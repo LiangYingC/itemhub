@@ -59,12 +59,18 @@ export const RoutingRule = [{
         prepareData: [{
             key: 'name',
             func: (args) => {
+                if (!args.token) {
+                    return '';
+                }
                 const extra = window.jwt_decode(args.token).extra;
                 return `${extra.LastName}${extra.FirstName}`;
             }
         }, {
             key: 'email',
             func: (args) => {
+                if (!args.token) {
+                    return '';
+                }
                 const extra = window.jwt_decode(args.token).extra;
                 return extra.Email;
             }

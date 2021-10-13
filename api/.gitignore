@@ -4,7 +4,6 @@ Homo.AuthApi/
 obj/
 bin/
 appsettings.json
-appsettings.*.json
 secrets/
 node_modules
 Migrations/

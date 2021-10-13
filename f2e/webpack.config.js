@@ -67,6 +67,9 @@ module.exports = {
         }, {
             from: './src/server.js',
             to: './server.js'
+        }, {
+            from: './src/third-party',
+            to: './third-party'
         }]})
     ]
 };

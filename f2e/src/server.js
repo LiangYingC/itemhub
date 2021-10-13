@@ -4,10 +4,9 @@ const staticAlias = require('node-static-alias');
 const fs = require('fs');
 const path = require('path');
 
-
 fs.copyFileSync(`./config.${process.env.NODE_ENV}.js`, './config.js');
 
-var fileServer = new staticAlias.Server('./', {
+const fileServer = new staticAlias.Server('./', {
     alias: [{
         match: /\/config.js$/,
         serve: process.env.NODE_ENV === 'prod' ? 'config.js' : 'config.dev.js'
@@ -18,7 +17,7 @@ var fileServer = new staticAlias.Server('./', {
         match: /\/([^/]+\/)*([^/]+)\.(js|css|png|woff2|woff|ttf|html|gif|svg|json|jpg)$/,
         serve: function (params) {
             return params.reqPath;
-        },
+        }
     }]
 });
 
@@ -35,7 +34,7 @@ http.createServer(options, function (request, response) {
 console.log('Sever Launch: port 443');
 
 const scssFiles = recursiveExtractCssFile('./');
-var sass = require('node-sass');
+const sass = require('node-sass');
 for (let i = 0; i < scssFiles.length; i++) {
     const outputFileName = path.dirname(scssFiles[i]) + path.basename(scssFiles[i]).replace(path.extname(scssFiles[i]), '.css');
     sass.render({
@@ -49,13 +48,12 @@ for (let i = 0; i < scssFiles.length; i++) {
         fs.writeFile(outputFileName, result.css, function (err) {
             if (err) {
                 console.error(err);
-                return;
             }
         });
     });
 }
 
-function recursiveExtractCssFile(folder) {
+function recursiveExtractCssFile (folder) {
     const result = extractCssFile(folder);
     fs.readdirSync(folder, {
         withFileTypes: true
@@ -67,7 +65,7 @@ function recursiveExtractCssFile(folder) {
     return result;
 }
 
-function extractCssFile(folder) {
+function extractCssFile (folder) {
     return fs.readdirSync(folder, {
         withFileTypes: true
     }).map((file) => {

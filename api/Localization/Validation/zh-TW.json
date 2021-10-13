@@ -1,0 +1,6 @@
+{
+    "Name is required": "名稱為必填",
+    "Password is required": "密碼為必填",
+    "Email length bigger than 64": "Email 長度超過預設最大長度 64",
+    "Password length less than 12": "密碼長度不得小於 12"
+}

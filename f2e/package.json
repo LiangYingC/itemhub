@@ -1,0 +1,29 @@
+{
+    "name": "iot-f2e",
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "swim-update": "npm install https://github.com/miterfrants/swim.git && node node_modules/swim/auto/update-core.js",
+        "swim-build": "node node_modules/swim/auto/cacher-for-webpack.js && npx webpack --config ./webpack.config.js && node node_modules/swim/auto/delete-config-after-webpack.js"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "swim": "git+https://github.com/miterfrants/swim.git"
+    },
+    "keywords": [],
+    "description": "",
+    "devDependencies": {
+        "babel-eslint": "^10.1.0",
+        "eslint": "^7.32.0",
+        "eslint-config-google": "^0.14.0",
+        "eslint-config-standard": "^16.0.3",
+        "eslint-plugin-import": "^2.25.1",
+        "eslint-plugin-node": "^11.1.0",
+        "eslint-plugin-promise": "^5.1.0",
+        "eslint-plugin-standard": "^5.0.0",
+        "stylelint": "^13.13.1",
+        "stylelint-config-standard": "^22.0.0"
+    }
+}

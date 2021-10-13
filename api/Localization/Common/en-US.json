@@ -1,0 +1,8 @@
+{
+    "hello": "Hello!",
+    "verify email": "Verify Email",
+    "verify link": "Verify Link {link}, Verify Code {code}",
+    "reset email": "Reset Password Email Subject",
+    "reset link": "Reset Password Link: {link}",
+    "sms template": "Verify Code: {code}"
+}

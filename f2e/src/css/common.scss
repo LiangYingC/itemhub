@@ -1,0 +1,25 @@
+/* Common */
+body,
+html {
+    padding: 0;
+    margin: 0;
+    font-family: Arial, 'PingFangSC-Regular', 'STHeiti', 'WenQuanYi Zen Hei',
+        'Microsoft JhengHei', '微軟正黑體', '儷黑 Pro', 'LiHei Pro', 'DFKai-SB',
+        sans-serif;
+}
+
+.d-block {
+    display: block;
+}
+
+.d-flex {
+    display: flex;
+}
+
+.align-items-center {
+    align-items: center;
+}
+
+.d-none {
+    display: none;
+}

@@ -1,0 +1,12 @@
+{
+    "TEST": "測試",
+    "INVALID_EMAIL": "錯誤 EMAIL 格式",
+    "UNAUTH_ACCESS_API": "未授權使用 API",
+    "INVALID_FORM": "表單驗證發生錯誤",
+    "GGGG": "testing GGGG zh-TW",
+    "SIGNIN_FAILED": "帳號或密碼錯誤",
+    "USER_BE_BLOCKED": "使用者被封鎖",
+    "SMS_ERROR": "簡訊商回傳錯誤: {message}",
+    "OAUTH_TYPE_ONLY_SUPPORT_CODE": "oAuth 只支援 response_type = code",
+    "OAUTH_REDIRECT_URI_NOT_IN_WHITLIST": "redirect_uri 不在設定的白名單"
+}

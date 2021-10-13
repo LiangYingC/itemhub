@@ -1,0 +1,19 @@
+<header>
+    <link href="/components/header/header.css" rel="stylesheet">
+    <a href="/" class="logo d-flex align-items-center">
+        Logo
+    </a>
+    <div class="menu d-flex align-items-center">
+        <a class="d-block" href="/cooperation/">Cooperation</a>
+        <a class="d-block" href="/pricing/">Pricing</a>
+    </div>
+    <div class="user-section">
+        <a class="ml-2 {hasSignedInvisibility}" href="/sign-up/send-verify-email/">Sign Up</a>
+        <a class="ml-2 {hasSignedInvisibility}" href="/sign-in/">Sign In</a>
+        <a class="ml-2 {hasSignedInvisibility}" onclick="controller.signInWithFacebook">Sign In With Facebook</a>
+        <a class="ml-2 {hasSignedInvisibility}" onclick="controller.signInWithLine">Sign In With Line</a>
+        <a class="ml-2 {hasSignedInvisibility}" onclick="controller.signInWithGoogle">Sign In With Google</a>
+        <a class="ml-2 {hasSignedVisibility}" href="/me/">Me</a>
+        <a class="ml-2 {hasSignedVisibility}" href="/sign-out/">Sign Out</a>
+    </div>
+</header>

@@ -1,0 +1,8 @@
+{
+    "hello": "您好!",
+    "verify email": "驗證信件",
+    "verify link": "驗證連結 {link}, 驗證碼: {code}",
+    "reset email": "重設密碼",
+    "reset link": "重設密碼 {link}",
+    "sms template": "驗證碼: {code}"
+}

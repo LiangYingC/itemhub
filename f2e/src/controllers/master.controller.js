@@ -9,6 +9,8 @@ export class MasterController extends RoutingController {
 
     async render () {
         await super.render({
+            name: this.args.name,
+            email: this.args.email
         });
     }
 

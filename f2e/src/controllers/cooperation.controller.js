@@ -13,8 +13,4 @@ export class CooperationController extends RoutingController {
             name: this.args.name
         });
     }
-
-    sendGuestMessage () {
-        console.log('sendGuestMessage');
-    }
 }

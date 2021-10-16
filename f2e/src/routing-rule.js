@@ -1,5 +1,6 @@
 import { AuthController } from './controllers/auth.controller.js';
 import { CooperationController } from './controllers/cooperation.controller.js';
+import { MainController } from './controllers/main.controller.js';
 import { MasterController } from './controllers/master.controller.js';
 import { MeController } from './controllers/me.controller.js';
 import { PricingController } from './controllers/pricing.controller.js';
@@ -35,27 +36,22 @@ export const RoutingRule = [{
     path: '/sign-out/',
     controller: SignOutController
 }, {
-    path: '/',
-    controller: MasterController,
-    html: '/template/master.html',
-    dependency: [{
-        url: '/third-party/jwt-decode.min.js',
-        checkVariable: 'jwt_decode'
-    }],
+    path: '',
     prepareData: [{
         key: 'token',
         func: () => {
             return CookieUtil.getCookie('token');
         }
     }],
+    dependency: [{
+        url: '/third-party/jwt-decode.min.js',
+        checkVariable: 'jwt_decode'
+    }],
+    controller: MainController,
     children: [{
-        path: 'pricing/',
-        controller: PricingController,
-        html: '/template/pricing.html'
-    }, {
-        path: 'cooperation/',
-        controller: CooperationController,
-        html: '/template/cooperation.html',
+        path: '/',
+        controller: MasterController,
+        html: '/template/master.html',
         prepareData: [{
             key: 'name',
             func: (args) => {
@@ -74,17 +70,26 @@ export const RoutingRule = [{
                 const extra = window.jwt_decode(args.token).extra;
                 return extra.Email;
             }
-        }]
-    }, {
-        path: 'me/',
-        controller: MeController,
-        html: '/template/me.html',
-        prepareData: [{
-            key: 'name',
-            func: (args) => {
-                const extra = window.jwt_decode(args.token).extra;
-                return `${extra.LastName}${extra.FirstName}`;
-            }
-        }]
-    }, SignUpRoutingRule]
+        }],
+        children: [{
+            path: 'pricing/',
+            controller: PricingController,
+            html: '/template/pricing.html'
+        }, {
+            path: 'cooperation/',
+            controller: CooperationController,
+            html: '/template/cooperation.html'
+        }, {
+            path: 'me/',
+            controller: MeController,
+            html: '/template/me.html',
+            prepareData: [{
+                key: 'name',
+                func: (args) => {
+                    const extra = window.jwt_decode(args.token).extra;
+                    return `${extra.LastName}${extra.FirstName}`;
+                }
+            }]
+        }, SignUpRoutingRule]
+    }]
 }];

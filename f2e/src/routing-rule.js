@@ -4,6 +4,7 @@ import { MainController } from './controllers/main.controller.js';
 import { MasterController } from './controllers/master.controller.js';
 import { MeController } from './controllers/me.controller.js';
 import { PricingController } from './controllers/pricing.controller.js';
+import { PrivacyPolicyController } from './controllers/privacy-policy.controller.js';
 import { SignOutController } from './controllers/sign-out.controller.js';
 import { UniversalDataService } from './dataservices/universal.dataservice.js';
 import { SignUpRoutingRule } from './routing-rules/sign-up.routing-rule.js';
@@ -79,6 +80,10 @@ export const RoutingRule = [{
             path: 'cooperation/',
             controller: CooperationController,
             html: '/template/cooperation.html'
+        }, {
+            path: 'privacy-policy/',
+            controller: PrivacyPolicyController,
+            html: '/template/privacy-policy.html'
         }, {
             path: 'me/',
             controller: MeController,

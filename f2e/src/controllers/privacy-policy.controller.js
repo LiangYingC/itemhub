@@ -2,9 +2,9 @@ import {
     RoutingController
 } from '../swim/routing-controller.js';
 
-export class PricingController extends RoutingController {
+export class PrivacyPolicyController extends RoutingController {
     static get id () {
-        return 'PricingController';
+        return 'PrivacyPolicyController';
     }
 
     async render () {

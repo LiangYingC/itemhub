@@ -2,26 +2,56 @@
     <link href="/css/master.css" rel="stylesheet">
     <component-header></component-header>
     <main class="child-router">
+        <h1>透過 ItemHub 輕鬆打造你的智慧生活</h1>
+        <div>
+            快速連接你的裝置或感應器，簡單的設定並操控各種裝置
+            <br />
+            讓你專注在智慧裝置的運用，開始你的智慧生活
+        </div>
+        <a href="/sign-up/send-verify-email/">搶先免費註冊試用</a>
         <div class="feats">
             <h1>Features</h1>
-            <div>feature 1</div>
-            <div>feature 2</div>
-            <div>feature 3</div>
-            <div>feature 4</div>
+            <div>
+                <h2>輕鬆的連接並操控各項裝置</h2>
+                <div>
+                    使用我們提供的程式碼並燒錄至裝置內，即可於 Web 介面上設定裝置的操作邏輯，讓你輕鬆的設定。
+                </div>
+            </div>
+            <div>
+                <h2>安全性高的 HTTPS API</h2>
+                <div>
+                    使用具安全性的 HTTPS API 來連接並操作裝置，保障你的資料與安全性。
+                </div>
+            </div>
+            <div>
+                <h2>客製化的情境操作</h2>
+                <div>
+                    透過 Web 介面彈性設定各種裝置的情境操作。
+                </div>
+            </div>
+            <div>
+                <h2>多元化的通知方式</h2>
+                <div>
+                    裝置的通知方式可使用 Email、LINE、簡訊、Message，讓你可透過不同管道接收通知。
+                </div>
+            </div>
+
+        </div>
+        <div class="how-to-use">
+            <ul>
+                <li>網站上登入並設定裝置並產生專屬的程式碼</li>
+                <li>將程式碼燒錄至裝置內</li>
+                <li>於網站上設定裝置的屬性或使用邏輯後，即可直接操控裝置或收集裝置資訊</li>
+            </ul>
         </div>
 
-        <a href="/sign-up/send-verify-email/">
-            Sign up to get 1 year basic plan for free
-            and real-time message with us
-        </a>
-
         <div class="pricing-plan">
-            <h1>Pricing Plan</h1>
+            <h1>收費方案</h1>
             <component-pricing-plan></component-pricing-plan>
         </div>
 
         <div class="cooperation">
-            <h1>Cooperation</h1>
+            <h1>聯絡我們</h1>
             <component-cooperation bind-name="name" bind-email="email"></component-cooperation>
         </div>
     </main>

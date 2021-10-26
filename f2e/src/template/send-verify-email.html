@@ -1,13 +1,16 @@
 <div class="send-verify-email">
-    <h2>Send Verify Email</h2>
+    <h2>會員註冊</h2>
     <div class="form">
-        <label class="d-block">
-            Email:
-            <input data-field="email" type="text" value="" />
-        </label>
-        <button onclick="controller.sendVerifyEmail">send verify email</button>
-        <button onclick="controller.signUpWithFacebook">Sign Up With Facebook</button>
-        <button onclick="controller.signUpWithLine">Sign Up With Line</button>
-        <button onclick="controller.signUpWithGoogle">Sign Up With Google</button>
+        <div>
+            <label class="d-block">
+                請輸入 EMAIL:
+                <input data-field="email" type="text" value="" />
+            </label>
+            <button onclick="controller.sendVerifyEmail">發送驗證碼</button>
+        </div>
+        或
+        <button onclick="controller.signUpWithFacebook">使用 FACEBOOK 註冊</button>
+        <button onclick="controller.signUpWithLine">使用 LINE 註冊</button>
+        <button onclick="controller.signUpWithGoogle">使用 GOOGLE 註冊</button>
     </div>
 </div>

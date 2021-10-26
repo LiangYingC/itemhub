@@ -1,20 +1,24 @@
 <div class="sign-up">
-    <h1>Sign Up</h1>
+    <h1>註冊</h1>
     <div class="child-router form">
         <label>
             Email:
             <div>{email}</div>
         </label>
         <label>
-            Password:
+            請輸入會員名稱
+            <input data-field="password" type="password" value=""></input>
+        </label>
+        <label>
+            請輸入密碼
             <input data-field="password" type="password" value=""></input>
         </label>
 
         <label>
-            Confrim Password:
+            請再次輸入密碼
             <input data-field="confirmPassword" type="password" value=""></input>
         </label>
 
-        <button onclick="controller.signUp">Sign Up</button>
+        <button onclick="controller.signUp">完成註冊</button>
     </div>
 </div>

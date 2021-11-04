@@ -1,3 +1,4 @@
+import { APP_CONFIG } from './config.js';
 import { AuthController } from './controllers/auth.controller.js';
 import { CooperationController } from './controllers/cooperation.controller.js';
 import { MainController } from './controllers/main.controller.js';
@@ -10,11 +11,34 @@ import { UniversalDataService } from './dataservices/universal.dataservice.js';
 import { SignUpRoutingRule } from './routing-rules/sign-up.routing-rule.js';
 import { CookieUtil } from './util/cookie.js';
 
+const gTag = {
+    dependency: {
+        url: `https://www.googletagmanager.com/gtag/js?id=${APP_CONFIG.GA_PROPERTY_ID}`,
+        checkVariable: 'dataLayer'
+    },
+    prepareData: {
+        key: 'gtag',
+        func: () => {
+            window.dataLayer = window.dataLayer || [];
+            function gtag () {
+                window.dataLayer.push(arguments);
+            }
+            gtag('js', new Date());
+            gtag('config', APP_CONFIG.GA_PROPERTY_ID);
+            return gtag;
+        }
+    }
+};
+
 export const RoutingRule = [{
     path: '/auth/?state&code',
     controller: AuthController,
     html: '/template/auth.html',
-    prepareData: [{
+    dependency: [{
+        url: `https://www.googletagmanager.com/gtag/js?id=${APP_CONFIG.GA_PROPERTY_ID}`,
+        checkVariable: 'dataLayer'
+    }, gTag.dependency],
+    prepareData: [gTag.prepareData, {
         key: 'state',
         func: (args) => {
             if (args.state.startsWith('line')) {
@@ -35,7 +59,9 @@ export const RoutingRule = [{
     }]
 }, {
     path: '/sign-out/',
-    controller: SignOutController
+    controller: SignOutController,
+    dependency: [gTag.dependency],
+    prepareData: [gTag.prepareData]
 }, {
     path: '',
     prepareData: [{
@@ -47,7 +73,7 @@ export const RoutingRule = [{
     dependency: [{
         url: '/third-party/jwt-decode.min.js',
         checkVariable: 'jwt_decode'
-    }],
+    }, gTag.dependency],
     controller: MainController,
     children: [{
         path: '/',
@@ -71,7 +97,7 @@ export const RoutingRule = [{
                 const extra = window.jwt_decode(args.token).extra;
                 return extra.Email;
             }
-        }],
+        }, gTag.prepareData],
         children: [{
             path: 'pricing/',
             controller: PricingController,

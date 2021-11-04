@@ -20,12 +20,16 @@ const gTag = {
         key: 'gtag',
         func: () => {
             window.dataLayer = window.dataLayer || [];
-            function gtag () {
-                window.dataLayer.push(arguments);
+            if (!window.gtag) {
+                function gtag () {
+                    window.dataLayer.push(arguments);
+                }
+                gtag('js', new Date());
+                gtag('config', APP_CONFIG.GA_PROPERTY_ID);
+                window.gtag = gtag;
             }
-            gtag('js', new Date());
-            gtag('config', APP_CONFIG.GA_PROPERTY_ID);
-            return gtag;
+
+            return window.gtag;
         }
     }
 };

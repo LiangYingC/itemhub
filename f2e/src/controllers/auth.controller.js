@@ -39,8 +39,8 @@ export class AuthController extends RoutingController {
         }
 
         CookieUtil.setCookie('token', resp.data.token);
-        this.args.gtag('event', EVENTS.SIGN_IN);
-        opener.location.href = '/';
+        opener.history.pushState({}, '', '/?tf=' + new Date().getUTCMilliseconds());
+        opener.gtag('event', EVENTS.SIGN_IN);
         window.close();
     }
 
@@ -71,9 +71,9 @@ export class AuthController extends RoutingController {
             }, 5000);
             return;
         }
-        this.args.gtag('event', EVENTS.SIGN_UP);
+        opener.gtag('event', EVENTS.SIGN_UP);
         CookieUtil.setCookie('token', respOfSignUp.data.token);
+        opener.history.pushState({}, '', '/');
         window.close();
-        window.opener.history.pushState({}, '', '/');
     }
 }

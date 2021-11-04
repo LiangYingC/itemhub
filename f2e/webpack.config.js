@@ -5,7 +5,10 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 const TerserJSPlugin = require('terser-webpack-plugin');
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
-const webpack = require('webpack');
+const webpack = require('webpack')
+const esm = require("esm")(module);
+const config = esm(`./src/config.${process.env.NODE_ENV}.js`);
+
 const {
     CleanWebpackPlugin
 } = require('clean-webpack-plugin');
@@ -25,12 +28,12 @@ module.exports = {
     },
     module: {
         rules: [{
-            test: /\.js$/i,
+            test: /\.html$/i,
             use: [{
                 loader: 'string-replace-loader',
                 options: {
-                    search: 'xxxx-dev',
-                    replace: process.env.NODE_ENV === 'prod' ? 'xxxx-prod' : 'xxxx-dev',
+                    search: '{GA_PROPERTY_ID}',
+                    replace: config.APP_CONFIG.GA_PROPERTY_ID
                 }
             }]
         }, {
@@ -70,6 +73,9 @@ module.exports = {
         }, {
             from: './src/third-party',
             to: './third-party'
+        }, {
+            from: './src/config.*.js',
+            to: './'
         }]})
     ]
 };

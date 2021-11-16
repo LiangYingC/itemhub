@@ -2,6 +2,7 @@
 . $HOME/.nvm/nvm.sh
 ENV="$NODE_ENV";
 
+cd ./api
 git pull origin master
 
 sudo docker build -t homo-iot-api ./
@@ -20,5 +21,5 @@ sudo docker run -d \
    -v /var/project/homo-iot-hub/api/secrets.json:/app/secrets.json \
    homo-iot-api
 
-cd f2e
+cd ../f2e
 nvm use 16 && npm install && FORCE_UPDATE=false NODE_ENV=$ENV npm run swim-build

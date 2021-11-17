@@ -1,0 +1,11 @@
+using System;
+
+namespace {namespace}
+{
+    public abstract partial class DTOs
+    {
+        public partial class {firstUpperCamelCaseModelName} : DTOs
+        {
+        }
+    }
+}

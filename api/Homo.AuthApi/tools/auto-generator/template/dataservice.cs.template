@@ -1,0 +1,94 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
+
+namespace {namespace}
+{
+    public class {firstUpperCamelCaseModelName}Dataservice
+    {
+        public static List<{firstUpperCamelCaseModelName}> GetList(DBContext dbContext, int page, int limit)
+        {
+            return dbContext.{firstUpperCamelCaseModelName}
+                .Where(x =>
+                    x.DeletedAt == null
+                )
+                .OrderByDescending(x => x.Id)
+                .Skip(limit * (page - 1))
+                .Take(limit)
+                .ToList();
+        }
+
+        public static List<{firstUpperCamelCaseModelName}> GetAll(DBContext dbContext)
+        {
+            return dbContext.{firstUpperCamelCaseModelName}
+                .Where(x =>
+                    x.DeletedAt == null
+                )
+                .OrderByDescending(x => x.Id)
+                .ToList();
+        }
+        public static int GetRowNum(DBContext dbContext)
+        {
+            return dbContext.{firstUpperCamelCaseModelName}
+                .Where(x =>
+                    x.DeletedAt == null
+                )
+                .Count();
+        }
+
+        public static {firstUpperCamelCaseModelName} GetOne(DBContext dbContext, long id)
+        {
+            return dbContext.{firstUpperCamelCaseModelName}.FirstOrDefault(x => x.DeletedAt == null && x.Id == id);
+        }
+
+        public static {firstUpperCamelCaseModelName} Create(DBContext dbContext, long createdBy, DTOs.{firstUpperCamelCaseModelName} dto)
+        {
+            {firstUpperCamelCaseModelName} record = new {firstUpperCamelCaseModelName}();
+            foreach (var propOfDTO in dto.GetType().GetProperties())
+            {
+                var value = propOfDTO.GetValue(dto);
+                var prop = record.GetType().GetProperty(propOfDTO.Name);
+                prop.SetValue(record, value);
+            }
+            record.CreatedBy = createdBy;
+            dbContext.{firstUpperCamelCaseModelName}.Add(record);
+            dbContext.SaveChanges();
+            return record;
+        }
+
+        public static void BatchDelete(DBContext dbContext, long editedBy, List<long> ids)
+        {
+            foreach (long id in ids)
+            {
+                {firstUpperCamelCaseModelName} record = new {firstUpperCamelCaseModelName} { Id = id };
+                dbContext.Attach<{firstUpperCamelCaseModelName}>(record);
+                record.DeletedAt = DateTime.Now;
+                record.EditedBy = editedBy;
+            }
+            dbContext.SaveChanges();
+        }
+
+        public static void Update(DBContext dbContext, long id, long editedBy, DTOs.{firstUpperCamelCaseModelName} dto)
+        {
+            {firstUpperCamelCaseModelName} record = dbContext.{firstUpperCamelCaseModelName}.Where(x => x.Id == id).FirstOrDefault();
+            foreach (var propOfDTO in dto.GetType().GetProperties())
+            {
+                var value = propOfDTO.GetValue(dto);
+                var prop = record.GetType().GetProperty(propOfDTO.Name);
+                prop.SetValue(record, value);
+            }
+            record.EditedAt = DateTime.Now;
+            record.EditedBy = editedBy;
+            dbContext.SaveChanges();
+        }
+
+        public static void Delete(DBContext dbContext, long id, long editedBy)
+        {
+            {firstUpperCamelCaseModelName} record = dbContext.{firstUpperCamelCaseModelName}.Where(x => x.Id == id).FirstOrDefault();
+            record.DeletedAt = DateTime.Now;
+            record.EditedBy = editedBy;
+            dbContext.SaveChanges();
+        }
+    }
+}

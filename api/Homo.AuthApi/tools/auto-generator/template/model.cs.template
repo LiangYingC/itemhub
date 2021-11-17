@@ -1,0 +1,15 @@
+using System;
+using Homo.Api;
+
+namespace {namespace}
+{
+    public partial class {firstUpperCamelCaseModelName}
+    {
+        public long Id { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public long CreatedBy { get; set; }
+        public DateTime? EditedAt { get; set; }
+        public long? EditedBy { get; set; }
+        public DateTime? DeletedAt { get; set; }
+    }
+}

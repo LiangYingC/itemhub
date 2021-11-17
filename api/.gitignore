@@ -1,9 +1,7 @@
-secrets.json
-Homo.Api/
-Homo.AuthApi/
 obj/
 bin/
 appsettings.json
 secrets/
 node_modules
 Migrations/
+secrets.json

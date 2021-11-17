@@ -1,0 +1,15 @@
+{
+  "name": "dev-front-end",
+  "version": "1.0.0",
+  "description": "",
+  "main": "local-server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "http-proxy": "^1.18.0",
+    "node-static-alias": "^1.1.2"
+  }
+}

@@ -19,6 +19,7 @@ sudo docker run -d \
    --name homo-iot-api \
    -v /var/project/homo-iot-hub/api/appsettings.json:/app/appsettings.json \
    -v /var/project/homo-iot-hub/api/secrets.json:/app/secrets.json \
+   -v /var/project/homo-iot-hub/api/Localization:/app/Localization \
    homo-iot-api
 
 cd ../f2e

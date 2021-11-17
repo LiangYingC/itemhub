@@ -22,7 +22,7 @@ export class VerifyEmailController extends RoutingController {
 
     async verifyEmail (event) {
         const elButton = event.currentTarget;
-        elButton.setAttribute('disabeld', 'disabeld');
+        elButton.setAttribute('disabled', 'disabled');
         const elForm = elButton.closest('.form');
         const data = {
             ...elForm.collectFormData(),

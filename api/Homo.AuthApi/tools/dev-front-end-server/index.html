@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Title of the document</title>
+</head>
+
+<body>
+  <div class="message" style="white-space: pre; margin: 40px 0;">
+
+  </div>
+  <div class="buttons" style="display: none;">
+    <button onclick="getCodeByFacebook('sign-in')">Facebook Sign In</button>
+    <button onclick="getCodeByGoogle('sign-in')">Google Sign In</button>
+    <button onclick="getCodeByLine('sign-in')">Line Sign In</button>
+  </div>
+
+  <div class="buttons" style="display: none; margin-top: 40px;">
+    <button onclick="getCodeByFacebook('sign-up')">Facebook Sign Up</button>
+    <button onclick="getCodeByGoogle('sign-up')">Google Sign Up</button>
+    <button onclick="getCodeByLine('sign-up')">Line Sign Up</button>
+  </div>
+
+  <button onclick="clearQueryString()" style="margin-top:40px;">Clear</button>
+</body>
+
+<script>
+  const fbClientId = '542447149657740';
+  const lineClientId = '1655133619';
+  const googleClientId = '675953765772-fckco228v8r3sbuf9uev0nhl4ddcijtu.apps.googleusercontent.com';
+  const redirectUri = 'https://localhost:9527/';
+  let googleEnumValue, fbEnumValue, lineEnumValue;
+
+  (async () => {
+    const apiEndpoint = 'https://localhost:5001/api/v1/';
+    const resp = await _fetch(`${apiEndpoint}universal/social-media-types`, {
+      method: 'GET'
+    });
+    const data = await resp.json();
+    googleEnumValue = data.find(item => item.key === 'GOOGLE').value;
+    fbEnumValue = data.find(item => item.key === 'FACEBOOK').value;
+    lineEnumValue = data.find(item => item.key === 'LINE').value;
+
+    document.querySelectorAll('.buttons').forEach((el) => {
+      el.style.display = 'block'
+    });
+
+    if (location.search.indexOf('code') !== -1) {
+      const state = JSON.parse(getQueryString('state'));
+      const elMessage = document.querySelector('.message');
+      const provider = state.provider;
+      const type = state.type;
+      const api = type === 'sign-in' ? `${apiEndpoint}auth/sign-in-with-social-media` :
+        `${apiEndpoint}auth/auth-with-social-media`
+      const respOfAuth = await _fetch(api, {
+        body: JSON.stringify({
+          provider: provider,
+          code: getQueryString('code'),
+          redirectUri
+        }),
+        method: 'POST'
+      });
+      const dataOfAuth = await respOfAuth.json();
+
+      elMessage.innerHTML =
+        `Http Status: ${respOfAuth.status} \nMessage: ${dataOfAuth.message || JSON.stringify(dataOfAuth)} \n${elMessage.innerHTML}`;
+
+      if (type === 'sign-up' && respOfAuth.status === 200) {
+        const respOfSignUp = await _fetch(`${apiEndpoint}auth/sign-up`, {
+          method: 'POST',
+          body: JSON.stringify({
+            password: 'testing123123'
+          }),
+          headers: {
+            Authorization: 'Bearer ' + dataOfAuth.token
+          }
+        });
+        const dataOfSignUp = await respOfSignUp.json();
+        elMessage.innerHTML =
+          `Http Status: ${respOfSignUp.status} \nMessage: ${dataOfSignUp.message || JSON.stringify(dataOfSignUp)} \n${elMessage.innerHTML}`;
+      }
+    }
+
+  })();
+
+  function getQueryString(key) {
+    if (!location.search || location.search.substring(1).length === 0) {
+      return '';
+    }
+    const queryStrings = location.search.substring(1).split('&');
+    const result = queryStrings.find((qs) => {
+      if (qs.indexOf(`${key}=`) === 0) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+    if (result) {
+      return decodeURIComponent(result.split('=')[1]);
+    }
+    return '';
+  }
+
+  function _fetch(url, option) {
+    if (option.cache) {
+      console.warn('Cound not declate cache in option params');
+    }
+    const newOption = {
+      ...option,
+      headers: {
+        ...option.headers,
+        'Content-Type': 'application/json'
+      }
+    };
+    return fetch(url, newOption);
+  }
+
+  function getCodeByGoogle(authType) {
+    location.href = [
+      'https://accounts.google.com/o/oauth2/v2/auth?1=1',
+      `scope=https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile`,
+      'include_granted_scopes=true',
+      'response_type=code',
+      `state=${JSON.stringify({
+        provider: googleEnumValue,
+        type: authType
+      })}`,
+      'redirect_uri=https%3A//localhost:9527/',
+      `client_id=${googleClientId}`
+    ].join('&');
+  }
+
+  function getCodeByFacebook(authType) {
+    location.href =
+      `https://www.facebook.com/v5.0/dialog/oauth?client_id=${fbClientId}&redirect_uri=${redirectUri}&state=${JSON.stringify({
+        provider: fbEnumValue,
+        type: authType
+      })}`;
+  }
+
+  function getCodeByLine(authType) {
+    location.href =
+      `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${lineClientId}&redirect_uri=${redirectUri}&state=${encodeURIComponent(JSON.stringify({
+        provider: lineEnumValue,
+        type: authType
+      }))}&bot_prompt=aggressive&scope=profile%20openid%20email`;
+  }
+
+  function clearQueryString() {
+    location.href = "/";
+  }
+</script>
+
+</html>

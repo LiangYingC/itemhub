@@ -9,8 +9,7 @@ export class CooperationController extends RoutingController {
 
     async render () {
         await super.render({
-            email: this.args.email,
-            name: this.args.name
+            ...this.args.me
         });
     }
 }

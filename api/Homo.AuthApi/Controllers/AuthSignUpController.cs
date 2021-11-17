@@ -176,7 +176,7 @@ namespace Homo.AuthApi
             {
                 Subject = _commonLocalizer.Get("verify email"),
                 Content = _commonLocalizer.Get("verify link", null, new Dictionary<string, string>() {
-                    { "link", $"{_websiteEndpoint}/auth/verify-email" },
+                    { "link", $"{_websiteEndpoint}/sign-up/verify-email" },
                     { "code", code }
                 })
             }, _systemEmail, dto.Email, _sendGridAPIKey);

@@ -19,7 +19,7 @@ export class SignUpController extends RoutingController {
 
     async signUp (event) {
         const elButton = event.currentTarget;
-        elButton.setAttribute('disabeld', 'disabeld');
+        elButton.setAttribute('disabled', 'disabled');
         const elForm = elButton.closest('.form');
 
         const data = {

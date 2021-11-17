@@ -6,6 +6,7 @@ import { MasterController } from './controllers/master.controller.js';
 import { MeController } from './controllers/me.controller.js';
 import { PricingController } from './controllers/pricing.controller.js';
 import { PrivacyPolicyController } from './controllers/privacy-policy.controller.js';
+import { SignInController } from './controllers/sign-in.controller.js';
 import { SignOutController } from './controllers/sign-out.controller.js';
 import { UniversalDataService } from './dataservices/universal.dataservice.js';
 import { SignUpRoutingRule } from './routing-rules/sign-up.routing-rule.js';
@@ -84,22 +85,19 @@ export const RoutingRule = [{
         controller: MasterController,
         html: '/template/master.html',
         prepareData: [{
-            key: 'name',
+            key: 'me',
             func: (args) => {
                 if (!args.token) {
-                    return '';
+                    return {
+                        name: '',
+                        email: ''
+                    };
                 }
                 const extra = window.jwt_decode(args.token).extra;
-                return `${extra.LastName}${extra.FirstName}`;
-            }
-        }, {
-            key: 'email',
-            func: (args) => {
-                if (!args.token) {
-                    return '';
-                }
-                const extra = window.jwt_decode(args.token).extra;
-                return extra.Email;
+                return {
+                    name: `${extra.LastName}${extra.FirstName}`,
+                    email: extra.Email
+                };
             }
         }, gTag.prepareData],
         children: [{
@@ -125,6 +123,10 @@ export const RoutingRule = [{
                     return `${extra.LastName}${extra.FirstName}`;
                 }
             }]
+        }, {
+            path: 'sign-in/',
+            controller: SignInController,
+            html: '/template/sign-in.html'
         }, SignUpRoutingRule]
     }]
 }];

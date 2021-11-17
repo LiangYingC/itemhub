@@ -5,3 +5,4 @@ secrets/
 node_modules
 Migrations/
 secrets.json
+package-lock.json

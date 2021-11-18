@@ -76,6 +76,9 @@ module.exports = {
         }, {
             from: './src/config.*.js',
             to: './'
+        }, {
+            from: './src/assets',
+            to: './assets'
         }]})
     ]
 };

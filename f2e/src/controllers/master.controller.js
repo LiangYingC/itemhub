@@ -9,10 +9,10 @@ export class MasterController extends RoutingController {
 
     async render () {
         this.meta = {
-            title: 'Item Hub',
-            description: 'Item Hub',
+            title: 'ItemHub',
+            description: 'Low-Code, No-Code Iot Platform',
             image: '',
-            keywords: ''
+            keywords: 'low-code,no-code,iot platform,iot,internet of thing,iot data center'
         };
         await super.render({
             ...this.args.me,

@@ -60,12 +60,10 @@ void setup()
     pinData[0]["pin"] = D0;
     pinData[0]["pinString"] = "D0";
     pinMode(D0, OUTPUT);
-
     pinData.add(jsonBuffer.createObject());
     pinData[1]["pin"] = D1;
     pinData[1]["pinString"] = "D1";
     pinMode(D1, OUTPUT);
-
     Serial.begin(9600);
     // need a Particle time sync for X509 certificates verify.
     if (millis() - lastSync > ONE_DAY_MILLIS)
@@ -102,7 +100,6 @@ void setup()
     stateEndPoint.append("/states");
     char *respOfStates = send("GET", (char *)stateEndPoint.c_str(), "", token.c_str());
     JsonArray &jsonStates = getResponseBodyArray(respOfStates);
-
     for (int i = 0; i < pinData.size(); i++)
     {
         bool isExists = false;

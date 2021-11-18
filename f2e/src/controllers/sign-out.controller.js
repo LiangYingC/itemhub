@@ -1,3 +1,4 @@
+import { EVENTS } from '../constants.js';
 import {
     RoutingController
 } from '../swim/routing-controller.js';
@@ -9,6 +10,7 @@ export class SignOutController extends RoutingController {
     }
 
     async render () {
+        this.args.gtag('event', EVENTS.SIGN_OUT);
         CookieUtil.eraseCookie('token');
         history.pushState({}, '', '/');
     }

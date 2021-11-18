@@ -1,7 +1,7 @@
 import {
     RoutingController
 } from '../swim/routing-controller.js';
-import { OAUTH_TYPE, RESPONSE_STATUS } from '../constants.js';
+import { EVENTS, OAUTH_TYPE, RESPONSE_STATUS } from '../constants.js';
 import { AuthDataService } from '../dataservices/auth.dataservice.js';
 import { Toaster } from '../util/toaster.js';
 import { Swissknife } from '../util/swissknife.js';
@@ -39,7 +39,8 @@ export class AuthController extends RoutingController {
         }
 
         CookieUtil.setCookie('token', resp.data.token);
-        opener.location.href = '/';
+        opener.history.pushState({}, '', '/?tf=' + new Date().getUTCMilliseconds());
+        opener.gtag('event', EVENTS.SIGN_IN);
         window.close();
     }
 
@@ -70,8 +71,9 @@ export class AuthController extends RoutingController {
             }, 5000);
             return;
         }
+        opener.gtag('event', EVENTS.SIGN_UP);
         CookieUtil.setCookie('token', respOfSignUp.data.token);
+        opener.history.pushState({}, '', '/');
         window.close();
-        window.opener.history.pushState({}, '', '/');
     }
 }

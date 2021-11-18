@@ -2,15 +2,14 @@
     <link href="/components/cooperation/cooperation.css" rel="stylesheet">
     <div class="form">
         <label class="d-block">
-            姓名:
-            <input data-field="name" type="text" value="{name}" />
+
+            <input placeholder="姓名" class="form-control" data-field="name" type="text" value="{name}" />
         </label>
         <label class="d-block">
-            Email:
-            <input data-field="email" type="text" value="{email}" />
+            <input placeholder="Email" class="form-control" data-field="email" type="text" value="{email}" />
         </label>
-        <textarea data-field="message" class="d-block"></textarea>
-        <button onclick="controller.sendCooperationMessage">
+        <textarea placeholder="留給我們的訊息" data-field="message" class="d-block form-control"></textarea>
+        <button class="btn btn-md" onclick="controller.sendCooperationMessage">
             發送
         </button>
     </div>

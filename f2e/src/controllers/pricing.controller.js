@@ -9,6 +9,7 @@ export class PricingController extends RoutingController {
 
     async render () {
         await super.render({
+            numberOfPromotedUser: this.args.numberOfRegisteredUsers > 300 ? 0 : 300 - this.args.numberOfRegisteredUsers
         });
     }
 }

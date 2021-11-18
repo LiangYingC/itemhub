@@ -6,8 +6,8 @@ import {
     CustomError
 } from './custom-error.js';
 
-if (!window['AppApiCache']) {
-    window['AppApiCache'] = {};
+if (!window.AppApiCache) {
+    window.AppApiCache = {};
 }
 
 export const ApiHelper = {
@@ -104,7 +104,7 @@ export const ApiHelper = {
         const newOption = {
             ...option,
             headers: {
-                ...option.headers,
+                ...option.headers
             }
         };
         return fetch(url, newOption);

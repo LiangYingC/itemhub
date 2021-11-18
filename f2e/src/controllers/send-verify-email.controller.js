@@ -32,7 +32,7 @@ export class SendVerifyEmailController extends RoutingController {
             type: OAUTH_TYPE.SIGN_UP,
             provider: OAUTH_PROVIDER.FACEBOOK
         };
-        PopupHelper.PopupCenter(`https://www.facebook.com/v5.0/dialog/oauth?client_id=${THIRD_PARTY_KEY.FB_CLIENT_ID}&redirect_uri=${window.location.origin}/auth/&state=${JSON.stringify(state)}`, 'fb auth', 600, 500);
+        PopupHelper.PopupCenter(`https://www.facebook.com/v12.0/dialog/oauth?client_id=${THIRD_PARTY_KEY.FB_CLIENT_ID}&redirect_uri=${window.location.origin}/auth/&state=${JSON.stringify(state)}`, 'fb auth', 600, 500);
     }
 
     async signUpWithGoogle () {

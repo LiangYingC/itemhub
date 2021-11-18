@@ -44,7 +44,7 @@ const char letencryptCaPem[] = LET_ENCRYPT_CA_PEM;
 
 #define ONE_DAY_MILLIS (24 * 60 * 60 * 1000)
 unsigned long lastSync = millis();
-char apiEndpoint[] = "iot.homo.tw";
+char apiEndpoint[] = "itemhub.io";
 int *successCount = 0;
 std::string result = "";
 bool respFlag = false;

@@ -8,8 +8,15 @@ export class MasterController extends RoutingController {
     }
 
     async render () {
+        this.meta = {
+            title: 'Item Hub',
+            description: 'Item Hub',
+            image: '',
+            keywords: ''
+        };
         await super.render({
-            ...this.args.me
+            ...this.args.me,
+            numberOfPromotedUser: this.args.numberOfRegisteredUsers > 300 ? 0 : 300 - this.args.numberOfRegisteredUsers
         });
     }
 

@@ -9,6 +9,7 @@ import { PrivacyPolicyController } from './controllers/privacy-policy.controller
 import { SignInController } from './controllers/sign-in.controller.js';
 import { SignOutController } from './controllers/sign-out.controller.js';
 import { UniversalDataService } from './dataservices/universal.dataservice.js';
+import { UserDataService } from './dataservices/user.dataservice.js';
 import { SignUpRoutingRule } from './routing-rules/sign-up.routing-rule.js';
 import { CookieUtil } from './util/cookie.js';
 
@@ -98,6 +99,12 @@ export const RoutingRule = [{
                     name: `${extra.LastName}${extra.FirstName}`,
                     email: extra.Email
                 };
+            }
+        }, {
+            key: 'numberOfRegisteredUsers',
+            func: async () => {
+                const resp = await UserDataService.GetNumberOfRegisteredUsers();
+                return resp.data.nums;
             }
         }, gTag.prepareData],
         children: [{

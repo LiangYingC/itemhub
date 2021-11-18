@@ -11,6 +11,7 @@ export class RoutingController {
         this.elOriginalChildNodes = [];
         this.parentController = parentController;
         this.pageVariable = null;
+        this.meta = {};
         if (elHTML) {
             const classQuery = elHTML.className.split(' ').map((className) => {
                 return `.${className}`;
@@ -52,13 +53,27 @@ export class RoutingController {
                 const elChildRouters = this.parentController.elHTML.querySelectorAll('.child-router');
                 // latest child router element will be replaced by this controller sahdow element
                 const elLatestChildRouter = elChildRouters[elChildRouters.length - 1];
-                var child = elLatestChildRouter.lastElementChild;
+                let child = elLatestChildRouter.lastElementChild;
                 while (child) {
                     elLatestChildRouter.removeChild(child);
                     child = elLatestChildRouter.lastElementChild;
                 }
                 elLatestChildRouter.appendChild(this.elHTML);
             }
+        }
+        if (this.meta && this.meta.title) {
+            document.title = this.meta.title;
+            document.head.appendChild(this.createMeta(null, 'og:title', this.meta.title));
+        }
+        if (this.meta && this.meta.description) {
+            document.head.appendChild(this.createMeta(null, 'og:description', this.meta.description));
+            document.head.appendChild(this.createMeta('description', null, this.meta.description));
+        }
+        if (this.meta && this.meta.image) {
+            document.head.appendChild(this.createMeta(null, 'og:image', this.meta.image));
+        }
+        if (this.meta && this.meta.keywords) {
+            document.head.appendChild(this.createMeta('keywords', this.meta.keywords));
         }
     }
 
@@ -79,6 +94,18 @@ export class RoutingController {
 
     async exit () {
         return true;
+    }
+
+    createMeta (name, propertyName, content) {
+        const elMeta = document.createElement('meta');
+        if (name) {
+            elMeta.setAttribute('name', name);
+        }
+        if (propertyName) {
+            elMeta.setAttribute('property', name);
+        }
+        elMeta.setAttribute('content', content);
+        return elMeta;
     }
 }
 

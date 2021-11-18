@@ -73,7 +73,7 @@ export class RoutingController {
             document.head.appendChild(this.createMeta(null, 'og:image', this.meta.image));
         }
         if (this.meta && this.meta.keywords) {
-            document.head.appendChild(this.createMeta('keywords', this.meta.keywords));
+            document.head.appendChild(this.createMeta('keywords', null, this.meta.keywords));
         }
     }
 
@@ -102,7 +102,7 @@ export class RoutingController {
             elMeta.setAttribute('name', name);
         }
         if (propertyName) {
-            elMeta.setAttribute('property', name);
+            elMeta.setAttribute('property', propertyName);
         }
         elMeta.setAttribute('content', content);
         return elMeta;

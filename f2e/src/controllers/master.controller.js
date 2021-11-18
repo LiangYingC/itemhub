@@ -10,7 +10,7 @@ export class MasterController extends RoutingController {
     async render () {
         this.meta = {
             title: 'ItemHub',
-            description: 'Low-Code, No-Code Iot Platform',
+            description: 'No-Code Iot Platform',
             image: '',
             keywords: 'low-code,no-code,iot platform,iot,internet of thing,iot data center'
         };

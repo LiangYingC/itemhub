@@ -85,9 +85,9 @@ export const Router = {
         });
 
         function overWriteLinkBehavior (e) {
-            var isMacLike = /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform);
-            var isIOS = /(iPhone|iPod|iPad)/i.test(navigator.platform);
-            var isWin = /(win32)/i.test(navigator.platform);
+            const isMacLike = /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform);
+            const isIOS = /(iPhone|iPod|iPad)/i.test(navigator.platform);
+            const isWin = /(win32)/i.test(navigator.platform);
             if (e.currentTarget.target === '_blank' ||
                 ((isMacLike || isIOS) && e.metaKey === true) ||
                 ((isWin) && e.ctrlKey === true)
@@ -247,7 +247,7 @@ export const Router = {
                 firstHTMLExistsController = window.SwimAppController[cursorIndex];
             }
             const elContainer = firstHTMLExistsController.elShadowHTML.parentElement;
-            var child = elContainer.lastElementChild;
+            let child = elContainer.lastElementChild;
             while (child) {
                 elContainer.removeChild(child);
                 child = elContainer.lastElementChild;
@@ -277,10 +277,10 @@ export const Router = {
     // server side: constructor -> render
     // client side first time: constructor -> enter -> render -> postRender -> exit
     // client side seconds time: enter -> render -> postRender -> exit
-    executeController: async (controller, context, htmlPath, parentController, skipControllerLiveTimeCycle) => {
+    executeController: async (Controller, context, htmlPath, parentController, skipControllerLiveTimeCycle) => {
         // 如果已經有 instance 就不要在執行 initalize
         const instances = window.SwimAppController.filter((instance) => {
-            return instance instanceof controller;
+            return instance instanceof Controller;
         });
 
         let controllerInstance = null;
@@ -292,7 +292,7 @@ export const Router = {
                 html = Render.appendStylesheetToHeadAndRemoveLoaded(html);
                 elHTML = html.toDom();
             }
-            controllerInstance = new controller(elHTML, parentController, context.args, context);
+            controllerInstance = new Controller(elHTML, parentController, context.args, context);
             window.SwimAppController.push(controllerInstance);
         } else {
             controllerInstance = instances[0];

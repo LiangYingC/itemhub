@@ -63,7 +63,12 @@ export class RoutingController {
         }
         if (this.meta && this.meta.title) {
             document.title = this.meta.title;
-            document.head.appendChild(this.createMeta(null, 'og:title', this.meta.title));
+            if (!this.meta['og:title']) {
+                document.head.appendChild(this.createMeta(null, 'og:title', this.meta.title));
+            }
+        }
+        if (this.meta && this.meta['og:title']) {
+            document.head.appendChild(this.createMeta(null, 'og:title', this.meta['og:title']));
         }
         if (this.meta && this.meta.description) {
             document.head.appendChild(this.createMeta(null, 'og:description', this.meta.description));

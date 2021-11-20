@@ -12,6 +12,14 @@ export class SendVerifyEmailController extends RoutingController {
         return 'SendVerifyEmailController';
     }
 
+    async render () {
+        this.meta = {
+            title: '驗證信箱 - ItemHub'
+        };
+        await super.render({
+        });
+    }
+
     async sendVerifyEmail (event) {
         const elButton = event.currentTarget;
         elButton.setAttribute('disabeld', 'disabeld');

@@ -12,6 +12,9 @@ export class VerifyEmailController extends RoutingController {
     }
 
     async render () {
+        this.meta = {
+            title: '驗證信箱 - ItemHub'
+        };
         await super.render({
         });
     }

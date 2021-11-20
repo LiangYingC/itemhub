@@ -8,6 +8,9 @@ export class PricingController extends RoutingController {
     }
 
     async render () {
+        this.meta = {
+            title: '方案 - ItemHub'
+        };
         await super.render({
             numberOfPromotedUser: this.args.numberOfRegisteredUsers > 300 ? 0 : 300 - this.args.numberOfRegisteredUsers
         });

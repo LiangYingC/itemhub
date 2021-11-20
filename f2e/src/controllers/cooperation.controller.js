@@ -8,6 +8,9 @@ export class CooperationController extends RoutingController {
     }
 
     async render () {
+        this.meta = {
+            title: '與我們聯繫 - ItemHub'
+        };
         await super.render({
             ...this.args.me
         });

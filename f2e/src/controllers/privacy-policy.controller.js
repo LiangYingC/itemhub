@@ -8,6 +8,9 @@ export class PrivacyPolicyController extends RoutingController {
     }
 
     async render () {
+        this.meta = {
+            title: '隱私權政策 - ItemHub'
+        };
         await super.render({
         });
     }

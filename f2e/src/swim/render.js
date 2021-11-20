@@ -38,7 +38,7 @@ export const Render = {
                     }
                     const attrValue = el.getAttribute(attrName);
                     const attrPrefix = attrName.substring(0, attrName.indexOf('-'));
-                    const variableNameInComponent = Render.sankeToCamel(attrName.replace(/bind\-/gi, '').replace(/attr\-/gi, ''));
+                    const variableNameInComponent = Render.sankeToCamel(attrName.replace(/bind-/gi, '').replace(/attr-/gi, ''));
 
                     if (attrPrefix === 'bind') {
                         let value = pageVariable[attrValue] || '';

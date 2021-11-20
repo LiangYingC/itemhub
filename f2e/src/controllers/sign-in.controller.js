@@ -12,6 +12,9 @@ export class SignInController extends RoutingController {
     }
 
     async render () {
+        this.meta = {
+            title: '登入 - ItemHub'
+        };
         await super.render({
         });
     }

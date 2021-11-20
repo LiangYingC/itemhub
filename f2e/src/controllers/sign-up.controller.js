@@ -12,6 +12,9 @@ export class SignUpController extends RoutingController {
     }
 
     async render () {
+        this.meta = {
+            title: '註冊 - ItemHub'
+        };
         await super.render({
             email: CookieUtil.getCookie('email')
         });

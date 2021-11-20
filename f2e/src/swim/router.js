@@ -18,6 +18,7 @@ window.SwimAppPreviousState = [];
 
 export const Router = {
     pauseRouting: false,
+    interrupt: null,
     init: (context) => {
         window.addEventListener('popstate', async () => {
             if (Router.pauseRouting) {
@@ -43,6 +44,9 @@ export const Router = {
                 if (exitResult) {
                     window.SwimAppPreviousState = newPath;
                     Router.routing(location.pathname + location.search, newPath, RoutingRule, context);
+                    if (Router.interrupt) {
+                        Router.interrupt();
+                    }
                     return original.apply(this, arguments);
                 }
             };

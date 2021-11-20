@@ -15,8 +15,20 @@ export class HeaderComponent extends BaseComponent {
         await super.render({
             ...this.variable,
             hasSignedInvisibility: CookieUtil.getCookie('token') ? 'd-none' : 'd-block',
-            hasSignedVisibility: CookieUtil.getCookie('token') ? 'd-block' : 'd-none'
+            hasSignedVisibility: CookieUtil.getCookie('token') ? 'd-block' : 'd-none',
+            isExpanded: false,
+            expandedVisible: 'd-none'
         });
+    }
+
+    async computed () {
+        return [{
+            variableName: 'expandedVisible',
+            watchKey: 'isExpanded',
+            value: () => {
+                return this.variable.isExpanded ? 'd-none' : '';
+            }
+        }];
     }
 
     async signInWithFacebook () {
@@ -38,5 +50,10 @@ export class HeaderComponent extends BaseComponent {
         };
         const url = ['https://accounts.google.com/o/oauth2/v2/auth?1=1', 'scope=https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile', 'include_granted_scopes=true', 'response_type=code', `state=${JSON.stringify(state)}`, `redirect_uri=${location.origin}/auth/`, `client_id=${THIRD_PARTY_KEY.GOOGLE_CLIENT_ID}`].join('&');
         PopupHelper.PopupCenter(url, 'google auth', 600, 500);
+    }
+
+    switchMenu (event) {
+        this.variable.isExpanded = !this.variable.isExpanded;
+        this.variable.expandedVisible = this.variable.isExpanded ? '' : 'd-none';
     }
 }

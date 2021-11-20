@@ -16,17 +16,16 @@ export class HeaderComponent extends BaseComponent {
             ...this.variable,
             hasSignedInvisibility: CookieUtil.getCookie('token') ? 'd-none' : 'd-block',
             hasSignedVisibility: CookieUtil.getCookie('token') ? 'd-block' : 'd-none',
-            isExpanded: false,
-            expandedVisible: 'd-none'
+            isExpanded: false
         });
     }
 
-    async computed () {
+    computed () {
         return [{
-            variableName: 'expandedVisible',
             watchKey: 'isExpanded',
+            variableName: 'expandedVisible',
             value: () => {
-                return this.variable.isExpanded ? 'd-none' : '';
+                return this.variable.isExpanded ? '' : 'd-none';
             }
         }];
     }
@@ -54,6 +53,5 @@ export class HeaderComponent extends BaseComponent {
 
     switchMenu (event) {
         this.variable.isExpanded = !this.variable.isExpanded;
-        this.variable.expandedVisible = this.variable.isExpanded ? '' : 'd-none';
     }
 }

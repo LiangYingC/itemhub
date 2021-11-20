@@ -33,6 +33,10 @@ export class RoutingController {
         }
     }
 
+    computed () {
+        return [];
+    }
+
     async enter (args) {
         this.args = args;
     }
@@ -43,11 +47,11 @@ export class RoutingController {
             revertOriginalChildRouter(this);
             // copy original text to controller elHTML;
             this.elHTML = Render.appendStylesheetToHeadAndRemoveLoaded(this.originalHTML).toDom();
-            Render.bindingVariableToDom(this, this.elHTML, this.pageVariable, this.args);
+            Render.bindingVariableToDom(this, this.elHTML, this.pageVariable, this.args, this.computed());
             await Render.renderComponentAsync(this.elHTML, this.pageVariable, this.args, this);
             updateDOM(this);
         } else if (this.elShadowHTML && !this.context.isUpdateDOMFirstRunRouting) {
-            Render.bindingVariableToDom(this, this.elHTML, this.pageVariable, this.args);
+            Render.bindingVariableToDom(this, this.elHTML, this.pageVariable, this.args, this.computed());
             await Render.renderComponentAsync(this.elHTML, this.pageVariable, this.args, this);
             if (this.parentController.elHTML && this.parentController.elHTML.querySelector('.child-router')) {
                 const elChildRouters = this.parentController.elHTML.querySelectorAll('.child-router');

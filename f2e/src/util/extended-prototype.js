@@ -1,9 +1,9 @@
 const extendStringProtoType = () => {
     if (!String.prototype.bind) {
         String.prototype.bind = function (variable) {
-            var result = this.toString();
-            for (var key in variable) {
-                var reg = new RegExp('{' + key + '}', 'gi');
+            let result = this.toString();
+            for (const key in variable) {
+                const reg = new RegExp('{' + key + '}', 'gi');
                 if (typeof variable[key] !== 'string' && typeof variable[key] !== 'number' && typeof variable[key] !== 'boolean') {
                     result = result.replace(reg, '');
                     continue;
@@ -47,7 +47,7 @@ const extendHTMLElementProtoType = async () => {
     if (!HTMLElement.prototype.collectFormData) {
         HTMLElement.prototype.collectFormData = function (skipWithoutDataFieldInputWarn = false) {
             const result = {};
-            let inputs = this.querySelectorAll('input[type="text"],input[type="password"],input[type="number"],input[type="hidden"]');
+            const inputs = this.querySelectorAll('input[type="text"],input[type="password"],input[type="number"],input[type="hidden"]');
             inputs.forEach((el) => {
                 if (!el.dataset.field && el.type !== 'file' && !skipWithoutDataFieldInputWarn) {
                     console.warn('element data-field not exists');
@@ -63,7 +63,7 @@ const extendHTMLElementProtoType = async () => {
                 }
             });
 
-            let checkboxs = this.querySelectorAll('input[type="checkbox"]:checked');
+            const checkboxs = this.querySelectorAll('input[type="checkbox"]:checked');
             checkboxs.forEach((el) => {
                 if (!el.dataset.field && el.type !== 'file' && !skipWithoutDataFieldInputWarn) {
                     console.warn('element data-field not exists');
@@ -80,7 +80,7 @@ const extendHTMLElementProtoType = async () => {
                 }
             });
 
-            let selects = this.querySelectorAll('select');
+            const selects = this.querySelectorAll('select');
             selects.forEach((el) => {
                 if (!el.dataset.field && el.type !== 'file' && !skipWithoutDataFieldInputWarn) {
                     console.warn('element data-field not exists');
@@ -100,15 +100,14 @@ const extendHTMLElementProtoType = async () => {
 
     if (!HTMLElement.prototype.clearForm) {
         HTMLElement.prototype.clearForm = function () {
-            let inputs = this.querySelectorAll('input');
+            const inputs = this.querySelectorAll('input');
             inputs.forEach((el) => {
                 if (!el.hasAttribute('skip-clear')) {
                     el.value = '';
                 }
-
             });
 
-            let selectes = this.querySelectorAll('select');
+            const selectes = this.querySelectorAll('select');
             selectes.forEach((el) => {
                 if (!el.hasAttribute('skip-clear')) {
                     el.value = '';

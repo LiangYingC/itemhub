@@ -1,3 +1,5 @@
+import { RESPONSE_STATUS } from '../constants.js';
+import { UserDataService } from '../dataservices/user.dataservice.js';
 import {
     RoutingController
 } from '../swim/routing-controller.js';
@@ -17,8 +19,25 @@ export class MasterController extends RoutingController {
         };
         await super.render({
             ...this.args.me,
-            numberOfPromotedUser: this.args.numberOfRegisteredUsers > 300 ? 0 : 300 - this.args.numberOfRegisteredUsers
+            numOfRegisteredUser: this.args.numOfRegisteredUser
         });
+        UserDataService.GetNumberOfRegisteredUsers()
+            .then(resp => {
+                if (resp.status === RESPONSE_STATUS.OK) {
+                    this.args.numOfRegisteredUser = resp.data.nums;
+                    this.pageVariable.numOfRegisteredUser = resp.data.nums;
+                }
+            });
+    }
+
+    computed () {
+        return [{
+            watchKey: 'numOfRegisteredUser',
+            variableName: 'numberOfPromotedUser',
+            value: () => {
+                return this.pageVariable.numOfRegisteredUser && this.pageVariable.numOfRegisteredUser > 300 ? 0 : 300 - this.pageVariable.numOfRegisteredUser;
+            }
+        }];
     }
 
     async exit (args) {

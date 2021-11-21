@@ -12,7 +12,17 @@ export class PricingController extends RoutingController {
             title: '方案 - ItemHub'
         };
         await super.render({
-            numberOfPromotedUser: this.args.numberOfRegisteredUsers > 300 ? 0 : 300 - this.args.numberOfRegisteredUsers
+            numOfRegisteredUser: this.args.numOfRegisteredUser
         });
+    }
+
+    computed () {
+        return [{
+            watchKey: 'numOfRegisteredUser',
+            variableName: 'numberOfPromotedUser',
+            value: () => {
+                return this.pageVariable.numOfRegisteredUser && this.pageVariable.numOfRegisteredUser > 300 ? 0 : 300 - this.pageVariable.numOfRegisteredUser;
+            }
+        }];
     }
 }

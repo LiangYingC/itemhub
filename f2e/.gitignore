@@ -4,3 +4,4 @@ dist/
 config.js
 package-lock.json
 config.*.js
+sitemap.xml

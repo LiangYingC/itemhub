@@ -33,7 +33,7 @@ function recursiveGeneratePath (currentPath, routingRule) {
         const existsData = result.filter(item => {
             return item.loc === currentPath + routingRule.path;
         });
-        if (existsData.length === 0) {
+        if (existsData.length === 0 && (currentPath + routingRule.path) !== config.APP_CONFIG.FRONT_END_URL) {
             result.push({
                 loc: currentPath + routingRule.path,
                 changefreq: 'weekly',

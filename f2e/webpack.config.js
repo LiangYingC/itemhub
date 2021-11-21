@@ -4,10 +4,63 @@ const CopyPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 const TerserJSPlugin = require('terser-webpack-plugin');
-const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
-const webpack = require('webpack')
-const esm = require("esm")(module);
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const webpack = require('webpack');
+const moment = require('moment');
+const esm = require('esm')(module);
 const config = esm(`./src/config.${process.env.NODE_ENV}.js`);
+
+// avoid node js without window variable exception
+const fs = require('fs');
+const htmlElement = require('html-element');
+const convert = require('jstoxmlparser');
+if (!global.window) {
+    global.window = global;
+}
+if (!global.HTMLElement) {
+    global.HTMLElement = htmlElement.Element;
+}
+const routingRules = esm('./src/routing-rule.js');
+const currentPath = config.APP_CONFIG.FRONT_END_URL;
+const result = [];
+
+for (let i = 0; i < routingRules.RoutingRule.length; i++) {
+    recursiveGeneratePath(currentPath, routingRules.RoutingRule[i]);
+}
+
+function recursiveGeneratePath (currentPath, routingRule) {
+    if (!routingRule.skipSitemap) {
+        const existsData = result.filter(item => {
+            return item.loc === currentPath + routingRule.path;
+        });
+        if (existsData.length === 0) {
+            result.push({
+                loc: currentPath + routingRule.path,
+                changefreq: 'weekly',
+                lastmod: moment().format('YYYY-MM-DD HH:mm:ss')
+            });
+        }
+    }
+    if (routingRule.children) {
+        for (let i = 0; i < routingRule.children.length; i++) {
+            recursiveGeneratePath(currentPath + routingRule.path, routingRule.children[i]);
+        }
+    }
+}
+
+const sitemap = convert.toXML({
+    _name: 'urlset',
+    _content: {
+        url: result
+    },
+    _attrs: {
+        xmlns: 'http://www.sitemaps.org/schemas/sitemap/0.9'
+    }
+}, {
+    header: false,
+    indent: '    '
+});
+fs.writeFileSync(path.join(__dirname, '/src/sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n${sitemap}`);
 
 const {
     CleanWebpackPlugin
@@ -24,7 +77,7 @@ module.exports = {
         minimizer: [
             new TerserJSPlugin({}),
             new CssMinimizerPlugin()
-        ],
+        ]
     },
     module: {
         rules: [{
@@ -46,9 +99,9 @@ module.exports = {
             test: /\.html$/i,
             loader: 'html-loader',
             options: {
-                minimize: true,
+                minimize: true
             }
-        }],
+        }]
     },
     plugins: [
         new MiniCssExtractPlugin(),
@@ -64,21 +117,26 @@ module.exports = {
             template: './src/build/index.html',
             filename: 'index.html'
         }),
-        new CopyPlugin({patterns: [{
-            from: './src/ssl',
-            to: './ssl'
-        }, {
-            from: './src/server.js',
-            to: './server.js'
-        }, {
-            from: './src/third-party',
-            to: './third-party'
-        }, {
-            from: './src/config.*.js',
-            to: './'
-        }, {
-            from: './src/assets',
-            to: './assets'
-        }]})
+        new CopyPlugin({
+            patterns: [{
+                from: './src/ssl',
+                to: './ssl'
+            }, {
+                from: './src/server.js',
+                to: './server.js'
+            }, {
+                from: './src/third-party',
+                to: './third-party'
+            }, {
+                from: './src/config.*.js',
+                to: './'
+            }, {
+                from: './src/assets',
+                to: './assets'
+            }, {
+                from: './src/sitemap.xml',
+                to: './'
+            }]
+        })
     ]
 };

@@ -10,7 +10,6 @@ import { RootController } from './controllers/root.controller.js';
 import { SignInController } from './controllers/sign-in.controller.js';
 import { SignOutController } from './controllers/sign-out.controller.js';
 import { UniversalDataService } from './dataservices/universal.dataservice.js';
-import { UserDataService } from './dataservices/user.dataservice.js';
 import { SignUpRoutingRule } from './routing-rules/sign-up.routing-rule.js';
 import { CookieUtil } from './util/cookie.js';
 
@@ -42,6 +41,7 @@ export const RoutingRule = [{
     controller: RootController,
     children: [{
         path: '/auth/?state&code',
+        skipSitemap: true,
         controller: AuthController,
         html: '/template/auth.html',
         dependency: [{
@@ -69,6 +69,7 @@ export const RoutingRule = [{
         }]
     }, {
         path: '/sign-out/',
+        skipSitemap: true,
         controller: SignOutController,
         dependency: [gTag.dependency],
         prepareData: [gTag.prepareData]
@@ -105,10 +106,9 @@ export const RoutingRule = [{
                     };
                 }
             }, {
-                key: 'numberOfRegisteredUsers',
-                func: async () => {
-                    const resp = await UserDataService.GetNumberOfRegisteredUsers();
-                    return resp.data.nums;
+                key: 'registeredUser',
+                func: () => {
+                    return null;
                 }
             }, gTag.prepareData],
             children: [{
@@ -125,6 +125,7 @@ export const RoutingRule = [{
                 html: '/template/privacy-policy.html'
             }, {
                 path: 'me/',
+                skipSitemap: true,
                 controller: MeController,
                 html: '/template/me.html',
                 prepareData: [{
@@ -136,6 +137,7 @@ export const RoutingRule = [{
                 }]
             }, {
                 path: 'sign-in/',
+                skipSitemap: true,
                 controller: SignInController,
                 html: '/template/sign-in.html'
             }, SignUpRoutingRule]

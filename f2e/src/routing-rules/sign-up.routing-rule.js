@@ -8,10 +8,12 @@ export const SignUpRoutingRule = {
     html: '/template/sign-up.html',
     children: [{
         path: 'send-verify-email/',
+        skipSitemap: true,
         controller: SendVerifyEmailController,
         html: '/template/send-verify-email.html'
     }, {
         path: 'verify-email/',
+        skipSitemap: true,
         controller: VerifyEmailController,
         html: '/template/verify-email.html'
     }]

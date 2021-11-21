@@ -37,7 +37,7 @@ function recursiveGeneratePath (currentPath, routingRule) {
             result.push({
                 loc: currentPath + routingRule.path,
                 changefreq: 'weekly',
-                lastmod: moment().format('YYYY-MM-DD HH:mm:ss')
+                lastmod: moment().format('YYYY-MM-DD')
             });
         }
     }

@@ -1,0 +1,31 @@
+@import 'bootstrap/scss/_functions.scss';
+@import 'bootstrap/scss/_variables.scss';
+
+$h1-font-size: 38px;
+$h1-font-size-for-small-screen: 30px;
+$h2-font-size: 30px;
+$h2-font-size-for-small-screen: 24px;
+$h3-font-size: 24px;
+$h3-font-size-for-small-screen: 20px;
+$h4-font-size: 20px;
+$h4-font-size-for-small-screen: 16px;
+$font-size-base: 16px;
+$font-size-base-for-small-screen: 14px;
+$small-font-size: 14px;
+$small-font-size-for-small-screen: 12px;
+$primary: #6bdcff;
+$dark-blue: #151b5e;
+$dark: #161c2e;
+$blue: #0048ff;
+
+$colors: (
+    'blue': $blue,
+    'dark-blue': $dark-blue,
+    'dark': $dark,
+);
+
+$theme-colors: (
+    'primary': $primary,
+    'dark-blue': $dark-blue,
+    'dark': $dark,
+);

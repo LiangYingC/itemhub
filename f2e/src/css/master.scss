@@ -1,4 +1,13 @@
+@import 'overwrite.scss';
+@import 'bootstrap/scss/_mixins.scss';
+
 .master {
+    .slogan {
+        font-size: 30px !important;
+        @include media-breakpoint-up(lg) {
+            font-size: 48px !important;
+        }
+    }
     main {
         min-height: 1500px;
     }

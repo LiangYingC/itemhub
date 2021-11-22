@@ -1,8 +1,4 @@
-@import 'bootstrap/scss/_functions.scss';
-@import 'bootstrap/scss/_variables.scss';
-$theme-colors: (
-    primary: #161c2e,
-);
+@import 'overwrite.scss';
 @import 'bootstrap/scss/bootstrap.scss';
 
 /* Common */
@@ -10,7 +6,60 @@ body,
 html {
     padding: 0;
     margin: 0;
-    font-family: Arial, 'PingFangSC-Regular', 'STHeiti', 'WenQuanYi Zen Hei',
-        'Microsoft JhengHei', '微軟正黑體', '儷黑 Pro', 'LiHei Pro', 'DFKai-SB',
-        sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang TC',
+        'Microsoft JhengHei', 'Helvetica Neue', Helvetica, Arial, sans-serif,
+        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+    @include media-breakpoint-down(lg) {
+        font-size: $font-size-base-for-small-screen;
+    }
+}
+
+.text-sm {
+    @include media-breakpoint-down(lg) {
+        font-size: $small-font-size-for-small-screen;
+    }
+}
+
+h1,
+.h1 {
+    font-size: $h1-font-size-for-small-screen;
+    @include media-breakpoint-up(lg) {
+        font-size: $h1-font-size;
+    }
+}
+
+h2,
+.h2 {
+    font-size: $h2-font-size-for-small-screen;
+    @include media-breakpoint-up(lg) {
+        font-size: $h2-font-size;
+    }
+}
+
+h3,
+.h3 {
+    font-size: $h3-font-size-for-small-screen;
+    @include media-breakpoint-up(lg) {
+        font-size: $h3-font-size;
+    }
+}
+
+h4,
+.h4 {
+    font-size: $h4-font-size-for-small-screen;
+    @include media-breakpoint-up(lg) {
+        font-size: $h4-font-size;
+    }
+}
+
+.text-blue {
+    color: $blue;
+}
+
+.text-dark-blue {
+    color: $dark-blue;
+}
+
+.bg-dark-blue {
+    background-color: $dark-blue;
 }

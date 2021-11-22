@@ -77,42 +77,43 @@ export const RoutingRule = [{
         prepareData: [gTag.prepareData]
     }, {
         path: '',
+        controller: MasterController,
+        html: '/template/master.html',
         prepareData: [{
+            key: 'me',
+            func: (args) => {
+                if (!args.token) {
+                    return {
+                        name: '',
+                        email: ''
+                    };
+                }
+                const extra = window.jwt_decode(args.token).extra;
+                return {
+                    name: `${extra.LastName}${extra.FirstName}`,
+                    email: extra.Email
+                };
+            }
+        }, {
             key: 'token',
             func: () => {
                 return CookieUtil.getCookie('token');
+            }
+        }, {
+            key: 'numOfRegisteredUser',
+            func: () => {
+                return null;
             }
         }],
         dependency: [{
             url: '/third-party/jwt-decode.min.js',
             checkVariable: 'jwt_decode'
         }, gTag.dependency],
-        controller: MainController,
         children: [{
             path: '/',
-            controller: MasterController,
-            html: '/template/master.html',
-            prepareData: [{
-                key: 'me',
-                func: (args) => {
-                    if (!args.token) {
-                        return {
-                            name: '',
-                            email: ''
-                        };
-                    }
-                    const extra = window.jwt_decode(args.token).extra;
-                    return {
-                        name: `${extra.LastName}${extra.FirstName}`,
-                        email: extra.Email
-                    };
-                }
-            }, {
-                key: 'registeredUser',
-                func: () => {
-                    return null;
-                }
-            }, gTag.prepareData],
+            controller: MainController,
+            html: '/template/main.html',
+            prepareData: [gTag.prepareData],
             children: [{
                 path: 'pricing/',
                 controller: PricingController,

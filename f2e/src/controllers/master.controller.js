@@ -19,7 +19,8 @@ export class MasterController extends RoutingController {
         };
         await super.render({
             ...this.args.me,
-            numOfRegisteredUser: this.args.numOfRegisteredUser
+            numOfRegisteredUser: this.args.numOfRegisteredUser || 0,
+            user: this.args.me
         });
         UserDataService.GetNumberOfRegisteredUsers()
             .then(resp => {

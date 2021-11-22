@@ -122,7 +122,7 @@ module.exports = {
                 from: './src/ssl',
                 to: './ssl'
             }, {
-                from: './src/server.js',
+                from: './server.js',
                 to: './server.js'
             }, {
                 from: './src/third-party',
@@ -135,6 +135,9 @@ module.exports = {
                 to: './assets'
             }, {
                 from: './src/sitemap.xml',
+                to: './'
+            }, {
+                from: './.foreverignore',
                 to: './'
             }]
         })

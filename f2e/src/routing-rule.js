@@ -1,6 +1,8 @@
 import { APP_CONFIG } from './config.js';
 import { AuthController } from './controllers/auth.controller.js';
 import { CooperationController } from './controllers/cooperation.controller.js';
+import { FeatureController } from './controllers/feature.controller.js';
+import { HowController } from './controllers/how.controller.js';
 import { MainController } from './controllers/main.controller.js';
 import { MasterController } from './controllers/master.controller.js';
 import { MeController } from './controllers/me.controller.js';
@@ -123,6 +125,12 @@ export const RoutingRule = [{
                 path: 'privacy-policy/',
                 controller: PrivacyPolicyController,
                 html: '/template/privacy-policy.html'
+            }, {
+                path: 'how/',
+                controller: HowController
+            }, {
+                path: 'feature/',
+                controller: FeatureController
             }, {
                 path: 'me/',
                 skipSitemap: true,

@@ -119,7 +119,7 @@ module.exports = {
         }),
         new CopyPlugin({
             patterns: [{
-                from: './src/ssl',
+                from: './ssl',
                 to: './ssl'
             }, {
                 from: './server.js',

@@ -54,4 +54,8 @@ export class HeaderComponent extends BaseComponent {
     switchMenu (event) {
         this.variable.isExpanded = !this.variable.isExpanded;
     }
+
+    collapse () {
+        this.variable.isExpanded = false;
+    }
 }

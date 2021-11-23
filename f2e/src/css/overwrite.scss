@@ -14,18 +14,28 @@ $font-size-base-for-small-screen: 14px;
 $small-font-size: 14px;
 $small-font-size-for-small-screen: 12px;
 $primary: #6bdcff;
+$light-blue: #4ac5ff;
 $dark-blue: #151b5e;
+$darkest-blue: #161c2e;
 $dark: #161c2e;
+$black-opacity25: rgba(0, 0, 0, 0.25);
 $blue: #0048ff;
+$bg-blue2green: linear-gradient(135deg, #0048ff 0%, #14ffca 100%);
 
 $colors: (
     'blue': $blue,
+    'light-blue': $light-blue,
     'dark-blue': $dark-blue,
     'dark': $dark,
+    'darkest-blue': $darkest-blue,
+    'black-opacity25': $black-opacity25,
 );
 
 $theme-colors: (
     'primary': $primary,
+    'light-blue': $light-blue,
     'dark-blue': $dark-blue,
     'dark': $dark,
+    'darkest-blue': $darkest-blue,
+    'black-opacity25': $black-opacity25,
 );

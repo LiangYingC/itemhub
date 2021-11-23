@@ -61,8 +61,24 @@ h4,
     color: $dark-blue;
 }
 
+.text-light-blue {
+    color: $light-blue;
+}
+
 .bg-dark-blue {
     background-color: $dark-blue;
+}
+
+.bg-blue2green {
+    background: $bg-blue2green;
+}
+
+.bg-darkest-blue {
+    background: $darkest-blue;
+}
+
+.bg-black-opacity25 {
+    background: $black-opacity25;
 }
 
 .nav-link,
@@ -70,4 +86,17 @@ h4,
     &:focus-visible {
         outline: none;
     }
+}
+
+.mt-n3 {
+    margin-top: -1rem;
+}
+
+.ms-n3 {
+    margin-left: -1rem;
+}
+
+.mx-n3 {
+    margin-left: -1rem;
+    margin-right: -1rem;
 }

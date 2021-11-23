@@ -1,0 +1,21 @@
+$icon-bottom-circle-wh: 88px;
+
+.feature {
+    padding-top: 220px;
+    padding-bottom: 140px;
+    .icon-bottom-circle {
+        width: $icon-bottom-circle-wh;
+        height: $icon-bottom-circle-wh;
+    }
+    .icon {
+        top: -1rem;
+        left: -1rem;
+    }
+    .bg-feature-img {
+        bottom: -5%;
+        right: -31%;
+    }
+    .feature-item {
+        margin-top: -50px;
+    }
+}

@@ -131,7 +131,8 @@ export const RoutingRule = [{
                 controller: HowController
             }, {
                 path: 'feature/',
-                controller: FeatureController
+                controller: FeatureController,
+                html: '/components/feature/feature.html'
             }, {
                 path: 'me/',
                 skipSitemap: true,

@@ -14,12 +14,14 @@ $font-size-base-for-small-screen: 14px;
 $small-font-size: 14px;
 $small-font-size-for-small-screen: 12px;
 $primary: #6bdcff;
+$deep-dark-blue: #0c152d;
 $dark-blue: #151b5e;
 $dark: #161c2e;
 $blue: #0048ff;
 
 $colors: (
     'blue': $blue,
+    'deep-dark-blue': $deep-dark-blue,
     'dark-blue': $dark-blue,
     'dark': $dark,
 );
@@ -28,4 +30,5 @@ $theme-colors: (
     'primary': $primary,
     'dark-blue': $dark-blue,
     'dark': $dark,
+    'deep-dark-blue': $deep-dark-blue,
 );

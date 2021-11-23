@@ -9,6 +9,7 @@ import {
 import {
     Render
 } from './render.js';
+import { Swissknife } from '../util/swissknife.js';
 
 window.SwimAppController = [];
 window.SwimAppControllersAndArgsMapping = {};
@@ -431,11 +432,29 @@ function setupContextArgs (argsReference, args, controllerId, isVariableFromUri)
         window.SwimAppControllersAndArgsMapping[controllerId] = [];
     }
     for (const key in args) {
-        if (isVariableFromUri) {
-            argsReference[key] = decodeURIComponent(args[key]);
-        } else {
+        if (typeof args[key] === 'object' || typeof args[key] === 'function') {
             argsReference[key] = args[key];
+            continue;
         }
+        if (isVariableFromUri) {
+            argsReference[`_${key}`] = decodeURIComponent(args[key]);
+        } else {
+            argsReference[`_${key}`] = args[key];
+        }
+        Object.defineProperty(argsReference, key, {
+            set: (newValue) => {
+                argsReference[`_${key}`] = newValue;
+                document.body.dispatchEvent(new CustomEvent(`CONTEXT_${Swissknife.CamelToUnderscoreSnake(key).toUpperCase()}_CHANGED`, {
+                    bubbles: true,
+                    detail: {
+                        newValue: newValue
+                    }
+                }));
+            },
+            get: () => {
+                return argsReference[`_${key}`];
+            }
+        });
 
         if (window.SwimAppControllersAndArgsMapping[controllerId].indexOf(key) === -1) {
             window.SwimAppControllersAndArgsMapping[controllerId].push(key);

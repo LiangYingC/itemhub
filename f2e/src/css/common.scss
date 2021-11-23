@@ -65,9 +65,26 @@ h4,
     background-color: $dark-blue;
 }
 
+.bg-deep-dark-blue {
+    background-color: $deep-dark-blue;
+}
+
 .nav-link,
 .link {
     &:focus-visible {
         outline: none;
+    }
+}
+
+.nav-link {
+    color: white;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+
+    &:hover,
+    &:active,
+    &:focus {
+        color: $primary;
+        border-bottom: 1px solid $primary;
     }
 }

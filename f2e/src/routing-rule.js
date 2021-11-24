@@ -1,4 +1,5 @@
 import { APP_CONFIG } from './config.js';
+import { AboutController } from './controllers/about.controller.js';
 import { AuthController } from './controllers/auth.controller.js';
 import { CooperationController } from './controllers/cooperation.controller.js';
 import { FeatureController } from './controllers/feature.controller.js';
@@ -133,6 +134,9 @@ export const RoutingRule = [{
                 path: 'feature/',
                 controller: FeatureController,
                 html: '/components/feature/feature.html'
+            }, {
+                path: 'about/',
+                controller: AboutController
             }, {
                 path: 'me/',
                 skipSitemap: true,

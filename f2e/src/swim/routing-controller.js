@@ -43,6 +43,7 @@ export class RoutingController {
 
     async render (pageVariable) {
         this.pageVariable = pageVariable;
+
         if (this.elHTML && this.context.isUpdateDOMFirstRunRouting) {
             revertOriginalChildRouter(this);
             // copy original text to controller elHTML;

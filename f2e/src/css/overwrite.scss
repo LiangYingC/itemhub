@@ -15,6 +15,7 @@ $small-font-size: 14px;
 $small-font-size-for-small-screen: 12px;
 $primary: #6bdcff;
 $light-blue: #4ac5ff;
+$deep-dark-blue: #0c152d;
 $dark-blue: #151b5e;
 $darkest-blue: #161c2e;
 $dark: #161c2e;
@@ -25,6 +26,12 @@ $bg-blue2green: linear-gradient(135deg, #0048ff 0%, #14ffca 100%);
 $colors: (
     'blue': $blue,
     'light-blue': $light-blue,
+);
+$enable-negative-margins: true;
+
+$colors: (
+    'blue': $blue,
+    'deep-dark-blue': $deep-dark-blue,
     'dark-blue': $dark-blue,
     'dark': $dark,
     'darkest-blue': $darkest-blue,
@@ -38,4 +45,5 @@ $theme-colors: (
     'dark': $dark,
     'darkest-blue': $darkest-blue,
     'black-opacity25': $black-opacity25,
+    'deep-dark-blue': $deep-dark-blue,
 );

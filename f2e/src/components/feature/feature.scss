@@ -8,28 +8,31 @@ $feature-block-padding-bottom: 140px;
 
 .feature {
     padding-top: $feature-block-padding-top;
-    padding-bottom: $feature-block-padding-bottom;
+
     .icon-bottom-circle {
         width: $icon-bottom-circle-wh;
         height: $icon-bottom-circle-wh;
     }
     .icon {
-        top: -1rem;
+        top: 0;
         left: -1rem;
     }
     .bg-feature-img {
-        bottom: -5%;
-        right: -31%;
+        bottom: -8%;
+        right: 0;
     }
     .feature-item {
-        // margin-top: -50px;
+        padding-bottom: $feature-block-padding-bottom;
     }
     @include media-breakpoint-down(md) {
         padding-top: calc(#{$feature-block-padding-top} / 2);
-        padding-bottom: calc(#{$feature-block-padding-bottom} / 2);
 
         .img-title-feature {
             width: $img-title-feature-mobile-w;
+        }
+
+        .feature-item {
+            padding-bottom: calc(#{$feature-block-padding-bottom} / 2);
         }
     }
 }

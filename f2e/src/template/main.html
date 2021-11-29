@@ -28,21 +28,28 @@
         </div>
         <component-feature></component-feature>
         <div class="how-to-use">
-            <ul>
-                <li>網站上登入並設定裝置並產生專屬的程式碼</li>
-                <li>將程式碼燒錄至裝置內</li>
-                <li>於網站上設定裝置的屬性或使用邏輯後，即可直接操控裝置或收集裝置資訊</li>
-            </ul>
+            <div class="container">
+                <h2>How</h2>
+                <ul>
+                    <li>網站上登入並設定裝置並產生專屬的程式碼</li>
+                    <li>將程式碼燒錄至裝置內</li>
+                    <li>於網站上設定裝置的屬性或使用邏輯後，即可直接操控裝置或收集裝置資訊</li>
+                </ul>
+            </div>
         </div>
 
         <div class="pricing-plan">
-            <h2>方案</h2>
-            <component-pricing-plan bind-number-of-promoted-user="numberOfPromotedUser"></component-pricing-plan>
+            <div class="container">
+                <h2>方案</h2>
+                <component-pricing-plan bind-number-of-promoted-user="numberOfPromotedUser"></component-pricing-plan>
+            </div>
         </div>
 
         <div class="cooperation">
-            <h2>與我們聯繫</h2>
-            <component-cooperation bind-name="name" bind-email="email"></component-cooperation>
+            <div class="container">
+                <h2>與我們聯繫</h2>
+                <component-cooperation bind-name="name" bind-email="email"></component-cooperation>
+            </div>
         </div>
     </div>
 </div>

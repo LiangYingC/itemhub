@@ -69,21 +69,54 @@ export class RoutingController {
         if (this.meta && this.meta.title) {
             document.title = this.meta.title;
             if (!this.meta['og:title']) {
-                document.head.appendChild(this.createMeta(null, 'og:title', this.meta.title));
+                const elMetaOgTitle = document.querySelector('meta[property="og:title"]');
+                if (!elMetaOgTitle) {
+                    document.head.appendChild(this.createMeta(null, 'og:title', this.meta.title));
+                } else {
+                    elMetaOgTitle.setAttribute('content', this.meta.title);
+                }
             }
         }
         if (this.meta && this.meta['og:title']) {
-            document.head.appendChild(this.createMeta(null, 'og:title', this.meta['og:title']));
+            const elMetaOgTitle = document.querySelector('meta[property="og:title"]');
+            if (!elMetaOgTitle) {
+                document.head.appendChild(this.createMeta(null, 'og:title', this.meta.title));
+            } else {
+                elMetaOgTitle.setAttribute('content', this.meta.title);
+            }
         }
         if (this.meta && this.meta.description) {
-            document.head.appendChild(this.createMeta(null, 'og:description', this.meta.description));
-            document.head.appendChild(this.createMeta('description', null, this.meta.description));
+            const elMetaOgDescription = document.querySelector('meta[property="og:description"]');
+            if (!elMetaOgDescription) {
+                document.head.appendChild(this.createMeta(null, 'og:description', this.meta.title));
+            } else {
+                elMetaOgDescription.setAttribute('content', this.meta.title);
+            }
+
+            const elMetaDescription = document.querySelector('meta[name="description"]');
+            if (!elMetaDescription) {
+                document.head.appendChild(this.createMeta('description', null, this.meta.description));
+            } else {
+                elMetaDescription.setAttribute('content', this.meta.description);
+            }
         }
+
         if (this.meta && this.meta.image) {
-            document.head.appendChild(this.createMeta(null, 'og:image', this.meta.image));
+            const elMetaOgImage = document.querySelector('meta[property="og:image"]');
+            if (!elMetaOgImage) {
+                document.head.appendChild(this.createMeta(null, 'og:image', this.meta.image));
+            } else {
+                elMetaOgImage.setAttribute('content', this.meta.image);
+            }
         }
+
         if (this.meta && this.meta.keywords) {
-            document.head.appendChild(this.createMeta('keywords', null, this.meta.keywords));
+            const elMetaKeywords = document.querySelector('meta[name="keywords"]');
+            if (!elMetaKeywords) {
+                document.head.appendChild(this.createMeta('keywords', null, this.meta.keywords));
+            } else {
+                elMetaKeywords.setAttribute('content', this.meta.keywords);
+            }
         }
     }
 

@@ -54,14 +54,14 @@ export const RoutingRule = [{
         prepareData: [gTag.prepareData, {
             key: 'state',
             func: (args) => {
-                if (args.state.startsWith('line')) {
-                    const states = args.state.split(',');
+                if (args._state.startsWith('line')) {
+                    const states = args._state.split(',');
                     return {
                         provider: states[0],
                         type: states[1]
                     };
                 } else {
-                    return JSON.parse(args.state);
+                    return JSON.parse(args._state);
                 }
             }
         }, {

@@ -18,9 +18,16 @@ export class PricingController extends RoutingController {
 
     async postRender () {
         await super.postRender();
-        document.body.addEventListener('CONTEXT_NUM_OF_REGISTERED_USER_CHANGED', (event) => {
-            this.pageVariable.numOfRegisteredUser = event.detail.newValue;
-        });
+        document.body.addEventListener('CONTEXT_NUM_OF_REGISTERED_USER_CHANGED', this.updateNumOfRegisteredUser);
+    }
+
+    async exit () {
+        document.body.removeEventListener('CONTEXT_NUM_OF_REGISTERED_USER_CHANGED', this.updateNumOfRegisteredUser);
+        return await super.exit();
+    }
+
+    updateNumOfRegisteredUser (event) {
+        this.pageVariable.numOfRegisteredUser = event.detail.newValue;
     }
 
     computed () {

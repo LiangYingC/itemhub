@@ -1,0 +1,102 @@
+@import '../../css/overwrite.scss';
+@import 'bootstrap/scss/_mixins.scss';
+$step-container-background: #1b2951;
+
+.how-to-use {
+    background-image: url(/assets/images/a-touch-of-technology.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding-top: 120px;
+
+    .wording {
+        position: relative !important;
+
+        img {
+            width: 140px;
+        }
+
+        @include media-breakpoint-up(sm) {
+            position: absolute !important;
+            padding-top: 60px;
+            width: 140px;
+        }
+
+        @include media-breakpoint-up(lg) {
+            width: 250px;
+
+            img {
+                width: 250px;
+            }
+        }
+    }
+
+    .circle {
+        width: 100px;
+        height: 100px;
+        background-image: url(/assets/images/circle.svg);
+        background-size: cover;
+
+        img {
+            width: 45px;
+            height: 45px;
+        }
+
+        @include media-breakpoint-up(lg) {
+            width: 240px;
+            height: 240px;
+
+            img {
+                width: 100px;
+                height: 100px;
+            }
+        }
+    }
+
+    .connector-container {
+        width: 100px;
+        .connector {
+            background-image: url(/assets/images/line.svg);
+        }
+
+        @include media-breakpoint-up(lg) {
+            width: 240px;
+        }
+    }
+
+    .step-container {
+        margin-left: 120px;
+
+        img {
+            height: 40px;
+        }
+
+        @include media-breakpoint-up(lg) {
+            margin-left: 260px;
+
+            img {
+                height: 60px;
+            }
+        }
+    }
+
+    .right-wrap {
+        padding: 55px 15px;
+        width: calc(100% - 30px);
+        margin-top: 60px;
+        background-color: $step-container-background;
+
+        @include media-breakpoint-up(sm) {
+            margin-top: 0;
+            width: 60vw;
+            padding: 15px 20px 15px 56px;
+        }
+
+        @include media-breakpoint-up(lg) {
+            padding: 100px 40px;
+        }
+
+        @include media-breakpoint-up(xl) {
+            padding: 100px 140px;
+        }
+    }
+}

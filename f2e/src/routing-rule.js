@@ -129,7 +129,8 @@ export const RoutingRule = [{
                 html: '/template/privacy-policy.html'
             }, {
                 path: 'how/',
-                controller: HowController
+                controller: HowController,
+                html: '/template/how.html'
             }, {
                 path: 'feature/',
                 controller: FeatureController,

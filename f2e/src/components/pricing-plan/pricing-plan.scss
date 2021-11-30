@@ -1,0 +1,71 @@
+@import '../../css/overwrite.scss';
+@import 'bootstrap/scss/_mixins.scss';
+$pricing-plan-blue: #23469e;
+$promoted-color: #14ffca;
+$promoted-card-bg: #1f305a;
+
+.pricing-plan {
+    background-color: $pricing-plan-blue;
+    background-image: url('../../assets/images/dot.png');
+    background-repeat: repeat;
+
+    .text-promoted {
+        color: $promoted-color;
+    }
+
+    .pricing-title {
+        padding-top: 120px;
+
+        img {
+            width: 236px;
+        }
+
+        @include media-breakpoint-up(lg) {
+            padding-top: 140px;
+
+            img {
+                width: 332px;
+            }
+        }
+    }
+
+    .pricing-plan-card {
+        border-radius: 16px;
+        background-color: $promoted-card-bg;
+
+        @include media-breakpoint-up(md) {
+            margin: 0 10px;
+            width: calc(100% / 3 - 20px);
+        }
+    }
+
+    .pricing-plan-container {
+        @include media-breakpoint-down(lg) {
+            width: calc(100% - 30px) !important;
+            max-width: calc(100% - 30px) !important;
+            padding: 0px;
+        }
+    }
+
+    .promote {
+        border: 2px solid $promoted-color;
+        border-radius: 24px;
+        width: calc(100% - 30px);
+
+        h2 {
+            color: $promoted-color;
+        }
+
+        @include media-breakpoint-up(md) {
+            width: 600px;
+        }
+
+        @include media-breakpoint-up(lg) {
+            width: 792px;
+        }
+    }
+
+    .bg-particle {
+        position: absolute;
+    }
+}

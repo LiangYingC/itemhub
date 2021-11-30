@@ -88,7 +88,7 @@ export class RoutingController {
         if (this.meta && this.meta.description) {
             const elMetaOgDescription = document.querySelector('meta[property="og:description"]');
             if (!elMetaOgDescription) {
-                document.head.appendChild(this.createMeta(null, 'og:description', this.meta.title));
+                document.head.appendChild(this.createMeta(null, 'og:description', this.meta.description));
             } else {
                 elMetaOgDescription.setAttribute('content', this.meta.title);
             }

@@ -7,32 +7,42 @@ $feature-block-padding-top: 220px;
 $feature-block-padding-bottom: 140px;
 
 .feature {
-    padding-top: $feature-block-padding-top;
+    padding-top: calc(#{$feature-block-padding-top} / 2);
 
     .icon-bottom-circle {
         width: $icon-bottom-circle-wh;
         height: $icon-bottom-circle-wh;
     }
+
     .icon {
         top: 0;
         left: -1rem;
     }
+
     .bg-feature-img {
         bottom: -8%;
         right: 0;
     }
-    .feature-item {
-        padding-bottom: $feature-block-padding-bottom;
-    }
-    @include media-breakpoint-down(md) {
-        padding-top: calc(#{$feature-block-padding-top} / 2);
 
-        .img-title-feature {
-            width: $img-title-feature-mobile-w;
-        }
+    .feature-item {
+        padding-bottom: calc(#{$feature-block-padding-bottom} / 2);
+    }
+
+    .img-title-feature {
+        width: $img-title-feature-mobile-w;
+    }
+
+    @include media-breakpoint-up(md) {
+        padding-top: $feature-block-padding-top;
 
         .feature-item {
-            padding-bottom: calc(#{$feature-block-padding-bottom} / 2);
+            padding-bottom: $feature-block-padding-bottom;
+        }
+    }
+
+    @include media-breakpoint-up(lg) {
+        .img-title-feature {
+            width: 500px;
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Homo.AuthApi;
+using Homo.Core.Constants;
+using Homo.Core.Helpers;
 
 namespace Homo.IotApi
 {
@@ -17,6 +19,16 @@ namespace Homo.IotApi
         public ActionResult<dynamic> getNumberOfRegisteredUsers()
         {
             return new { nums = UserDataservice.GetRowNums(_dbContext, null, null) };
+        }
+
+        [HttpPost]
+        [Route("check-in")]
+        public ActionResult<dynamic> record([FromBody] DTOs.CheckIn dto)
+        {
+            string salt = CryptographicHelper.GetSalt(64);
+            string hash = CryptographicHelper.GenerateSaltedHash(CryptographicHelper.GetSpecificLengthRandomString(32, true), salt);
+            UserDataservice.SignUp(_dbContext, dto.Email, "", "", "", salt, hash);
+            return new { Status = CUSTOM_RESPONSE.OK };
         }
     }
 }

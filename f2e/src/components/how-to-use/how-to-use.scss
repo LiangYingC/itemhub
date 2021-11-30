@@ -3,7 +3,7 @@
 $step-container-background: #1b2951;
 
 .how-to-use {
-    background-image: url(/assets/images/a-touch-of-technology.png);
+    background-image: url(../../assets/images/a-touch-of-technology.png);
     background-repeat: no-repeat;
     background-size: cover;
     padding-top: 120px;
@@ -33,7 +33,7 @@ $step-container-background: #1b2951;
     .circle {
         width: 100px;
         height: 100px;
-        background-image: url(/assets/images/circle.svg);
+        background-image: url(../../assets/images/circle.svg);
         background-size: cover;
 
         img {
@@ -55,7 +55,7 @@ $step-container-background: #1b2951;
     .connector-container {
         width: 100px;
         .connector {
-            background-image: url(/assets/images/line.svg);
+            background-image: url(../../assets/images/line.svg);
         }
 
         @include media-breakpoint-up(lg) {

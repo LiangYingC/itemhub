@@ -1,7 +1,75 @@
-<div class="pricing-plan">
+<div class="pricing-plan position-relative pb-5">
     <link href="/components/pricing-plan/pricing-plan.css" rel="stylesheet">
-    <div>首波早鳥方案</div>
-    <div>相關功能還在開發中，前 300名 註冊即享終身免費升級進階方案</div>
-    <div>尚餘名額 {numberOfPromotedUser} 位</div>
-    <a href="/sign-up/send-verify-email/">立即註冊></a>
+    <img src="/assets/images/particle.svg" class="bg-particle bottom-0 w-100" />
+
+    <div class="container position-relative">
+        <div class="pricing-title d-flex justify-content-center">
+            <img src="/assets/images/pricing.svg" />
+        </div>
+    </div>
+    <div class="d-flex justify-content-center position-relative">
+        <div class="promote mt-5 p-4">
+            <h2 class="text-center">首波早鳥方案</h2>
+            <div class="text-center">
+                相關功能還在開發中，前 300名 註冊即享終身免費升級進階方案
+            </div>
+            <h4 class="text-center mt-2">
+                尚餘名額 {numberOfPromotedUser} 位
+            </h4>
+            <div class="d-flex justify-content-center mt-4">
+                <button class="btn btn-lg bg-white rounded-pill text-dark-blue px-4 py-2">
+                    立即註冊
+                    <img src="../../assets/images/right-arrow.svg" class="ms-2" />
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="pricing-plan-container container mt-5 d-block d-md-flex position-relative">
+        <div class="pricing-plan-card overflow-hidden mt-4 mt-md-0">
+            <h4 class="title text-white bg-blue mb-0 py-2 text-center">免費方案</h4>
+            <div class="content py-4">
+                <div class="text-promoted text-center">{ 裝置數 }</div>
+                <div class="text-center">5 個裝置</div>
+                <div class="text-promoted text-center mt-3">{ 用量 }</div>
+                <div class="text-center">
+                    1 個裝置可發送 30 秒/次 的請求<br />
+                    1 天可使用 50 M 的流量
+                </div>
+            </div>
+        </div>
+
+        <div class="pricing-plan-card overflow-hidden mt-4 mt-md-0">
+            <h4 class="title text-white bg-blue mb-0 py-2 text-center">進階方案</h4>
+            <div class="content py-4">
+                <div class="text-promoted text-center">{ 裝置數 }</div>
+                <div class="text-center">20 個裝置</div>
+                <div class="text-promoted text-center mt-3">{ 用量 }</div>
+                <div class="text-center">
+                    1 個裝置可發送 3 秒/次 的請求<br />
+                    1 天可使用 1 G 的流量
+                </div>
+            </div>
+        </div>
+
+        <div class="pricing-plan-card overflow-hidden mt-4 mt-md-0">
+            <h4 class="title text-white bg-blue mb-0 py-2 text-center">無限方案</h4>
+            <div class="content py-4">
+                <div class="text-promoted text-center">{ 裝置數 }</div>
+                <div class="text-center">不限制</div>
+                <div class="text-promoted text-center mt-3">{ 用量 }</div>
+                <div class="text-center">
+                    1 個裝置可發送 1 秒/次 的請求<br />
+                    1 天可使用 10 G 的流量
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="enterprice-plan d-flex justify-content-center py-5 ">
+        <div>
+            <h3 class="text-promoted">企業方案</h3>
+            <a class="text-white" href="mailto:itemhub.tw@gmail.com">{ 聯絡我們 }</a>
+        </div>
+    </div>
 </div>

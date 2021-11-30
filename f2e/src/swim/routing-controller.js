@@ -90,7 +90,7 @@ export class RoutingController {
             if (!elMetaOgDescription) {
                 document.head.appendChild(this.createMeta(null, 'og:description', this.meta.description));
             } else {
-                elMetaOgDescription.setAttribute('content', this.meta.title);
+                elMetaOgDescription.setAttribute('content', this.meta.description);
             }
 
             const elMetaDescription = document.querySelector('meta[name="description"]');

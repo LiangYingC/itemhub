@@ -13,13 +13,7 @@
                             串聯你的裝置與感應器就是這麼輕鬆簡單 <br />
                             讓你專注在智慧裝置的運用，從今天開始你的智慧生活
                         </div>
-                        <div class="d-flex justify-content-center justify-content-sm-start">
-                            <a href="/sign-up/send-verify-email/"
-                                class="btn btn-lg bg-white d-flex align-items-center rounded-pill text-dark-blue px-4 py-2 mt-4">
-                                免費試用
-                                <img src="/assets/images/right-arrow.svg" class="ms-2" />
-                            </a>
-                        </div>
+                        <component-check-in></component-check-in>
                     </div>
                     <div class="col-12 col-lg-6 justify-content-center d-flex mt-4 mt-lg-0">
                         <img src="/assets/images/kv.png" class="w-100" />
@@ -30,5 +24,15 @@
         <component-feature></component-feature>
         <component-how-to-use></component-how-to-use>
         <component-pricing-plan bind-number-of-promoted-user="numberOfPromotedUser"></component-pricing-plan>
+        <div class="bottom-check-in">
+            <div class="content text-center mx-auto">
+                <h2>收取第一手通知</h2>
+                <div class="mb-4">
+                    相關功能尚待開發中，登記 EMAIL 即可獲取第一手消息 <br />
+                    前 300 名登記者享終身免費升級進階方案
+                </div>
+                <component-check-in></component-check-in>
+            </div>
+        </div>
     </div>
 </div>

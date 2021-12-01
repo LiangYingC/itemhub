@@ -13,7 +13,8 @@ export const API = {
     SIGN_IN_WITH_SOCIAL_MEDIA: 'auth/sign-in-with-social-media',
     AUTH_WITH_SOCIAL_MEDIA: 'auth/auth-with-social-media',
     UNIVERSAL: 'universal',
-    NUMBER_OF_REGISTERED_USERS: 'users/number-of-registered-users'
+    NUMBER_OF_REGISTERED_USERS: 'users/number-of-registered-users',
+    CHECK_IN: 'users/check-in'
 };
 
 export const OAUTH_TYPE = {

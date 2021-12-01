@@ -1,0 +1,20 @@
+@import '../../css/overwrite.scss';
+@import 'bootstrap/scss/_mixins.scss';
+
+.check-in {
+    .form-control {
+        border-radius: 56px;
+    }
+
+    .check-in-btn {
+        border-radius: 152px;
+    }
+
+    @include media-breakpoint-up(sm) {
+        .check-in-btn {
+            top: 4px;
+            right: 4px;
+            position: absolute;
+        }
+    }
+}

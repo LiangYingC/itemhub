@@ -1,6 +1,11 @@
 #include <string>
 #include "TlsTcpClient.h"
 #include "SparkJson/SparkJson.h"
+#include "dht/DHT.h"
+
+#define DHTPIN D1
+#define DHTTYPE DHT11
+DHT dht(DHTPIN, DHTTYPE);
 
 //
 // This example connect to the Let's Encrypt HTTPS server.
@@ -56,14 +61,17 @@ JsonArray &pinData = jsonBuffer.createArray();
 void setup()
 {
     delay(5000);
+    dht.begin();
     pinData.add(jsonBuffer.createObject());
     pinData[0]["pin"] = D0;
     pinData[0]["pinString"] = "D0";
+    pinData[0]["mode"] = "SWITCH";
     pinMode(D0, OUTPUT);
     pinData.add(jsonBuffer.createObject());
     pinData[1]["pin"] = D1;
     pinData[1]["pinString"] = "D1";
-    pinMode(D1, OUTPUT);
+    pinData[1]["mode"] = "SENSOR";
+    pinMode(D1, INPUT);
     Serial.begin(9600);
     // need a Particle time sync for X509 certificates verify.
     if (millis() - lastSync > ONE_DAY_MILLIS)
@@ -154,6 +162,29 @@ void loop()
                     digitalWrite(pinData[j]["pin"], HIGH);
                 }
             }
+        }
+    }
+
+    std::string devicePinDataEndpoint = "/api/v1/me/devices/";
+    devicePinDataEndpoint.append(stringOfRemoteDeviceId);
+    for (int i = 0; i < pinData.size(); i++)
+    {
+        std::string mode = pinData[i]["mode"].asString();
+        if (mode == "SENSOR")
+        {
+            std::string endpoint(devicePinDataEndpoint);
+            std::string pin = pinData[i]["pinString"].asString();
+            endpoint.append("/");
+            endpoint.append(pin);
+            std::string postBody = "{\"value\":";
+            float h = dht.readHumidity();
+            float t = dht.readTemperature();
+            Serial.printf("temperature: %f\n", t);
+            Serial.printf("humidity: %f\n", h);
+            std::string humidity = std::to_string(h);
+            postBody.append(humidity);
+            postBody.append("}");
+            char *resp = send("POST", (char *)endpoint.c_str(), (char *)postBody.c_str(), token.c_str());
         }
     }
     delay(2000);

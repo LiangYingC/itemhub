@@ -58,5 +58,12 @@ export const AuthDataService = {
             method: 'POST',
             body: JSON.stringify(data)
         });
+    },
+    CheckIn: async (data) => {
+        const api = APP_CONFIG.API_ENDPOINT + API.CHECK_IN;
+        return ApiHelper.sendRequest(api, {
+            method: 'POST',
+            body: JSON.stringify(data)
+        });
     }
 };

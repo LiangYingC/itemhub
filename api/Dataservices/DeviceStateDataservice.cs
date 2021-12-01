@@ -73,7 +73,7 @@ namespace Homo.IotApi
         }
         public static void UpdateValueByDeviceId(IotDbContext dbContext, long ownerId, long deviceId, string pin, decimal value)
         {
-            DeviceState record = dbContext.DeviceState.Where(x => x.DeviceId == deviceId && x.OwnerId == ownerId && x.Pin == pin && x.Mode == (byte)DEVICE_MODE.OUTPUT).FirstOrDefault();
+            DeviceState record = dbContext.DeviceState.Where(x => x.DeviceId == deviceId && x.OwnerId == ownerId && x.Pin == pin && x.Mode == (byte)DEVICE_MODE.SWITCH).FirstOrDefault();
             record.Value = value;
             record.EditedAt = DateTime.Now;
             dbContext.SaveChanges();

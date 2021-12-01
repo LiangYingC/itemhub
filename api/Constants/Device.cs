@@ -5,7 +5,7 @@ namespace Homo.IotApi
 {
     public enum DEVICE_MODE
     {
-        INPUT,
-        OUTPUT
+        SENSOR,
+        SWITCH
     }
 }

@@ -66,7 +66,7 @@ namespace Homo.IotApi
             long ownerId = extraPayload.Id;
             List<Device> devices = DeviceDataservice.GetAll(_dbContext, ownerId);
             List<long> myDeviceIds = devices.Select(x => x.Id).ToList<long>();
-            List<DeviceState> myDeviceStates = DeviceStateDataservice.GetAll(_dbContext, ownerId, myDeviceIds, (byte)DEVICE_MODE.OUTPUT, this.GoogleDevicePin);
+            List<DeviceState> myDeviceStates = DeviceStateDataservice.GetAll(_dbContext, ownerId, myDeviceIds, (byte)DEVICE_MODE.SWITCH, this.GoogleDevicePin);
             List<long> existsStateDeviceIds = myDeviceStates.Select(x => x.DeviceId).ToList();
             // create device state to memory
             devices.Where(x => !existsStateDeviceIds.Contains(x.Id)).ToList().ForEach(device =>
@@ -75,7 +75,7 @@ namespace Homo.IotApi
                 DeviceStateDataservice.Create(_dbContext, ownerId, device.Id, new DTOs.DeviceState()
                 {
                     Pin = GoogleDevicePin,
-                    Mode = (byte)DEVICE_MODE.OUTPUT,
+                    Mode = (byte)DEVICE_MODE.SWITCH,
                     Value = 0
                 });
             });
@@ -112,7 +112,7 @@ namespace Homo.IotApi
                 }
             });
             List<long> myDeviceIds = commands[0].Devices.Select(x => x.Id).ToList<long>();
-            List<GoogleDeviceState> states = DeviceStateDataservice.GetAll(_dbContext, ownerId, myDeviceIds, (byte)DEVICE_MODE.OUTPUT, this.GoogleDevicePin)
+            List<GoogleDeviceState> states = DeviceStateDataservice.GetAll(_dbContext, ownerId, myDeviceIds, (byte)DEVICE_MODE.SWITCH, this.GoogleDevicePin)
             .Select(x => new GoogleDeviceState()
             {
                 DeviceId = x.DeviceId,

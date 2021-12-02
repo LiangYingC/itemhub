@@ -1,7 +1,7 @@
 ---
 name: Bug Template
 about: Bug Template
-title: "[Bug]"
+title: "Bug - "
 labels: bug
 ---
 

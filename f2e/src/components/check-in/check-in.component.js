@@ -18,6 +18,15 @@ export class CheckInComponent extends BaseComponent {
         });
     }
 
+    async postRender () {
+        await super.postRender();
+        if (CookieUtil.getCookie('email')) {
+            this.elHTML.dispatchEvent(new CustomEvent('CHECKIN', {
+                bubbles: true
+            }));
+        }
+    }
+
     async checkIn (event) {
         const elButton = event.currentTarget;
         elButton.setAttribute('disabeld', 'disabeld');
@@ -33,9 +42,13 @@ export class CheckInComponent extends BaseComponent {
         const resp = await AuthDataService.CheckIn(data);
         if (resp.status !== RESPONSE_STATUS.OK) {
             Toaster.popup(Toaster.TYPE.ERROR, resp.data.message);
+            return;
         }
 
         CookieUtil.setCookie('email', data.email);
+        this.elHTML.dispatchEvent(new CustomEvent('CHECKIN', {
+            bubbles: true
+        }));
         Toaster.popup(Toaster.TYPE.INFO, '登記成功');
     }
 }

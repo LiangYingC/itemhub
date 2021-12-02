@@ -3,6 +3,7 @@ import { AuthDataService } from '../../dataservices/auth.dataservice.js';
 import {
     BaseComponent
 } from '../../swim/base.component.js';
+import { CookieUtil } from '../../util/cookie.js';
 import { Toaster } from '../../util/toaster.js';
 
 export class CheckInComponent extends BaseComponent {
@@ -34,6 +35,7 @@ export class CheckInComponent extends BaseComponent {
             Toaster.popup(Toaster.TYPE.ERROR, resp.data.message);
         }
 
+        CookieUtil.setCookie('email', data.email);
         Toaster.popup(Toaster.TYPE.INFO, '登記成功');
     }
 }

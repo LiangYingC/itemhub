@@ -144,10 +144,14 @@ h4,
 /* Toaster */
 .toaster {
     position: fixed;
-    bottom: 20px;
+    top: 20px;
     right: 100px;
     z-index: 10006;
     padding-bottom: 20px;
+    @include media-breakpoint-up(lg) {
+        top: auto;
+        bottom: 20px;
+    }
 }
 
 .toaster-item {

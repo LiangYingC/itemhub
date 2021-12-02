@@ -51,5 +51,5 @@ https://github.com/miterfrants/bet 先把這個專案 clone 下來, 按以下幾
 
 - 驗收已標記上 `Done` 的 Issue
 - 依照 Issue 上面的驗收列表檢驗是否真實完成
-- 如果已完成在 Issue 列表開啟 `Sync Github Issue` 把完成的 Issue 按下 `Done`
+- 如果已完成在 Issue 列表開啟 `Sync Github Issue` 把完成的 Issue 按下 `Done` 並可獲額外紅利, 投注籌碼的 1/5 紅利
 - 接著把這個 Issue Close 掉

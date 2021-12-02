@@ -17,6 +17,7 @@ namespace Homo.IotApi
                     (mode == null || x.Mode == (byte)mode) &&
                     (pin == null || x.Pin == pin)
                 )
+                .OrderByDescending(x => x.Id)
                 .Skip((page - 1) * limit)
                 .Take(limit)
                 .ToList<DevicePinData>();

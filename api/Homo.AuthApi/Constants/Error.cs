@@ -15,5 +15,6 @@ namespace Homo.AuthApi
         public static string WRONG_PASSWORD = "WRONG_PASSWORD";
         public static string SMS_ERROR = "SMS_ERROR";
         public static string DATA_NOT_FOUND = "DATA_NOT_FOUND";
+        public static string EMAIL_ALREADY_REGISTERED = "EMAIL_ALREADY_REGISTERED";
     }
 }

@@ -8,5 +8,6 @@
     "USER_BE_BLOCKED": "使用者被封鎖",
     "SMS_ERROR": "簡訊商回傳錯誤: {message}",
     "OAUTH_TYPE_ONLY_SUPPORT_CODE": "oAuth 只支援 response_type = code",
-    "OAUTH_REDIRECT_URI_NOT_IN_WHITLIST": "redirect_uri 不在設定的白名單"
+    "OAUTH_REDIRECT_URI_NOT_IN_WHITLIST": "redirect_uri 不在設定的白名單",
+    "EMAIL_ALREADY_REGISTERED": "Email 已經被註冊了"
 }

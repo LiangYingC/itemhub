@@ -5,5 +5,6 @@
     "INVALID_FORM": "invalid form",
     "GGGG": "testing GGGG",
     "SIGNIN_FAILED": "Email Or Password Failed",
-    "USER_BE_BLOCKED": "User had be blocked"
+    "USER_BE_BLOCKED": "User had be blocked",
+    "EMAIL_ALREADY_REGISTERED": "Email has been registered"
 }

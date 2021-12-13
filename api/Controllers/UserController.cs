@@ -25,6 +25,12 @@ namespace Homo.IotApi
         [Route("check-in")]
         public ActionResult<dynamic> record([FromBody] DTOs.CheckIn dto)
         {
+            User user = UserDataservice.GetOneByEmail(_dbContext, dto.Email);
+            if (user != null)
+            {
+                throw new CustomException(Homo.AuthApi.ERROR_CODE.EMAIL_ALREADY_REGISTERED, System.Net.HttpStatusCode.BadRequest);
+            }
+
             string salt = CryptographicHelper.GetSalt(64);
             string hash = CryptographicHelper.GenerateSaltedHash(CryptographicHelper.GetSpecificLengthRandomString(32, true), salt);
             UserDataservice.SignUp(_dbContext, dto.Email, "", "", "", salt, hash);

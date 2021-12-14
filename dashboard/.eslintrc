@@ -1,0 +1,40 @@
+{
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended"
+    ],
+    "plugins": [
+        "@typescript-eslint"
+    ],
+    "globals": {
+        "Atomics": "readonly",
+        "SharedArrayBuffer": "readonly",
+        "require": "readonly",
+        "process": "readonly",
+        "$": "readonly",
+        "__dirname": "readonly"
+    },
+    "parserOptions": {
+        "parser": "typescript-eslint/parser"
+    },
+    "root": true,
+    "rules": {
+        "indent": [4],
+        "semi": [
+            "error",
+            "always"
+        ],
+        "no-var": "error",
+        "prefer-const": "error",
+        "@typescript-eslint/no-empty-function": ["off"],
+        "@typescript-eslint/no-explicit-any": ["off"]
+    },
+    "env": {
+        "es6": false,
+        "browser": true,
+        "commonjs": true,
+        "node": false,
+        "jquery": true
+    }
+}

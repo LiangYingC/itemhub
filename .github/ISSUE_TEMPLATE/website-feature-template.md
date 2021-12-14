@@ -1,7 +1,7 @@
 ---
-name: Platform Feature Template
-about: Platform Feature Template
-title: "Platform - "
+name: Website Feature Template
+about: Website Feature Template
+title: "Website - "
 labels: ""
 ---
 

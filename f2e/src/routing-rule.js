@@ -1,5 +1,6 @@
 import { APP_CONFIG } from './config.js';
-import { AboutController } from './controllers/about.controller.js';
+// TODO :「隱私權政策」內容寫完後，可以打開，並加上 RoutingRule 相關設定
+// import { AboutController } from './controllers/about.controller.js';
 import { AuthController } from './controllers/auth.controller.js';
 import { CooperationController } from './controllers/cooperation.controller.js';
 import { FeatureController } from './controllers/feature.controller.js';
@@ -8,7 +9,8 @@ import { MainController } from './controllers/main.controller.js';
 import { MasterController } from './controllers/master.controller.js';
 import { MeController } from './controllers/me.controller.js';
 import { PricingController } from './controllers/pricing.controller.js';
-import { PrivacyPolicyController } from './controllers/privacy-policy.controller.js';
+// TODO :「關於我們」內容寫完後，可以打開，並加上 RoutingRule 相關設定
+// import { PrivacyPolicyController } from './controllers/privacy-policy.controller.js';
 import { RootController } from './controllers/root.controller.js';
 import { SignInController } from './controllers/sign-in.controller.js';
 import { SignOutController } from './controllers/sign-out.controller.js';
@@ -124,10 +126,6 @@ export const RoutingRule = [{
                 controller: CooperationController,
                 html: '/template/cooperation.html'
             }, {
-                path: 'privacy-policy/',
-                controller: PrivacyPolicyController,
-                html: '/template/privacy-policy.html'
-            }, {
                 path: 'how/',
                 controller: HowController,
                 html: '/template/how.html'
@@ -135,9 +133,6 @@ export const RoutingRule = [{
                 path: 'feature/',
                 controller: FeatureController,
                 html: '/components/feature/feature.html'
-            }, {
-                path: 'about/',
-                controller: AboutController
             }, {
                 path: 'me/',
                 skipSitemap: true,

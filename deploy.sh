@@ -22,5 +22,5 @@ sudo docker run -d \
    -v /var/project/itemhub/api/Localization:/app/Localization \
    itemhub-api
 
-cd ../f2e
+cd ../website
 nvm use 16 && npm install && FORCE_UPDATE=false NODE_ENV=$ENV npm run swim-build

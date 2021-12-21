@@ -1,7 +1,16 @@
-# 遊戲規則
+# 專案結構
+
+目前總共有兩個專案項目，分別為：
+
+- Dashboard : 後台系統，前端位於 dashboard 資料夾中，API 端位於 api 資料夾中。
+- Website : 前台官網，前端位於 website 資料夾中，API 端位於 api 資料夾中。
+
+各個專案項目的說明，請參見各自資料夾中的 README。
+
+# 團隊協作遊戲規則
 
 Itemhub 採用去中心化決策流程, 每個人都能在 Issue 撰寫自己想為 Itemhub 開發的功能或是行銷任務,
-目前加入這個組織的人, 必須先裝上 Homo.Bet 這個 Chrome Extension, Homo.Bet 於每個星期日發放 10 枚硬幣,
+目前加入這個組織的人, 必須先裝上 `Homo.Bet` 這個 Chrome Extension, `Homo.Bet` 於每個星期日發放 10 枚硬幣,
 你可以把這些籌碼投注在你所關心的 Issue 上面, 如果在下一個星期日來臨時還沒把籌碼投注完則會被清空, 執行 Issue 的人並完成驗收
 可以賺取這些被投注在 Issue 上的籌碼, 可為日後商店兌換加薪, 股權, 假期等
 

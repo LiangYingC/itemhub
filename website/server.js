@@ -33,7 +33,7 @@ http.createServer(options, function (request, response) {
         fileServer.serve(request, response);
     }).resume();
 }).listen(443);
-console.log('Sever Launch: port 443');
+console.log('Sever Launch: https://dev.itemhub.io:443');
 
 const scssFiles = recursiveExtractCssFile('./');
 const sass = require('node-sass');

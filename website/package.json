@@ -4,6 +4,7 @@
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
+        "dev": "NODE_ENV=dev forever server.js",
         "swim-update": "npm install https://github.com/miterfrants/swim.git && node node_modules/swim/auto/update-core.js",
         "swim-build": "node node_modules/swim/auto/cacher-for-webpack.js && npx webpack --config ./webpack.config.js && node node_modules/swim/auto/delete-config-after-webpack.js"
     },

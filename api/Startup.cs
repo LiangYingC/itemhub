@@ -70,30 +70,30 @@ namespace Homo.IotApi
             services.AddDbContext<IotDbContext>(options => options.UseMySql(secrets.DBConnectionString, serverVersion));
             services.AddDbContext<Homo.AuthApi.DBContext>(options => options.UseMySql(secrets.DBConnectionString, serverVersion));
             services.AddControllers();
-            // services.AddSwaggerGen(c =>
-            // {
-            //     c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo() { Title = "Api Doc", Version = "v1" });
-            //     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-            //     {
-            //         In = ParameterLocation.Header,
-            //         Description = "Please insert JWT with Bearer into field",
-            //         Name = "Authorization",
-            //         Type = SecuritySchemeType.ApiKey
-            //     });
-            //     c.AddSecurityRequirement(new OpenApiSecurityRequirement {
-            //         {
-            //             new OpenApiSecurityScheme
-            //             {
-            //             Reference = new OpenApiReference
-            //             {
-            //                 Type = ReferenceType.SecurityScheme,
-            //                 Id = "Bearer"
-            //             }
-            //             },
-            //             new string[] { }
-            //             }
-            //         });
-            // });
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo() { Title = "Api Doc", Version = "v1" });
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Please insert JWT with Bearer into field",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                        },
+                        new string[] { }
+                        }
+                    });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -102,8 +102,8 @@ namespace Homo.IotApi
             if (env.EnvironmentName == "dev")
             {
                 app.UseDeveloperExceptionPage();
-                // app.UseSwagger();
-                // app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "homo auth api v1"));
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "homo auth api v1"));
             }
 
             var supportedCultures = new[] {

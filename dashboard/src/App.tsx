@@ -1,20 +1,61 @@
 import './App.css';
-import { Link, Outlet } from 'react-router-dom';
-import Header from './Components/Header/Header';
-import Footer from './Components/Footer/Footer';
+import { Outlet } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+    decrement,
+    increment,
+    selectCount,
+} from './redux/reducers/counter.reducer';
+import { selectDevices } from './redux/reducers/device.reducer';
+import { add, addMany } from './redux/reducers/device.reducer';
+import { useContext } from 'react';
+import { LogContext } from './contexts/logs.context';
 
 function App() {
+    const count = useSelector(selectCount);
+    const dispatch = useDispatch();
+    const devices = useSelector(selectDevices);
+    const { logs, addLog } = useContext(LogContext);
     return (
         <div>
-            <Header></Header>
-            <h1>Bookkeeper</h1>
-            <hr />
-            <nav>
-                <Link to="/invoices">Invoices</Link> |{' '}
-                <Link to="/expenses">Expenses</Link>
-            </nav>
+            <button onClick={() => addLog('testing')}>Add Logs</button>
+
+            <div>
+                {logs.map((item) => (
+                    <div>{item}</div>
+                ))}
+            </div>
+
+            <div>
+                <button
+                    aria-label="Increment value"
+                    onClick={() => dispatch(increment())}
+                >
+                    +
+                </button>
+                <span>{count}</span>
+                <button
+                    aria-label="Decrement value"
+                    onClick={() => dispatch(decrement())}
+                >
+                    -
+                </button>
+            </div>
+
+            <div>
+                <button onClick={() => dispatch(add())}>add</button>
+                <button
+                    onClick={() =>
+                        dispatch(addMany([{ name: '2' }, { name: '3' }]))
+                    }
+                >
+                    addMany
+                </button>
+                {devices.map((item) => (
+                    <div>{item.name}</div>
+                ))}
+            </div>
             <Outlet />
-            <Footer></Footer>
         </div>
     );
 }

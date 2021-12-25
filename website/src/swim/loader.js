@@ -64,6 +64,12 @@ export class Loader {
             if (!window[dependency[i].checkVariable] && window.SwimAppLoaderCache.indexOf(dependency[i].url) === -1) {
                 const script = document.createElement('script');
                 script.src = dependency[i].url;
+                if(dependency[i].defer){
+                    script.defer = true;
+                }
+                if(dependency[i].async){
+                    script.async = true;
+                }
                 document.body.appendChild(script);
                 window.SwimAppLoaderCache.push(dependency[i].url);
             }

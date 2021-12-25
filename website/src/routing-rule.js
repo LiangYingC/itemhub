@@ -21,7 +21,9 @@ import { CookieUtil } from './util/cookie.js';
 const gTag = {
     dependency: {
         url: `https://www.googletagmanager.com/gtag/js?id=${APP_CONFIG.GA_PROPERTY_ID}`,
-        checkVariable: 'dataLayer'
+        checkVariable: 'dataLayer',
+        defer: true,
+        async: true
     },
     prepareData: {
         key: 'gtag',

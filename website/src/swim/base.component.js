@@ -29,7 +29,7 @@ export class BaseComponent {
         this.template = html;
         this.elHTML = html.toDom();
         Render.bindingVariableToDom(this, this.elHTML, variable, this.args, this.computed());
-        Render.renderComponentAsync(this.elHTML, variable, this.args, this);
+        await Render.renderComponentAsync(this.elHTML, variable, this.args, this);
         this.elRoot.appendChild(this.elHTML);
     }
 

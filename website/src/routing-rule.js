@@ -107,7 +107,7 @@ export const RoutingRule = [{
         }, {
             key: 'numOfRegisteredUser',
             func: () => {
-                return null;
+                return 0;
             }
         }],
         dependency: [{

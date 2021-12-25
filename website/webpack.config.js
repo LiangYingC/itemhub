@@ -154,7 +154,6 @@ module.exports = {
         }]
     },
     plugins: [
-        new MiniCssExtractPlugin(),
         new CleanWebpackPlugin(),
         new RemoveEmptyScriptsPlugin(),
         new MiniCssExtractPlugin({

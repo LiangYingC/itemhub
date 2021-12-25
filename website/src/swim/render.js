@@ -4,7 +4,9 @@ import {
 import { APP_CONFIG } from '../config.js';
 export const Render = {
     renderComponentAsync: async (elHTML, pageVariable, args, controller) => {
-        elHTML.querySelectorAll('*').forEach(async (el) => {
+        const elements = elHTML.querySelectorAll('*');
+        for (let i = 0; i < elements.length; i++) {
+            const el = elements[i];
             if (el && el.tagName.toLowerCase().indexOf('component-') !== -1) {
                 const componentInfo = Render._getComponentInfo(el.tagName.toLowerCase());
                 const varKeys = el.getAttribute('variable') ? el.getAttribute('variable').split(',') : [];
@@ -91,7 +93,7 @@ export const Render = {
                     await componentInstance.postRender();
                 }
             }
-        });
+        }
     },
     bindingVariableToDom: (controller, elRoot, variable, args, computed) => {
         Render._renderSwimFor(elRoot, variable, controller, args, computed);

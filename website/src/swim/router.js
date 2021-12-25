@@ -444,6 +444,7 @@ function setupContextArgs (argsReference, args, controllerId, isVariableFromUri)
         Object.defineProperty(argsReference, key, {
             set: (newValue) => {
                 argsReference[`_${key}`] = newValue;
+
                 document.body.dispatchEvent(new CustomEvent(`CONTEXT_${Swissknife.CamelToUnderscoreSnake(key).toUpperCase()}_CHANGED`, {
                     bubbles: true,
                     detail: {

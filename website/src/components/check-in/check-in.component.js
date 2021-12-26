@@ -27,12 +27,17 @@ export class CheckInComponent extends BaseComponent {
         }
     }
 
+    checkInByKeyUp (event) {
+        if (event.keyCode === 13) {
+            this.elHTML.querySelector('button').click();
+        }
+    }
+
     async checkIn (event) {
         const elButton = event.currentTarget;
         elButton.setAttribute('disabeld', 'disabeld');
         const elForm = elButton.closest('.form');
         const data = elForm.collectFormData();
-
         if (!((/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(data.email)))) {
             Toaster.popup(Toaster.TYPE.ERROR, 'EMAIL格式不正確');
             return;
@@ -49,6 +54,7 @@ export class CheckInComponent extends BaseComponent {
         this.elHTML.dispatchEvent(new CustomEvent('CHECKIN', {
             bubbles: true
         }));
+        this.args.numOfRegisteredUser += 1;
         Toaster.popup(Toaster.TYPE.INFO, '登記成功');
     }
 }

@@ -1,6 +1,4 @@
 import { APP_CONFIG } from '../config.js';
-import { RESPONSE_STATUS } from '../constants.js';
-import { UserDataService } from '../dataservices/user.dataservice.js';
 import {
     RoutingController
 } from '../swim/routing-controller.js';
@@ -17,17 +15,9 @@ export class MainController extends RoutingController {
 
         await super.render({
             ...this.args.me,
-            numOfRegisteredUser: this.args.numOfRegisteredUser || 0,
+            numOfRegisteredUser: this.args.numOfRegisteredUser,
             user: this.args.me
         });
-
-        UserDataService.GetNumberOfRegisteredUsers()
-            .then(resp => {
-                if (resp.status === RESPONSE_STATUS.OK) {
-                    this.args.numOfRegisteredUser = resp.data.nums;
-                    this.pageVariable.numOfRegisteredUser = resp.data.nums;
-                }
-            });
     }
 
     computed () {

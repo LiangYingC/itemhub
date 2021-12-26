@@ -5,6 +5,8 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 const TerserJSPlugin = require('terser-webpack-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const PurgecssPlugin = require('purgecss-webpack-plugin');
+const glob = require('glob');
 const webpack = require('webpack');
 const moment = require('moment');
 const esm = require('esm')(module);
@@ -154,7 +156,6 @@ module.exports = {
         }]
     },
     plugins: [
-        new MiniCssExtractPlugin(),
         new CleanWebpackPlugin(),
         new RemoveEmptyScriptsPlugin(),
         new MiniCssExtractPlugin({
@@ -190,6 +191,9 @@ module.exports = {
                 from: './.foreverignore',
                 to: './'
             }]
+        }),
+        new PurgecssPlugin({
+            paths: glob.sync('./**/*.html', { nodir: true })
         })
     ]
 };

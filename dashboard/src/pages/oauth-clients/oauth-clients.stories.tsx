@@ -1,5 +1,5 @@
 /* eslint-disable */
-import OauthClients from './OauthClients';
+import OauthClients from './oauth-clients';
 
 export default {
     title: 'OauthClients',

@@ -1,5 +1,5 @@
 /* eslint-disable */
-import Footer from './Footer';
+import Footer from './footer';
 
 export default {
     title: 'Footer',

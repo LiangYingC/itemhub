@@ -1,5 +1,5 @@
 /* eslint-disable */
-import Triggers from './Triggers';
+import Triggers from './triggers';
 
 export default {
     title: 'Triggers',

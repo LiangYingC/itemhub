@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import Triggers from './Triggers';
+import Triggers from './triggers';
 
 describe('<Triggers />', () => {
     test('it should mount', () => {

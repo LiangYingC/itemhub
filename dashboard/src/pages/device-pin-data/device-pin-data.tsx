@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './DevicePinData.module.scss';
+import styles from './device-pin-data.module.scss';
 import { useParams, Link } from 'react-router-dom';
 
 const DevicePinData = () => {

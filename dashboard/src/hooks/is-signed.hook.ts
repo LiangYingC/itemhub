@@ -4,7 +4,7 @@ import { AuthDataservice } from '../dataservices/auth.dataservice';
 import { CookieHelper } from '../helpers/cookie.helper';
 import { ApiHelper } from '../helpers/api.helper';
 
-export function useIsLogged() {
+export function useIsSigned() {
     const [data, setData] = useState(null);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -14,7 +14,7 @@ export function useIsLogged() {
             setLoading(true);
             const token = CookieHelper.GetCookie('token');
             if (token) {
-                const resp: any = await AuthDataservice.IsSignIn(token);
+                const resp: any = await AuthDataservice.IsSigned(token);
                 if (resp.status === 'OK') {
                     setData(resp);
                 } else {

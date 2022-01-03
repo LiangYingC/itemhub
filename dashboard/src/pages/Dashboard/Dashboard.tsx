@@ -1,15 +1,14 @@
 import { Link, Outlet } from 'react-router-dom';
 import styles from './Dashboard.module.scss';
-import Header from '../../components/Header/Header';
-import Footer from '../../components/Footer/Footer';
-import { useIsLogged } from '../../hooks/is-logged.hook';
-import { DeviceDataservice } from '../../dataservices/device.dataservice';
+import Header from '../../components/header/header';
+import Footer from '../../components/footer/footer';
+import { useIsSigned } from '../../hooks/is-signed.hook';
 
 const Dashboard = () => {
-    const { data, loading, error } = useIsLogged();
+    const { data, loading, error } = useIsSigned();
 
     return (
-        <div className={styles.Dashboard} data-testid="Dashboard">
+        <div className={styles.dashboard} data-testid="Dashboard">
             {loading ? (
                 <div>Loading</div>
             ) : error ? (

@@ -1,5 +1,5 @@
 /* eslint-disable */
-import DevicePinData from './DevicePinData';
+import DevicePinData from './device-pin-data';
 
 export default {
     title: 'DevicePinData',

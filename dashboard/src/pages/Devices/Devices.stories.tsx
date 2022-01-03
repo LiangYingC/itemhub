@@ -1,5 +1,5 @@
 /* eslint-disable */
-import Devices from './Devices';
+import Devices from './devices';
 
 export default {
     title: 'Devices',

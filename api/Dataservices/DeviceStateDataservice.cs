@@ -84,6 +84,18 @@ namespace Homo.IotApi
             dbContext.SaveChanges();
         }
 
+        public static void UpdatePinStateOnlineByDeviceId(IotDbContext dbContext, long ownerId, long deviceId)
+        {
+            DeviceState record = dbContext.DeviceState.Where(x =>
+                x.DeviceId == deviceId
+                && x.OwnerId == ownerId
+                && x.Mode == (byte)DEVICE_MODE.SWITCH
+            ).FirstOrDefault();
+            record.Online = true;
+            record.EditedAt = DateTime.Now;
+            dbContext.SaveChanges();
+        }
+
         public static void Delete(IotDbContext dbContext, long ownerId, long id)
         {
             DeviceState record = dbContext.DeviceState.Where(x => x.Id == id && x.OwnerId == ownerId).FirstOrDefault();

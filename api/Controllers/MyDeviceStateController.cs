@@ -19,6 +19,7 @@ namespace Homo.IotApi
         [HttpGet]
         public ActionResult<dynamic> getStates([FromRoute] long id, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
+            DeviceStateDataservice.UpdatePinStateOnlineByDeviceId(_dbContext, extraPayload.Id, id);
             return DeviceStateDataservice.GetAll(_dbContext, extraPayload.Id, new List<long>() { id }, null, null);
         }
 

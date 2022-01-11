@@ -1,6 +1,17 @@
 @import 'bootstrap/scss/_functions.scss';
 @import 'bootstrap/scss/_variables.scss';
 
+$spacers: (
+    0: 0,
+    1: $spacer * 0.25,
+    2: $spacer * 0.25 * 2,
+    25: $spacer * 0.25 * 3,
+    3: $spacer * 0.25 * 4,
+    4: $spacer * 0.25 * 6,
+    5: $spacer * 0.25 * 12,
+    6: $spacer * 0.25 * 24,
+);
+
 $h1-font-size: 38px;
 $h1-font-size-for-small-screen: 30px;
 $h2-font-size: 30px;
@@ -13,38 +24,146 @@ $font-size-base: 16px;
 $font-size-base-for-small-screen: 14px;
 $small-font-size: 14px;
 $small-font-size-for-small-screen: 12px;
-$primary: #6bdcff;
-$light-blue: #4ac5ff;
-$deep-dark-blue: #0c152d;
-$dark-blue: #151b5e;
-$darkest-blue: #161c2e;
-$dark: #161c2e;
-$black-opacity25: rgba(0, 0, 0, 0.25);
-$blue: #0048ff;
-$bg-blue2green: linear-gradient(135deg, #0048ff 0%, #14ffca 100%);
 
-$colors: (
-    'blue': $blue,
-    'light-blue': $light-blue,
+$opacity: (
+    100: 1,
+    85: 0.85,
+    75: 0.75,
+    65: 0.65,
+    50: 0.5,
+    35: 0.35,
+    25: 0.25,
+    10: 0.1,
+    0: 0,
 );
 
+$primary: #6bdcff; // deprecated
+$light-blue: #4ac5ff; // deprecated
+$deep-dark-blue: #0c152d; // deprecated
+$dark-blue: #141b5e; // deprecated
+$darkest-blue: #161c2e; // deprecated
+$dark: #161c2e; // deprecated
+$black-opacity25: rgba(0, 0, 0, 0.25); // deprecated
+$blue: #0048ff; // deprecated
+$danger: #ff4747;
+$primary-900: #1f305a;
+$primary-800: #23469e;
+$primary-700: #1679c0;
+$primary-600: #30a7df;
+$primary-500: #4ac5ff;
+$primary-400: #6bdcff;
+$primary-300: #9de8ff;
+$primary-200: #d3f5ff;
+$primary-100: #e9faff;
+
+$grey-800: #13151f;
+$grey-700: #1e202b;
+$grey-600: #282b39;
+$grey-500: #404350;
+$grey-400: #666a7f;
+$grey-300: #8a90ad;
+$grey-200: #dbdbdb;
+$grey-100: #e5eaff;
+
+$bg-blue2green: linear-gradient(135deg, #0048ff 0%, #14ffca 100%);
 $enable-negative-margins: true;
 
-$colors: (
-    'blue': $blue,
-    'deep-dark-blue': $deep-dark-blue,
-    'dark-blue': $dark-blue,
-    'dark': $dark,
-    'darkest-blue': $darkest-blue,
-    'black-opacity25': $black-opacity25,
-);
-
 $theme-colors: (
+    'black': black,
+    'white': white,
     'primary': $primary,
     'light-blue': $light-blue,
     'dark-blue': $dark-blue,
     'dark': $dark,
+    'blue': $blue,
+    'danger': $danger,
     'darkest-blue': $darkest-blue,
-    'black-opacity25': $black-opacity25,
     'deep-dark-blue': $deep-dark-blue,
+    'black-opacity-25': rgba($black, 0.25),
+    'primary-100': $primary-100,
+    'primary-200': $primary-200,
+    'primary-300': $primary-300,
+    'primary-400': $primary-400,
+    'primary-500': $primary-500,
+    'primary-600': $primary-600,
+    'primary-700': $primary-700,
+    'primary-800': $primary-800,
+    'primary-900': $primary-900,
+    'grey-100': $grey-100,
+    'grey-200': $grey-200,
+    'grey-300': $grey-300,
+    'grey-400': $grey-400,
+    'grey-500': $grey-500,
+    'grey-600': $grey-600,
+    'grey-700': $grey-700,
+    'grey-800': $grey-800,
 );
+
+@import 'bootstrap/scss/_utilities.scss';
+
+$utilities: map-merge(
+    $utilities,
+    (
+        'color': (
+            property: color,
+            class: 'text',
+            values: $theme-colors,
+        ),
+        'background': (
+            property: 'background',
+            class: 'bg',
+            values:
+                map-merge(
+                    $theme-colors,
+                    (
+                        blue2green: $bg-blue2green,
+                    )
+                ),
+        ),
+    )
+);
+
+.btn-primary {
+    background: white;
+    color: $primary-800;
+    outline: none;
+    border: none;
+    &:hover {
+        background: $primary-100;
+        color: $blue;
+    }
+
+    &:active {
+        background: $primary-200;
+        color: $blue;
+    }
+
+    &:disabled {
+        background: $grey-200;
+        opacity: 1;
+        color: rgba($black, 0.25);
+    }
+}
+
+.form-control {
+    background: rgba(0, 0, 0, 0.25);
+    padding: 1rem 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.85);
+
+    &::placeholder {
+        color: rgba(255, 255, 255, 0.45);
+    }
+
+    &:focus {
+        color: rgba(255, 255, 255, 0.85);
+        background-color: transparent;
+        border-color: #30a7df;
+        box-shadow: none;
+    }
+
+    &.invalid {
+        border-color: $danger;
+        color: rgba(white, map-get($opacity, 50));
+    }
+}

@@ -1,19 +1,86 @@
-<div class="sign-in">
-    <h1>登入</h1>
-    <div class="child-router form">
-        <label>
-            請輸入 EMAIL
-            <input data-field="email" type="text" value=""></input>
-        </label>
-        <br />
-        <label>
-            請輸入密碼
-            <input data-field="password" type="password" value=""></input>
-        </label>
-        <button onclick="controller.signIn">登入</button>
-        或
-        <button>使用 FACEBOOK 登入</button>
-        <button>使用 LINE 登入</button>
-        <button>使用 GOOGLE 登入</button>
+<div class="sign-in text-white">
+    <link href="/css/sign-in.css" rel="stylesheet">
+    <div class="container mt-0 mt-md-6">
+        <div class="row align-items-center">
+            <div class="col-12 col-md-6 logo-section order-2 order-md-1">
+                <div>
+                    <div class="d-flex justify-content-center d-none d-md-block"><img src="/assets/images/kv.jpeg"
+                            class="w-100"></div>
+                    <div class="d-flex justify-content-center mt-0 mt-md-5">
+                        <a href="/" class="logo d-flex p-0 position-relative">
+                            <img class="icon" src="/assets/images/logo.svg">
+                            <img class="ms-3" src="/assets/images/logo-wording.svg">
+                        </a>
+                    </div>
+                    <div class="d-flex justify-content-center mt-3">
+                        打造你專屬的 IoT 物聯網
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 form order-1 order-md-2">
+                <div class="px-5 py-5 py-md-0">
+                    <h2 class="text-center mb-5">登入</h2>
+                    <div class="child-router form">
+                        <label class="d-block mb-4">
+                            <div class="mb-2">信箱</div>
+                            <input onkeyup="controller.handleInputTypeEnter" class="form-control" data-field="email"
+                                type="text" value="" placeholder="請輸入信箱" tabindex="1"></input>
+                            <div class="validation text-danger mt-2">
+
+                            </div>
+                        </label>
+
+                        <label class="d-block mb-5">
+                            <div class="mb-2 d-flex justify-content-between">
+                                <div>密碼</div>
+                                <a href="#" tabindex="7">忘記密碼</a>
+                            </div>
+                            <input onkeyup="controller.handleInputTypeEnter" class="form-control" tabindex="2"
+                                data-field="password" type="password" value="" placeholder="請輸入密碼"></input>
+                            <div class="validation text-danger mt-2">
+
+                            </div>
+                        </label>
+
+                        <div class="text-center">
+                            <button class="btn-sign-in btn btn-md btn-primary rounded-pill h4 px-4" tabindex="3"
+                                onclick="controller.signIn">登入</button>
+                        </div>
+
+                        <div class="text-center mt-2">
+                            <a href="#" tabindex="8">註冊帳號</a>
+                        </div>
+
+                        <div class="d-flex align-items-center mt-5 mb-3">
+                            <hr class="flex-grow-1">
+                            </hr>
+                            <div class="px-3">使用社群帳號登入</div>
+                            <hr class="flex-grow-1">
+                            </hr>
+                        </div>
+
+                        <div class="d-flex flex-column font-weight-bold">
+                            <button tabindex="4"
+                                class="btn btn-md btn-primary rounded-pill h4 mb-3 d-flex align-items-center justify-content-center py-25">
+                                <img src="/assets/images/facebook.svg" alt="facebook icon" class="me-2" />
+                                使用 FACEBOOK 登入
+                            </button>
+                            <button tabindex="5"
+                                class="btn btn-md btn-primary rounded-pill h4 mb-3 d-flex align-items-center justify-content-center py-25">
+                                <img src="/assets/images/google.svg" alt="google icon" class="me-2" />
+                                使用 GOOGLE 登入
+                            </button>
+                            <button tabindex="6"
+                                class="btn btn-md btn-primary rounded-pill h4 mb-3 d-flex align-items-center justify-content-center py-25">
+                                <img src="/assets/images/line.svg" alt="line icon" class="me-2" />
+                                使用 LINE 登入
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+    <div class="bg w-50 bg-deep-dark-blue position-absolute top-0 end-0 h-100 d-none d-md-block"></div>
+    <div class="bg w-50 bg-dark-blue position-absolute top-0 start-0 h-100 d-none d-md-block"></div>
 </div>

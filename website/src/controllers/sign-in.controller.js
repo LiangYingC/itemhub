@@ -67,6 +67,7 @@ export class SignInController extends RoutingController {
                 }
                 elValidation.innerHTML = `${elValidation.innerHTML} ${validationMessage[i].message}`;
             }
+            this.elHTML.querySelector(`[data-field="${validationMessage[0].key}"]`).focus();
             return;
         }
 

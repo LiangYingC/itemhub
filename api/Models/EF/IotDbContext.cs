@@ -23,7 +23,7 @@ namespace Homo.IotApi
 
         public virtual DbSet<OauthClientRedirectUri> OauthClientRedirectUri { get; set; }
 
-        public virtual DbSet<DeviceState> DeviceState { get; set; }
+        public virtual DbSet<DevicePinState> DevicePinState { get; set; }
         public virtual DbSet<DevicePinData> DevicePinData { get; set; }
         public virtual DbSet<Trigger> Trigger { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -45,10 +45,11 @@ namespace Homo.IotApi
                 entity.HasIndex(p => new { p.Name });
                 entity.HasIndex(p => new { p.DeviceId });
                 entity.HasIndex(p => new { p.OwnerId });
+                entity.HasIndex(p => new { p.Online });
                 entity.HasOne(p => p.Zone).WithMany().HasForeignKey(p => p.ZoneId);
             });
 
-            modelBuilder.Entity<DeviceState>(entity =>
+            modelBuilder.Entity<DevicePinState>(entity =>
             {
                 entity.HasIndex(p => new { p.Pin });
                 entity.HasIndex(p => new { p.Mode });

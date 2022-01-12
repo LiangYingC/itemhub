@@ -19,6 +19,5 @@ namespace Homo.IotApi
         [Required]
         public long DeviceId { get; set; }
         public Device Device { get; set; }
-        public bool Online { get; set; }
     }
 }

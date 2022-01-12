@@ -22,76 +22,6 @@ html {
     }
 }
 
-h1,
-.h1 {
-    font-size: $h1-font-size-for-small-screen;
-    @include media-breakpoint-up(lg) {
-        font-size: $h1-font-size;
-    }
-}
-
-h2,
-.h2 {
-    font-size: $h2-font-size-for-small-screen;
-    @include media-breakpoint-up(lg) {
-        font-size: $h2-font-size;
-    }
-}
-
-h3,
-.h3 {
-    font-size: $h3-font-size-for-small-screen;
-    @include media-breakpoint-up(lg) {
-        font-size: $h3-font-size;
-    }
-}
-
-h4,
-.h4 {
-    font-size: $h4-font-size-for-small-screen;
-    line-height: 1.8rem;
-    @include media-breakpoint-up(lg) {
-        font-size: $h4-font-size;
-        line-height: 1.8rem;
-    }
-}
-
-.text-blue {
-    color: $blue;
-}
-
-.text-dark-blue {
-    color: $dark-blue;
-}
-
-.text-light-blue {
-    color: $light-blue;
-}
-
-.bg-dark-blue {
-    background-color: $dark-blue;
-}
-
-.bg-blue2green {
-    background: $bg-blue2green;
-}
-
-.bg-blue {
-    background-color: $blue;
-}
-
-.bg-darkest-blue {
-    background: $darkest-blue;
-}
-
-.bg-black-opacity25 {
-    background: $black-opacity25;
-}
-
-.bg-deep-dark-blue {
-    background-color: $deep-dark-blue;
-}
-
 .nav-link,
 .link {
     &:focus-visible {
@@ -109,37 +39,10 @@ h4,
     &:focus {
         color: $primary;
         border-bottom: 1px solid $primary;
+        text-decoration: none;
     }
 }
 
-.opacity-65 {
-    opacity: 0.65;
-}
-
-.form-control {
-    background: rgba(0, 0, 0, 0.25);
-    padding: 1rem 1.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: rgba(255, 255, 255, 0.85);
-
-    &::placeholder {
-        color: rgba(255, 255, 255, 0.45);
-    }
-
-    &:focus {
-        color: rgba(255, 255, 255, 0.85);
-        background-color: transparent;
-        border-color: #30a7df;
-        box-shadow: none;
-    }
-}
-
-.hover-bule {
-    &:hover {
-        background-color: #e9faff !important;
-        color: $blue;
-    }
-}
 /* purgecss start ignore */
 /* Toaster */
 .toaster {
@@ -218,5 +121,16 @@ a.toaster-item::after {
     height: 40px;
     text-align: center;
     line-height: 40px;
+}
+
+a {
+    color: $primary;
+    outline: none;
+    text-decoration: none;
+
+    &:hover {
+        color: $primary;
+        text-decoration: underline;
+    }
 }
 /* purgecss end ignore */

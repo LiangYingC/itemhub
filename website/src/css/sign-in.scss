@@ -2,11 +2,15 @@
 @import 'bootstrap/scss/_mixins.scss';
 
 .sign-in {
-    .bg-deep-dark-blue {
+    .bg-grey-700 {
+        min-height: 100vh;
+        height: 100%;
         z-index: -1;
     }
 
     .bg-dark-blue {
+        min-height: 100vh;
+        height: 100%;
         z-index: -1;
     }
 

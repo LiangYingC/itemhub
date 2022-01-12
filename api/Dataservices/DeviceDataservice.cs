@@ -117,5 +117,17 @@ namespace Homo.IotApi
             record.DeletedAt = DateTime.Now;
             dbContext.SaveChanges();
         }
+
+        public static void Switch(IotDbContext dbContext, long ownerId, long id, bool online)
+        {
+            System.Console.WriteLine($"testing:{Newtonsoft.Json.JsonConvert.SerializeObject(ownerId, Newtonsoft.Json.Formatting.Indented)}");
+            System.Console.WriteLine($"testing:{Newtonsoft.Json.JsonConvert.SerializeObject(id, Newtonsoft.Json.Formatting.Indented)}");
+            System.Console.WriteLine($"testing:{Newtonsoft.Json.JsonConvert.SerializeObject(online, Newtonsoft.Json.Formatting.Indented)}");
+            dbContext.Device.Where(x => x.Id == id && x.OwnerId == ownerId).UpdateFromQuery(x => new Device()
+            {
+                Online = online
+            });
+            dbContext.SaveChanges();
+        }
     }
 }

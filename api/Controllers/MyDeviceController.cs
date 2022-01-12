@@ -1,7 +1,14 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Builder;
+using System.Threading.Tasks;
+using System.Threading;
+using System;
+using Microsoft.EntityFrameworkCore;
 using Homo.Api;
 using Homo.Core.Constants;
+
 
 namespace Homo.IotApi
 {
@@ -11,9 +18,12 @@ namespace Homo.IotApi
     public class MyDeviceController : ControllerBase
     {
         private readonly IotDbContext _dbContext;
-        public MyDeviceController(IotDbContext dbContext)
+        private readonly string _dbConnectionString;
+        private DateTime _nextRunTimestamp;
+        public MyDeviceController(IotDbContext dbContext, IOptions<AppSettings> appSettings)
         {
             _dbContext = dbContext;
+            _dbConnectionString = appSettings.Value.Secrets.DBConnectionString;
         }
 
         [HttpGet]
@@ -101,9 +111,17 @@ namespace Homo.IotApi
         public ActionResult<dynamic> online([FromRoute] long id, dynamic extraPayload)
         {
             long ownerId = extraPayload.Id;
-
+            DeviceDataservice.Switch(_dbContext, ownerId, id, true);
+            Task.Factory.StartNew(async () =>
+            {
+                await Task.Delay(10000);
+                DbContextOptionsBuilder<IotDbContext> builder = new DbContextOptionsBuilder<IotDbContext>();
+                var serverVersion = new MySqlServerVersion(new Version(8, 0, 25));
+                builder.UseMySql(_dbConnectionString, serverVersion);
+                IotDbContext newDbContext = new IotDbContext(builder.Options);
+                DeviceDataservice.Switch(newDbContext, ownerId, id, false);
+            });
             return new { status = CUSTOM_RESPONSE.OK };
         }
-
     }
 }

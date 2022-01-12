@@ -3,7 +3,7 @@ using Homo.Api;
 
 namespace Homo.IotApi
 {
-    public partial class DeviceState
+    public partial class DevicePinState
     {
         public long Id { get; set; }
         public DateTime CreatedAt { get; set; }
@@ -19,6 +19,5 @@ namespace Homo.IotApi
         [Required]
         public long DeviceId { get; set; }
         public Device Device { get; set; }
-        public bool Online { get; set; }
     }
 }

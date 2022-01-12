@@ -96,5 +96,14 @@ namespace Homo.IotApi
             return new { status = CUSTOM_RESPONSE.OK };
         }
 
+        [HttpPost]
+        [Route("{id}/online")]
+        public ActionResult<dynamic> online([FromRoute] long id, dynamic extraPayload)
+        {
+            long ownerId = extraPayload.Id;
+
+            return new { status = CUSTOM_RESPONSE.OK };
+        }
+
     }
 }

@@ -30,6 +30,19 @@ namespace Homo.IotApi
                 .OrderByDescending(x => x.Id)
                 .ToList();
         }
+
+        public static List<Device> GetAllByIds(IotDbContext dbContext, long ownerId, List<long> ids)
+        {
+            return dbContext.Device
+                .Where(x =>
+                    x.DeletedAt == null
+                    && x.OwnerId == ownerId
+                    && ids.Contains(x.Id)
+                )
+                .OrderByDescending(x => x.Id)
+                .ToList();
+        }
+
         public static int GetRowNum(IotDbContext dbContext, long ownerId)
         {
             return dbContext.Device

@@ -143,6 +143,11 @@ $utilities: map-merge(
         opacity: 1;
         color: rgba($black, 0.25);
     }
+
+    &.btn-md {
+        font-size: $h4-font-size;
+        font-weight: 600;
+    }
 }
 
 .form-control {

@@ -112,15 +112,7 @@ namespace Homo.IotApi
         {
             long ownerId = extraPayload.Id;
             DeviceDataservice.Switch(_dbContext, ownerId, id, true);
-            Task.Factory.StartNew(async () =>
-            {
-                await Task.Delay(10000);
-                DbContextOptionsBuilder<IotDbContext> builder = new DbContextOptionsBuilder<IotDbContext>();
-                var serverVersion = new MySqlServerVersion(new Version(8, 0, 25));
-                builder.UseMySql(_dbConnectionString, serverVersion);
-                IotDbContext newDbContext = new IotDbContext(builder.Options);
-                DeviceDataservice.Switch(newDbContext, ownerId, id, false);
-            });
+            TimeoutOfflineDeviceService.StartAsync(ownerId, id, _dbConnectionString);
             return new { status = CUSTOM_RESPONSE.OK };
         }
     }

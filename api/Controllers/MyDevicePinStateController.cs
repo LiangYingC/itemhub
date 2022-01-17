@@ -19,25 +19,25 @@ namespace Homo.IotApi
         [HttpGet]
         public ActionResult<dynamic> getStates([FromRoute] long id, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
-            return DeviceStateDataservice.GetAll(_dbContext, extraPayload.Id, new List<long>() { id }, null, null);
+            return DevicePinStateDataservice.GetAll(_dbContext, extraPayload.Id, new List<long>() { id }, null, null);
         }
 
         [HttpPost]
-        public ActionResult<dynamic> createPinState([FromRoute] long id, [FromBody] DTOs.DeviceState dto, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
+        public ActionResult<dynamic> createPinState([FromRoute] long id, [FromBody] DTOs.DevicePinState dto, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
-            DeviceState state = DeviceStateDataservice.GetOne(_dbContext, id, dto.Mode, dto.Pin);
+            DevicePinState state = DevicePinStateDataservice.GetOne(_dbContext, id, dto.Mode, dto.Pin);
             if (state != null)
             {
                 throw new CustomException(IotApi.ERROR_CODE.DEVICE_STATE_EXISTS, System.Net.HttpStatusCode.BadRequest);
             }
-            return DeviceStateDataservice.Create(_dbContext, extraPayload.Id, id, dto);
+            return DevicePinStateDataservice.Create(_dbContext, extraPayload.Id, id, dto);
         }
 
         [HttpPatch]
         [Route("{pin}")]
-        public ActionResult<dynamic> updatePinState([FromRoute] long id, [FromRoute] string pin, [FromBody] DTOs.DeviceStateValue dto, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
+        public ActionResult<dynamic> updatePinState([FromRoute] long id, [FromRoute] string pin, [FromBody] DTOs.DevicePinStateValue dto, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
-            DeviceStateDataservice.UpdateValueByDeviceId(_dbContext, extraPayload.Id, id, pin, dto.Value);
+            DevicePinStateDataservice.UpdateValueByDeviceId(_dbContext, extraPayload.Id, id, pin, dto.Value);
             return new { status = CUSTOM_RESPONSE.OK };
         }
     }

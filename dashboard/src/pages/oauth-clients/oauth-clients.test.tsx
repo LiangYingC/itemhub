@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import OauthClients from './OauthClients';
+import OauthClients from './oauth-clients';
 
 describe('<OauthClients />', () => {
     test('it should mount', () => {

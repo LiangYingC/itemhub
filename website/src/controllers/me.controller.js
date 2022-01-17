@@ -9,7 +9,7 @@ export class MeController extends RoutingController {
 
     async render () {
         await super.render({
-            name: this.args.name
+            name: this.args.me.name
         });
     }
 

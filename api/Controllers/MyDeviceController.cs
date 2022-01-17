@@ -1,7 +1,14 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Builder;
+using System.Threading.Tasks;
+using System.Threading;
+using System;
+using Microsoft.EntityFrameworkCore;
 using Homo.Api;
 using Homo.Core.Constants;
+
 
 namespace Homo.IotApi
 {
@@ -11,9 +18,12 @@ namespace Homo.IotApi
     public class MyDeviceController : ControllerBase
     {
         private readonly IotDbContext _dbContext;
-        public MyDeviceController(IotDbContext dbContext)
+        private readonly string _dbConnectionString;
+        private DateTime _nextRunTimestamp;
+        public MyDeviceController(IotDbContext dbContext, IOptions<AppSettings> appSettings)
         {
             _dbContext = dbContext;
+            _dbConnectionString = appSettings.Value.Secrets.DBConnectionString;
         }
 
         [HttpGet]
@@ -96,5 +106,14 @@ namespace Homo.IotApi
             return new { status = CUSTOM_RESPONSE.OK };
         }
 
+        [HttpPost]
+        [Route("{id}/online")]
+        public ActionResult<dynamic> online([FromRoute] long id, dynamic extraPayload)
+        {
+            long ownerId = extraPayload.Id;
+            DeviceDataservice.Switch(_dbContext, ownerId, id, true);
+            TimeoutOfflineDeviceService.StartAsync(ownerId, id, _dbConnectionString);
+            return new { status = CUSTOM_RESPONSE.OK };
+        }
     }
 }

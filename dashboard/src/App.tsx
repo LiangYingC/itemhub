@@ -1,18 +1,14 @@
 import './App.css';
 import { Outlet } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import {
-    decrement,
-    increment,
-    selectCount,
-} from './redux/reducers/counter.reducer';
 import { selectDevices } from './redux/reducers/device.reducer';
 import { add, addMany } from './redux/reducers/device.reducer';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
+import { AuthDataservice } from './dataservices/auth.dataservice';
+import { CookieHelper } from './helpers/cookie.helper';
 import { LogContext } from './contexts/logs.context';
 
 function App() {
-    const count = useSelector(selectCount);
     const dispatch = useDispatch();
     const devices = useSelector(selectDevices);
     const { logs, addLog } = useContext(LogContext);
@@ -26,7 +22,7 @@ function App() {
                 ))}
             </div>
 
-            <div>
+            {/* <div>
                 <button
                     aria-label="Increment value"
                     onClick={() => dispatch(increment())}
@@ -40,17 +36,17 @@ function App() {
                 >
                     -
                 </button>
-            </div>
+            </div> */}
 
             <div>
-                <button onClick={() => dispatch(add())}>add</button>
+                {/* <button onClick={() => dispatch(add())}>add</button>
                 <button
                     onClick={() =>
                         dispatch(addMany([{ name: '2' }, { name: '3' }]))
                     }
                 >
                     addMany
-                </button>
+                </button> */}
                 {devices.map((item) => (
                     <div>{item.name}</div>
                 ))}

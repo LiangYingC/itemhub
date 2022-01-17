@@ -154,19 +154,27 @@ export const Router = {
         const previousRoutingPathArray = Router.getRoutingPathArray(previousPath, routers);
 
         // should be enter controller
-        let firstTimeDiffIndex = -1;
-        const differenceRoutinPathFromCurrent = currentRoutingPathArray.filter((routingPath, index) => {
-            if (firstTimeDiffIndex !== -1 && index > firstTimeDiffIndex) {
-                return true;
-            }
-            for (let i = 0; i < previousRoutingPathArray.length; i++) {
-                if (routingPath.fullPath === previousRoutingPathArray[i].fullPath) {
-                    return false;
+        let currentIndex = 0;
+        let previousIndex = 0;
+        const differenceRoutinPathFromCurrent = [];
+
+        if (previousRoutingPathArray.length > 0) {
+            while (
+                currentIndex < currentRoutingPathArray.length &&
+                previousIndex < previousRoutingPathArray.length
+            ) {
+                if (previousRoutingPathArray[previousIndex].fullPath !== currentRoutingPathArray[currentIndex].fullPath) { // 發現不一樣就把所有後面的 path push 到 diff 裡頭
+                    break;
                 }
+                currentIndex = currentIndex + 1;
+                previousIndex = previousIndex + 1;
             }
-            firstTimeDiffIndex = index;
-            return true;
-        });
+        }
+
+        for (let i = currentIndex; i < currentRoutingPathArray.length; i++) {
+            differenceRoutinPathFromCurrent.push(currentRoutingPathArray[i]);
+        }
+
         // edge case: child routing rule to parent routing rule
         if (
             differenceRoutinPathFromCurrent.length === 0 &&
@@ -436,26 +444,31 @@ function setupContextArgs (argsReference, args, controllerId, isVariableFromUri)
             argsReference[key] = args[key];
             continue;
         }
+
         if (isVariableFromUri) {
             argsReference[`_${key}`] = decodeURIComponent(args[key]);
         } else {
             argsReference[`_${key}`] = args[key];
         }
-        Object.defineProperty(argsReference, key, {
-            set: (newValue) => {
-                argsReference[`_${key}`] = newValue;
 
-                document.body.dispatchEvent(new CustomEvent(`CONTEXT_${Swissknife.CamelToUnderscoreSnake(key).toUpperCase()}_CHANGED`, {
-                    bubbles: true,
-                    detail: {
-                        newValue: newValue
-                    }
-                }));
-            },
-            get: () => {
-                return argsReference[`_${key}`];
-            }
-        });
+        if (argsReference[`${key}`] === undefined && argsReference[`_${key}`] !== undefined) {
+            Object.defineProperty(argsReference, key, {
+                set: (newValue) => {
+                    argsReference[`_${key}`] = newValue;
+
+                    document.body.dispatchEvent(new CustomEvent(`CONTEXT_${Swissknife.CamelToUnderscoreSnake(key).toUpperCase()}_CHANGED`, {
+                        bubbles: true,
+                        detail: {
+                            newValue: newValue
+                        }
+                    }));
+                },
+                get: () => {
+                    return argsReference[`_${key}`];
+                },
+                configurable: true
+            });
+        }
 
         if (window.SwimAppControllersAndArgsMapping[controllerId].indexOf(key) === -1) {
             window.SwimAppControllersAndArgsMapping[controllerId].push(key);

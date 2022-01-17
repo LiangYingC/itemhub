@@ -15,8 +15,4 @@ export class MasterController extends RoutingController {
             user: this.args.me
         });
     }
-
-    async exit (args) {
-        return super.exit(args);
-    }
 }

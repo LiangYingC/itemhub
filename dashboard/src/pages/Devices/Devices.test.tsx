@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import Devices from './Devices';
+import Devices from './devices';
 
 describe('<Devices />', () => {
     test('it should mount', () => {

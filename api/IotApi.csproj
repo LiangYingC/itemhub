@@ -32,5 +32,6 @@
     <PackageReference Include="AWSSDK.SimpleEmailV2" Version="3.7.0.40"/>
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0"/>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3"/>
+    <PackageReference Include="Z.EntityFramework.Extensions.EFCore" Version="5.13.6"/>
   </ItemGroup>
 </Project>

@@ -1,15 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { DeviceDataservice } from '../../dataservices/device.dataservice';
 import { CookieHelper } from '../../helpers/cookie.helper';
 import styles from './Devices.module.scss';
 import { useQuery } from '../../hooks/query.hook';
+import { LogContext } from '../../contexts/logs.context';
 
 const Devices = () => {
     let [devices, setDevices] = useState<{ name: string; id: number }[] | []>(
         []
     );
     let query = useQuery();
+    const { logs, addLog } = useContext(LogContext);
+
     useEffect(() => {
         (async () => {
             const page = Number(query.get('page') || 1);
@@ -34,6 +37,14 @@ const Devices = () => {
                 <div key={item.id}>
                     <Link to={`/devices/${item.id}`}>{item.name}</Link> <br />
                 </div>
+            ))}
+            <br />
+            <hr />
+            <br />
+            <button onClick={() => addLog('aaaa')}>test add log</button>
+            <h1>Logs</h1>
+            {logs.map((log, index) => (
+                <div key={`log-${index}`}>aaa{log}aaa</div>
             ))}
         </div>
     );

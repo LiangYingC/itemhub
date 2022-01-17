@@ -30,6 +30,19 @@ namespace Homo.IotApi
                 .OrderByDescending(x => x.Id)
                 .ToList();
         }
+
+        public static List<Device> GetAllByIds(IotDbContext dbContext, long ownerId, List<long> ids)
+        {
+            return dbContext.Device
+                .Where(x =>
+                    x.DeletedAt == null
+                    && x.OwnerId == ownerId
+                    && ids.Contains(x.Id)
+                )
+                .OrderByDescending(x => x.Id)
+                .ToList();
+        }
+
         public static int GetRowNum(IotDbContext dbContext, long ownerId)
         {
             return dbContext.Device
@@ -102,6 +115,15 @@ namespace Homo.IotApi
         {
             Device record = dbContext.Device.Where(x => x.Id == id && x.OwnerId == ownerId).FirstOrDefault();
             record.DeletedAt = DateTime.Now;
+            dbContext.SaveChanges();
+        }
+
+        public static void Switch(IotDbContext dbContext, long ownerId, long id, bool online)
+        {
+            dbContext.Device.Where(x => x.Id == id && x.OwnerId == ownerId).UpdateFromQuery(x => new Device()
+            {
+                Online = online
+            });
             dbContext.SaveChanges();
         }
     }

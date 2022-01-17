@@ -12,7 +12,7 @@ namespace Homo.IotApi
     public class GoogleSmartHomeController : ControllerBase
     {
         private readonly string GoogleDevicePin = "D0";
-        private static List<DeviceState> DeviceStates = new List<DeviceState>();
+        private static List<DevicePinState> DevicePinStates = new List<DevicePinState>();
         private readonly IotDbContext _dbContext;
         public GoogleSmartHomeController(IotDbContext dbContext)
         {
@@ -66,13 +66,13 @@ namespace Homo.IotApi
             long ownerId = extraPayload.Id;
             List<Device> devices = DeviceDataservice.GetAll(_dbContext, ownerId);
             List<long> myDeviceIds = devices.Select(x => x.Id).ToList<long>();
-            List<DeviceState> myDeviceStates = DeviceStateDataservice.GetAll(_dbContext, ownerId, myDeviceIds, (byte)DEVICE_MODE.SWITCH, this.GoogleDevicePin);
+            List<DevicePinState> myDeviceStates = DevicePinStateDataservice.GetAll(_dbContext, ownerId, myDeviceIds, (byte)DEVICE_MODE.SWITCH, this.GoogleDevicePin);
             List<long> existsStateDeviceIds = myDeviceStates.Select(x => x.DeviceId).ToList();
             // create device state to memory
             devices.Where(x => !existsStateDeviceIds.Contains(x.Id)).ToList().ForEach(device =>
             {
                 // Google Smart Home Device Default Pin: D0
-                DeviceStateDataservice.Create(_dbContext, ownerId, device.Id, new DTOs.DeviceState()
+                DevicePinStateDataservice.Create(_dbContext, ownerId, device.Id, new DTOs.DevicePinState()
                 {
                     Pin = GoogleDevicePin,
                     Mode = (byte)DEVICE_MODE.SWITCH,
@@ -92,7 +92,7 @@ namespace Homo.IotApi
                             DeviceId = deviceState.DeviceId.ToString(),
                             On = deviceState.Value == 1,
                             Status = "SUCCESS",
-                            Online = deviceState.Online,
+                            Online = x.Online
                         };
                     }).ToDictionary(x => x.DeviceId)
                 }
@@ -108,17 +108,19 @@ namespace Homo.IotApi
             {
                 for (int i = 0; i < command.Devices.Count; i++)
                 {
-                    DeviceStateDataservice.UpdateValueByDeviceId(_dbContext, ownerId, command.Devices[i].Id, GoogleDevicePin, command.Execution[i].Params.on.Value ? 1 : 0);
+                    DevicePinStateDataservice.UpdateValueByDeviceId(_dbContext, ownerId, command.Devices[i].Id, GoogleDevicePin, command.Execution[i].Params.on.Value ? 1 : 0);
                 }
             });
             List<long> myDeviceIds = commands[0].Devices.Select(x => x.Id).ToList<long>();
-            List<GoogleDeviceState> states = DeviceStateDataservice.GetAll(_dbContext, ownerId, myDeviceIds, (byte)DEVICE_MODE.SWITCH, this.GoogleDevicePin)
+            List<DevicePinState> states = DevicePinStateDataservice.GetAll(_dbContext, ownerId, myDeviceIds, (byte)DEVICE_MODE.SWITCH, this.GoogleDevicePin);
+            List<Device> devices = DeviceDataservice.GetAllByIds(_dbContext, ownerId, states.Select(x => x.DeviceId).ToList<long>());
+            List<GoogleDeviceState> statesForGoogle = states
             .Select(x => new GoogleDeviceState()
             {
                 DeviceId = x.DeviceId,
                 On = x.Value == 1,
                 Status = "SUCCESS",
-                Online = x.Online,
+                Online = devices.Where(y => y.Id == x.DeviceId).FirstOrDefault().Online,
             }).ToList();
 
             return new
@@ -131,7 +133,7 @@ namespace Homo.IotApi
                         new {
                             Ids = myDeviceIds.Select(x=> x.ToString()).ToList<string>(),
                             Status = "SUCCESS",
-                            States = states.Select(x=>new {
+                            States = statesForGoogle.Select(x=>new {
                                 DeviceId = x.DeviceId.ToString(),
                                 On = x.On,
                                 Status = x.Status,

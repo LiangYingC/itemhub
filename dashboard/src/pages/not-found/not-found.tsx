@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './NotFound.module.scss';
+import styles from './not-found.module.scss';
 
 const NotFound = () => (
     <div className={styles.NotFound} data-testid="NotFound">

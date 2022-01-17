@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './OauthClients.module.scss';
+import styles from './oauth-clients.module.scss';
 
 const OauthClients = () => (
     <div className={styles.OauthClients} data-testid="OauthClients">

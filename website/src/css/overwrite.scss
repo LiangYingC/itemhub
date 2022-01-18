@@ -47,6 +47,7 @@ $dark: #161c2e; // deprecated
 $black-opacity25: rgba(0, 0, 0, 0.25); // deprecated
 $blue: #0048ff; // deprecated
 $danger: #ff4747;
+$purple: #d415a1;
 $primary-900: #1f305a;
 $primary-800: #23469e;
 $primary-700: #1679c0;
@@ -98,6 +99,7 @@ $theme-colors: (
     'grey-600': $grey-600,
     'grey-700': $grey-700,
     'grey-800': $grey-800,
+    'purple': $purple,
 );
 
 @import 'bootstrap/scss/_utilities.scss';

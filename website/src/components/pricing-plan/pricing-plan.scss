@@ -42,6 +42,11 @@ $promoted-card-bg: #1f305a;
             }
         }
 
+        .popular-label {
+            line-height: 1.5em;
+            transform: translate(-70px, 0);
+        }
+
         @include media-breakpoint-up(md) {
             &:first-child {
                 border-top-left-radius: 16px;
@@ -54,10 +59,16 @@ $promoted-card-bg: #1f305a;
             }
 
             &.promoting {
+                overflow: unset !important;
                 transform: scale(1.1);
             }
             border-radius: 0;
             width: calc(100% / 3 - 20px);
+
+            .popular-label {
+                line-height: 1.5em;
+                transform: translate(0, -24px);
+            }
         }
     }
 

@@ -8,6 +8,7 @@ $spacers: (
     25: $spacer * 0.25 * 3,
     3: $spacer * 0.25 * 4,
     4: $spacer * 0.25 * 6,
+    45: $spacer * 0.25 * 8,
     5: $spacer * 0.25 * 12,
     6: $spacer * 0.25 * 24,
 );
@@ -119,6 +120,11 @@ $utilities: map-merge(
                         blue2green: $bg-blue2green,
                     )
                 ),
+        ),
+        'opacity': (
+            property: 'opacity',
+            class: 'opacity',
+            values: $opacity,
         ),
     )
 );

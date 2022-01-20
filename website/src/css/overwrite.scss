@@ -136,6 +136,8 @@ $utilities: map-merge(
     color: $primary-800;
     outline: none;
     border: none;
+    font-weight: 600;
+
     &:hover {
         background: $primary-100;
         color: $blue;
@@ -150,6 +152,10 @@ $utilities: map-merge(
         background: $grey-200;
         opacity: 1;
         color: rgba($black, 0.25);
+    }
+
+    &.btn-md {
+        font-size: $h4-font-size;
     }
 }
 

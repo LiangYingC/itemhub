@@ -24,7 +24,7 @@ export class AuthController extends RoutingController {
     }
 
     async signIn () {
-        const targetProvider = this.args.universal.authProvider.find(item => item.label.toString().toLowerCase() === this.args.state.provider);
+        const targetProvider = this.args.socialMediaTypes.find(item => item.label.toString().toLowerCase() === this.args.state.provider);
         const resp = await AuthDataService.SignInWithSocialMedia({
             code: this.args.code,
             provider: targetProvider.value,

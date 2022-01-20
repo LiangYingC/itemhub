@@ -1,9 +1,10 @@
-import { RESPONSE_STATUS } from '../constants.js';
+import { OAUTH_PROVIDER, OAUTH_TYPE, RESPONSE_STATUS, THIRD_PARTY_KEY } from '../constants.js';
 import { AuthDataService } from '../dataservices/auth.dataservice.js';
 import {
     RoutingController
 } from '../swim/routing-controller.js';
 import { CookieUtil } from '../util/cookie.js';
+import { PopupHelper } from '../util/popup.helper.js';
 import { Toaster } from '../util/toaster.js';
 import { Validate } from '../util/validate.js';
 
@@ -80,5 +81,26 @@ export class SignInController extends RoutingController {
         }
         CookieUtil.setCookie('token', resp.data.token);
         history.replaceState({}, '', '/me/');
+    }
+
+    async signInWithFacebook () {
+        const state = {
+            type: OAUTH_TYPE.SIGN_IN,
+            provider: OAUTH_PROVIDER.FACEBOOK
+        };
+        PopupHelper.PopupCenter(`https://www.facebook.com/v12.0/dialog/oauth?client_id=${THIRD_PARTY_KEY.FB_CLIENT_ID}&redirect_uri=${window.location.origin}/auth/&state=${JSON.stringify(state)}`, 'fb auth', 600, 500);
+    }
+
+    async signInWithLine () {
+        PopupHelper.PopupCenter(`https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${THIRD_PARTY_KEY.LINE_CLIENT_ID}&redirect_uri=${window.location.origin}/auth/&state=${OAUTH_PROVIDER.LINE},${OAUTH_TYPE.SIGN_IN}&bot_prompt=aggressive&scope=profile%20openid%20email`, 'line auth', 600, 500);
+    }
+
+    async signInWithGoogle () {
+        const state = {
+            type: OAUTH_TYPE.SIGN_IN,
+            provider: OAUTH_PROVIDER.GOOGLE
+        };
+        const url = ['https://accounts.google.com/o/oauth2/v2/auth?1=1', 'scope=https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile', 'include_granted_scopes=true', 'response_type=code', `state=${JSON.stringify(state)}`, `redirect_uri=${location.origin}/auth/`, `client_id=${THIRD_PARTY_KEY.GOOGLE_CLIENT_ID}`].join('&');
+        PopupHelper.PopupCenter(url, 'google auth', 600, 500);
     }
 }

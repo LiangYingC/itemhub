@@ -1,13 +1,20 @@
 {
-    "TEST": "測試",
     "INVALID_EMAIL": "錯誤 EMAIL 格式",
     "UNAUTH_ACCESS_API": "未授權使用 API",
     "INVALID_FORM": "表單驗證發生錯誤",
-    "GGGG": "testing GGGG zh-TW",
     "SIGNIN_FAILED": "帳號或密碼錯誤",
     "USER_BE_BLOCKED": "使用者被封鎖",
     "SMS_ERROR": "簡訊商回傳錯誤: {message}",
     "OAUTH_TYPE_ONLY_SUPPORT_CODE": "oAuth 只支援 response_type = code",
     "OAUTH_REDIRECT_URI_NOT_IN_WHITLIST": "redirect_uri 不在設定的白名單",
-    "EMAIL_ALREADY_REGISTERED": "Email 已經被註冊了"
+    "USER_NOT_FOUND": "你還未註冊為使用者",
+    "SIGN_IN_BY_OTHER_WAY": "你當初不是用這個方式註冊, 請更換方式登入",
+    "TOKEN_EXPIRED": "認證已經過期囉! 請重新登入",
+    "TOO_MANY_TIMES_TO_SEND_MAIL": "你今天重送太多事 Email",
+    "VERIFY_CODE_NOT_FOUND": "找不到你輸入的驗證碼",
+    "INVALID_CODE_FROM_SOCIAL_MEDIA": "第三方認證單位告訴我們你給予錯誤的網址",
+    "REMOVE_FB_SUB_INVALID_CODE": "REMOVE_FB_SUB_INVALID_CODE",
+    "WRONG_PASSWORD": "輸入的密碼錯誤",
+    "DATA_NOT_FOUND": "找不到資料",
+    "EMAIL_ALREADY_REGISTERED": "這個 Email 已經註冊過了"
 }

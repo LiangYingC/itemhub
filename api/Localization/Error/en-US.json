@@ -3,8 +3,17 @@
     "INVALID_EMAIL": "invalid email format",
     "UNAUTH_ACCESS_API": "you could not access api",
     "INVALID_FORM": "invalid form",
-    "GGGG": "testing GGGG",
     "SIGNIN_FAILED": "Email Or Password Failed",
     "USER_BE_BLOCKED": "User had be blocked",
-    "EMAIL_ALREADY_REGISTERED": "Email has been registered"
+    "EMAIL_ALREADY_REGISTERED": "Email has been registered",
+    "USER_NOT_FOUND": "User not found",
+    "SIGN_IN_BY_OTHER_WAY": "You register by other way, please sign in by other way",
+    "TOKEN_EXPIRED": "Token expired",
+    "TOO_MANY_TIMES_TO_SEND_MAIL": "You send email so much times today",
+    "VERIFY_CODE_NOT_FOUND": "Verify code not found",
+    "INVALID_CODE_FROM_SOCIAL_MEDIA": "Invalid code from social media",
+    "REMOVE_FB_SUB_INVALID_CODE": "REMOVE_FB_SUB_INVALID_CODE",
+    "WRONG_PASSWORD": "Wrong password",
+    "SMS_ERROR": "Sms provider error: {message}",
+    "DATA_NOT_FOUND": "Data not round"
 }

@@ -73,9 +73,9 @@ export const RoutingRule = [{
                 }
             }
         }, {
-            key: 'universal',
+            key: 'socialMediaTypes',
             func: async () => {
-                return (await UniversalDataService.GetAll()).data;
+                return (await UniversalDataService.GetSocialMediaTypes()).data;
             }
         }]
     }, {
@@ -93,7 +93,6 @@ export const RoutingRule = [{
             key: 'isAuth',
             func: () => {
                 const token = CookieUtil.getCookie('token');
-                console.log(token);
                 const tokenPayload = token ? window.jwt_decode(token) : false;
                 if (tokenPayload) {
                     setTimeout(() => {

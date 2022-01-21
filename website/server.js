@@ -29,7 +29,13 @@ bs.init({
     ui: false,
     server: {
         baseDir: 'src',
-        index: 'index.html'
+        index: 'index.html',
+        middleware: (req, res, next) => {
+            if (req.url.length > 1 && req.url.endsWith('/')) {
+                req.url = '/';
+            }
+            next();
+        }
     },
     port: 443,
     https: {

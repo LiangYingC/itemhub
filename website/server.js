@@ -7,13 +7,13 @@ const nodemon = require('nodemon');
 const bs = require('browser-sync');
 
 /**
- * nodemon will execute ./extractCssFiles.js after js,scss,html files changed.
+ * nodemon will execute ./extractCssFiles.js after scss files changed.
  * setting parameters: https://github.com/remy/nodemon/blob/master/lib/config/load.js#L236.
  * */
 nodemon({
     script: './extractCssFiles.js',
     watch: ['src/'],
-    ext: 'js scss html',
+    ext: 'scss',
     ignore: ['config.js', 'config.dev.js', '*.css']
 });
 

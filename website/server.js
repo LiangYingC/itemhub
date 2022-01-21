@@ -3,6 +3,18 @@ const http = require('https');
 const staticAlias = require('node-static-alias');
 const fs = require('fs');
 const path = require('path');
+const nodemon = require('nodemon');
+
+/**
+ * nodemon will execute ./extractCssFiles.js after js,scss,html files changed.
+ * setting parameters: https://github.com/remy/nodemon/blob/master/lib/config/load.js#L236.
+ * */
+nodemon({
+    script: './extractCssFiles.js',
+    watch: ['src/'],
+    ext: 'js scss html',
+    ignore: ['config.js', 'config.dev.js', '*.css']
+});
 
 /**
  * http.createServer will launch sever

@@ -4,6 +4,7 @@ const staticAlias = require('node-static-alias');
 const fs = require('fs');
 const path = require('path');
 const nodemon = require('nodemon');
+const bs = require('browser-sync');
 
 /**
  * nodemon will execute ./extractCssFiles.js after js,scss,html files changed.
@@ -48,3 +49,17 @@ http.createServer(options, function (request, response) {
         fileServer.serve(request, response);
     }).resume();
 }).listen(443);
+
+/**
+ * bs will proxy sever for browser reload after html,css,js files changed.
+ * setting parameters: https://browsersync.io/docs/options.
+ * */
+bs.init({
+    proxy: 'https://dev.itemhub.io:443',
+    port: 3000,
+    files: ['./src/**/*.{html,css,js}'],
+    watchOptions: {
+        ignored: ['node_modules', 'config.js', 'config.dev.js', './src/**/*.scss']
+    },
+    ui: false
+});

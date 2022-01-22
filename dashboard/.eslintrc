@@ -25,7 +25,7 @@
     },
     "root": true,
     "rules": {
-        "indent": [4],
+        "indent": ["error", 4],
         "semi": [
             "error",
             "always"

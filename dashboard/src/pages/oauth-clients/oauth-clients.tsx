@@ -1,4 +1,3 @@
-import React from 'react';
 import styles from './oauth-clients.module.scss';
 
 const OauthClients = () => (

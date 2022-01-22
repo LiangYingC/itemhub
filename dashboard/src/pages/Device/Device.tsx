@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import styles from './Device.module.scss';
+import styles from './device.module.scss';
 import { CookieHelper } from '../../helpers/cookie.helper';
 import { DeviceDataservice } from '../../dataservices/device.dataservice';
 

@@ -1,5 +1,4 @@
-import React from 'react';
-import styles from './Trigger.module.scss';
+import styles from './trigger.module.scss';
 import { Link, useParams } from 'react-router-dom';
 
 const Trigger = () => {

@@ -14,7 +14,7 @@ nodemon({
     script: './extractCssFiles.js',
     watch: ['src/'],
     ext: 'scss',
-    ignore: ['config.js', 'config.dev.js', '*.css']
+    ignore: ['config.js', 'config.*.js', '*.css']
 });
 
 /**
@@ -25,7 +25,7 @@ nodemon({
 bs.init({
     files: ['./src/**/*.{html,css,js}'],
     watchOptions: {
-        ignored: ['node_modules', 'config.js', 'config.dev.js', './src/**/*.scss']
+        ignored: ['node_modules', 'config.js', 'config.*.js', './src/**/*.scss']
     },
     ui: false,
     server: {

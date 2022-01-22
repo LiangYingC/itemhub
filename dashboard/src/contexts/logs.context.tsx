@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import { useState, createContext } from 'react';
 import { LogsContextState } from '../types/logs.type';
 
 const contextDefaultValues: LogsContextState = {
@@ -6,7 +6,7 @@ const contextDefaultValues: LogsContextState = {
     addLog: () => {},
 };
 
-export const LogContext = React.createContext(contextDefaultValues);
+export const LogContext = createContext(contextDefaultValues);
 
 const LogProvider: React.FC = ({ children }) => {
     const [logs, setLogs] = useState<string[]>(contextDefaultValues.logs);

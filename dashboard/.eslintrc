@@ -1,4 +1,4 @@
-{
+{   "parser": "@typescript-eslint/parser",
     "extends": [
         "eslint:recommended",
         "plugin:@typescript-eslint/eslint-recommended",
@@ -14,9 +14,6 @@
         "process": "readonly",
         "$": "readonly",
         "__dirname": "readonly"
-    },
-    "parserOptions": {
-        "parser": "typescript-eslint/parser"
     },
     "root": true,
     "rules": {

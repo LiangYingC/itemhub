@@ -1,4 +1,4 @@
-import './App.css';
+import './app.css';
 import { Outlet } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectDevices } from './redux/reducers/device.reducer';

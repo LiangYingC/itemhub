@@ -35,7 +35,10 @@ const Devices = () => {
         <div className={styles.Devices} data-testid="Devices">
             {devices.map((item) => (
                 <div key={item.id}>
-                    <Link to={`/devices/${item.id}`}>{item.name}</Link> <br />
+                    <Link to={`/dashboard/devices/${item.id}`}>
+                        {item.name}
+                    </Link>{' '}
+                    <br />
                 </div>
             ))}
             <br />

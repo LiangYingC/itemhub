@@ -4,6 +4,8 @@ const nodemon = require('nodemon');
 const bs = require('browser-sync');
 const open = require('open');
 
+fs.copyFileSync(`./src/config.${process.env.NODE_ENV}.js`, './src/config.js');
+
 /**
  * nodemon will execute ./extractCssFiles.js after scss files changed.
  * setting parameters: https://github.com/remy/nodemon/blob/master/lib/config/load.js#L236.
@@ -14,8 +16,6 @@ nodemon({
     ext: 'scss',
     ignore: ['config.js', 'config.dev.js', '*.css']
 });
-
-fs.copyFileSync(`./src/config.${process.env.NODE_ENV}.js`, './src/config.js');
 
 /**
  * browser will reload after html,css,js files changed.

@@ -19,9 +19,9 @@ const Dashboard = () => {
                     <h1>Itemhub</h1>
                     <hr />
                     <nav>
-                        <Link to="/devices">Devices</Link> |{' '}
-                        <Link to="/triggers">Triggers</Link> |{' '}
-                        <Link to="/oauth-clients">oAuth Clients</Link>
+                        <Link to="/dashboard/devices">Devices</Link> |{' '}
+                        <Link to="/dashboard/triggers">Triggers</Link> |{' '}
+                        <Link to="/dashboard/oauth-clients">oAuth Clients</Link>
                     </nav>
                     <Outlet></Outlet>
                     <Footer></Footer>

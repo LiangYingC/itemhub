@@ -27,7 +27,7 @@ ReactDOM.render(
                     </LogProvider>
                 }
             >
-                <Route path="/" element={<Dashboard />}>
+                <Route path="dashboard" element={<Dashboard />}>
                     <Route path="devices" element={<Devices />} />
                     <Route path="devices/:id" element={<Device />} />
                     <Route

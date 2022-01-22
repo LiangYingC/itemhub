@@ -16,7 +16,7 @@ const Dashboard = () => {
             ) : (
                 <div>
                     <Header></Header>
-                    <h1>Itemhub</h1>
+                    <h1>Itemhub Test Auto Deploy</h1>
                     <hr />
                     <nav>
                         <Link to="/dashboard/devices">Devices</Link> |{' '}

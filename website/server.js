@@ -18,9 +18,10 @@ nodemon({
 fs.copyFileSync(`./src/config.${process.env.NODE_ENV}.js`, './src/config.js');
 
 /**
- * bs will proxy sever for browser reload after html,css,js files changed.
+ * browser will reload after html,css,js files changed.
  * setting parameters: https://browsersync.io/docs/options.
  * */
+
 bs.init({
     files: ['./src/**/*.{html,css,js}'],
     watchOptions: {

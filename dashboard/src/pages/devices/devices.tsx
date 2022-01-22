@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useContext, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { DeviceDataservice } from '../../dataservices/device.dataservice';
 import { CookieHelper } from '../../helpers/cookie.helper';
-import styles from './Devices.module.scss';
+import styles from './devices.module.scss';
 import { useQuery } from '../../hooks/query.hook';
 import { LogContext } from '../../contexts/logs.context';
 

@@ -8,20 +8,27 @@
         },
         "useJSXTextNode": true
     },
-    "plugins": ["@typescript-eslint", "prettier"],
-    "extends": [
-        "eslint:recommended",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:@typescript-eslint/eslint-recommended",
-        "prettier",
-        "plugin:prettier/recommended"
-    ],
     "env": {
         "es6": false,
         "browser": true,
         "commonjs": true,
         "node": false,
         "jquery": true
+    },
+    "plugins": ["@typescript-eslint", "prettier", "react", "react-hooks"],
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:react/recommended",
+        "plugin:react-hooks/recommended",
+        "prettier",
+        "plugin:prettier/recommended"
+    ],
+    "settings": {
+        "react": {
+            "version": "detect" // Tells eslint-plugin-react to automatically detect the version of React which u install to use.
+        }
     },
     "globals": {
         "Atomics": "readonly",
@@ -36,6 +43,7 @@
         "semi": ["error", "always"],
         "no-var": "error",
         "prefer-const": "error",
+        "react/react-in-jsx-scope": 0, // Can use JSX without import React
         "@typescript-eslint/no-empty-function": ["off"],
         "@typescript-eslint/no-explicit-any": ["off"]
     }

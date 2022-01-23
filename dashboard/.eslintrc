@@ -1,12 +1,34 @@
 {
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaVersion": 2020, // Allows for the parsing of modern ECMAScript features
+        "sourceType": "module", // Allows for the use of imports
+        "ecmaFeatures": {
+            "jsx": true // Allows for the parsing of JSX
+        }
+    },
+    "env": {
+        "es6": false,
+        "browser": true,
+        "commonjs": true,
+        "node": false,
+        "jquery": true
+    },
+    "plugins": ["@typescript-eslint", "prettier", "react", "react-hooks"],
     "extends": [
         "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
         "plugin:@typescript-eslint/eslint-recommended",
-        "plugin:@typescript-eslint/recommended"
+        "plugin:react/recommended",
+        "plugin:react-hooks/recommended",
+        "prettier",
+        "plugin:prettier/recommended"
     ],
-    "plugins": [
-        "@typescript-eslint"
-    ],
+    "settings": {
+        "react": {
+            "version": "detect" // Tells eslint-plugin-react to automatically detect the version of React which u install to use.
+        }
+    },
     "globals": {
         "Atomics": "readonly",
         "SharedArrayBuffer": "readonly",
@@ -15,26 +37,13 @@
         "$": "readonly",
         "__dirname": "readonly"
     },
-    "parserOptions": {
-        "parser": "typescript-eslint/parser"
-    },
-    "root": true,
     "rules": {
-        "indent": [4],
-        "semi": [
-            "error",
-            "always"
-        ],
+        "indent": ["error", 4],
+        "semi": ["error", "always"],
         "no-var": "error",
         "prefer-const": "error",
+        "react/react-in-jsx-scope": 0, // Can use JSX without import React
         "@typescript-eslint/no-empty-function": ["off"],
         "@typescript-eslint/no-explicit-any": ["off"]
-    },
-    "env": {
-        "es6": false,
-        "browser": true,
-        "commonjs": true,
-        "node": false,
-        "jquery": true
     }
 }

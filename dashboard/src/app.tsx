@@ -1,15 +1,14 @@
 import './app.css';
 import { Outlet } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { selectDevices } from './redux/reducers/device.reducer';
-import { add, addMany } from './redux/reducers/device.reducer';
-import { useContext, useEffect } from 'react';
-import { AuthDataservice } from './dataservices/auth.dataservice';
-import { CookieHelper } from './helpers/cookie.helper';
+// import { add, addMany } from './redux/reducers/device.reducer';
+import { useContext } from 'react';
+// import { AuthDataservice } from './dataservices/auth.dataservice';
+// import { CookieHelper } from './helpers/cookie.helper';
 import { LogContext } from './contexts/logs.context';
 
 function App() {
-    const dispatch = useDispatch();
     const devices = useSelector(selectDevices);
     const { logs, addLog } = useContext(LogContext);
     return (
@@ -18,7 +17,7 @@ function App() {
 
             <div>
                 {logs.map((item) => (
-                    <div>{item}</div>
+                    <div key={item}>{item}</div>
                 ))}
             </div>
 
@@ -48,7 +47,7 @@ function App() {
                     addMany
                 </button> */}
                 {devices.map((item) => (
-                    <div>{item.name}</div>
+                    <div key={item.name}>{item.name}</div>
                 ))}
             </div>
             <Outlet />

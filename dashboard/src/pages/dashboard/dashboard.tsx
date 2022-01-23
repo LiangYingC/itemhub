@@ -5,7 +5,7 @@ import Footer from '../../components/footer/footer';
 import { useIsSigned } from '../../hooks/is-signed.hook';
 
 const Dashboard = () => {
-    const { data, loading, error } = useIsSigned();
+    const { loading, error } = useIsSigned();
 
     return (
         <div className={styles.dashboard} data-testid="Dashboard">

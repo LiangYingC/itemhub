@@ -3,7 +3,7 @@ export const ApiHelper = {
         api: string,
         data: any,
         method: string,
-        callbackFunc?: () => {}
+        callbackFunc?: () => null
     ) => {
         const token = data.token;
         delete data.token;
@@ -31,8 +31,9 @@ export const ApiHelper = {
     SendRequest: (
         api: string,
         fetchOption: any,
-        callbackFunc?: (result: any) => {}
+        callbackFunc?: (result: any) => null
     ) => {
+        // eslint-disable-next-line no-async-promise-executor
         return new Promise(async (resolve) => {
             let result;
             const newOption = {

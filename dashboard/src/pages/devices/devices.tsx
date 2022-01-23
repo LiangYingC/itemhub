@@ -7,10 +7,10 @@ import { useQuery } from '../../hooks/query.hook';
 import { LogContext } from '../../contexts/logs.context';
 
 const Devices = () => {
-    let [devices, setDevices] = useState<{ name: string; id: number }[] | []>(
+    const [devices, setDevices] = useState<{ name: string; id: number }[] | []>(
         []
     );
-    let query = useQuery();
+    const query = useQuery();
     const { logs, addLog } = useContext(LogContext);
 
     useEffect(() => {
@@ -29,7 +29,7 @@ const Devices = () => {
         return () => {
             setDevices([]);
         };
-    }, [query.get('page'), query.get('limit')]);
+    }, [query]);
 
     return (
         <div className={styles.Devices} data-testid="Devices">

@@ -6,7 +6,7 @@ export const CUSTOM_ERROR_TYPE = {
 };
 
 export class CustomError extends Error {
-    constructor(type, reason) {
+    constructor (type, reason) {
         super(reason);
         this.type = type;
         this.reason = reason;

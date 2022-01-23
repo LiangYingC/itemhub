@@ -2,7 +2,7 @@ import styles from './device-pin-data.module.scss';
 import { useParams, Link } from 'react-router-dom';
 
 const DevicePinData = () => {
-    let { id, pin } = useParams();
+    const { id, pin } = useParams();
     return (
         <div className={styles.DevicePinData} data-testid="DevicePinData">
             DevicePinData Component

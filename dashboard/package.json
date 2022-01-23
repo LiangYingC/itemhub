@@ -2,10 +2,15 @@
     "name": "dashboard",
     "version": "0.0.0",
     "scripts": {
+<<<<<<< HEAD
         "format": "prettier --write .",
         "lint": "eslint . --ext ts --ext tsx",
         "dev": "vite",
         "build": "tsc && vite build",
+=======
+        "dev": "vite --mode dev",
+        "build": "tsc && vite build --mode prod",
+>>>>>>> d3b1f877c6a7044cbb00f1989d3d061ae4be0986
         "preview": "vite preview"
     },
     "dependencies": {

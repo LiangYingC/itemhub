@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { END_POINT } from '../constants';
 import { AuthDataservice } from '../dataservices/auth.dataservice';
 import { CookieHelper } from '../helpers/cookie.helper';
 import { ApiHelper } from '../helpers/api.helper';
@@ -25,7 +24,7 @@ export function useIsSigned() {
             }
             setLoading(false);
         })();
-    }, [true]);
+    }, []);
 
     return { data, error, loading };
 }

@@ -35,7 +35,6 @@ export const APP = {
                 }
                 e.stopPropagation();
                 e.preventDefault();
-                return;
             }
         });
 
@@ -48,7 +47,6 @@ export const APP = {
                 }
                 e.stopPropagation();
                 e.preventDefault();
-                return;
             } else {
                 Toaster.popup(Toaster.TYPE.ERROR, '系統發生未預期的錯誤');
             }

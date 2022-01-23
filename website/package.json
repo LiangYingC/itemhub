@@ -3,6 +3,8 @@
     "version": "1.0.0",
     "main": "index.js",
     "scripts": {
+        "format": "prettier --write .",
+        "lint": "eslint . --ext js",
         "test": "echo \"Error: no test specified\" && exit 1",
         "dev": "NODE_ENV=dev node ./server.js",
         "swim-update": "npm install https://github.com/miterfrants/swim.git && node node_modules/swim/auto/update-core.js",
@@ -32,6 +34,7 @@
         "moment": "^2.29.1",
         "nodemon": "^2.0.15",
         "open": "^8.4.0",
+        "prettier": "^2.5.1",
         "purgecss-webpack-plugin": "^4.1.3",
         "stylelint": "^13.13.1",
         "stylelint-config-standard": "^22.0.0"

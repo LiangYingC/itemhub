@@ -1,12 +1,12 @@
-window['SwimAppLoaderCache'] = [];
+window.SwimAppLoaderCache = [];
 
 export class Loader {
-    constructor() {
+    constructor () {
         this.max = 10000;
         this.checkCount = 0;
     }
 
-    async load(dependency) {
+    async load (dependency) {
         for (let i = 0; i < dependency.length; i++) {
             if (dependency[i].dependency) {
                 const loader = new Loader();
@@ -16,21 +16,21 @@ export class Loader {
         await this._load(dependency);
     }
 
-    async loadHTML(url) {
+    async loadHTML (url) {
         if (window.SwimAppLoaderCache[url]) {
             return window.SwimAppLoaderCache[url];
         }
         if (window.SwimAppLoaderCache[url] === '') {
-            return new Promise((resolve, reject)=>{
+            return new Promise((resolve, reject) => {
                 const checkTemplate = () => {
                     if (window.SwimAppLoaderCache[url] === '') {
-                        setTimeout(checkTemplate,10);
+                        setTimeout(checkTemplate, 10);
                     } else {
                         resolve(window.SwimAppLoaderCache[url]);
                     }
-                }
+                };
                 checkTemplate();
-            })
+            });
         }
         window.SwimAppLoaderCache[url] = '';
         const resp = await fetch(url, {
@@ -46,28 +46,28 @@ export class Loader {
         return result;
     }
 
-    async loadJS(url, moduleName) {
+    async loadJS (url, moduleName) {
         return new Promise((resolve, reject) => {
             import(url).then((module) => {
-                for (let key in module) {
+                for (const key in module) {
                     if (key === moduleName) {
                         resolve(module[key]);
                     }
                 }
-                reject(null);
+                reject(new Error('loadJS Error'));
             });
         });
     }
 
-    async _load(dependency) {
+    async _load (dependency) {
         for (let i = 0; i < dependency.length; i++) {
             if (!window[dependency[i].checkVariable] && window.SwimAppLoaderCache.indexOf(dependency[i].url) === -1) {
                 const script = document.createElement('script');
                 script.src = dependency[i].url;
-                if(dependency[i].defer){
+                if (dependency[i].defer) {
                     script.defer = true;
                 }
-                if(dependency[i].async){
+                if (dependency[i].async) {
                     script.async = true;
                 }
                 document.body.appendChild(script);
@@ -80,7 +80,7 @@ export class Loader {
         });
     }
 
-    async _check(dependency, resolve, reject) {
+    async _check (dependency, resolve, reject) {
         let isReady = true;
         for (let i = 0; i < dependency.length; i++) {
             if (dependency[i].checkVariable && !window[dependency[i].checkVariable]) {
@@ -101,7 +101,6 @@ export class Loader {
                 // refactor throw error
                 console.error(dependency);
             }
-
         }
     }
 }

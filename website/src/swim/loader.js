@@ -54,7 +54,7 @@ export class Loader {
                         resolve(module[key]);
                     }
                 }
-                reject(null);
+                reject(new Error('loadJS Error'));
             });
         });
     }

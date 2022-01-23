@@ -9,7 +9,7 @@ const extendStringProtoType = () => {
                     result = result.replace(reg, '');
                     continue;
                 }
-                if (variable[key] == null || variable[key] === undefined) {
+                if (variable[key] === null || variable[key] === undefined) {
                     result = result.replace(reg, '');
                     continue;
                 }

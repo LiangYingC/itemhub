@@ -2,6 +2,8 @@
     "name": "dashboard",
     "version": "0.0.0",
     "scripts": {
+        "format": "prettier --write .",
+        "lint": "eslint . --ext ts --ext tsx --ext scss",
         "dev": "vite",
         "build": "tsc && vite build",
         "preview": "vite preview"

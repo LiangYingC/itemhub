@@ -1,3 +1,4 @@
+/* eslint-disable no-extend-native */
 const extendStringProtoType = () => {
     if (!String.prototype.bind) {
         String.prototype.bind = function (variable) {
@@ -8,7 +9,7 @@ const extendStringProtoType = () => {
                     result = result.replace(reg, '');
                     continue;
                 }
-                if (variable[key] == null || variable[key] == undefined) {
+                if (variable[key] == null || variable[key] === undefined) {
                     result = result.replace(reg, '');
                     continue;
                 }

@@ -5,8 +5,8 @@ import { CookieHelper } from '../../helpers/cookie.helper';
 import { DeviceDataservice } from '../../dataservices/device.dataservice';
 
 const Device = () => {
-    let { id } = useParams();
-    let [device, setDevice] = useState<{ name: string; id: number } | null>(
+    const { id } = useParams();
+    const [device, setDevice] = useState<{ name: string; id: number } | null>(
         null
     );
     useEffect(() => {

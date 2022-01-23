@@ -1,4 +1,5 @@
-{   "parser": "typescript-eslint/parser",
+{
+    "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaVersion": 2020,
         "sourceType": "module",
@@ -7,14 +8,21 @@
         },
         "useJSXTextNode": true
     },
+    "plugins": ["@typescript-eslint", "prettier"],
     "extends": [
         "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
         "plugin:@typescript-eslint/eslint-recommended",
-        "plugin:@typescript-eslint/recommended"
+        "prettier",
+        "plugin:prettier/recommended"
     ],
-    "plugins": [
-        "@typescript-eslint"
-    ],
+    "env": {
+        "es6": false,
+        "browser": true,
+        "commonjs": true,
+        "node": false,
+        "jquery": true
+    },
     "globals": {
         "Atomics": "readonly",
         "SharedArrayBuffer": "readonly",
@@ -23,23 +31,12 @@
         "$": "readonly",
         "__dirname": "readonly"
     },
-    "root": true,
     "rules": {
         "indent": ["error", 4],
-        "semi": [
-            "error",
-            "always"
-        ],
+        "semi": ["error", "always"],
         "no-var": "error",
         "prefer-const": "error",
         "@typescript-eslint/no-empty-function": ["off"],
         "@typescript-eslint/no-explicit-any": ["off"]
-    },
-    "env": {
-        "es6": false,
-        "browser": true,
-        "commonjs": true,
-        "node": false,
-        "jquery": true
     }
 }

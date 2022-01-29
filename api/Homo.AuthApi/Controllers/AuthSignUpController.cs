@@ -223,7 +223,6 @@ namespace Homo.AuthApi
                 else if (dto.Provider == SocialMediaProvider.LINE)
                 {
                     authResp = await LineOAuthHelper.GetAccessToken(_lineClientId, dto.RedirectUri, _lineClientSecret, dto.Code);
-                    System.Console.WriteLine($"testing:{Newtonsoft.Json.JsonConvert.SerializeObject(authResp, Newtonsoft.Json.Formatting.Indented)}");
                     userInfo = LineOAuthHelper.GetUserInfo(authResp.id_token);
                     provider = SocialMediaProvider.LINE;
                 }

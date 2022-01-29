@@ -32,7 +32,8 @@ bs.init({
         baseDir: 'src',
         index: 'index.html',
         middleware: (req, res, next) => {
-            if (req.url.length > 1 && req.url.endsWith('/')) {
+            const pathname = req.url.split('?')[0];
+            if (req.url.length > 1 && pathname.endsWith('/')) {
                 req.url = '/';
             }
             next();

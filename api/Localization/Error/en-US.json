@@ -15,5 +15,7 @@
     "REMOVE_FB_SUB_INVALID_CODE": "REMOVE_FB_SUB_INVALID_CODE",
     "WRONG_PASSWORD": "Wrong password",
     "SMS_ERROR": "Sms provider error: {message}",
-    "DATA_NOT_FOUND": "Data not round"
+    "DATA_NOT_FOUND": "Data not round",
+    "TAPPAY_TRANSACTION_ERROR": "third party payment service return error: {message}",
+    "DUPLICATE_SUBSCRIBE": "You already subscribed, current paln: {planName}, period: {startAt} ~ {endAt}"
 }

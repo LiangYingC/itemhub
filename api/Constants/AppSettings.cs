@@ -20,7 +20,8 @@ namespace Homo.IotApi
         public string LineClientSecret { get; set; }
         public string SmsUsername { get; set; }
         public string SmsPassword { get; set; }
-
+        public string TapPayPartnerKey { get; set; }
+        public string TapPayMerchantId { get; set; }
 
     }
 
@@ -36,5 +37,6 @@ namespace Homo.IotApi
         public bool AuthByCookie { get; set; }
         public string Pkcs1PublicKeyPath { get; set; }
         public string SmsClientUrl { get; set; }
+        public string TapPayEndpoint { get; set; }
     }
 }

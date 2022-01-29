@@ -26,6 +26,8 @@ namespace Homo.IotApi
         public virtual DbSet<DevicePinState> DevicePinState { get; set; }
         public virtual DbSet<DevicePinData> DevicePinData { get; set; }
         public virtual DbSet<Trigger> Trigger { get; set; }
+        public virtual DbSet<Subscription> Subscription { get; set; }
+        public virtual DbSet<Transaction> Transaction { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -76,6 +78,21 @@ namespace Homo.IotApi
                 entity.HasIndex(p => new { p.OwnerId });
                 entity.HasOne(p => p.SourceDevice).WithMany().HasForeignKey(p => p.SourceDeviceId);
                 entity.HasOne(p => p.DestinationDevice).WithMany().HasForeignKey(p => p.DestinationDeviceId);
+            });
+
+            modelBuilder.Entity<Subscription>(entity =>
+            {
+                entity.HasIndex(p => new { p.OwnerId });
+                entity.HasIndex(p => new { p.PricingPlan });
+                entity.HasIndex(p => new { p.StartAt });
+                entity.HasIndex(p => new { p.EndAt });
+                entity.HasIndex(p => new { p.TransactionId });
+            });
+
+            modelBuilder.Entity<Transaction>(entity =>
+            {
+                entity.HasIndex(p => new { p.OwnerId });
+                entity.HasIndex(p => new { p.CreatedAt });
             });
 
             OnModelCreatingPartial(modelBuilder);

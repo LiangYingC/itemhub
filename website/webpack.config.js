@@ -187,9 +187,6 @@ module.exports = {
             }, {
                 from: './src/sitemap.xml',
                 to: './'
-            }, {
-                from: './.foreverignore',
-                to: './'
             }]
         }),
         new PurgecssPlugin({

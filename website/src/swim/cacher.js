@@ -44,6 +44,8 @@ import '../components/pricing-plan/pricing-plan.scss';
 
 import authHTML from '../template/auth.html';
 
+import checkoutHTML from '../template/checkout.html';
+
 import contactUsHTML from '../template/contact-us.html';
 
 import cooperationHTML from '../template/cooperation.html';
@@ -68,9 +70,9 @@ import signUpHTML from '../template/sign-up.html';
 
 import verifyEmailHTML from '../template/verify-email.html';
 
+import '../css/main.css';
 import '../css/common.css';
 import '../css/cooperation.css';
-import '../css/main.css';
 import '../css/master.css';
 import '../css/overwrite.css';
 import '../css/pricing.css';
@@ -112,6 +114,7 @@ export const Cacher = {
         window.SwimAppComponents.PricingPlanComponent = PricingPlanComponent;
         window.SwimAppLoaderCache[`${APP_CONFIG.FRONT_END_PREFIX}/components/pricing-plan/pricing-plan.html`] = PricingPlanHTML;
         window.SwimAppLoaderCache[`${APP_CONFIG.FRONT_END_PREFIX}/template/auth.html`] = authHTML;
+        window.SwimAppLoaderCache[`${APP_CONFIG.FRONT_END_PREFIX}/template/checkout.html`] = checkoutHTML;
         window.SwimAppLoaderCache[`${APP_CONFIG.FRONT_END_PREFIX}/template/contact-us.html`] = contactUsHTML;
         window.SwimAppLoaderCache[`${APP_CONFIG.FRONT_END_PREFIX}/template/cooperation.html`] = cooperationHTML;
         window.SwimAppLoaderCache[`${APP_CONFIG.FRONT_END_PREFIX}/template/how.html`] = howHTML;

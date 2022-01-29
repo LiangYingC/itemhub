@@ -2,6 +2,7 @@ import { APP_CONFIG } from './config.js';
 // TODO :「隱私權政策」內容寫完後，可以打開，並加上 RoutingRule 相關設定
 // import { AboutController } from './controllers/about.controller.js';
 import { AuthController } from './controllers/auth.controller.js';
+import { CheckoutController } from './controllers/checkout.controller.js';
 import { CooperationController } from './controllers/cooperation.controller.js';
 import { FeatureController } from './controllers/feature.controller.js';
 import { HowController } from './controllers/how.controller.js';
@@ -161,6 +162,21 @@ export const RoutingRule = [{
                 skipSitemap: true,
                 controller: MeController,
                 html: '/template/me.html'
+            }, {
+                path: 'checkout/?pricingPlan',
+                skipSitemap: true,
+                controller: CheckoutController,
+                html: '/template/checkout.html',
+                dependency: [{
+                    url: 'https://js.tappaysdk.com/tpdirect/v5.8.0',
+                    checkVariable: 'TPDirect'
+                }],
+                prepareData: [{
+                    key: 'pricingPlans',
+                    func: async () => {
+                        return (await UniversalDataService.GetPricingPlan()).data;
+                    }
+                }]
             }]
         }]
     }]

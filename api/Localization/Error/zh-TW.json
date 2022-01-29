@@ -16,5 +16,7 @@
     "REMOVE_FB_SUB_INVALID_CODE": "REMOVE_FB_SUB_INVALID_CODE",
     "WRONG_PASSWORD": "輸入的密碼錯誤",
     "DATA_NOT_FOUND": "找不到資料",
-    "EMAIL_ALREADY_REGISTERED": "這個 Email 已經註冊過了"
+    "EMAIL_ALREADY_REGISTERED": "這個 Email 已經註冊過了",
+    "TAPPAY_TRANSACTION_ERROR": "第三方金流發生錯誤: {message}",
+    "DUPLICATE_SUBSCRIBE": "你重複訂閱囉, 目前的訂閱方案是: {planName}<br/> 期間: {startAt} ~ {endAt}"
 }

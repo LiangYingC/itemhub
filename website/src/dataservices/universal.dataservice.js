@@ -11,9 +11,14 @@ import {
 } from '../config.js';
 
 export const UniversalDataService = {
-    GetSocialMediaTypes: async (data) => {
-        console.log('testing');
+    GetSocialMediaTypes: async () => {
         const api = APP_CONFIG.API_ENDPOINT + API.UNIVERSAL_SOCIAL_MEDIA_TYPE;
+        return ApiHelper.sendRequest(api, {
+            method: 'GET'
+        });
+    },
+    GetPricingPlan: async () => {
+        const api = APP_CONFIG.API_ENDPOINT + API.UNIVERSAL_PRICING_PLANS;
         return ApiHelper.sendRequest(api, {
             method: 'GET'
         });

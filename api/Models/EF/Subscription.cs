@@ -25,5 +25,7 @@ namespace Homo.IotApi
         public string CardToken { get; set; }
         [Required]
         public long TransactionId { get; set; }
+        [Required]
+        public bool StopNextSubscribed { get; set; }
     }
 }

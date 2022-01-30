@@ -37,6 +37,7 @@ namespace Homo.IotApi
         public bool AuthByCookie { get; set; }
         public string Pkcs1PublicKeyPath { get; set; }
         public string SmsClientUrl { get; set; }
-        public string TapPayEndpoint { get; set; }
+        public string TapPayEndpointByPrime { get; set; }
+        public string TapPayEndpointByToken { get; set; }
     }
 }

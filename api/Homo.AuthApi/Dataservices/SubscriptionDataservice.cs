@@ -30,5 +30,23 @@ namespace Homo.IotApi
                 && (current == null || (x.StartAt <= current && x.EndAt >= current))
             ).ToList<Subscription>();
         }
+
+        public static List<Subscription> GetShouldBeAutoPayNextPeriod(IotDbContext dbContext, DateTime nextStartAt)
+        {
+            DateTime filterStartAt = nextStartAt.AddMonths(-1);
+            return dbContext.Subscription
+                .Where(x =>
+                    x.DeletedAt == null
+                    && x.StopNextSubscribed
+                    && x.EndAt > filterStartAt // 當前時間減一個月確定前一期是否有資料
+                    && !dbContext.Subscription.Any(y => nextStartAt >= y.StartAt && nextStartAt <= y.EndAt) // 同時沒有當期的資料
+                )
+                .ToList();
+        }
+
+        public static void CancelSubscription(IotDbContext dbContext, long ownerId)
+        {
+
+        }
     }
 }

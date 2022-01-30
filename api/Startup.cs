@@ -16,9 +16,11 @@ namespace Homo.IotApi
 {
     public class Startup
     {
+        Microsoft.AspNetCore.Hosting.IWebHostEnvironment _env;
         public Startup(IConfiguration configuration, Microsoft.AspNetCore.Hosting.IWebHostEnvironment env)
         {
             Console.WriteLine(env.EnvironmentName);
+            _env = env;
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
@@ -70,6 +72,14 @@ namespace Homo.IotApi
             services.AddDbContext<IotDbContext>(options => options.UseMySql(secrets.DBConnectionString, serverVersion));
             services.AddDbContext<Homo.AuthApi.DBContext>(options => options.UseMySql(secrets.DBConnectionString, serverVersion));
             services.AddControllers();
+            if (_env.EnvironmentName.ToLower() != "dev")
+            {
+                services.AddCronJob<AutoPaymentCronJob>(c =>
+                {
+                    c.TimeZoneInfo = TimeZoneInfo.Local;
+                    c.CronExpression = @"0 0 1 * *";
+                });
+            }
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo() { Title = "Api Doc", Version = "v1" });

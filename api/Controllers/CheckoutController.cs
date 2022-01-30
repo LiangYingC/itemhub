@@ -22,7 +22,7 @@ namespace Homo.IotApi
         public CheckoutController(IotDbContext dbContext, IOptions<AppSettings> appSettings)
         {
             _dbContext = dbContext;
-            _tapPayEndpoint = appSettings.Value.Common.TapPayEndpoint;
+            _tapPayEndpoint = appSettings.Value.Common.TapPayEndpointByPrime;
             _tapPayPartnerKey = appSettings.Value.Secrets.TapPayPartnerKey;
             _tapPayMerchantId = appSettings.Value.Secrets.TapPayMerchantId;
         }
@@ -48,7 +48,7 @@ namespace Homo.IotApi
             // 照比例算價格
             DateTime startOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
             int daysInMonth = System.DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
-            DateTime endOfMonth = startOfMonth.AddDays(daysInMonth);
+            DateTime endOfMonth = startOfMonth.AddDays(daysInMonth - 1).AddHours(23).AddMinutes(59).AddSeconds(59);
             int infactAmount = (int)Math.Round((decimal)amount * (endOfMonth - DateTime.Now).Days / daysInMonth);
             string planName = plans.Find(x => (int)x.Value == (int)dto.pricingPlan).Label;
             var postBody = new

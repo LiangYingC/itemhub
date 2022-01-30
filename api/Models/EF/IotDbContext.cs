@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Homo.AuthApi;
 
 namespace Homo.IotApi
 {
@@ -87,6 +88,8 @@ namespace Homo.IotApi
                 entity.HasIndex(p => new { p.StartAt });
                 entity.HasIndex(p => new { p.EndAt });
                 entity.HasIndex(p => new { p.TransactionId });
+                entity.Property(b => b.StopNextSubscribed)
+                    .HasDefaultValueSql("1");
             });
 
             modelBuilder.Entity<Transaction>(entity =>

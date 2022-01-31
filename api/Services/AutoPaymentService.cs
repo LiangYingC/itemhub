@@ -39,6 +39,11 @@ namespace Homo.IotApi
 
         public override async Task<dynamic> DoWork(CancellationToken cancellationToken)
         {
+            if (DateTime.Now.Day == 1)
+            {
+                return Task.CompletedTask;
+            }
+
             Console.WriteLine($"{DateTime.Now:hh:mm:ss} AutoPaymentCronJob is working.");
             DbContextOptionsBuilder<IotDbContext> iotBuilder = new DbContextOptionsBuilder<IotDbContext>();
             DbContextOptionsBuilder<DBContext> builder = new DbContextOptionsBuilder<DBContext>();

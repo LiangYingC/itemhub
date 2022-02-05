@@ -27,5 +27,10 @@ namespace Homo.IotApi
         public long TransactionId { get; set; }
         [Required]
         public bool StopNextSubscribed { get; set; }
+
+        public Subscription()
+        {
+            StopNextSubscribed = false;
+        }
     }
 }

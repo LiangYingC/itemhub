@@ -1,34 +1,35 @@
 <div class="checkout container">
+    <link href="/css/checkout.css" rel="stylesheet">
     <h1 class="my-4">
-        結帳頁面
-        <span>{selectedPricingPlanName}</span>
+        訂閱頁面<br />
+        方案 <span>{selectedPricingPlanName}</span>
         <span>NTD ${selectedPricingPlanPrice}</span>
     </h1>
 
     <div class="row checkout-form">
         <div class="col-12 col-md-6">
-            <div class="form-control card-number"></div>
+            <div class="tpfield card-number"></div>
         </div>
-        <div class="col-12 col-md-6">
-            <div class="form-control expiration"></div>
+        <div class="col-12 col-md-6 mt-3 mt-md-0">
+            <div class="tpfield expiration"></div>
         </div>
-        <div class="col-12 col-md-6">
-            <div class="form-control ccv"></div>
+        <div class="col-12 col-md-6 mt-3">
+            <div class="tpfield ccv"></div>
         </div>
-        <div class="col-12 col-md-6">
+        <div class="col-12 col-md-6 mt-3">
             <input data-field="name" class="form-control name" placeholder="持卡人" type="text" />
         </div>
-        <div class="col-12 col-md-6">
+        <div class="col-12 col-md-6 mt-3">
             <input data-field="email" class="form-control email" placeholder="信箱" type="text" />
         </div>
-        <div class="col-12 col-md-6">
+        <div class="col-12 col-md-6 mt-3">
             <input data-field="phone" class="form-control phone-number" placeholder="手機" type="text" />
         </div>
     </div>
 
     <div class="row">
-        <div class="col-12 col-md-6">
-            <button onclick="controller.checkout">Pay</button>
+        <div class="col-12 col-md-6 mt-3">
+            <button class="btn btn-lg btn-white" onclick="controller.checkout">訂閱</button>
         </div>
     </div>
 

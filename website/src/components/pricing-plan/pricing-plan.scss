@@ -32,6 +32,9 @@ $promoted-card-bg: #1f305a;
     .pricing-plan-card {
         border-radius: 16px;
         background-color: $promoted-card-bg;
+        &:hover {
+            text-decoration: none;
+        }
 
         &.promoting {
             .title {

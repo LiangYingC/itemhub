@@ -1,6 +1,6 @@
 import { END_POINT } from '@/constants';
 import { ApiHelper } from '@/helpers/api.helper';
-import { Device } from '@/types/devices.type';
+import { DeviceList, DeviceItem } from '@/types/devices.type';
 
 export const DevicesDataservice = {
     GetList: async ({ page, limit }: { page: number; limit: number }) => {
@@ -14,7 +14,7 @@ export const DevicesDataservice = {
         });
 
         return response.data as {
-            devices: Device[];
+            devices: DeviceList;
             rowNums: number;
         };
     },
@@ -26,6 +26,6 @@ export const DevicesDataservice = {
             apiPath,
             method: 'GET',
         });
-        return response.data;
+        return response.data as DeviceItem;
     },
 };

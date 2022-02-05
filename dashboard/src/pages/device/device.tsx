@@ -2,23 +2,18 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import styles from './device.module.scss';
 import { DevicesDataservice } from '@/dataservices/devices.dataservice';
+import { DeviceItem } from '@/types/devices.type';
 
 const Device = () => {
     const { id } = useParams();
-    const [device, setDevice] = useState<{ name: string; id: number } | null>(
-        null
-    );
+    const [device, setDevice] = useState<DeviceItem | null>(null);
     useEffect(() => {
         (async () => {
-            const data: any = await DevicesDataservice.GetOne({
+            const data = await DevicesDataservice.GetOne({
                 id: Number(id),
             });
             setDevice(data);
         })();
-
-        return () => {
-            setDevice(null);
-        };
     }, [id]);
 
     return (

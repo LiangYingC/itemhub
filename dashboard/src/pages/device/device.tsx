@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import styles from './device.module.scss';
-import { CookieHelper } from '../../helpers/cookie.helper';
-import { DeviceDataservice } from '../../dataservices/device.dataservice';
+import { DevicesDataservice } from '@/dataservices/devices.dataservice';
 
 const Device = () => {
     const { id } = useParams();
@@ -11,8 +10,9 @@ const Device = () => {
     );
     useEffect(() => {
         (async () => {
-            const token = CookieHelper.GetCookie('token') || '';
-            const data: any = await DeviceDataservice.GetOne(token, Number(id));
+            const data: any = await DevicesDataservice.GetOne({
+                id: Number(id),
+            });
             setDevice(data);
         })();
 

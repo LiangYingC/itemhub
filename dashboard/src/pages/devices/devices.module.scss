@@ -1,2 +1,18 @@
-.Devices {
+.devices {
+    // 目前 table 只是暫時的樣式，未來會在拔掉
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+    td,
+    th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #dddddd;
+    }
 }

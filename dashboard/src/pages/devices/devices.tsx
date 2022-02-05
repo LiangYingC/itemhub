@@ -1,53 +1,54 @@
-import { useContext, useEffect, useState } from 'react';
+import './devices.module.scss';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { DeviceDataservice } from '../../dataservices/device.dataservice';
-import { CookieHelper } from '../../helpers/cookie.helper';
+import { useAppSelector, useAppDispatch } from '@/hooks/redux.hook';
+import { DevicesDataservice } from '@/dataservices/devices.dataservice';
+import {
+    selectDevices,
+    devicesActions,
+} from '@/redux/reducers/devices.reducer';
 import styles from './devices.module.scss';
-import { useQuery } from '../../hooks/query.hook';
-import { LogContext } from '../../contexts/logs.context';
+import { useQuery } from '@/hooks/query.hook';
 
 const Devices = () => {
-    const [devices, setDevices] = useState<{ name: string; id: number }[] | []>(
-        []
-    );
     const query = useQuery();
-    const { logs, addLog } = useContext(LogContext);
+    const dispatch = useAppDispatch();
+    const devices = useAppSelector(selectDevices);
 
     useEffect(() => {
-        (async () => {
-            const page = Number(query.get('page') || 1);
-            const limit = Number(query.get('limit') || 20);
-            const token = CookieHelper.GetCookie('token') || '';
-            const data: any = await DeviceDataservice.GetList(
-                token,
-                page,
-                limit
-            );
-            setDevices(data.devices);
-        })();
+        const page = Number(query.get('page') || 1);
+        const limit = Number(query.get('limit') || 20);
 
-        return () => {
-            setDevices([]);
-        };
-    }, [query]);
+        if (devices === null) {
+            (async () => {
+                const data = await DevicesDataservice.GetList({ page, limit });
+                dispatch(devicesActions.addDevices(data.devices));
+            })();
+        }
+    }, [devices, query, dispatch]);
 
     return (
-        <div className={styles.Devices} data-testid="Devices">
-            {devices.map((item) => (
-                <div key={item.id}>
-                    <Link to={`/dashboard/devices/${item.id}`}>
-                        {item.name}
-                    </Link>{' '}
-                    <br />
+        <div className={styles.devices} data-testid="Devices">
+            {devices?.map(({ id, name, createdAt }) => (
+                <div key={id}>
+                    <table>
+                        <tr>
+                            <th>Id</th>
+                            <th>Name</th>
+                            <th>CreateTime</th>
+                        </tr>
+                        <tr>
+                            <td>{id}</td>
+                            <td>{name}</td>
+                            <td>{createdAt}</td>
+                        </tr>
+                        <tr>
+                            <Link to={`/dashboard/devices/${id}`}>
+                                Go to {name} detail page
+                            </Link>
+                        </tr>
+                    </table>
                 </div>
-            ))}
-            <br />
-            <hr />
-            <br />
-            <button onClick={() => addLog('aaaa')}>test add log</button>
-            <h1>Logs</h1>
-            {logs.map((log, index) => (
-                <div key={`log-${index}`}>aaa{log}aaa</div>
             ))}
         </div>
     );

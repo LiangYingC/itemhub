@@ -1,58 +1,29 @@
-import './app.css';
+import 'bootstrap/scss/bootstrap.scss';
+import './app.scss';
 import { Outlet } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { selectDevices } from './redux/reducers/device.reducer';
-// import { add, addMany } from './redux/reducers/device.reducer';
-import { useContext } from 'react';
-// import { AuthDataservice } from './dataservices/auth.dataservice';
-// import { CookieHelper } from './helpers/cookie.helper';
-import { LogContext } from './contexts/logs.context';
+import { useEffect } from 'react';
+import { AuthDataservice } from './dataservices/auth.dataservice';
+import { CookieHelper } from './helpers/cookie.helper';
+// login.local.ts 不會進 Git，現階段請跟 coworker 拿
+import { DEV_LOGIN } from '@/login.local';
 
-function App() {
-    const devices = useSelector(selectDevices);
-    const { logs, addLog } = useContext(LogContext);
-    return (
-        <div>
-            <button onClick={() => addLog('testing')}>Add Logs</button>
+const App = () => {
+    // dev 環境暫時直接打測試帳號的 API 取得 token，便於開發，之後可拔掉
+    useEffect(() => {
+        const token = CookieHelper.GetCookie('token');
 
-            <div>
-                {logs.map((item) => (
-                    <div key={item}>{item}</div>
-                ))}
-            </div>
-
-            {/* <div>
-                <button
-                    aria-label="Increment value"
-                    onClick={() => dispatch(increment())}
-                >
-                    +
-                </button>
-                <span>{count}</span>
-                <button
-                    aria-label="Decrement value"
-                    onClick={() => dispatch(decrement())}
-                >
-                    -
-                </button>
-            </div> */}
-
-            <div>
-                {/* <button onClick={() => dispatch(add())}>add</button>
-                <button
-                    onClick={() =>
-                        dispatch(addMany([{ name: '2' }, { name: '3' }]))
-                    }
-                >
-                    addMany
-                </button> */}
-                {devices.map((item) => (
-                    <div key={item.name}>{item.name}</div>
-                ))}
-            </div>
-            <Outlet />
-        </div>
-    );
-}
+        if (token === null && import.meta.env.VITE_ENV === 'dev') {
+            (async () => {
+                const data = await AuthDataservice.SignWithEmail({
+                    email: DEV_LOGIN.EMAIL,
+                    password: DEV_LOGIN.PASSWORD,
+                });
+                const tokenValue = data.token;
+                CookieHelper.SetCookie('token', tokenValue, 7);
+            })();
+        }
+    }, []);
+    return <Outlet />;
+};
 
 export default App;

@@ -5,22 +5,21 @@ import {
     devicesActions,
 } from '@/redux/reducers/devices.reducer';
 import { DevicesDataservice } from '@/dataservices/devices.dataservice';
-import { DeviceList } from '@/types/devices.type';
 
-export const useDeviceList = ({
+export const useGetDeviceList = ({
     page,
     limit,
 }: {
     page: number;
     limit: number;
 }) => {
-    const [isLoading, setIsLoading] = useState(false);
-    const [data, setData] = useState<DeviceList | null>(null);
-
     const dispatch = useAppDispatch();
     const devices = useAppSelector(selectDevices);
 
-    const fetchDeviceList = useCallback(async () => {
+    const [data, setData] = useState(devices);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const getDeviceList = useCallback(async () => {
         setIsLoading(true);
         const data = await DevicesDataservice.GetList({ page, limit });
         const deviceList = data.devices;
@@ -31,14 +30,41 @@ export const useDeviceList = ({
     }, [dispatch, limit, page]);
 
     useEffect(() => {
-        if (devices === null) {
-            fetchDeviceList();
+        if (data === null && !isLoading) {
+            getDeviceList();
         }
-    }, [devices, fetchDeviceList]);
+    }, [data, getDeviceList, isLoading]);
 
     return {
         isLoading,
         deviceList: data,
-        fetchDeviceList,
+        getDeviceList,
+    };
+};
+
+export const useGetDeviceItem = ({ id }: { id: number }) => {
+    const devices = useAppSelector(selectDevices);
+    const deviceItem = devices?.filter((device) => device.id === id)[0] || null;
+
+    const [data, setData] = useState(deviceItem);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const getDeviceItem = useCallback(async () => {
+        setIsLoading(true);
+        const data = await DevicesDataservice.GetItem({ id });
+        setData(data);
+        setIsLoading(false);
+    }, [id]);
+
+    useEffect(() => {
+        if (data === null && !isLoading) {
+            getDeviceItem();
+        }
+    }, [data, getDeviceItem, isLoading]);
+
+    return {
+        isLoading,
+        deviceItem: data,
+        getDeviceItem,
     };
 };

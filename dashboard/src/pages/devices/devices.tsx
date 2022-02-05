@@ -1,13 +1,13 @@
 import styles from './devices.module.scss';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@/hooks/query.hook';
-import { useDeviceList } from '@/hooks/api/devices.hook';
+import { useGetDeviceList } from '@/hooks/api/devices.hook';
 
 const Devices = () => {
     const query = useQuery();
     const page = Number(query.get('page') || 1);
     const limit = Number(query.get('limit') || 20);
-    const { isLoading, deviceList, fetchDeviceList } = useDeviceList({
+    const { isLoading, deviceList, getDeviceList } = useGetDeviceList({
         page,
         limit,
     });
@@ -39,7 +39,7 @@ const Devices = () => {
                     </div>
                 ))
             )}
-            <button onClick={fetchDeviceList}>refresh device list</button>
+            <button onClick={getDeviceList}>refresh device list</button>
         </div>
     );
 };

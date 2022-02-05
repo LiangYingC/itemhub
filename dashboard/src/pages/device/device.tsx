@@ -18,10 +18,23 @@ const Device = () => {
 
     return (
         <div className={styles.Device} data-testid="Device">
-            Device Component: Id: {id}
-            {JSON.stringify(device)}
-            <br />
-            <Link to="../devices">Back</Link>
+            {device && (
+                <>
+                    <div>id: {device.id}</div>
+                    <div>name: {device.name}</div>
+                    <div>ownerId: {device.ownerId}</div>
+                    <div>deviceId: {device.deviceId}</div>
+                    <div>createdAt: {device.createdAt}</div>
+                    <div>editedAt: {device.editedAt || 'not yet edit'}</div>
+                    <div>deletedAt: {device.deletedAt || 'not yet delete'}</div>
+                    <div>info: {device.info || 'no info data'}</div>
+                    <div>online: {device.online ? 'online' : 'offline'}</div>
+                    <div>zone: {device.zone || 'no zone data'}</div>
+                    <div>zoneId: {device.zone || 'no zoneId data'}</div>
+                    <div>zoneId: {device.zone || 'no zoneId data'}</div>
+                </>
+            )}
+            <Link to="../devices">Back to device list</Link>
         </div>
     );
 };

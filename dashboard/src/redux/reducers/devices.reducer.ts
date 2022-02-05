@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '@/redux/store';
-import { Device } from '@/types/devices.type';
+import { DeviceList } from '@/types/devices.type';
 
 export const devicesSlice = createSlice({
     name: 'devices',
-    initialState: null as Device[] | null,
+    initialState: null as DeviceList | null,
     reducers: {
-        addDevices: (state, action: PayloadAction<Device[]>) => {
+        addDevices: (state, action: PayloadAction<DeviceList>) => {
             return state === null
                 ? action.payload
                 : state.concat(action.payload);

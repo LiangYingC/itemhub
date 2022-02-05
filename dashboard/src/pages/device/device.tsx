@@ -9,7 +9,7 @@ const Device = () => {
     const [device, setDevice] = useState<DeviceItem | null>(null);
     useEffect(() => {
         (async () => {
-            const data = await DevicesDataservice.GetOne({
+            const data = await DevicesDataservice.GetItem({
                 id: Number(id),
             });
             setDevice(data);

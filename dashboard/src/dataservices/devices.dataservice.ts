@@ -18,7 +18,7 @@ export const DevicesDataservice = {
             rowNums: number;
         };
     },
-    GetOne: async ({ id }: { id: number }) => {
+    GetItem: async ({ id }: { id: number }) => {
         let apiPath = `${import.meta.env.VITE_API_ENDPOINT}${END_POINT.DEVICE}`;
         apiPath = apiPath.replace(':id', id.toString());
 

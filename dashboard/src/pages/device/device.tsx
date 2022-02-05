@@ -1,6 +1,6 @@
+import styles from './device.module.scss';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import styles from './device.module.scss';
 import { DevicesDataservice } from '@/dataservices/devices.dataservice';
 import { DeviceItem } from '@/types/devices.type';
 

@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom';
 import styles from './triggers.module.scss';
+import { Link } from 'react-router-dom';
 
 const Triggers = () => (
     <div className={styles.Triggers} data-testid="Triggers">

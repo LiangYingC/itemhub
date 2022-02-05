@@ -1,4 +1,4 @@
-export interface Device {
+export interface DeviceItem {
     id: number;
     name: string;
     ownerId: number;
@@ -11,3 +11,5 @@ export interface Device {
     zone: null | string;
     zoneId: null | string;
 }
+
+export type DeviceList = DeviceItem[];

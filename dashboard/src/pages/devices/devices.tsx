@@ -1,55 +1,45 @@
-import './devices.module.scss';
-import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { useAppSelector, useAppDispatch } from '@/hooks/redux.hook';
-import { DevicesDataservice } from '@/dataservices/devices.dataservice';
-import {
-    selectDevices,
-    devicesActions,
-} from '@/redux/reducers/devices.reducer';
 import styles from './devices.module.scss';
+import { Link } from 'react-router-dom';
 import { useQuery } from '@/hooks/query.hook';
+import { useDeviceList } from '@/hooks/api/devices.hook';
 
 const Devices = () => {
     const query = useQuery();
-    const dispatch = useAppDispatch();
-    const devices = useAppSelector(selectDevices);
-
-    useEffect(() => {
-        const page = Number(query.get('page') || 1);
-        const limit = Number(query.get('limit') || 20);
-
-        if (devices === null) {
-            (async () => {
-                const data = await DevicesDataservice.GetList({ page, limit });
-                dispatch(devicesActions.addDevices(data.devices));
-            })();
-        }
-    }, [devices, query, dispatch]);
+    const page = Number(query.get('page') || 1);
+    const limit = Number(query.get('limit') || 20);
+    const { isLoading, deviceList, fetchDeviceList } = useDeviceList({
+        page,
+        limit,
+    });
 
     return (
         <div className={styles.devices} data-testid="Devices">
-            {devices?.map(({ id, name, createdAt }) => (
-                <div key={id}>
-                    <table>
-                        <tr>
-                            <th>Id</th>
-                            <th>Name</th>
-                            <th>CreateTime</th>
-                        </tr>
-                        <tr>
-                            <td>{id}</td>
-                            <td>{name}</td>
-                            <td>{createdAt}</td>
-                        </tr>
-                        <tr>
-                            <Link to={`/dashboard/devices/${id}`}>
-                                Go to {name} detail page
-                            </Link>
-                        </tr>
-                    </table>
-                </div>
-            ))}
+            {isLoading ? (
+                <div>Loading</div>
+            ) : (
+                deviceList?.map(({ id, name, createdAt }) => (
+                    <div key={id}>
+                        <table>
+                            <tr>
+                                <th>Id</th>
+                                <th>Name</th>
+                                <th>CreateTime</th>
+                            </tr>
+                            <tr>
+                                <td>{id}</td>
+                                <td>{name}</td>
+                                <td>{createdAt}</td>
+                            </tr>
+                            <tr>
+                                <Link to={`/dashboard/devices/${id}`}>
+                                    Go to {name} detail page
+                                </Link>
+                            </tr>
+                        </table>
+                    </div>
+                ))
+            )}
+            <button onClick={fetchDeviceList}>refresh device list</button>
         </div>
     );
 };

@@ -25,7 +25,7 @@ export const useGetDeviceList = ({
         const deviceList = data.devices;
 
         setData(deviceList);
-        dispatch(devicesActions.addDevices(deviceList));
+        dispatch(devicesActions.setDevices(deviceList));
         setIsLoading(false);
     }, [dispatch, limit, page]);
 

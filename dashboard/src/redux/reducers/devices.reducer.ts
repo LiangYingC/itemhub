@@ -6,10 +6,8 @@ export const devicesSlice = createSlice({
     name: 'devices',
     initialState: null as DeviceList | null,
     reducers: {
-        addDevices: (state, action: PayloadAction<DeviceList>) => {
-            return state === null
-                ? action.payload
-                : state.concat(action.payload);
+        setDevices: (state, action: PayloadAction<DeviceList>) => {
+            return action.payload;
         },
     },
 });

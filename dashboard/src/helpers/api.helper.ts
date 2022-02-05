@@ -1,84 +1,113 @@
+import { CookieHelper } from '@/helpers/cookie.helper';
+interface SendRequestParams {
+    apiPath: string;
+    method: string;
+    headers?: { [key: string]: any };
+    payload?: any;
+    shouldDeleteContentType?: boolean;
+    callbackFunc?: (result: any) => null;
+}
+
+interface FetchParams {
+    apiPath: string;
+    fetchOption: {
+        method: string;
+        headers: { [key: string]: any };
+        body?: string;
+    };
+    shouldDeleteContentType: boolean;
+}
+
 export const ApiHelper = {
-    SendRequestWithToken: (
-        api: string,
-        data: any,
-        method: string,
-        callbackFunc?: () => null
-    ) => {
-        const token = data.token;
-        delete data.token;
+    SendRequestWithToken: ({
+        apiPath,
+        method,
+        headers = {},
+        payload = null,
+        shouldDeleteContentType = false,
+        callbackFunc,
+    }: SendRequestParams) => {
+        const token = CookieHelper.GetCookie('token');
 
-        return ApiHelper.SendRequest(
-            api,
-            {
-                method: method,
-                headers: {
-                    Authorization: 'Bearer ' + token,
-                },
-                body: JSON.stringify(data),
-            },
-            callbackFunc
-        );
+        if (token) {
+            return ApiHelper.SendRequest({
+                apiPath,
+                method,
+                headers: { Authorization: `Bearer ${token}`, ...headers },
+                payload,
+                shouldDeleteContentType,
+                callbackFunc,
+            });
+        } else {
+            import.meta.env.VITE_ENV === 'prod'
+                ? (window.location.href = '/')
+                : alert('empty token');
+        }
     },
-    LocalError: (reason: string): any => {
-        return {
-            status: 'FAILED',
-            data: {
-                message: reason,
-            },
-        };
-    },
-    SendRequest: (
-        api: string,
-        fetchOption: any,
-        callbackFunc?: (result: any) => null
-    ) => {
+    SendRequest: ({
+        apiPath,
+        method,
+        headers = {},
+        payload = null,
+        shouldDeleteContentType = false,
+        callbackFunc,
+    }: SendRequestParams) => {
+        const fetchOption = payload
+            ? {
+                  method: method,
+                  headers,
+                  body: JSON.stringify(payload),
+              }
+            : {
+                  method: method,
+                  headers,
+              };
+
         // eslint-disable-next-line no-async-promise-executor
-        return new Promise(async (resolve) => {
-            let result;
-            const newOption = {
-                ...fetchOption,
-            };
-            delete newOption.headers;
+        return new Promise(async (resolve, reject) => {
+            let result: any;
+            let response: Response;
 
-            let resp: any;
             try {
-                resp = await ApiHelper.fetch(api, fetchOption);
+                response = await ApiHelper.Fetch({
+                    apiPath,
+                    fetchOption,
+                    shouldDeleteContentType,
+                });
             } catch (error) {
+                alert('目前發生問題，請稍後再試');
+
                 result = {
                     status: 'FAILED',
                     data: {
                         message: error,
                     },
                 };
-                resolve(result);
-                return;
+                return reject(result);
             }
-            const isDownloadFile = [
-                'text/csv',
-                'application/vnd.ms-excel',
-                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            ].includes(resp.headers.get('content-type'));
 
-            if (resp.status === 200 && !isDownloadFile) {
-                const jsonData = await resp.json();
+            const contentType = response.headers.get('content-type');
+            const isDownloadFile = contentType
+                ? [
+                      'text/csv',
+                      'application/vnd.ms-excel',
+                      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                  ].includes(contentType)
+                : false;
+
+            if (response.status === 200 && !isDownloadFile) {
+                const jsonData = await response.json();
                 result = {
                     status: 'OK',
-                    httpStatus: resp.status,
+                    httpStatus: response.status,
                     data: jsonData,
                 };
-                if (fetchOption.method === 'GET') {
-                    const newOption = {
-                        ...fetchOption,
-                    };
-                    delete newOption.headers;
-                }
-            } else if (resp.status === 200 && isDownloadFile) {
-                const blob = await resp.blob();
+            } else if (response.status === 200 && isDownloadFile) {
+                const blob = await response.blob();
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 let filename = null;
-                const disposition = resp.headers.get('content-disposition');
+                const disposition = response.headers.get('content-disposition');
                 if (disposition && disposition.indexOf('attachment') !== -1) {
                     const filenameRegex =
                         /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
@@ -102,19 +131,19 @@ export const ApiHelper = {
                     status: 'OK',
                     httpStatus: 200,
                 };
-            } else if (resp.status === 204) {
+            } else if (response.status === 204) {
                 result = {
                     status: 'FAILED',
-                    httpStatus: resp.status,
+                    httpStatus: response.status,
                     data: {
                         message: '沒有資料',
                     },
                 };
             } else {
-                const jsonData = await resp.json();
+                const jsonData = await response.json();
                 result = {
                     status: 'FAILED',
-                    httpStatus: resp.status,
+                    httpStatus: response.status,
                     data: {
                         message: jsonData.message,
                         invalidatedPayload: jsonData.invalidatedPayload,
@@ -127,29 +156,26 @@ export const ApiHelper = {
             resolve(result);
         });
     },
-    fetch: (url: string, option: any) => {
-        if (option.cache) {
-            console.warn('Cound not declate cache in option params');
+    Fetch: ({ apiPath, fetchOption, shouldDeleteContentType }: FetchParams) => {
+        if (
+            fetchOption.method === 'GET' &&
+            typeof fetchOption.body !== 'undefined'
+        ) {
+            throw new Error("Don't set body payload when fetch method is GET.");
         }
 
-        if (option.method === 'GET') {
-            delete option.body;
-        }
-
-        const headers = {
-            'Content-Type': 'application/json',
-            ...option.headers,
-        };
+        const headers = shouldDeleteContentType
+            ? fetchOption.headers
+            : {
+                  'Content-Type': 'application/json',
+                  ...fetchOption.headers,
+              };
 
         if (
-            option &&
-            option.headers &&
-            option.headers['Content-Type'] === null
+            fetchOption.body &&
+            !(JSON.parse(fetchOption.body) instanceof FormData)
         ) {
-            delete headers['Content-Type'];
-        }
-        if (option.body && !(option.body instanceof FormData)) {
-            const newBody = JSON.parse(option.body);
+            const newBody = JSON.parse(fetchOption.body);
             for (const key in newBody) {
                 if (newBody[key] === true) {
                     newBody[key] = 1;
@@ -157,12 +183,14 @@ export const ApiHelper = {
                     newBody[key] = 0;
                 }
             }
-            option.body = JSON.stringify(newBody);
+            fetchOption.body = JSON.stringify(newBody);
         }
-        const newOption = {
-            ...option,
+
+        const finalOption = {
+            ...fetchOption,
             headers,
         };
-        return fetch(url, newOption);
+
+        return fetch(apiPath, finalOption);
     },
 };

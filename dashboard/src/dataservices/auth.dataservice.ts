@@ -1,14 +1,36 @@
-import { END_POINT } from '../constants';
-import { ApiHelper } from '../helpers/api.helper';
+import { END_POINT } from '@/constants';
+import { ApiHelper } from '@/helpers/api.helper';
 
 export const AuthDataservice = {
-    IsSigned: async (token: string) => {
-        return ApiHelper.SendRequestWithToken(
-            `${import.meta.env.VITE_API_ENDPOINT}${END_POINT.IS_SIGNED}`,
-            {
-                token,
+    SignWithEmail: async ({
+        email,
+        password,
+    }: {
+        email: string;
+        password: string;
+    }) => {
+        const apiPath = `${import.meta.env.VITE_API_ENDPOINT}${
+            END_POINT.SIGN_WITH_EMAIL
+        }`;
+
+        const response: any = await ApiHelper.SendRequest({
+            apiPath,
+            method: 'POST',
+            payload: {
+                email,
+                password,
             },
-            'POST'
-        );
+        });
+
+        return response.data as { token: string };
+    },
+    IsSigned: async () => {
+        const apiPath = `${import.meta.env.VITE_API_ENDPOINT}${
+            END_POINT.IS_SIGNED
+        }`;
+        return ApiHelper.SendRequestWithToken({
+            apiPath,
+            method: 'POST',
+        });
     },
 };

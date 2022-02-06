@@ -3,7 +3,7 @@ import { ApiHelper } from '@/helpers/api.helper';
 import { DeviceList, DeviceItem } from '@/types/devices.type';
 
 export const DevicesDataservice = {
-    GetList: async ({ page, limit }: { page: number; limit: number }) => {
+    GetDevices: async ({ page, limit }: { page: number; limit: number }) => {
         const apiPath = `${API_PATH_PREFIX}${END_POINT.DEVICES}?page=${page}&limit=${limit}`;
 
         const response: any = await ApiHelper.SendRequestWithToken({
@@ -16,7 +16,7 @@ export const DevicesDataservice = {
             rowNums: number;
         };
     },
-    GetItem: async ({ id }: { id: number }) => {
+    GetSingleItem: async ({ id }: { id: number }) => {
         let apiPath = `${API_PATH_PREFIX}${END_POINT.DEVICE}`;
         apiPath = apiPath.replace(':id', id.toString());
 
@@ -26,7 +26,7 @@ export const DevicesDataservice = {
         });
         return response.data as DeviceItem;
     },
-    PatchItem: async ({
+    UpdateSingleDevice: async ({
         id,
         editedData,
     }: {

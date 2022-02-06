@@ -21,7 +21,7 @@ export const useRefreshDevices = ({
 
         try {
             setIsLoading(true);
-            const data = await DevicesDataservice.GetList({ page, limit });
+            const data = await DevicesDataservice.GetDevices({ page, limit });
             const devices = data.devices;
             dispatch(devicesActions.refreshDevices(devices));
         } catch (err: any) {
@@ -49,7 +49,7 @@ export const useRefreshDeviceItem = ({ id }: { id: number }) => {
 
         try {
             setIsLoading(true);
-            const data = await DevicesDataservice.GetItem({ id });
+            const data = await DevicesDataservice.GetSingleItem({ id });
             dispatch(devicesActions.refreshSingleDevice(data));
         } catch (err: any) {
             setError(err.toString());
@@ -82,7 +82,10 @@ export const useUpdateSingleDevice = ({
 
         try {
             setIsLoading(true);
-            const data = await DevicesDataservice.PatchItem({ id, editedData });
+            const data = await DevicesDataservice.UpdateSingleDevice({
+                id,
+                editedData,
+            });
             if (data.status === 'OK') {
                 console.log('in');
                 dispatch(

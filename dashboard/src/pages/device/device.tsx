@@ -2,8 +2,8 @@ import styles from './device.module.scss';
 import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import {
-    useRefreshDeviceItem,
-    useUpdateSingleDevice,
+    useGetSingleDeviceApi,
+    useUpdateSingleDeviceApi,
 } from '@/hooks/apis/devices.hook';
 import { DeviceItem } from '@/types/devices.type';
 import { useAppSelector } from '@/hooks/redux.hook';
@@ -27,17 +27,17 @@ const Device = () => {
     const [editedData, setEditedData] =
         useState<Partial<DeviceItem>>(initialEditedData);
 
-    const { isLoading, refreshSingleDevice } = useRefreshDeviceItem({
+    const { isLoading, getSingleDeviceApi } = useGetSingleDeviceApi({
         id: numId,
     });
-    const { updateSingleDevice } = useUpdateSingleDevice({
+    const { updateSingleDeviceApi } = useUpdateSingleDeviceApi({
         id: numId,
         editedData: editedData,
     });
 
     useEffect(() => {
         if (device === null) {
-            refreshSingleDevice();
+            getSingleDeviceApi();
         }
     }, []);
 
@@ -46,7 +46,7 @@ const Device = () => {
     };
 
     const updateDeviceData = () => {
-        updateSingleDevice();
+        updateSingleDeviceApi();
         setEditedData(initialEditedData);
         closeModal();
     };

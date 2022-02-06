@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@/hooks/query.hook';
 import { useAppSelector } from '@/hooks/redux.hook';
-import { useRefreshDevices } from '@/hooks/apis/devices.hook';
+import { useGetDevicesApi } from '@/hooks/apis/devices.hook';
 import { selectDevices } from '@/redux/reducers/devices.reducer';
 
 const Devices = () => {
@@ -12,13 +12,13 @@ const Devices = () => {
     const limit = Number(query.get('limit') || 20);
     const devices = useAppSelector(selectDevices);
 
-    const { isLoading, refreshDevices } = useRefreshDevices({
+    const { isLoading, getDevicesApi } = useGetDevicesApi({
         page,
         limit,
     });
 
     useEffect(() => {
-        refreshDevices();
+        getDevicesApi();
     }, []);
 
     return (
@@ -49,7 +49,7 @@ const Devices = () => {
                     </div>
                 ))
             )}
-            <button onClick={refreshDevices}>refresh device list</button>
+            <button onClick={getDevicesApi}>refresh device list</button>
         </div>
     );
 };

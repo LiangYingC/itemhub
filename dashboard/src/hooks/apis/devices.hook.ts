@@ -4,7 +4,7 @@ import { devicesActions } from '@/redux/reducers/devices.reducer';
 import { DevicesDataservice } from '@/dataservices/devices.dataservice';
 import { DeviceItem } from '@/types/devices.type';
 
-export const useRefreshDevices = ({
+export const useGetDevicesApi = ({
     page,
     limit,
 }: {
@@ -16,7 +16,7 @@ export const useRefreshDevices = ({
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
 
-    const refreshDevices = useCallback(async () => {
+    const getDevicesApi = useCallback(async () => {
         if (isLoading) return;
 
         try {
@@ -34,17 +34,17 @@ export const useRefreshDevices = ({
     return {
         isLoading,
         error,
-        refreshDevices,
+        getDevicesApi,
     };
 };
 
-export const useRefreshDeviceItem = ({ id }: { id: number }) => {
+export const useGetSingleDeviceApi = ({ id }: { id: number }) => {
     const dispatch = useAppDispatch();
 
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
 
-    const refreshSingleDevice = useCallback(async () => {
+    const getSingleDeviceApi = useCallback(async () => {
         if (isLoading) return;
 
         try {
@@ -61,11 +61,11 @@ export const useRefreshDeviceItem = ({ id }: { id: number }) => {
     return {
         isLoading,
         error,
-        refreshSingleDevice,
+        getSingleDeviceApi,
     };
 };
 
-export const useUpdateSingleDevice = ({
+export const useUpdateSingleDeviceApi = ({
     id,
     editedData,
 }: {
@@ -77,7 +77,7 @@ export const useUpdateSingleDevice = ({
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
 
-    const updateSingleDevice = useCallback(async () => {
+    const updateSingleDeviceApi = useCallback(async () => {
         if (isLoading) return;
 
         try {
@@ -102,6 +102,6 @@ export const useUpdateSingleDevice = ({
     return {
         isLoading,
         error,
-        updateSingleDevice,
+        updateSingleDeviceApi,
     };
 };

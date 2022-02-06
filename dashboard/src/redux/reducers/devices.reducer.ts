@@ -6,7 +6,7 @@ export const devicesSlice = createSlice({
     name: 'devices',
     initialState: null as DeviceItem[] | null,
     reducers: {
-        refreshDevices: (_, action: PayloadAction<DeviceItem[]>) => {
+        refreshDevices: (state, action: PayloadAction<DeviceItem[]>) => {
             const newDevices = action.payload;
             return newDevices;
         },

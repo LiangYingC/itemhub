@@ -15,7 +15,7 @@ import {
 
 export const useGetDevicesApi = ({ page, limit }: GetDevicesParams) => {
     const fetchGetDevices = useCallback(() => {
-        return DevicesDataservice.GetDevices({ page, limit });
+        return DevicesDataservice.GetList({ page, limit });
     }, [limit, page]);
 
     const dispatch = useAppDispatch();
@@ -43,7 +43,7 @@ export const useGetDevicesApi = ({ page, limit }: GetDevicesParams) => {
 
 export const useGetSingleDeviceApi = ({ id }: GetSingleDeviceParams) => {
     const fetchGetSingleDevice = useCallback(() => {
-        return DevicesDataservice.GetSingleItem({ id });
+        return DevicesDataservice.GetSingle({ id });
     }, [id]);
 
     const dispatch = useAppDispatch();
@@ -73,7 +73,7 @@ export const useUpdateSingleDeviceApi = ({
 }: UpdateSingleDeviceParams) => {
     const fetchGetSingleDevice = useCallback(
         () =>
-            DevicesDataservice.UpdateSingleDevice({
+            DevicesDataservice.UpdateSingle({
                 id,
                 editedData,
             }),
@@ -108,7 +108,7 @@ export const useUpdateSingleDeviceApi = ({
 
 export const useGetDevicePinsApi = ({ id }: GetDevicePinsParams) => {
     const fetchGetSingleDevice = useCallback(
-        () => DevicesDataservice.GetDevicePins({ id }),
+        () => DevicesDataservice.GetSinglePins({ id }),
         [id]
     );
 

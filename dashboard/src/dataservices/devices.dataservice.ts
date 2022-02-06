@@ -11,7 +11,7 @@ import {
 } from '@/types/devices.dataservice';
 
 export const DevicesDataservice = {
-    GetDevices: async ({ page, limit }: GetDevicesParams) => {
+    GetList: async ({ page, limit }: GetDevicesParams) => {
         const apiPath = `${API_PATH_PREFIX}${END_POINT.DEVICES}?page=${page}&limit=${limit}`;
 
         const response: any = await ApiHelper.SendRequestWithToken({
@@ -21,7 +21,7 @@ export const DevicesDataservice = {
 
         return response.data as GetDevicesResponseData;
     },
-    GetSingleItem: async ({ id }: GetSingleDeviceParams) => {
+    GetSingle: async ({ id }: GetSingleDeviceParams) => {
         let apiPath = `${API_PATH_PREFIX}${END_POINT.DEVICE}`;
         apiPath = apiPath.replace(':id', id.toString());
 
@@ -31,10 +31,7 @@ export const DevicesDataservice = {
         });
         return response.data as DeviceItem;
     },
-    UpdateSingleDevice: async ({
-        id,
-        editedData,
-    }: UpdateSingleDeviceParams) => {
+    UpdateSingle: async ({ id, editedData }: UpdateSingleDeviceParams) => {
         let apiPath = `${API_PATH_PREFIX}${END_POINT.DEVICE}`;
         apiPath = apiPath.replace(':id', id.toString());
 
@@ -45,7 +42,7 @@ export const DevicesDataservice = {
         });
         return response.data as UpdateSingleDeviceResponseData;
     },
-    GetDevicePins: async ({ id }: GetDevicePinsParams) => {
+    GetSinglePins: async ({ id }: GetDevicePinsParams) => {
         let apiPath = `${API_PATH_PREFIX}${END_POINT.DEVICE_PINS}`;
         apiPath = apiPath.replace(':id', id.toString());
 

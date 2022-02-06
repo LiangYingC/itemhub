@@ -10,6 +10,7 @@ import { useAppSelector } from '@/hooks/redux.hook';
 import { selectDevices } from '@/redux/reducers/devices.reducer';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import Pins from '@/components/pins/pins';
 
 const initialEditedData = {
     deviceId: '',
@@ -57,8 +58,9 @@ const Device = () => {
             {isLoading || device === null ? (
                 <div>Loading</div>
             ) : (
-                <>
+                <div>
                     <div>
+                        <h2>Device Data</h2>
                         <div>id: {device.id}</div>
                         <div>name: {device.name}</div>
                         <div>ownerId: {device.ownerId}</div>
@@ -78,7 +80,11 @@ const Device = () => {
                     <button onClick={() => setIsShowModal(true)}>
                         edit data
                     </button>
-                </>
+                    <div>
+                        <h2>Pins Data</h2>
+                        <Pins />
+                    </div>
+                </div>
             )}
             <Modal show={isShowModal} onHide={closeModal} centered>
                 <Modal.Header closeButton>

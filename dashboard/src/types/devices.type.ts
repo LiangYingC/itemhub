@@ -9,7 +9,7 @@ export interface DeviceItem {
     info: null | string;
     online: boolean;
     zone: null | string;
-    zoneId: null | string;
+    zoneId: null | number;
 }
 
 export type DeviceList = DeviceItem[];

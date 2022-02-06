@@ -1,4 +1,4 @@
-import { API_PATH_PREFIX, END_POINT } from '@/constants';
+import { API_PATH_PREFIX, END_POINT } from '@/constants/api';
 import { ApiHelper } from '@/helpers/api.helper';
 import { DeviceList, DeviceItem } from '@/types/devices.type';
 

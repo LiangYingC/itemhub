@@ -23,7 +23,8 @@ namespace Homo.IotApi
                 .Select(g => new DevicePin()
                 {
                     DeviceId = g.Key.DeviceId,
-                    Pin = g.Key.Pin
+                    Pin = g.Key.Pin,
+                    Mode = DEVICE_MODE.SENSOR
                 })
                 .ToList<DevicePin>();
 
@@ -35,7 +36,8 @@ namespace Homo.IotApi
                 .Select(x => new DevicePin()
                 {
                     DeviceId = x.DeviceId,
-                    Pin = x.Pin
+                    Pin = x.Pin,
+                    Mode = DEVICE_MODE.SWITCH
                 })
                 .ToList<DevicePin>();
 
@@ -48,5 +50,6 @@ namespace Homo.IotApi
     {
         public string Pin { get; set; }
         public long DeviceId { get; set; }
+        public DEVICE_MODE Mode { get; set; }
     }
 }

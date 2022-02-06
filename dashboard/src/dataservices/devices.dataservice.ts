@@ -4,7 +4,7 @@ import { DeviceList, DeviceItem } from '@/types/devices.type';
 
 export const DevicesDataservice = {
     GetList: async ({ page, limit }: { page: number; limit: number }) => {
-        const apiPath = `${import.meta.env.VITE_API_ENDPOINT}${
+        const apiPath = `${import.meta.env.VITE_API_PATH_PREFIX}${
             END_POINT.DEVICES
         }?page=${page}&limit=${limit}`;
 
@@ -19,7 +19,9 @@ export const DevicesDataservice = {
         };
     },
     GetItem: async ({ id }: { id: number }) => {
-        let apiPath = `${import.meta.env.VITE_API_ENDPOINT}${END_POINT.DEVICE}`;
+        let apiPath = `${import.meta.env.VITE_API_PATH_PREFIX}${
+            END_POINT.DEVICE
+        }`;
         apiPath = apiPath.replace(':id', id.toString());
 
         const response: any = await ApiHelper.SendRequestWithToken({

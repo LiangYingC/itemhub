@@ -43,4 +43,14 @@ export const DevicesDataservice = {
         });
         return response.data as { status: string };
     },
+    GetDevicePins: async ({ id }: { id: number }) => {
+        let apiPath = `${API_PATH_PREFIX}${END_POINT.DEVICE_PINS}`;
+        apiPath = apiPath.replace(':id', id.toString());
+
+        const response: any = await ApiHelper.SendRequestWithToken({
+            apiPath,
+            method: 'GET',
+        });
+        return response.data as { status: string };
+    },
 };

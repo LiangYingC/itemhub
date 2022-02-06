@@ -5,6 +5,7 @@ export const END_POINT = {
     IS_SIGNED: 'auth/is-sign-in',
     DEVICES: 'me/devices',
     DEVICE: 'me/devices/:id',
+    DEVICE_PINS: '/v1/me/devices/:id/pins',
 };
 
 export const RESPONSE_STATUS = {

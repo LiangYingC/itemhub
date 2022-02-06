@@ -90,8 +90,8 @@ const Device = () => {
                 <Modal.Header closeButton>
                     <Modal.Title>Edited Modal</Modal.Title>
                 </Modal.Header>
-                <Modal.Body className={styles['edited-modal-body']}>
-                    <label>
+                <Modal.Body>
+                    <label className="d-block">
                         <div>deviceId:</div>
                         <input
                             type="text"
@@ -106,7 +106,7 @@ const Device = () => {
                             }
                         />
                     </label>
-                    <label>
+                    <label className="d-block">
                         <div>name:</div>
                         <input
                             type="text"
@@ -121,7 +121,7 @@ const Device = () => {
                             }
                         />
                     </label>
-                    <label>
+                    <label className="d-block">
                         <div>info:</div>
                         <input
                             type="text"

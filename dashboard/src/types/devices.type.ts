@@ -13,3 +13,10 @@ export interface DeviceItem {
 }
 
 export type DeviceList = DeviceItem[];
+
+export interface PinItem {
+    pin: string;
+    deviceId: number;
+}
+
+export type PinList = PinItem[];

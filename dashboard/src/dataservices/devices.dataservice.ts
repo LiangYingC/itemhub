@@ -26,4 +26,21 @@ export const DevicesDataservice = {
         });
         return response.data as DeviceItem;
     },
+    PatchItem: async ({
+        id,
+        editedData,
+    }: {
+        id: number;
+        editedData: Partial<DeviceItem>;
+    }) => {
+        let apiPath = `${API_PATH_PREFIX}${END_POINT.DEVICE}`;
+        apiPath = apiPath.replace(':id', id.toString());
+
+        const response: any = await ApiHelper.SendRequestWithToken({
+            apiPath,
+            method: 'PATCH',
+            payload: editedData,
+        });
+        return response.data as { status: string };
+    },
 };

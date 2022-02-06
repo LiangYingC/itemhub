@@ -12,8 +12,6 @@ export interface DeviceItem {
     zoneId: null | number;
 }
 
-export type DeviceList = DeviceItem[];
-
 export interface PinItem {
     pin: string;
     deviceId: number;

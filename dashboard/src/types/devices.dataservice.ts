@@ -1,11 +1,11 @@
-import { DeviceList, DeviceItem } from './devices.type';
+import { DeviceItem } from './devices.type';
 
 export interface GetDevicesParams {
     page: number;
     limit: number;
 }
 export interface GetDevicesResponseData {
-    devices: DeviceList;
+    devices: DeviceItem[];
     rowNums: number;
 }
 

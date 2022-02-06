@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '@/redux/store';
-import { DeviceList, DeviceItem } from '@/types/devices.type';
+import { DeviceItem } from '@/types/devices.type';
 
 export const devicesSlice = createSlice({
     name: 'devices',
-    initialState: null as DeviceList | null,
+    initialState: null as DeviceItem[] | null,
     reducers: {
-        refreshDevices: (_, action: PayloadAction<DeviceList>) => {
+        refreshDevices: (_, action: PayloadAction<DeviceItem[]>) => {
             const newDevices = action.payload;
             return newDevices;
         },

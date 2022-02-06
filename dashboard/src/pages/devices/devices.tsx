@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@/hooks/query.hook';
 import { useAppSelector } from '@/hooks/redux.hook';
-import { useGetDeviceList } from '@/hooks/apis/devices.hook';
+import { useRefreshDevices } from '@/hooks/apis/devices.hook';
 import { selectDevices } from '@/redux/reducers/devices.reducer';
 
 const Devices = () => {
@@ -12,16 +12,17 @@ const Devices = () => {
     const limit = Number(query.get('limit') || 20);
     const devices = useAppSelector(selectDevices);
 
-    const { isLoading, refreshDeviceList } = useGetDeviceList({
+    const { isLoading, refreshDevices } = useRefreshDevices({
         page,
         limit,
     });
 
     useEffect(() => {
-        refreshDeviceList();
+        refreshDevices();
     }, []);
 
     return (
+        // UI 結構等設計稿後再重構調整
         <div className={styles.devices} data-testid="Devices">
             {isLoading ? (
                 <div>Loading</div>
@@ -48,7 +49,7 @@ const Devices = () => {
                     </div>
                 ))
             )}
-            <button onClick={refreshDeviceList}>refresh device list</button>
+            <button onClick={refreshDevices}>refresh device list</button>
         </div>
     );
 };

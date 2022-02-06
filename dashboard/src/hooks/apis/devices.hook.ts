@@ -4,7 +4,7 @@ import { devicesActions } from '@/redux/reducers/devices.reducer';
 import { DevicesDataservice } from '@/dataservices/devices.dataservice';
 import { DeviceItem } from '@/types/devices.type';
 
-export const useGetDeviceList = ({
+export const useRefreshDevices = ({
     page,
     limit,
 }: {
@@ -16,7 +16,7 @@ export const useGetDeviceList = ({
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
 
-    const refreshDeviceList = useCallback(async () => {
+    const refreshDevices = useCallback(async () => {
         setIsLoading(true);
 
         try {
@@ -33,17 +33,17 @@ export const useGetDeviceList = ({
     return {
         isLoading,
         error,
-        refreshDeviceList,
+        refreshDevices,
     };
 };
 
-export const useGetDeviceItem = ({ id }: { id: number }) => {
+export const useRefreshDeviceItem = ({ id }: { id: number }) => {
     const dispatch = useAppDispatch();
 
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
 
-    const refreshDeviceItem = useCallback(async () => {
+    const refreshSingleDevice = useCallback(async () => {
         setIsLoading(true);
 
         try {
@@ -59,11 +59,11 @@ export const useGetDeviceItem = ({ id }: { id: number }) => {
     return {
         isLoading,
         error,
-        refreshDeviceItem,
+        refreshSingleDevice,
     };
 };
 
-export const usePatchDeviceItem = ({
+export const useUpdateSingleDevice = ({
     id,
     editedData,
 }: {
@@ -75,7 +75,7 @@ export const usePatchDeviceItem = ({
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
 
-    const patchDeviceItem = useCallback(async () => {
+    const updateSingleDevice = useCallback(async () => {
         setIsLoading(true);
 
         try {
@@ -96,6 +96,6 @@ export const usePatchDeviceItem = ({
     return {
         isLoading,
         error,
-        patchDeviceItem,
+        updateSingleDevice,
     };
 };

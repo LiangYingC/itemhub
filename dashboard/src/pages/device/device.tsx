@@ -2,8 +2,8 @@ import styles from './device.module.scss';
 import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import {
-    useGetDeviceItem,
-    usePatchDeviceItem,
+    useRefreshDeviceItem,
+    useUpdateSingleDevice,
 } from '@/hooks/apis/devices.hook';
 import { DeviceItem } from '@/types/devices.type';
 import { useAppSelector } from '@/hooks/redux.hook';
@@ -28,31 +28,32 @@ const Device = () => {
     const [editedData, setEditedData] =
         useState<Partial<DeviceItem>>(initialEditedData);
 
-    const { isLoading, refreshDeviceItem } = useGetDeviceItem({
+    const { isLoading, refreshSingleDevice } = useRefreshDeviceItem({
         id: numId,
     });
-    const { patchDeviceItem } = usePatchDeviceItem({
+    const { updateSingleDevice } = useUpdateSingleDevice({
         id: numId,
         editedData: editedData,
     });
 
     useEffect(() => {
         if (device === null && !isLoading) {
-            refreshDeviceItem();
+            refreshSingleDevice();
         }
-    }, [isLoading, device, refreshDeviceItem]);
+    }, [isLoading, device, refreshSingleDevice]);
 
     const closeModal = () => {
         setIsShowModal(false);
     };
 
     const updateDeviceData = () => {
-        patchDeviceItem();
+        updateSingleDevice();
         setEditedData(initialEditedData);
         closeModal();
     };
 
     return (
+        // UI 結構等設計稿後再重構調整
         <div className={styles.device} data-testid="device">
             {isLoading || device === null ? (
                 <div>Loading</div>
@@ -82,7 +83,7 @@ const Device = () => {
             )}
             <Modal show={isShowModal} onHide={closeModal} centered>
                 <Modal.Header closeButton>
-                    <Modal.Title>Modal heading</Modal.Title>
+                    <Modal.Title>Edited Modal</Modal.Title>
                 </Modal.Header>
                 <Modal.Body className={styles['edited-modal-body']}>
                     <label>

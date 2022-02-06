@@ -1,10 +1,8 @@
-import { useCallback, useEffect, useState } from 'react';
-import { useAppSelector, useAppDispatch } from '@/hooks/redux.hook';
-import {
-    selectDevices,
-    devicesActions,
-} from '@/redux/reducers/devices.reducer';
+import { useCallback, useState } from 'react';
+import { useAppDispatch } from '@/hooks/redux.hook';
+import { devicesActions } from '@/redux/reducers/devices.reducer';
 import { DevicesDataservice } from '@/dataservices/devices.dataservice';
+import { DeviceItem } from '@/types/devices.type';
 
 export const useGetDeviceList = ({
     page,
@@ -14,57 +12,90 @@ export const useGetDeviceList = ({
     limit: number;
 }) => {
     const dispatch = useAppDispatch();
-    const devices = useAppSelector(selectDevices);
 
-    const [data, setData] = useState(devices);
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
 
-    const getDeviceList = useCallback(async () => {
+    const refreshDeviceList = useCallback(async () => {
         setIsLoading(true);
-        const data = await DevicesDataservice.GetList({ page, limit });
-        const deviceList = data.devices;
 
-        setData(deviceList);
-        dispatch(devicesActions.setDevices(deviceList));
+        try {
+            const data = await DevicesDataservice.GetList({ page, limit });
+            const devices = data.devices;
+            dispatch(devicesActions.refreshDevices(devices));
+        } catch (err: any) {
+            setError(err.toString());
+        }
+
         setIsLoading(false);
     }, [dispatch, limit, page]);
 
-    useEffect(() => {
-        if (data === null && !isLoading) {
-            getDeviceList();
-        }
-    }, [data, getDeviceList, isLoading]);
-
     return {
         isLoading,
-        deviceList: data,
-        getDeviceList,
+        error,
+        refreshDeviceList,
     };
 };
 
 export const useGetDeviceItem = ({ id }: { id: number }) => {
-    const devices = useAppSelector(selectDevices);
-    const deviceItem = devices?.filter((device) => device.id === id)[0] || null;
+    const dispatch = useAppDispatch();
 
-    const [data, setData] = useState(deviceItem);
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
 
-    const getDeviceItem = useCallback(async () => {
+    const refreshDeviceItem = useCallback(async () => {
         setIsLoading(true);
-        const data = await DevicesDataservice.GetItem({ id });
-        setData(data);
-        setIsLoading(false);
-    }, [id]);
 
-    useEffect(() => {
-        if (data === null && !isLoading) {
-            getDeviceItem();
+        try {
+            const data = await DevicesDataservice.GetItem({ id });
+            dispatch(devicesActions.refreshSingleDevice(data));
+        } catch (err: any) {
+            setError(err.toString());
         }
-    }, [data, getDeviceItem, isLoading]);
+
+        setIsLoading(false);
+    }, [id, dispatch]);
 
     return {
         isLoading,
-        deviceItem: data,
-        getDeviceItem,
+        error,
+        refreshDeviceItem,
+    };
+};
+
+export const usePatchDeviceItem = ({
+    id,
+    editedData,
+}: {
+    id: number;
+    editedData: Partial<DeviceItem>;
+}) => {
+    const dispatch = useAppDispatch();
+
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
+
+    const patchDeviceItem = useCallback(async () => {
+        setIsLoading(true);
+
+        try {
+            const data = await DevicesDataservice.PatchItem({ id, editedData });
+            if (data.status === 'OK') {
+                console.log('in');
+                dispatch(
+                    devicesActions.updateSingleDevice({ ...editedData, id })
+                );
+            }
+        } catch (err: any) {
+            setError(err.toString());
+        }
+
+        setIsLoading(false);
+    }, [id, editedData, dispatch]);
+
+    return {
+        isLoading,
+        error,
+        patchDeviceItem,
     };
 };

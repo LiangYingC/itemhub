@@ -1,38 +1,148 @@
 import styles from './device.module.scss';
+import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { useGetDeviceItem } from '@/hooks/apis/devices.hook';
+import {
+    useGetDeviceItem,
+    usePatchDeviceItem,
+} from '@/hooks/apis/devices.hook';
+import { DeviceItem } from '@/types/devices.type';
+import { useAppSelector } from '@/hooks/redux.hook';
+import { selectDevices } from '@/redux/reducers/devices.reducer';
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
+
+const initialEditedData = {
+    deviceId: '',
+    name: '',
+    info: '',
+};
 
 const Device = () => {
     const { id } = useParams();
-    const { isLoading, deviceItem } = useGetDeviceItem({
-        id: Number(id),
+    const numId = Number(id);
+    const devices = useAppSelector(selectDevices);
+    const deviceIndex = devices.findIndex((device) => device.id === numId);
+    const device = deviceIndex < 0 ? null : devices[deviceIndex];
+
+    const [isShowModal, setIsShowModal] = useState(false);
+    const [editedData, setEditedData] =
+        useState<Partial<DeviceItem>>(initialEditedData);
+
+    const { isLoading, refreshDeviceItem } = useGetDeviceItem({
+        id: numId,
+    });
+    const { patchDeviceItem } = usePatchDeviceItem({
+        id: numId,
+        editedData: editedData,
     });
 
+    useEffect(() => {
+        if (device === null && !isLoading) {
+            refreshDeviceItem();
+        }
+    }, [isLoading, device, refreshDeviceItem]);
+
+    const closeModal = () => {
+        setIsShowModal(false);
+    };
+
+    const updateDeviceData = () => {
+        patchDeviceItem();
+        setEditedData(initialEditedData);
+        closeModal();
+    };
+
     return (
-        <div className={styles.Device} data-testid="Device">
-            {isLoading || deviceItem === null ? (
+        <div className={styles.device} data-testid="device">
+            {isLoading || device === null ? (
                 <div>Loading</div>
             ) : (
                 <>
-                    <div>id: {deviceItem.id}</div>
-                    <div>name: {deviceItem.name}</div>
-                    <div>ownerId: {deviceItem.ownerId}</div>
-                    <div>deviceId: {deviceItem.deviceId}</div>
-                    <div>createdAt: {deviceItem.createdAt}</div>
-                    <div>editedAt: {deviceItem.editedAt || 'not yet edit'}</div>
                     <div>
-                        deletedAt: {deviceItem.deletedAt || 'not yet delete'}
+                        <div>id: {device.id}</div>
+                        <div>name: {device.name}</div>
+                        <div>ownerId: {device.ownerId}</div>
+                        <div>deviceId: {device.deviceId}</div>
+                        <div>createdAt: {device.createdAt}</div>
+                        <div>editedAt: {device.editedAt || 'not yet edit'}</div>
+                        <div>
+                            deletedAt: {device.deletedAt || 'not yet delete'}
+                        </div>
+                        <div>info: {device.info || 'no info data'}</div>
+                        <div>
+                            online: {device.online ? 'online' : 'offline'}
+                        </div>
+                        <div>zone: {device.zone || 'no zone data'}</div>
+                        <div>zoneId: {device.zone || 'no zoneId data'}</div>
                     </div>
-                    <div>info: {deviceItem.info || 'no info data'}</div>
-                    <div>
-                        online: {deviceItem.online ? 'online' : 'offline'}
-                    </div>
-                    <div>zone: {deviceItem.zone || 'no zone data'}</div>
-                    <div>zoneId: {deviceItem.zone || 'no zoneId data'}</div>
-                    <div>zoneId: {deviceItem.zone || 'no zoneId data'}</div>
+                    <button onClick={() => setIsShowModal(true)}>
+                        edit data
+                    </button>
                 </>
             )}
-            <Link to="../devices">Back to deviceItem list</Link>
+            <Modal show={isShowModal} onHide={closeModal} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>Modal heading</Modal.Title>
+                </Modal.Header>
+                <Modal.Body className={styles['edited-modal-body']}>
+                    <label>
+                        <div>deviceId:</div>
+                        <input
+                            type="text"
+                            name="deviceId"
+                            onChange={(e) =>
+                                setEditedData((prev) => {
+                                    return {
+                                        ...prev,
+                                        deviceId: e.target.value,
+                                    };
+                                })
+                            }
+                        />
+                    </label>
+                    <label>
+                        <div>name:</div>
+                        <input
+                            type="text"
+                            name="name"
+                            onChange={(e) =>
+                                setEditedData((prev) => {
+                                    return {
+                                        ...prev,
+                                        name: e.target.value,
+                                    };
+                                })
+                            }
+                        />
+                    </label>
+                    <label>
+                        <div>info:</div>
+                        <input
+                            type="text"
+                            name="info"
+                            onChange={(e) =>
+                                setEditedData((prev) => {
+                                    return {
+                                        ...prev,
+                                        info: e.target.value,
+                                    };
+                                })
+                            }
+                        />
+                    </label>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={closeModal}>
+                        Close
+                    </Button>
+                    <Button variant="primary" onClick={updateDeviceData}>
+                        Save Changes
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+            <div>
+                <Link to="../devices">Back to device list</Link>
+            </div>
         </div>
     );
 };

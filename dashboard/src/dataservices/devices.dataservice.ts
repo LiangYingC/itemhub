@@ -1,12 +1,10 @@
-import { END_POINT } from '@/constants';
+import { API_PATH_PREFIX, END_POINT } from '@/constants';
 import { ApiHelper } from '@/helpers/api.helper';
 import { DeviceList, DeviceItem } from '@/types/devices.type';
 
 export const DevicesDataservice = {
     GetList: async ({ page, limit }: { page: number; limit: number }) => {
-        const apiPath = `${import.meta.env.VITE_API_PATH_PREFIX}${
-            END_POINT.DEVICES
-        }?page=${page}&limit=${limit}`;
+        const apiPath = `${API_PATH_PREFIX}${END_POINT.DEVICES}?page=${page}&limit=${limit}`;
 
         const response: any = await ApiHelper.SendRequestWithToken({
             apiPath,
@@ -19,9 +17,7 @@ export const DevicesDataservice = {
         };
     },
     GetItem: async ({ id }: { id: number }) => {
-        let apiPath = `${import.meta.env.VITE_API_PATH_PREFIX}${
-            END_POINT.DEVICE
-        }`;
+        let apiPath = `${API_PATH_PREFIX}${END_POINT.DEVICE}`;
         apiPath = apiPath.replace(':id', id.toString());
 
         const response: any = await ApiHelper.SendRequestWithToken({

@@ -3,6 +3,8 @@ export const RESPONSE_STATUS = {
     FAILED: 'FAILED',
 };
 
+export const API_PATH_PREFIX = import.meta.env.VITE_API_PATH_PREFIX;
+
 export const END_POINT = {
     SIGN_WITH_EMAIL: 'auth/sign-in-with-email',
     IS_SIGNED: 'auth/is-sign-in',

@@ -1,4 +1,4 @@
-import { END_POINT } from '@/constants';
+import { API_PATH_PREFIX, END_POINT } from '@/constants';
 import { ApiHelper } from '@/helpers/api.helper';
 
 export const AuthDataservice = {
@@ -9,9 +9,7 @@ export const AuthDataservice = {
         email: string;
         password: string;
     }) => {
-        const apiPath = `${import.meta.env.VITE_API_PATH_PREFIX}${
-            END_POINT.SIGN_WITH_EMAIL
-        }`;
+        const apiPath = `${API_PATH_PREFIX}${END_POINT.SIGN_WITH_EMAIL}`;
 
         const response: any = await ApiHelper.SendRequest({
             apiPath,
@@ -25,9 +23,7 @@ export const AuthDataservice = {
         return response.data as { token: string };
     },
     IsSigned: async () => {
-        const apiPath = `${import.meta.env.VITE_API_PATH_PREFIX}${
-            END_POINT.IS_SIGNED
-        }`;
+        const apiPath = `${API_PATH_PREFIX}${END_POINT.IS_SIGNED}`;
         return ApiHelper.SendRequestWithToken({
             apiPath,
             method: 'POST',

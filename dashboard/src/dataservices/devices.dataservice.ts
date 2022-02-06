@@ -1,6 +1,6 @@
 import { API_PATH_PREFIX, END_POINT } from '@/constants/api';
 import { ApiHelper } from '@/helpers/api.helper';
-import { DeviceList, DeviceItem } from '@/types/devices.type';
+import { DeviceList, DeviceItem, PinList } from '@/types/devices.type';
 
 export const DevicesDataservice = {
     GetDevices: async ({ page, limit }: { page: number; limit: number }) => {
@@ -51,6 +51,6 @@ export const DevicesDataservice = {
             apiPath,
             method: 'GET',
         });
-        return response.data as { status: string };
+        return response.data as PinList;
     },
 };

@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 import { useAppDispatch } from '@/hooks/redux.hook';
 import { devicesActions } from '@/redux/reducers/devices.reducer';
 import { DevicesDataservice } from '@/dataservices/devices.dataservice';
-import { DeviceItem } from '@/types/devices.type';
+import { DeviceItem, PinList } from '@/types/devices.type';
 
 export const useGetDevicesApi = ({
     page,
@@ -103,5 +103,32 @@ export const useUpdateSingleDeviceApi = ({
         isLoading,
         error,
         updateSingleDeviceApi,
+    };
+};
+
+export const useGetDevicePinsApi = ({ id }: { id: number }) => {
+    const [data, setData] = useState<PinList | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
+
+    const getDevicePinsApi = useCallback(async () => {
+        if (isLoading) return;
+
+        try {
+            setIsLoading(true);
+            const data = await DevicesDataservice.GetDevicePins({ id });
+            setData(data);
+        } catch (err: any) {
+            setError(err.toString());
+        } finally {
+            setIsLoading(false);
+        }
+    }, [isLoading, id]);
+
+    return {
+        isLoading,
+        error,
+        data,
+        getDevicePinsApi,
     };
 };

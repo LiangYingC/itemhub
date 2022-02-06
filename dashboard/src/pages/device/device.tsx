@@ -21,8 +21,7 @@ const Device = () => {
     const { id } = useParams();
     const numId = Number(id);
     const devices = useAppSelector(selectDevices);
-    const deviceIndex = devices.findIndex((device) => device.id === numId);
-    const device = deviceIndex < 0 ? null : devices[deviceIndex];
+    const device = devices?.filter((device) => device.id === numId)[0] || null;
 
     const [isShowModal, setIsShowModal] = useState(false);
     const [editedData, setEditedData] =
@@ -40,7 +39,7 @@ const Device = () => {
         if (device === null && !isLoading) {
             refreshSingleDevice();
         }
-    }, [isLoading, device, refreshSingleDevice]);
+    }, []);
 
     const closeModal = () => {
         setIsShowModal(false);

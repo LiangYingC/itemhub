@@ -18,13 +18,15 @@ const Devices = () => {
     });
 
     useEffect(() => {
-        refreshDevices();
+        if (!isLoading) {
+            refreshDevices();
+        }
     }, []);
 
     return (
         // UI 結構等設計稿後再重構調整
         <div className={styles.devices} data-testid="Devices">
-            {isLoading ? (
+            {isLoading || devices === null ? (
                 <div>Loading</div>
             ) : (
                 devices.map(({ id, name, createdAt }) => (

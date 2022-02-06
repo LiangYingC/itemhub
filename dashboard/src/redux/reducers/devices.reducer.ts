@@ -4,9 +4,9 @@ import { DeviceList, DeviceItem } from '@/types/devices.type';
 
 export const devicesSlice = createSlice({
     name: 'devices',
-    initialState: [] as DeviceList,
+    initialState: null as DeviceList | null,
     reducers: {
-        refreshDevices: (state, action: PayloadAction<DeviceList>) => {
+        refreshDevices: (_, action: PayloadAction<DeviceList>) => {
             const newDevices = action.payload;
             return newDevices;
         },
@@ -14,17 +14,16 @@ export const devicesSlice = createSlice({
             const devices = state;
             const newDeviceData = action.payload;
 
+            if (devices === null) {
+                return [newDeviceData];
+            }
+
             const targetIndex = devices.findIndex(
                 (device) => device.id === newDeviceData.id
             );
-            if (targetIndex < 0) {
-                devices.push(newDeviceData);
-            } else {
-                devices[targetIndex] = {
-                    ...newDeviceData,
-                };
-            }
-
+            devices[targetIndex] = {
+                ...newDeviceData,
+            };
             return devices;
         },
         updateSingleDevice: (
@@ -34,14 +33,15 @@ export const devicesSlice = createSlice({
             const devices = state;
             const newDeviceData = action.payload;
 
+            if (devices === null) {
+                throw new Error(
+                    'Can not updateSingleDevice when devices is null.'
+                );
+            }
+
             const targetIndex = devices.findIndex(
                 ({ id }) => id === newDeviceData.id
             );
-            if (targetIndex < 0) {
-                throw new Error(
-                    'Can not find device which you want to update.'
-                );
-            }
             devices[targetIndex] = {
                 ...devices[targetIndex],
                 ...newDeviceData,

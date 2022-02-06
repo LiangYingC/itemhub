@@ -87,7 +87,6 @@ export const useUpdateSingleDeviceApi = ({
                 editedData,
             });
             if (data.status === 'OK') {
-                console.log('in');
                 dispatch(
                     devicesActions.updateSingleDevice({ ...editedData, id })
                 );

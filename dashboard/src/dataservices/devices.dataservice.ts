@@ -1,9 +1,17 @@
 import { API_PATH_PREFIX, END_POINT } from '@/constants/api';
 import { ApiHelper } from '@/helpers/api.helper';
-import { DeviceList, DeviceItem, PinList } from '@/types/devices.type';
+import { DeviceItem, PinList } from '@/types/devices.type';
+import {
+    GetDevicesParams,
+    GetDevicesResponseData,
+    GetSingleDeviceParams,
+    UpdateSingleDeviceParams,
+    UpdateSingleDeviceResponseData,
+    GetDevicePinsParams,
+} from '@/types/devices.dataservice';
 
 export const DevicesDataservice = {
-    GetDevices: async ({ page, limit }: { page: number; limit: number }) => {
+    GetDevices: async ({ page, limit }: GetDevicesParams) => {
         const apiPath = `${API_PATH_PREFIX}${END_POINT.DEVICES}?page=${page}&limit=${limit}`;
 
         const response: any = await ApiHelper.SendRequestWithToken({
@@ -11,12 +19,9 @@ export const DevicesDataservice = {
             method: 'GET',
         });
 
-        return response.data as {
-            devices: DeviceList;
-            rowNums: number;
-        };
+        return response.data as GetDevicesResponseData;
     },
-    GetSingleItem: async ({ id }: { id: number }) => {
+    GetSingleItem: async ({ id }: GetSingleDeviceParams) => {
         let apiPath = `${API_PATH_PREFIX}${END_POINT.DEVICE}`;
         apiPath = apiPath.replace(':id', id.toString());
 
@@ -29,10 +34,7 @@ export const DevicesDataservice = {
     UpdateSingleDevice: async ({
         id,
         editedData,
-    }: {
-        id: number;
-        editedData: Partial<DeviceItem>;
-    }) => {
+    }: UpdateSingleDeviceParams) => {
         let apiPath = `${API_PATH_PREFIX}${END_POINT.DEVICE}`;
         apiPath = apiPath.replace(':id', id.toString());
 
@@ -41,9 +43,9 @@ export const DevicesDataservice = {
             method: 'PATCH',
             payload: editedData,
         });
-        return response.data as { status: string };
+        return response.data as UpdateSingleDeviceResponseData;
     },
-    GetDevicePins: async ({ id }: { id: number }) => {
+    GetDevicePins: async ({ id }: GetDevicePinsParams) => {
         let apiPath = `${API_PATH_PREFIX}${END_POINT.DEVICE_PINS}`;
         apiPath = apiPath.replace(':id', id.toString());
 

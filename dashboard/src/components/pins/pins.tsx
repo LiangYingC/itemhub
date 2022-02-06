@@ -5,7 +5,7 @@ import { useGetDevicePinsApi } from '@/hooks/apis/devices.hook';
 
 const Pins = () => {
     const { id } = useParams();
-    const { isLoading, data, getDevicePinsApi } = useGetDevicePinsApi({
+    const { isLoading, devicePins, getDevicePinsApi } = useGetDevicePinsApi({
         id: Number(id),
     });
 
@@ -16,10 +16,10 @@ const Pins = () => {
     return (
         // UI 結構等設計稿後再重構調整
         <div className={styles.pins} data-testid="Pins">
-            {isLoading || data === null ? (
+            {isLoading || devicePins === null ? (
                 <div>Loading</div>
             ) : (
-                data.map(({ deviceId, pin }) => (
+                devicePins.map(({ deviceId, pin }) => (
                     <div key={deviceId}>
                         <div>deviceId: {deviceId}</div>
                         <div>pin: {pin}</div>

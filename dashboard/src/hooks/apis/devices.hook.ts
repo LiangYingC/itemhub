@@ -1,133 +1,126 @@
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { useAppDispatch } from '@/hooks/redux.hook';
+import { useFetchApi } from '@/hooks/apis/fetch.hook';
 import { devicesActions } from '@/redux/reducers/devices.reducer';
 import { DevicesDataservice } from '@/dataservices/devices.dataservice';
 import { DeviceItem, PinList } from '@/types/devices.type';
+import {
+    GetDevicesParams,
+    GetDevicesResponseData,
+    GetSingleDeviceParams,
+    UpdateSingleDeviceParams,
+    UpdateSingleDeviceResponseData,
+    GetDevicePinsParams,
+} from '@/types/devices.dataservice';
 
-export const useGetDevicesApi = ({
-    page,
-    limit,
-}: {
-    page: number;
-    limit: number;
-}) => {
+export const useGetDevicesApi = ({ page, limit }: GetDevicesParams) => {
+    const fetchGetDevices = useCallback(() => {
+        return DevicesDataservice.GetDevices({ page, limit });
+    }, [limit, page]);
+
     const dispatch = useAppDispatch();
+    const dispatchRefreshDevices = useCallback(
+        (data: GetDevicesResponseData) => {
+            if (data) {
+                dispatch(devicesActions.refreshDevices(data.devices));
+            }
+        },
+        [dispatch]
+    );
 
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState('');
-
-    const getDevicesApi = useCallback(async () => {
-        if (isLoading) return;
-
-        try {
-            setIsLoading(true);
-            const data = await DevicesDataservice.GetDevices({ page, limit });
-            const devices = data.devices;
-            dispatch(devicesActions.refreshDevices(devices));
-        } catch (err: any) {
-            setError(err.toString());
-        } finally {
-            setIsLoading(false);
-        }
-    }, [isLoading, limit, page, dispatch]);
+    const { isLoading, error, fetchApi } = useFetchApi<GetDevicesResponseData>({
+        initialData: null,
+        fetchMethod: fetchGetDevices,
+        callbackFunc: dispatchRefreshDevices,
+    });
 
     return {
         isLoading,
         error,
-        getDevicesApi,
+        getDevicesApi: fetchApi,
     };
 };
 
-export const useGetSingleDeviceApi = ({ id }: { id: number }) => {
+export const useGetSingleDeviceApi = ({ id }: GetSingleDeviceParams) => {
+    const fetchGetSingleDevice = useCallback(() => {
+        return DevicesDataservice.GetSingleItem({ id });
+    }, [id]);
+
     const dispatch = useAppDispatch();
-
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState('');
-
-    const getSingleDeviceApi = useCallback(async () => {
-        if (isLoading) return;
-
-        try {
-            setIsLoading(true);
-            const data = await DevicesDataservice.GetSingleItem({ id });
+    const dispatchRefreshDevices = useCallback(
+        (data: DeviceItem) => {
             dispatch(devicesActions.refreshSingleDevice(data));
-        } catch (err: any) {
-            setError(err.toString());
-        } finally {
-            setIsLoading(false);
-        }
-    }, [isLoading, id, dispatch]);
+        },
+        [dispatch]
+    );
+
+    const { isLoading, error, fetchApi } = useFetchApi<DeviceItem>({
+        initialData: null,
+        fetchMethod: fetchGetSingleDevice,
+        callbackFunc: dispatchRefreshDevices,
+    });
 
     return {
         isLoading,
         error,
-        getSingleDeviceApi,
+        getSingleDeviceApi: fetchApi,
     };
 };
 
 export const useUpdateSingleDeviceApi = ({
     id,
     editedData,
-}: {
-    id: number;
-    editedData: Partial<DeviceItem>;
-}) => {
-    const dispatch = useAppDispatch();
-
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState('');
-
-    const updateSingleDeviceApi = useCallback(async () => {
-        if (isLoading) return;
-
-        try {
-            setIsLoading(true);
-            const data = await DevicesDataservice.UpdateSingleDevice({
+}: UpdateSingleDeviceParams) => {
+    const fetchGetSingleDevice = useCallback(
+        () =>
+            DevicesDataservice.UpdateSingleDevice({
                 id,
                 editedData,
-            });
+            }),
+        [editedData, id]
+    );
+
+    const dispatch = useAppDispatch();
+    const dispatchRefreshDevices = useCallback(
+        (data: UpdateSingleDeviceResponseData) => {
             if (data.status === 'OK') {
                 dispatch(
                     devicesActions.updateSingleDevice({ ...editedData, id })
                 );
             }
-        } catch (err: any) {
-            setError(err.toString());
-        } finally {
-            setIsLoading(false);
-        }
-    }, [isLoading, id, editedData, dispatch]);
+        },
+        [editedData, id, dispatch]
+    );
+
+    const { isLoading, error, fetchApi } =
+        useFetchApi<UpdateSingleDeviceResponseData>({
+            initialData: null,
+            fetchMethod: fetchGetSingleDevice,
+            callbackFunc: dispatchRefreshDevices,
+        });
 
     return {
         isLoading,
         error,
-        updateSingleDeviceApi,
+        updateSingleDeviceApi: fetchApi,
     };
 };
 
-export const useGetDevicePinsApi = ({ id }: { id: number }) => {
-    const [data, setData] = useState<PinList | null>(null);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState('');
+export const useGetDevicePinsApi = ({ id }: GetDevicePinsParams) => {
+    const fetchGetSingleDevice = useCallback(
+        () => DevicesDataservice.GetDevicePins({ id }),
+        [id]
+    );
 
-    const getDevicePinsApi = useCallback(async () => {
-        if (isLoading) return;
-
-        try {
-            setIsLoading(true);
-            const data = await DevicesDataservice.GetDevicePins({ id });
-            setData(data);
-        } catch (err: any) {
-            setError(err.toString());
-        } finally {
-            setIsLoading(false);
-        }
-    }, [isLoading, id]);
+    const { isLoading, error, data, fetchApi } = useFetchApi<PinList>({
+        initialData: null,
+        fetchMethod: fetchGetSingleDevice,
+    });
 
     return {
         isLoading,
         error,
-        data,
-        getDevicePinsApi,
+        devicePins: data,
+        getDevicePinsApi: fetchApi,
     };
 };

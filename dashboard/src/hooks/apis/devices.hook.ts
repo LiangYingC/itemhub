@@ -3,7 +3,7 @@ import { useAppDispatch } from '@/hooks/redux.hook';
 import { useFetchApi } from '@/hooks/apis/fetch.hook';
 import { devicesActions } from '@/redux/reducers/devices.reducer';
 import { DevicesDataservice } from '@/dataservices/devices.dataservice';
-import { DeviceItem, PinList } from '@/types/devices.type';
+import { DeviceItem, PinItem } from '@/types/devices.type';
 import {
     GetDevicesParams,
     GetDevicesResponseData,
@@ -112,7 +112,7 @@ export const useGetDevicePinsApi = ({ id }: GetDevicePinsParams) => {
         [id]
     );
 
-    const { isLoading, error, data, fetchApi } = useFetchApi<PinList>({
+    const { isLoading, error, data, fetchApi } = useFetchApi<PinItem[]>({
         initialData: null,
         fetchMethod: fetchGetSingleDevice,
     });

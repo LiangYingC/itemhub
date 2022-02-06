@@ -1,6 +1,6 @@
 import { API_PATH_PREFIX, END_POINT } from '@/constants/api';
 import { ApiHelper } from '@/helpers/api.helper';
-import { DeviceItem, PinList } from '@/types/devices.type';
+import { DeviceItem, PinItem } from '@/types/devices.type';
 import {
     GetDevicesParams,
     GetDevicesResponseData,
@@ -53,6 +53,6 @@ export const DevicesDataservice = {
             apiPath,
             method: 'GET',
         });
-        return response.data as PinList;
+        return response.data as PinItem[];
     },
 };

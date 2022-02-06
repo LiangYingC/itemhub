@@ -16,5 +16,3 @@ export interface PinItem {
     pin: string;
     deviceId: number;
 }
-
-export type PinList = PinItem[];

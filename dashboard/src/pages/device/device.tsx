@@ -36,7 +36,7 @@ const Device = () => {
     });
 
     useEffect(() => {
-        if (device === null && !isLoading) {
+        if (device === null) {
             refreshSingleDevice();
         }
     }, []);

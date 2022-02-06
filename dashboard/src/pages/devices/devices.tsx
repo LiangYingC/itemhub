@@ -18,9 +18,7 @@ const Devices = () => {
     });
 
     useEffect(() => {
-        if (!isLoading) {
-            refreshDevices();
-        }
+        refreshDevices();
     }, []);
 
     return (

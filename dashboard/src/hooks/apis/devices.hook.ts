@@ -17,18 +17,19 @@ export const useRefreshDevices = ({
     const [error, setError] = useState('');
 
     const refreshDevices = useCallback(async () => {
-        setIsLoading(true);
+        if (isLoading) return;
 
         try {
+            setIsLoading(true);
             const data = await DevicesDataservice.GetList({ page, limit });
             const devices = data.devices;
             dispatch(devicesActions.refreshDevices(devices));
         } catch (err: any) {
             setError(err.toString());
+        } finally {
+            setIsLoading(false);
         }
-
-        setIsLoading(false);
-    }, [dispatch, limit, page]);
+    }, [isLoading, limit, page, dispatch]);
 
     return {
         isLoading,
@@ -44,17 +45,18 @@ export const useRefreshDeviceItem = ({ id }: { id: number }) => {
     const [error, setError] = useState('');
 
     const refreshSingleDevice = useCallback(async () => {
-        setIsLoading(true);
+        if (isLoading) return;
 
         try {
+            setIsLoading(true);
             const data = await DevicesDataservice.GetItem({ id });
             dispatch(devicesActions.refreshSingleDevice(data));
         } catch (err: any) {
             setError(err.toString());
+        } finally {
+            setIsLoading(false);
         }
-
-        setIsLoading(false);
-    }, [id, dispatch]);
+    }, [isLoading, id, dispatch]);
 
     return {
         isLoading,
@@ -76,9 +78,10 @@ export const useUpdateSingleDevice = ({
     const [error, setError] = useState('');
 
     const updateSingleDevice = useCallback(async () => {
-        setIsLoading(true);
+        if (isLoading) return;
 
         try {
+            setIsLoading(true);
             const data = await DevicesDataservice.PatchItem({ id, editedData });
             if (data.status === 'OK') {
                 console.log('in');
@@ -88,10 +91,10 @@ export const useUpdateSingleDevice = ({
             }
         } catch (err: any) {
             setError(err.toString());
+        } finally {
+            setIsLoading(false);
         }
-
-        setIsLoading(false);
-    }, [id, editedData, dispatch]);
+    }, [isLoading, id, editedData, dispatch]);
 
     return {
         isLoading,

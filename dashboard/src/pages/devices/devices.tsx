@@ -1,7 +1,7 @@
 import styles from './devices.module.scss';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@/hooks/query.hook';
-import { useGetDeviceList } from '@/hooks/api/devices.hook';
+import { useGetDeviceList } from '@/hooks/apis/devices.hook';
 
 const Devices = () => {
     const query = useQuery();

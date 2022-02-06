@@ -1,6 +1,6 @@
 import styles from './device.module.scss';
 import { Link, useParams } from 'react-router-dom';
-import { useGetDeviceItem } from '@/hooks/api/devices.hook';
+import { useGetDeviceItem } from '@/hooks/apis/devices.hook';
 
 const Device = () => {
     const { id } = useParams();

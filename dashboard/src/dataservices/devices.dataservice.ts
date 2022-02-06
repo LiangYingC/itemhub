@@ -21,7 +21,7 @@ export const DevicesDataservice = {
 
         return response.data as GetDevicesResponseData;
     },
-    GetSingle: async ({ id }: GetSingleDeviceParams) => {
+    GetOne: async ({ id }: GetSingleDeviceParams) => {
         let apiPath = `${API_PATH_PREFIX}${END_POINT.DEVICE}`;
         apiPath = apiPath.replace(':id', id.toString());
 
@@ -31,7 +31,7 @@ export const DevicesDataservice = {
         });
         return response.data as DeviceItem;
     },
-    UpdateSingle: async ({ id, editedData }: UpdateSingleDeviceParams) => {
+    UpdateOne: async ({ id, editedData }: UpdateSingleDeviceParams) => {
         let apiPath = `${API_PATH_PREFIX}${END_POINT.DEVICE}`;
         apiPath = apiPath.replace(':id', id.toString());
 
@@ -42,7 +42,7 @@ export const DevicesDataservice = {
         });
         return response.data as UpdateSingleDeviceResponseData;
     },
-    GetSinglePins: async ({ id }: GetDevicePinsParams) => {
+    GetOnePins: async ({ id }: GetDevicePinsParams) => {
         let apiPath = `${API_PATH_PREFIX}${END_POINT.DEVICE_PINS}`;
         apiPath = apiPath.replace(':id', id.toString());
 

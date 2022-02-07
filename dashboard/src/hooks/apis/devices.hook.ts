@@ -71,7 +71,7 @@ export const useUpdateSingleDeviceApi = ({
     id,
     editedData,
 }: UpdateSingleDeviceParams) => {
-    const fetchGetSingleDevice = useCallback(
+    const fetchUpdateSingleDevice = useCallback(
         () =>
             DevicesDataservice.UpdateOne({
                 id,
@@ -95,7 +95,7 @@ export const useUpdateSingleDeviceApi = ({
     const { isLoading, error, fetchApi } =
         useFetchApi<UpdateSingleDeviceResponseData>({
             initialData: null,
-            fetchMethod: fetchGetSingleDevice,
+            fetchMethod: fetchUpdateSingleDevice,
             callbackFunc: dispatchRefreshDevices,
         });
 

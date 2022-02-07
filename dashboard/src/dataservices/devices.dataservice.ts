@@ -1,31 +1,55 @@
-import { END_POINT } from '@/constants';
+import { API_URL, END_POINT } from '@/constants/api';
 import { ApiHelper } from '@/helpers/api.helper';
-import { Device } from '@/types/devices.type';
+import { DeviceItem, PinItem } from '@/types/devices.type';
+import {
+    GetDevicesParams,
+    GetDevicesResponseData,
+    GetSingleDeviceParams,
+    UpdateSingleDeviceParams,
+    UpdateSingleDeviceResponseData,
+    GetDevicePinsParams,
+} from '@/types/devices.dataservice';
 
 export const DevicesDataservice = {
-    GetList: async ({ page, limit }: { page: number; limit: number }) => {
-        const apiPath = `${import.meta.env.VITE_API_ENDPOINT}${
-            END_POINT.DEVICES
-        }?page=${page}&limit=${limit}`;
+    GetList: async ({ page, limit }: GetDevicesParams) => {
+        const apiPath = `${API_URL}${END_POINT.DEVICES}?page=${page}&limit=${limit}`;
 
         const response: any = await ApiHelper.SendRequestWithToken({
             apiPath,
             method: 'GET',
         });
 
-        return response.data as {
-            devices: Device[];
-            rowNums: number;
-        };
+        return response.data as GetDevicesResponseData;
     },
-    GetOne: async ({ id }: { id: number }) => {
-        let apiPath = `${import.meta.env.VITE_API_ENDPOINT}${END_POINT.DEVICE}`;
+    GetOne: async ({ id }: GetSingleDeviceParams) => {
+        let apiPath = `${API_URL}${END_POINT.DEVICE}`;
         apiPath = apiPath.replace(':id', id.toString());
 
         const response: any = await ApiHelper.SendRequestWithToken({
             apiPath,
             method: 'GET',
         });
-        return response.data;
+        return response.data as DeviceItem;
+    },
+    UpdateOne: async ({ id, editedData }: UpdateSingleDeviceParams) => {
+        let apiPath = `${API_URL}${END_POINT.DEVICE}`;
+        apiPath = apiPath.replace(':id', id.toString());
+
+        const response: any = await ApiHelper.SendRequestWithToken({
+            apiPath,
+            method: 'PATCH',
+            payload: editedData,
+        });
+        return response.data as UpdateSingleDeviceResponseData;
+    },
+    GetOnePins: async ({ id }: GetDevicePinsParams) => {
+        let apiPath = `${API_URL}${END_POINT.DEVICE_PINS}`;
+        apiPath = apiPath.replace(':id', id.toString());
+
+        const response: any = await ApiHelper.SendRequestWithToken({
+            apiPath,
+            method: 'GET',
+        });
+        return response.data as PinItem[];
     },
 };

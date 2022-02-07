@@ -1,4 +1,4 @@
-export interface Device {
+export interface DeviceItem {
     id: number;
     name: string;
     ownerId: number;
@@ -9,5 +9,10 @@ export interface Device {
     info: null | string;
     online: boolean;
     zone: null | string;
-    zoneId: null | string;
+    zoneId: null | number;
+}
+
+export interface PinItem {
+    pin: string;
+    deviceId: number;
 }

@@ -1,4 +1,4 @@
-export const API_PATH_PREFIX = import.meta.env.VITE_API_PATH_URL;
+export const API_URL = import.meta.env.VITE_API_URL;
 
 export const END_POINT = {
     SIGN_WITH_EMAIL: 'auth/sign-in-with-email',

@@ -14,7 +14,7 @@ namespace Homo.Api
                 return ValidationResult.Success;
             }
 
-            if (value.GetType().Name == "Byte" && value.ToString().Length > 0)
+            if (value != null && value.GetType().Name == "Byte" && value.ToString().Length > 0)
             {
                 return ValidationResult.Success;
             }

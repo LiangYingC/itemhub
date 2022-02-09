@@ -9,7 +9,6 @@ export class SignUpFinishController extends RoutingController {
     }
 
     async render () {
-        console.log(APP_CONFIG.DASHBOARD_URL);
         await super.render({
             DASHBOARD_URL: APP_CONFIG.DASHBOARD_URL
         });

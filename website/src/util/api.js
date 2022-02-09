@@ -76,7 +76,9 @@ export const ApiHelper = {
                     status: RESPONSE_STATUS.FAILED,
                     httpStatus: resp.status,
                     data: {
-                        message: jsonData.message
+                        message: jsonData.message,
+                        errorKey: jsonData.errorKey,
+                        payload: jsonData.payload || null
                     }
                 };
             }

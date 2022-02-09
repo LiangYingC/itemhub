@@ -16,7 +16,7 @@ import { RootController } from './controllers/root.controller.js';
 import { SignOutController } from './controllers/sign-out.controller.js';
 import { UniversalDataService } from './dataservices/universal.dataservice.js';
 import { CookieUtil } from './util/cookie.js';
-import { SignInController } from './controllers/sign-in.controller.js';
+import { AuthRoutingRule } from './routing-rules/auth.routing-rule.js';
 
 const gTag = {
     dependency: {
@@ -50,7 +50,7 @@ export const RoutingRule = [{
         url: '/third-party/jwt-decode.min.js',
         checkVariable: 'jwt_decode'
     }, gTag.dependency],
-    children: [{
+    children: [AuthRoutingRule, {
         path: '/oauth/?state&code',
         skipSitemap: true,
         controller: OauthController,
@@ -84,25 +84,6 @@ export const RoutingRule = [{
         controller: SignOutController,
         dependency: [gTag.dependency],
         prepareData: [gTag.prepareData]
-    }, {
-        path: '/sign-in/',
-        skipSitemap: true,
-        controller: SignInController,
-        html: '/template/sign-in.html',
-        prepareData: [{
-            key: 'isAuth',
-            func: () => {
-                const token = CookieUtil.getCookie('token');
-                const tokenPayload = token ? window.jwt_decode(token) : false;
-                if (tokenPayload) {
-                    setTimeout(() => {
-                        history.replaceState({}, '', '/me/');
-                    }, 50);
-                    return true;
-                }
-                return false;
-            }
-        }]
     }, {
         path: '',
         controller: MasterController,

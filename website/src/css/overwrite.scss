@@ -57,6 +57,7 @@ $primary-400: #6bdcff;
 $primary-300: #9de8ff;
 $primary-200: #d3f5ff;
 $primary-100: #e9faff;
+$green: #14ffca;
 
 $grey-800: #13151f;
 $grey-700: #1e202b;
@@ -100,6 +101,7 @@ $theme-colors: (
     'grey-700': $grey-700,
     'grey-800': $grey-800,
     'purple': $purple,
+    'green': $green
 );
 
 @import 'bootstrap/scss/_utilities.scss';
@@ -159,7 +161,7 @@ $utilities: map-merge(
     }
 }
 
-.form-control {
+.form-control, .itemhub-form-control  {
     background: rgba(0, 0, 0, 0.25);
     padding: 1rem 1.5rem;
     border: 1px solid rgba(255, 255, 255, 0.15);
@@ -179,5 +181,10 @@ $utilities: map-merge(
     &.invalid {
         border-color: $danger;
         color: rgba(white, map-get($opacity, 50));
+    }
+
+    &:disabled {
+        background: rgba(255, 255, 255, 0.09);
+        border: 1px solid rgba(255, 255, 255, 0.15);
     }
 }

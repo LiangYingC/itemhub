@@ -54,7 +54,7 @@ export const RoutingRule = [{
         path: '/oauth/?state&code',
         skipSitemap: true,
         controller: OauthController,
-        html: '/template/auth.html',
+        html: '/template/oauth.html',
         dependency: [{
             url: `https://www.googletagmanager.com/gtag/js?id=${APP_CONFIG.GA_PROPERTY_ID}`,
             checkVariable: 'dataLayer'

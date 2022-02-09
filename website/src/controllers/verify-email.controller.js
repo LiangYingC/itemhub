@@ -1,7 +1,7 @@
 import {
     RoutingController
 } from '../swim/routing-controller.js';
-import { RESPONSE_STATUS } from '../constants.js';
+import { ERROR_KEYS, RESPONSE_STATUS } from '../constants.js';
 import { AuthDataService } from '../dataservices/auth.dataservice.js';
 import { Toaster } from '../util/toaster.js';
 
@@ -42,7 +42,7 @@ export class VerifyEmailController extends RoutingController {
         const resp = await AuthDataService.SendVerifyEmail(data);
         elButton.removeAttribute('disabled');
         if (resp.status !== RESPONSE_STATUS.OK) {
-            if (resp.data.errorKey === 'SIGN_IN_BY_OTHER_WAY') {
+            if (resp.data.errorKey === ERROR_KEYS.SIGN_IN_BY_OTHER_WAY) {
                 const duplicateProviderMessag = [];
                 for (const provider in resp.data.payload.duplicatedUserProvider) {
                     duplicateProviderMessag.push(`${provider}: ${resp.data.payload.duplicatedUserProvider[provider]}`);

@@ -95,7 +95,8 @@ export const Router = {
             const isWin = /(win32)/i.test(navigator.platform);
             if (e.currentTarget.target === '_blank' ||
                 ((isMacLike || isIOS) && e.metaKey === true) ||
-                ((isWin) && e.ctrlKey === true)
+                ((isWin) && e.ctrlKey === true) ||
+                e.currentTarget.hasAttribute('not-in-app')
             ) {
                 return;
             }

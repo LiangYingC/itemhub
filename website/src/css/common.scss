@@ -133,4 +133,12 @@ a {
         text-decoration: underline;
     }
 }
+
+a.btn {
+    text-decoration: none;
+    &:hover {
+        text-decoration: none;
+    }
+}
+
 /* purgecss end ignore */

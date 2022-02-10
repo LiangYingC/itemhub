@@ -1,25 +1,49 @@
-<div class="sign-up">
-    <h1>註冊</h1>
-    <div class="child-router form">
-        <label>
-            Email:
-            <div>{email}</div>
-        </label>
-        <label>
-            請輸入會員名稱
-            <input data-field="lastName" placeholder="姓" type="text" value=""></input>
-            <input data-field="firstName" placeholder="名" type="text" value=""></input>
-        </label>
-        <label>
-            請輸入密碼
-            <input data-field="password" type="password" value=""></input>
-        </label>
+<div class="verify-phone">
+    <div class="px-5">
+        <h2 class="text-center mb-5">註冊</h2>
 
-        <label>
-            請再次輸入密碼
-            <input data-field="confirmPassword" type="password" value=""></input>
-        </label>
+        <div class="form container">
+            <div class="text-green d-flex align-items-center">
+                <img src="/assets/images/bird.svg" />
+                <span class="ms-2">首波早鳥登記用戶</span>
+            </div>
+            <div>
+                請完成以下步驟並註冊成功後，你的帳戶將自動升級成進階方案
+            </div>
+            <label class="row mt-4 d-flex align-items-center">
+                <div class="col-12 mb-2">手機驗證</div>
+                <div class="col-7">
+                    <input data-field="phone" class="form-control" type="phone" placeholder="請輸入手機號碼" />
+                </div>
+                <div class="col-5 align-items-cetner d-flex">
+                    <button onclick="controller.sendCodeToPhone"
+                        class="btn btn-send-verify-email w-100 btn-primary rounded-pill px-4 text-nowrap"
+                        disabled>發送驗證碼至手機</button>
+                </div>
+            </label>
 
-        <button onclick="controller.signUp">完成註冊</button>
+            <label class="row mt-4">
+                <div class="col-12 mb-2">驗證碼</div>
+                <div class="col-12">
+                    <input onkeyup="controller.validateCodeAndGetValidatedPhoneToken" class="form-control" type="code"
+                        placeholder="請輸入驗證碼" disabled />
+                </div>
+            </label>
+
+            <label class="row mt-4">
+                <div class="col-12 mb-2">密碼</div>
+                <div class="col-12">
+                    <input onkeyup="controller.validatePassword" class="form-control" type="password"
+                        placeholder="請輸入 12 碼以上的英數" disabled />
+                </div>
+            </label>
+
+            <div class="d-flex align-items-center justify-content-center mt-5">
+                <a href="/auth/verify-email/">上一步</a>
+                <button onclick="controller.signUp"
+                    class="btn btn-md btn-primary ms-3 rounded-pill px-4 py-2 text-nowrap" disabled>完成註冊</button>
+            </div>
+
+        </div>
     </div>
 </div>

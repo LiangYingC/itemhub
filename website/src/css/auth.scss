@@ -1,0 +1,44 @@
+@import 'overwrite.scss';
+@import 'bootstrap/scss/_mixins.scss';
+
+.auth {
+    .bg-grey-700 {
+        min-height: 100vh;
+        height: 100%;
+        z-index: -1;
+    }
+
+    .bg-dark-blue {
+        min-height: 100vh;
+        height: 100%;
+        z-index: -1;
+    }
+
+    .logo {
+        height: 50px;
+    }
+
+    .auth-provider {
+        .btn-line {
+            background: #06C755
+        }
+        button {
+            height: 64px;
+            width: 64px;
+        }
+    }
+
+    @include media-breakpoint-down(lg) {
+        .logo {
+            height: 25px;
+        }
+    }
+
+    @include media-breakpoint-down(md) {
+        background-color: $dark-blue;
+        min-height: 100vh;
+        .container {
+            max-width: 100% !important;
+        }
+    }
+}

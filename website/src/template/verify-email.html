@@ -1,10 +1,69 @@
 <div class="verify-email">
-    <h2>Email 驗證</h2>
-    <div class="form">
-        <label class="d-block">
-            請輸入驗證碼:
-            <input data-field="code" type="text" value="" />
-        </label>
-        <button onclick="controller.verifyEmail">驗證</button>
+    <div class="px-5">
+        <h2 class="text-center mb-5">註冊</h2>
+        <div class="form container">
+            <label class="row d-flex align-items-center">
+                <div class="col-12 mb-2">Email: 驗證</div>
+                <div class="col-7">
+                    <input data-field="email" onkeyup="controller.validateEmail" class="form-control" type="text"
+                        placeholder="請輸入信箱註冊" />
+                </div>
+                <div class="col-5 align-items-cetner d-flex">
+                    <button onclick="controller.sendVerifyEmail"
+                        class="btn btn-send-verify-email w-100 btn-primary rounded-pill px-4 text-nowrap"
+                        disabled>傳送驗證碼至信箱</button>
+                </div>
+            </label>
+
+            <label class="row mt-4">
+                <div class="col-12 mb-2">驗證碼</div>
+                <div class="col-12">
+                    <input onkeyup="controller.validateCode" class="form-control" type="text" placeholder="請輸入驗證碼"
+                        disabled />
+                </div>
+            </label>
+
+            <div class="text-center mt-5">
+                <button onclick="controller.getValidatedEmailToken"
+                    class="btn-sign-in btn btn-md btn-primary rounded-pill px-4" tabindex="3" disabled>下一步</button>
+            </div>
+
+            <div class="d-flex align-items-center mt-5 mb-3">
+                <hr class="flex-grow-1">
+                </hr>
+                <div class="px-3">使用社群帳號註冊</div>
+                <hr class="flex-grow-1">
+                </hr>
+            </div>
+
+            <div class="d-flex flex-row font-weight-bold auth-provider justify-content-center">
+                <button onclick="controller.signInWithFacebook" tabindex="4"
+                    class="btn btn-md btn-primary rounded-circle d-flex align-items-center justify-content-center mx-2 btn-fb">
+                    <img src="/assets/images/facebook.svg" alt="facebook icon" />
+                </button>
+
+                <button onclick="controller.signInWithLine" tabindex="6"
+                    class="btn btn-md btn-primary rounded-circle d-flex align-items-center justify-content-center mx-2 btn-line">
+                    <img src="/assets/images/line.svg" alt="line icon" />
+                </button>
+
+                <button onclick="controller.signInWithGoogle" tabindex="5"
+                    class="btn btn-md btn-primary rounded-circle d-flex align-items-center justify-content-center mx-2">
+                    <img src="/assets/images/google.svg" alt="google icon" />
+                </button>
+            </div>
+
+            <div class="d-flex align-items-center mt-5 mb-3">
+                <hr class="flex-grow-1">
+                </hr>
+                <div class="px-3">已有帳號?</div>
+                <hr class="flex-grow-1">
+                </hr>
+            </div>
+            <div class="text-center mt-4">
+                <a href="/auth/sign-in/" class="btn-sign-in btn btn-md btn-primary rounded-pill px-4 py-2" tabindex="3"
+                    disabled>登入</a>
+            </div>
+        </div>
     </div>
 </div>

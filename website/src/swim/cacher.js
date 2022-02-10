@@ -58,6 +58,8 @@ import masterHTML from '../template/master.html';
 
 import meHTML from '../template/me.html';
 
+import oauthHTML from '../template/oauth.html';
+
 import pricingHTML from '../template/pricing.html';
 
 import privacyPolicyHTML from '../template/privacy-policy.html';
@@ -71,6 +73,8 @@ import signUpHTML from '../template/sign-up.html';
 import verifyEmailHTML from '../template/verify-email.html';
 
 import '../css/main.css';
+import '../css/auth.css';
+import '../css/checkout.css';
 import '../css/common.css';
 import '../css/cooperation.css';
 import '../css/master.css';
@@ -121,12 +125,15 @@ export const Cacher = {
         window.SwimAppLoaderCache[`${APP_CONFIG.FRONT_END_PREFIX}/template/main.html`] = mainHTML;
         window.SwimAppLoaderCache[`${APP_CONFIG.FRONT_END_PREFIX}/template/master.html`] = masterHTML;
         window.SwimAppLoaderCache[`${APP_CONFIG.FRONT_END_PREFIX}/template/me.html`] = meHTML;
+        window.SwimAppLoaderCache[`${APP_CONFIG.FRONT_END_PREFIX}/template/oauth.html`] = oauthHTML;
         window.SwimAppLoaderCache[`${APP_CONFIG.FRONT_END_PREFIX}/template/pricing.html`] = pricingHTML;
         window.SwimAppLoaderCache[`${APP_CONFIG.FRONT_END_PREFIX}/template/privacy-policy.html`] = privacyPolicyHTML;
         window.SwimAppLoaderCache[`${APP_CONFIG.FRONT_END_PREFIX}/template/send-verify-email.html`] = sendVerifyEmailHTML;
         window.SwimAppLoaderCache[`${APP_CONFIG.FRONT_END_PREFIX}/template/sign-in.html`] = signInHTML;
         window.SwimAppLoaderCache[`${APP_CONFIG.FRONT_END_PREFIX}/template/sign-up.html`] = signUpHTML;
         window.SwimAppLoaderCache[`${APP_CONFIG.FRONT_END_PREFIX}/template/verify-email.html`] = verifyEmailHTML;
+        window.SwimAppStylesheet.push(`${APP_CONFIG.FRONT_END_PREFIX}/css/auth.css`);
+        window.SwimAppStylesheet.push(`${APP_CONFIG.FRONT_END_PREFIX}/css/checkout.css`);
         window.SwimAppStylesheet.push(`${APP_CONFIG.FRONT_END_PREFIX}/css/common.css`);
         window.SwimAppStylesheet.push(`${APP_CONFIG.FRONT_END_PREFIX}/css/cooperation.css`);
         window.SwimAppStylesheet.push(`${APP_CONFIG.FRONT_END_PREFIX}/css/main.css`);

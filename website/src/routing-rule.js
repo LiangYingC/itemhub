@@ -1,7 +1,7 @@
 import { APP_CONFIG } from './config.js';
 // TODO :「隱私權政策」內容寫完後，可以打開，並加上 RoutingRule 相關設定
 // import { AboutController } from './controllers/about.controller.js';
-import { AuthController } from './controllers/auth.controller.js';
+import { OauthController } from './controllers/oauth.controller.js';
 import { CheckoutController } from './controllers/checkout.controller.js';
 import { CooperationController } from './controllers/cooperation.controller.js';
 import { FeatureController } from './controllers/feature.controller.js';
@@ -13,11 +13,10 @@ import { PricingController } from './controllers/pricing.controller.js';
 // TODO :「關於我們」內容寫完後，可以打開，並加上 RoutingRule 相關設定
 // import { PrivacyPolicyController } from './controllers/privacy-policy.controller.js';
 import { RootController } from './controllers/root.controller.js';
-import { SignInController } from './controllers/sign-in.controller.js';
 import { SignOutController } from './controllers/sign-out.controller.js';
 import { UniversalDataService } from './dataservices/universal.dataservice.js';
-// import { SignUpRoutingRule } from './routing-rules/sign-up.routing-rule.js';
 import { CookieUtil } from './util/cookie.js';
+import { SignInController } from './controllers/sign-in.controller.js';
 
 const gTag = {
     dependency: {
@@ -52,10 +51,10 @@ export const RoutingRule = [{
         checkVariable: 'jwt_decode'
     }, gTag.dependency],
     children: [{
-        path: '/auth/?state&code',
+        path: '/oauth/?state&code',
         skipSitemap: true,
-        controller: AuthController,
-        html: '/template/auth.html',
+        controller: OauthController,
+        html: '/template/oauth.html',
         dependency: [{
             url: `https://www.googletagmanager.com/gtag/js?id=${APP_CONFIG.GA_PROPERTY_ID}`,
             checkVariable: 'dataLayer'

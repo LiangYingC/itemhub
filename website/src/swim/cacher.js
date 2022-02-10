@@ -74,7 +74,6 @@ import verifyEmailHTML from '../template/verify-email.html';
 
 import '../css/main.css';
 import '../css/auth.css';
-import '../css/checkout.css';
 import '../css/common.css';
 import '../css/cooperation.css';
 import '../css/master.css';
@@ -134,7 +133,6 @@ export const Cacher = {
         window.SwimAppLoaderCache[`${APP_CONFIG.FRONT_END_PREFIX}/template/sign-up.html`] = signUpHTML;
         window.SwimAppLoaderCache[`${APP_CONFIG.FRONT_END_PREFIX}/template/verify-email.html`] = verifyEmailHTML;
         window.SwimAppStylesheet.push(`${APP_CONFIG.FRONT_END_PREFIX}/css/auth.css`);
-        window.SwimAppStylesheet.push(`${APP_CONFIG.FRONT_END_PREFIX}/css/checkout.css`);
         window.SwimAppStylesheet.push(`${APP_CONFIG.FRONT_END_PREFIX}/css/common.css`);
         window.SwimAppStylesheet.push(`${APP_CONFIG.FRONT_END_PREFIX}/css/cooperation.css`);
         window.SwimAppStylesheet.push(`${APP_CONFIG.FRONT_END_PREFIX}/css/main.css`);

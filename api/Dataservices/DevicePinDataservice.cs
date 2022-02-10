@@ -47,7 +47,7 @@ namespace Homo.IotApi
                     State = (decimal)x.Value
                 });
 
-            return fromSensorData.Union(fromSensorData).ToList<DevicePin>();
+            return fromSensorData.Union(fromSwitch).ToList<DevicePin>();
         }
     }
 

@@ -6,7 +6,7 @@ namespace Homo.IotApi
 {
     public class DevicePinDataservice
     {
-        public static List<DevicePin> GetList(IotDbContext dbContext, long? ownerId, long deviceId)
+        public static List<DevicePin> GetList(IotDbContext dbContext, long ownerId, long deviceId)
         {
             IEnumerable<DevicePin> fromSensorData = dbContext.DevicePinSensor
                 .Where(x =>
@@ -48,6 +48,17 @@ namespace Homo.IotApi
                 });
 
             return fromSensorData.Union(fromSwitch).ToList<DevicePin>();
+        }
+
+        public static void RemoveUnuseSwitchPins(IotDbContext dbContext, long ownerId, long deviceId, List<string> usedPins)
+        {
+            dbContext.DevicePinSwitch.Where(x =>
+                x.OwnerId == ownerId
+                && x.DeviceId == deviceId
+                && !usedPins.Contains(x.Pin)).UpdateFromQuery(x => new DevicePinSwitch()
+                {
+                    DeletedAt = DateTime.Now
+                });
         }
     }
 

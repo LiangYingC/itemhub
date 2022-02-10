@@ -1,13 +1,9 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Builder;
-using System.Threading.Tasks;
-using System.Threading;
-using System;
-using Microsoft.EntityFrameworkCore;
 using Homo.Api;
 using Homo.Core.Constants;
+using System.Linq;
 
 
 namespace Homo.IotApi
@@ -29,6 +25,15 @@ namespace Homo.IotApi
         {
             long ownerId = extraPayload.Id;
             return DevicePinDataservice.GetList(_dbContext, ownerId, id);
+        }
+
+        [HttpDelete]
+        public ActionResult<dynamic> removeUnusedPins([FromRoute] long id, [FromQuery] string usedPins, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
+        {
+            long ownerId = extraPayload.Id;
+            List<string> pins = usedPins.Split(",").ToList<string>();
+            DevicePinDataservice.RemoveUnuseSwitchPins(_dbContext, ownerId, id, pins);
+            return new { status = CUSTOM_RESPONSE.OK };
         }
 
     }

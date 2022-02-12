@@ -1,5 +1,5 @@
 import { CookieHelper } from '@/helpers/cookie.helper';
-import { RESPONSE_STATUS } from '@/constants/api';
+import { FETCH_METHOD, RESPONSE_STATUS } from '@/constants/api';
 interface SendRequestParams {
     apiPath: string;
     method: string;
@@ -167,10 +167,12 @@ export const ApiHelper = {
     },
     Fetch: ({ apiPath, fetchOption, shouldDeleteContentType }: FetchParams) => {
         if (
-            fetchOption.method === 'GET' &&
+            fetchOption.method === FETCH_METHOD.GET &&
             typeof fetchOption.body !== 'undefined'
         ) {
-            throw new Error("Don't set body payload when fetch method is GET.");
+            throw new Error(
+                `Don't set body payload when fetch method is ${FETCH_METHOD.GET}.`
+            );
         }
 
         const headers = shouldDeleteContentType

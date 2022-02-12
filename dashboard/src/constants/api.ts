@@ -8,6 +8,13 @@ export const END_POINT = {
     DEVICE_PINS: 'me/devices/:id/pins',
 };
 
+export const FETCH_METHOD = {
+    GET: 'GET',
+    POST: 'POST',
+    PATCH: 'PATCH',
+    DELETE: 'DELETE',
+};
+
 export const RESPONSE_STATUS = {
     OK: 'OK',
     FAILED: 'FAILED',

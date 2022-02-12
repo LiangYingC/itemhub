@@ -1,4 +1,4 @@
-import { API_URL, END_POINT } from '@/constants/api';
+import { API_URL, END_POINT, FETCH_METHOD } from '@/constants/api';
 import { ApiHelper } from '@/helpers/api.helper';
 
 export const AuthDataservice = {
@@ -13,7 +13,7 @@ export const AuthDataservice = {
 
         const response: any = await ApiHelper.SendRequest({
             apiPath,
-            method: 'POST',
+            method: FETCH_METHOD.POST,
             payload: {
                 email,
                 password,
@@ -26,7 +26,7 @@ export const AuthDataservice = {
         const apiPath = `${API_URL}${END_POINT.IS_SIGNED}`;
         return ApiHelper.SendRequestWithToken({
             apiPath,
-            method: 'POST',
+            method: FETCH_METHOD.POST,
         });
     },
 };

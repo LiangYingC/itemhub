@@ -1,4 +1,4 @@
-import { API_URL, END_POINT } from '@/constants/api';
+import { API_URL, END_POINT, FETCH_METHOD } from '@/constants/api';
 import { ApiHelper } from '@/helpers/api.helper';
 import { DeviceItem, PinItem } from '@/types/devices.type';
 import {
@@ -16,7 +16,7 @@ export const DevicesDataservice = {
 
         const response: any = await ApiHelper.SendRequestWithToken({
             apiPath,
-            method: 'GET',
+            method: FETCH_METHOD.GET,
         });
 
         return response.data as GetDevicesResponseData;
@@ -27,7 +27,7 @@ export const DevicesDataservice = {
 
         const response: any = await ApiHelper.SendRequestWithToken({
             apiPath,
-            method: 'GET',
+            method: FETCH_METHOD.GET,
         });
         return response.data as DeviceItem;
     },
@@ -37,7 +37,7 @@ export const DevicesDataservice = {
 
         const response: any = await ApiHelper.SendRequestWithToken({
             apiPath,
-            method: 'PATCH',
+            method: FETCH_METHOD.PATCH,
             payload: editedData,
         });
         return response.data as UpdateSingleDeviceResponseData;
@@ -48,7 +48,7 @@ export const DevicesDataservice = {
 
         const response: any = await ApiHelper.SendRequestWithToken({
             apiPath,
-            method: 'GET',
+            method: FETCH_METHOD.GET,
         });
         return response.data as PinItem[];
     },

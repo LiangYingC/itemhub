@@ -15,4 +15,5 @@ export interface DeviceItem {
 export interface PinItem {
     pin: string;
     deviceId: number;
+    state: number;
 }

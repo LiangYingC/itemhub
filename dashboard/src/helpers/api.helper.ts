@@ -1,4 +1,5 @@
 import { CookieHelper } from '@/helpers/cookie.helper';
+import { RESPONSE_STATUS } from '@/constants/api';
 interface SendRequestParams {
     apiPath: string;
     method: string;
@@ -78,7 +79,7 @@ export const ApiHelper = {
                 alert('目前發生問題，請稍後再試');
 
                 result = {
-                    status: 'FAILED',
+                    status: RESPONSE_STATUS.FAILED,
                     data: {
                         message: error,
                     },
@@ -127,7 +128,7 @@ export const ApiHelper = {
                 }, 0);
 
                 result = {
-                    status: 'OK',
+                    status: RESPONSE_STATUS.OK,
                     httpStatus: 200,
                 };
             }
@@ -135,13 +136,13 @@ export const ApiHelper = {
             if (response.status === 200) {
                 const jsonData = await response.json();
                 result = {
-                    status: 'OK',
+                    status: RESPONSE_STATUS.OK,
                     httpStatus: response.status,
                     data: jsonData,
                 };
             } else if (response.status === 204) {
                 result = {
-                    status: 'FAILED',
+                    status: RESPONSE_STATUS.FAILED,
                     httpStatus: response.status,
                     data: {
                         message: '沒有資料',
@@ -150,7 +151,7 @@ export const ApiHelper = {
             } else {
                 const jsonData = await response.json();
                 result = {
-                    status: 'FAILED',
+                    status: RESPONSE_STATUS.FAILED,
                     httpStatus: response.status,
                     data: {
                         message: jsonData.message,

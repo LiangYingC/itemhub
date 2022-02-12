@@ -12,6 +12,7 @@ import {
     UpdateSingleDeviceResponseData,
     GetDevicePinsParams,
 } from '@/types/devices.dataservice';
+import { RESPONSE_STATUS } from '@/constants/api';
 
 export const useGetDevicesApi = ({ page, limit }: GetDevicesParams) => {
     const fetchGetDevices = useCallback(() => {
@@ -83,7 +84,7 @@ export const useUpdateSingleDeviceApi = ({
     const dispatch = useAppDispatch();
     const dispatchRefreshDevices = useCallback(
         (data: UpdateSingleDeviceResponseData) => {
-            if (data.status === 'OK') {
+            if (data.status === RESPONSE_STATUS.OK) {
                 dispatch(
                     devicesActions.updateSingleDevice({ ...editedData, id })
                 );

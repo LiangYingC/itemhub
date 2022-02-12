@@ -19,10 +19,11 @@ const Pins = () => {
             {isLoading || devicePins === null ? (
                 <div>Loading</div>
             ) : (
-                devicePins.map(({ deviceId, pin }) => (
+                devicePins.map(({ deviceId, pin, state }) => (
                     <div key={deviceId}>
                         <div>deviceId: {deviceId}</div>
                         <div>pin: {pin}</div>
+                        <div>state: {state}</div>
                     </div>
                 ))
             )}

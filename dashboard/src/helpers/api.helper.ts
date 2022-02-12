@@ -87,26 +87,22 @@ export const ApiHelper = {
             }
 
             const contentType = response.headers.get('content-type');
-            const isDownloadFile = contentType
-                ? [
-                      'text/csv',
-                      'application/vnd.ms-excel',
-                      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                  ].includes(contentType)
-                : false;
+            const downloadTypes = [
+                'text/csv',
+                'application/vnd.ms-excel',
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            ];
+            const isDownloadFile =
+                response.status === 200 &&
+                contentType &&
+                downloadTypes.includes(contentType);
 
-            if (response.status === 200 && !isDownloadFile) {
-                const jsonData = await response.json();
-                result = {
-                    status: 'OK',
-                    httpStatus: response.status,
-                    data: jsonData,
-                };
-            } else if (response.status === 200 && isDownloadFile) {
+            if (isDownloadFile) {
                 const blob = await response.blob();
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 let filename = null;
+
                 const disposition = response.headers.get('content-disposition');
                 if (disposition && disposition.indexOf('attachment') !== -1) {
                     const filenameRegex =
@@ -116,6 +112,7 @@ export const ApiHelper = {
                         filename = matches[1].replace(/['"]/g, '');
                     }
                 }
+
                 a.classList.add('skip-swim-router');
                 document.body.appendChild(a);
                 a.href = url;
@@ -123,13 +120,24 @@ export const ApiHelper = {
                     a.download = filename;
                 }
                 a.click();
+
                 setTimeout(() => {
                     window.URL.revokeObjectURL(url);
                     document.body.removeChild(a);
                 }, 0);
+
                 result = {
                     status: 'OK',
                     httpStatus: 200,
+                };
+            }
+
+            if (response.status === 200) {
+                const jsonData = await response.json();
+                result = {
+                    status: 'OK',
+                    httpStatus: response.status,
+                    data: jsonData,
                 };
             } else if (response.status === 204) {
                 result = {

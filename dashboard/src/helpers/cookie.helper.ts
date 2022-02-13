@@ -19,7 +19,7 @@ export const CookieHelper: CookieHelperInterface = {
             if (cookie.charAt(0) === ' ') {
                 cookie = cookie.substring(1, cookie.length);
             }
-            console.log({ cookie });
+
             if (cookie.indexOf(nameEq) === 0) {
                 return cookie.substring(nameEq.length, cookie.length);
             }

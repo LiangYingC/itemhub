@@ -97,15 +97,6 @@ export const ApiHelper: ApiHelperInterface = {
         });
     },
     fetch: ({ apiPath, fetchOption, shouldDeleteContentType }) => {
-        if (
-            fetchOption.method === FETCH_METHOD.GET &&
-            typeof fetchOption.body !== 'undefined'
-        ) {
-            throw new Error(
-                `Don't set body payload when fetch method is ${FETCH_METHOD.GET}.`
-            );
-        }
-
         const headers = shouldDeleteContentType
             ? fetchOption.headers
             : {

@@ -45,8 +45,8 @@ export const ApiHelper: ApiHelperInterface = {
               };
 
         // eslint-disable-next-line no-async-promise-executor
-        return new Promise<FetchResult>(async (resolve, reject) => {
-            let result: FetchResult;
+        return new Promise(async (resolve, reject) => {
+            let result: FetchResult<any>;
 
             const response = await ApiHelper.fetch({
                 apiPath,

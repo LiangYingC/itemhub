@@ -17,10 +17,10 @@ interface FetchParams {
     shouldDeleteContentType: boolean;
 }
 
-export interface FetchResult {
+export interface FetchResult<T> {
     httpStatus: number;
     status: string;
-    data: { [key: string]: any };
+    data: T;
 }
 
 export interface FetchErrorResultData {
@@ -36,22 +36,22 @@ export interface FetchErrorResult {
 }
 
 export interface ApiHelperInterface {
-    sendRequestWithToken: ({
+    sendRequestWithToken: <T>({
         apiPath,
         method,
         headers,
         payload,
         shouldDeleteContentType,
         callbackFunc,
-    }: SendRequestParams) => Promise<FetchResult>;
-    sendRequest: ({
+    }: SendRequestParams) => Promise<FetchResult<T>>;
+    sendRequest: <T>({
         apiPath,
         method,
         headers,
         payload,
         shouldDeleteContentType,
         callbackFunc,
-    }: SendRequestParams) => Promise<FetchResult>;
+    }: SendRequestParams) => Promise<FetchResult<T>>;
     fetch: ({
         apiPath,
         fetchOption,

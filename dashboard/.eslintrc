@@ -49,6 +49,9 @@
         "react/destructuring-assignment": "warn",
         "react/react-in-jsx-scope": "off",
         "react/prop-types": "off",
+        // eslint-plugin-react-hooks rules: https://github.com/facebook/react/tree/main/packages/eslint-plugin-react-hooks
+        "react-hooks/rules-of-hooks": "error",
+        "react-hooks/exhaustive-deps": "warn",
         // @typescript-eslint/eslint-plugin rules: https://typescript-eslint.io/rules/
         "@typescript-eslint/no-empty-function": ["off"],
         "@typescript-eslint/no-explicit-any": ["off"]

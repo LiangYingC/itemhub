@@ -8,8 +8,8 @@ import { CookieHelper } from './helpers/cookie.helper';
 const isProd = import.meta.env.VITE_ENV === 'prod';
 
 const App = () => {
-    // dashboard dev site 暫時實作簡易的登入系統，之後 website 兩階段驗證完畢後可拔掉
-    const token = CookieHelper.GetCookie('token');
+    // TODO: dashboard dev site 暫時實作簡易的登入系統，之後 website 兩階段驗證完畢後可完全拔掉
+    const token = CookieHelper.GetToken();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');

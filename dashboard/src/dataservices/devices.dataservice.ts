@@ -2,16 +2,13 @@ import { API_URL, END_POINT, FETCH_METHOD } from '@/constants/api';
 import { ApiHelper } from '@/helpers/api.helper';
 import { DeviceItem, PinItem } from '@/types/devices.type';
 import {
-    GetDevicesParams,
     GetDevicesResponseData,
-    GetSingleDeviceParams,
-    UpdateSingleDeviceParams,
     UpdateSingleDeviceResponseData,
-    GetDevicePinsParams,
-} from '@/types/devices.dataservice.type';
+} from '@/types/dataservices.type';
+import { DevicesDataserviceInterface } from '@/types/dataservices.type';
 
-export const DevicesDataservice = {
-    GetList: async ({ page, limit }: GetDevicesParams) => {
+export const DevicesDataservice: DevicesDataserviceInterface = {
+    getList: async ({ page, limit }) => {
         const apiPath = `${API_URL}${END_POINT.DEVICES}?page=${page}&limit=${limit}`;
 
         const result =
@@ -21,7 +18,7 @@ export const DevicesDataservice = {
             });
         return result.data;
     },
-    GetOne: async ({ id }: GetSingleDeviceParams) => {
+    getOne: async ({ id }) => {
         let apiPath = `${API_URL}${END_POINT.DEVICE}`;
         apiPath = apiPath.replace(':id', id.toString());
 
@@ -31,7 +28,7 @@ export const DevicesDataservice = {
         });
         return result.data;
     },
-    UpdateOne: async ({ id, editedData }: UpdateSingleDeviceParams) => {
+    updateOne: async ({ id, editedData }) => {
         let apiPath = `${API_URL}${END_POINT.DEVICE}`;
         apiPath = apiPath.replace(':id', id.toString());
 
@@ -45,7 +42,7 @@ export const DevicesDataservice = {
             );
         return result.data;
     },
-    GetOnePins: async ({ id }: GetDevicePinsParams) => {
+    getOnePins: async ({ id }) => {
         let apiPath = `${API_URL}${END_POINT.DEVICE_PINS}`;
         apiPath = apiPath.replace(':id', id.toString());
 

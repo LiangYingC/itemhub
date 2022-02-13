@@ -16,7 +16,7 @@ const App = () => {
 
     const signWithEmail = async () => {
         if (token === null && email && password && !isProd) {
-            const data = await AuthDataservice.SignWithEmail({
+            const data = await AuthDataservice.signWithEmail({
                 email,
                 password,
             });

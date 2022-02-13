@@ -1,14 +1,9 @@
 import { API_URL, END_POINT, FETCH_METHOD } from '@/constants/api';
 import { ApiHelper } from '@/helpers/api.helper';
+import { AuthDataserviceInterface } from '@/types/dataservices.type';
 
-export const AuthDataservice = {
-    SignWithEmail: async ({
-        email,
-        password,
-    }: {
-        email: string;
-        password: string;
-    }) => {
+export const AuthDataservice: AuthDataserviceInterface = {
+    signWithEmail: async ({ email, password }) => {
         const apiPath = `${API_URL}${END_POINT.SIGN_WITH_EMAIL}`;
 
         const result = await ApiHelper.sendRequest<{ token: string }>({
@@ -21,11 +16,14 @@ export const AuthDataservice = {
         });
         return result.data;
     },
-    IsSigned: async () => {
+    isSigned: async () => {
         const apiPath = `${API_URL}${END_POINT.IS_SIGNED}`;
-        return ApiHelper.sendRequestWithToken({
+        const result = await ApiHelper.sendRequestWithToken<{
+            state: boolean;
+        }>({
             apiPath,
             method: FETCH_METHOD.POST,
         });
+        return result.data;
     },
 };

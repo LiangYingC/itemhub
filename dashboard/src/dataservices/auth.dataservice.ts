@@ -11,7 +11,7 @@ export const AuthDataservice = {
     }) => {
         const apiPath = `${API_URL}${END_POINT.SIGN_WITH_EMAIL}`;
 
-        const response: any = await ApiHelper.SendRequest({
+        const result = await ApiHelper.sendRequest({
             apiPath,
             method: FETCH_METHOD.POST,
             payload: {
@@ -20,11 +20,11 @@ export const AuthDataservice = {
             },
         });
 
-        return response.data as { token: string };
+        return result.data as { token: string };
     },
     IsSigned: async () => {
         const apiPath = `${API_URL}${END_POINT.IS_SIGNED}`;
-        return ApiHelper.SendRequestWithToken({
+        return ApiHelper.sendRequestWithToken({
             apiPath,
             method: FETCH_METHOD.POST,
         });

@@ -9,7 +9,7 @@ const isProd = import.meta.env.VITE_ENV === 'prod';
 
 const App = () => {
     // TODO: dashboard dev site 暫時實作簡易的登入系統，之後 website 兩階段驗證完畢後可完全拔掉
-    const token = CookieHelper.GetToken();
+    const token = CookieHelper.getToken();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -21,7 +21,11 @@ const App = () => {
                 password,
             });
             const tokenValue = data.token;
-            CookieHelper.SetCookie('token', tokenValue, 7);
+            CookieHelper.setCookie({
+                name: 'token',
+                value: tokenValue,
+                days: 14,
+            });
             window.location.reload();
         }
     };

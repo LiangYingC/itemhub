@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { FetchResult } from '@/types/helpers.type';
+import { FetchErrorResultData } from '@/types/helpers.type';
 
 export const useFetchApi = <T>({
     initialData,
@@ -12,7 +12,7 @@ export const useFetchApi = <T>({
 }) => {
     const [data, setData] = useState<T | null>(initialData);
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<FetchResult | null>(null);
+    const [error, setError] = useState<FetchErrorResultData | null>(null);
 
     const fetchApi = useCallback(async () => {
         if (isLoading) return;
@@ -26,10 +26,18 @@ export const useFetchApi = <T>({
             }
 
             setData(data);
-        } catch (err: any) {
+        } catch (error: any) {
+            const errorData: FetchErrorResultData = error?.data || {
+                errorKey: 'UNKNOWN_ERROR',
+                message: '非預期錯誤',
+                payload: [],
+                stackTrace: '',
+            };
+            const errorKey = errorData.errorKey;
+
             // TODO: will handle error ui here, e.g. open global error modal.
-            console.log({ err });
-            setError(err);
+            alert(errorKey);
+            setError(error);
         } finally {
             setIsLoading(false);
         }

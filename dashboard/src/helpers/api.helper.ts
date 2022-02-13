@@ -1,6 +1,10 @@
 import { CookieHelper } from '@/helpers/cookie.helper';
-import { FETCH_METHOD, RESPONSE_STATUS } from '@/constants/api';
-import { ApiHelperInterface, FetchResult } from '@/types/helpers.type';
+import { RESPONSE_STATUS } from '@/constants/api';
+import {
+    ApiHelperInterface,
+    FetchResult,
+    FetchErrorResult,
+} from '@/types/helpers.type';
 
 export const ApiHelper: ApiHelperInterface = {
     sendRequestWithToken: ({
@@ -43,6 +47,7 @@ export const ApiHelper: ApiHelperInterface = {
         // eslint-disable-next-line no-async-promise-executor
         return new Promise<FetchResult>(async (resolve, reject) => {
             let result: FetchResult;
+
             const response = await ApiHelper.fetch({
                 apiPath,
                 fetchOption,
@@ -51,12 +56,12 @@ export const ApiHelper: ApiHelperInterface = {
 
             if (!response.ok) {
                 const errorJsonData = await response.json();
-                result = {
+                const errprResult: FetchErrorResult = {
                     httpStatus: response.status,
                     status: RESPONSE_STATUS.FAILED,
                     data: errorJsonData,
                 };
-                reject(result);
+                reject(errprResult);
             }
 
             if (response.status === 200) {

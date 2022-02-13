@@ -23,6 +23,18 @@ export interface FetchResult {
     data: { [key: string]: any };
 }
 
+export interface FetchErrorResultData {
+    errorKey: string;
+    message: string;
+    payload: any[];
+    stackTrace: string;
+}
+export interface FetchErrorResult {
+    httpStatus: number;
+    status: string;
+    data: FetchErrorResultData;
+}
+
 export interface ApiHelperInterface {
     sendRequestWithToken: ({
         apiPath,

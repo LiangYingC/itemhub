@@ -35,7 +35,7 @@ export const useFetchApi = <T>({
             };
             const errorKey = errorData.errorKey;
 
-            // TODO: will handle error ui here, e.g. open global error modal.
+            // TODO: will handle global error ui here, e.g. open global error modal.
             alert(errorKey);
             setError(error);
         } finally {

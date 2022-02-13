@@ -27,7 +27,7 @@ export interface GetDevicePinsParams {
     id: number;
 }
 
-export interface DevicesDataserviceInterface {
+export interface DevicesDataservicesInterface {
     getList: ({
         page,
         limit,
@@ -40,7 +40,7 @@ export interface DevicesDataserviceInterface {
     getOnePins: ({ id }: GetDevicePinsParams) => Promise<PinItem[]>;
 }
 
-export interface AuthDataserviceInterface {
+export interface AuthDataservicesInterface {
     signWithEmail: ({
         email,
         password,

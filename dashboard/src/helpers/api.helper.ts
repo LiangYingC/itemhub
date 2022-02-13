@@ -1,12 +1,12 @@
-import { CookieHelper } from '@/helpers/cookie.helper';
+import { CookieHelpers } from '@/helpers/cookie.helper';
 import { RESPONSE_STATUS } from '@/constants/api';
 import {
-    ApiHelperInterface,
+    ApiHelpersInterface,
     FetchResult,
     FetchErrorResult,
 } from '@/types/helpers.type';
 
-export const ApiHelper: ApiHelperInterface = {
+export const ApiHelpers: ApiHelpersInterface = {
     sendRequestWithToken: ({
         apiPath,
         method,
@@ -15,8 +15,8 @@ export const ApiHelper: ApiHelperInterface = {
         shouldDeleteContentType = false,
         callbackFunc,
     }) => {
-        const token = CookieHelper.getToken();
-        return ApiHelper.sendRequest({
+        const token = CookieHelpers.getToken();
+        return ApiHelpers.sendRequest({
             apiPath,
             method,
             headers: { Authorization: `Bearer ${token}`, ...headers },
@@ -48,7 +48,7 @@ export const ApiHelper: ApiHelperInterface = {
         return new Promise(async (resolve, reject) => {
             let result: FetchResult<any>;
 
-            const response = await ApiHelper.fetch({
+            const response = await ApiHelpers.fetch({
                 apiPath,
                 fetchOption,
                 shouldDeleteContentType,
@@ -75,7 +75,7 @@ export const ApiHelper: ApiHelperInterface = {
                     contentType && downloadTypes.includes(contentType);
 
                 if (isDownloadFile) {
-                    result = await ApiHelper.handleDownloadFile({ response });
+                    result = await ApiHelpers.handleDownloadFile({ response });
                 } else {
                     const jsonData = await response.json();
                     result = {

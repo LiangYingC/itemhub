@@ -1,18 +1,18 @@
 import { API_URL, END_POINT, FETCH_METHOD } from '@/constants/api';
-import { ApiHelper } from '@/helpers/api.helper';
+import { ApiHelpers } from '@/helpers/api.helper';
 import { DeviceItem, PinItem } from '@/types/devices.type';
 import {
     GetDevicesResponseData,
     UpdateSingleDeviceResponseData,
 } from '@/types/dataservices.type';
-import { DevicesDataserviceInterface } from '@/types/dataservices.type';
+import { DevicesDataservicesInterface } from '@/types/dataservices.type';
 
-export const DevicesDataservice: DevicesDataserviceInterface = {
+export const DevicesDataservices: DevicesDataservicesInterface = {
     getList: async ({ page, limit }) => {
         const apiPath = `${API_URL}${END_POINT.DEVICES}?page=${page}&limit=${limit}`;
 
         const result =
-            await ApiHelper.sendRequestWithToken<GetDevicesResponseData>({
+            await ApiHelpers.sendRequestWithToken<GetDevicesResponseData>({
                 apiPath,
                 method: FETCH_METHOD.GET,
             });
@@ -22,7 +22,7 @@ export const DevicesDataservice: DevicesDataserviceInterface = {
         let apiPath = `${API_URL}${END_POINT.DEVICE}`;
         apiPath = apiPath.replace(':id', id.toString());
 
-        const result = await ApiHelper.sendRequestWithToken<DeviceItem>({
+        const result = await ApiHelpers.sendRequestWithToken<DeviceItem>({
             apiPath,
             method: FETCH_METHOD.GET,
         });
@@ -33,7 +33,7 @@ export const DevicesDataservice: DevicesDataserviceInterface = {
         apiPath = apiPath.replace(':id', id.toString());
 
         const result =
-            await ApiHelper.sendRequestWithToken<UpdateSingleDeviceResponseData>(
+            await ApiHelpers.sendRequestWithToken<UpdateSingleDeviceResponseData>(
                 {
                     apiPath,
                     method: FETCH_METHOD.PATCH,
@@ -46,7 +46,7 @@ export const DevicesDataservice: DevicesDataserviceInterface = {
         let apiPath = `${API_URL}${END_POINT.DEVICE_PINS}`;
         apiPath = apiPath.replace(':id', id.toString());
 
-        const result = await ApiHelper.sendRequestWithToken<PinItem[]>({
+        const result = await ApiHelpers.sendRequestWithToken<PinItem[]>({
             apiPath,
             method: FETCH_METHOD.GET,
         });

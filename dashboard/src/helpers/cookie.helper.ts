@@ -1,6 +1,6 @@
-import { CookieHelperInterface } from '@/types/helpers.type';
+import { CookieHelpersInterface } from '@/types/helpers.type';
 
-export const CookieHelper: CookieHelperInterface = {
+export const CookieHelpers: CookieHelpersInterface = {
     setCookie: ({ name, value, days }) => {
         let expires = '';
         if (days) {
@@ -27,10 +27,10 @@ export const CookieHelper: CookieHelperInterface = {
         return null;
     },
     eraseCookie: ({ name }) => {
-        CookieHelper.setCookie({ name, value: '', days: -1 });
+        CookieHelpers.setCookie({ name, value: '', days: -1 });
     },
     getToken: () => {
-        const token = CookieHelper.getCookie({ name: 'token' });
+        const token = CookieHelpers.getCookie({ name: 'token' });
         if (token) {
             return token;
         }

@@ -35,7 +35,7 @@ export interface FetchErrorResult {
     data: FetchErrorResultData;
 }
 
-export interface ApiHelperInterface {
+export interface ApiHelpersInterface {
     sendRequestWithToken: <T>({
         apiPath,
         method,
@@ -66,7 +66,7 @@ export interface ApiHelperInterface {
     }>;
 }
 
-export interface CookieHelperInterface {
+export interface CookieHelpersInterface {
     setCookie: ({
         name,
         value,

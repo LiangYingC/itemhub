@@ -2,26 +2,26 @@ import 'bootstrap/scss/bootstrap.scss';
 import './app.scss';
 import { Outlet } from 'react-router-dom';
 import { useState } from 'react';
-import { AuthDataservice } from './dataservices/auth.dataservice';
-import { CookieHelper } from './helpers/cookie.helper';
+import { AuthDataservices } from './dataservices/auth.dataservice';
+import { CookieHelpers } from './helpers/cookie.helper';
 
 const isProd = import.meta.env.VITE_ENV === 'prod';
 
 const App = () => {
     // TODO: dashboard dev site 暫時實作簡易的登入系統，之後 website 兩階段驗證完畢後可完全拔掉
-    const token = CookieHelper.getToken();
+    const token = CookieHelpers.getToken();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const signWithEmail = async () => {
         if (token === null && email && password && !isProd) {
-            const data = await AuthDataservice.signWithEmail({
+            const data = await AuthDataservices.signWithEmail({
                 email,
                 password,
             });
             const tokenValue = data.token;
-            CookieHelper.setCookie({
+            CookieHelpers.setCookie({
                 name: 'token',
                 value: tokenValue,
                 days: 14,

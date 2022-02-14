@@ -8,31 +8,32 @@ import {
 import { DevicesDataservicesInterface } from '@/types/dataservices.type';
 
 export const DevicesDataservices: DevicesDataservicesInterface = {
-    getList: async ({ page, limit }) => {
+    GetList: async ({ page, limit }) => {
         const apiPath = `${API_URL}${END_POINT.DEVICES}?page=${page}&limit=${limit}`;
 
         const result =
-            await ApiHelpers.sendRequestWithToken<GetDevicesResponseData>({
+            await ApiHelpers.SendRequestWithToken<GetDevicesResponseData>({
                 apiPath,
                 method: HTTP_METHOD.GET,
             });
         return result.data;
     },
-    getOne: async ({ id }) => {
-        const apiPath = `${API_URL}${END_POINT.DEVICE}`;
+    GetOne: async ({ id }) => {
+        let apiPath = `${API_URL}${END_POINT.DEVICE}`;
+        apiPath = apiPath.replace(':id', id.toString());
 
-        const result = await ApiHelpers.sendRequestWithToken<DeviceItem>({
+        const result = await ApiHelpers.SendRequestWithToken<DeviceItem>({
             apiPath,
             method: HTTP_METHOD.GET,
         });
         return result.data;
     },
-    updateOne: async ({ id, editedData }) => {
+    UpdateOne: async ({ id, editedData }) => {
         let apiPath = `${API_URL}${END_POINT.DEVICE}`;
         apiPath = apiPath.replace(':id', id.toString());
 
         const result =
-            await ApiHelpers.sendRequestWithToken<UpdateSingleDeviceResponseData>(
+            await ApiHelpers.SendRequestWithToken<UpdateSingleDeviceResponseData>(
                 {
                     apiPath,
                     method: HTTP_METHOD.PATCH,
@@ -41,11 +42,11 @@ export const DevicesDataservices: DevicesDataservicesInterface = {
             );
         return result.data;
     },
-    getOnePins: async ({ id }) => {
+    GetOnePins: async ({ id }) => {
         let apiPath = `${API_URL}${END_POINT.DEVICE_PINS}`;
         apiPath = apiPath.replace(':id', id.toString());
 
-        const result = await ApiHelpers.sendRequestWithToken<PinItem[]>({
+        const result = await ApiHelpers.SendRequestWithToken<PinItem[]>({
             apiPath,
             method: HTTP_METHOD.GET,
         });

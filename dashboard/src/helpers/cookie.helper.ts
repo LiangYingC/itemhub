@@ -1,7 +1,7 @@
 import { CookieHelpersInterface } from '@/types/helpers.type';
 
 export const CookieHelpers: CookieHelpersInterface = {
-    setCookie: ({ name, value, days }) => {
+    SetCookie: ({ name, value, days }) => {
         let expires = '';
         if (days) {
             const date = new Date();
@@ -10,7 +10,7 @@ export const CookieHelpers: CookieHelpersInterface = {
         }
         document.cookie = name + '=' + value + expires + '; path=/';
     },
-    getCookie: ({ name }) => {
+    GetCookie: ({ name }) => {
         const nameEq = `${name}=`;
         const cookies = document.cookie.split(';');
 
@@ -26,11 +26,11 @@ export const CookieHelpers: CookieHelpersInterface = {
         }
         return null;
     },
-    eraseCookie: ({ name }) => {
-        CookieHelpers.setCookie({ name, value: '', days: -1 });
+    EraseCookie: ({ name }) => {
+        CookieHelpers.SetCookie({ name, value: '', days: -1 });
     },
-    getToken: () => {
-        const token = CookieHelpers.getCookie({ name: 'token' });
+    GetToken: () => {
+        const token = CookieHelpers.GetCookie({ name: 'token' });
         if (token) {
             return token;
         }

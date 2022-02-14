@@ -3,9 +3,9 @@ import { ApiHelpers } from '@/helpers/api.helper';
 import { AuthDataservicesInterface } from '@/types/dataservices.type';
 
 export const AuthDataservices: AuthDataservicesInterface = {
-    signWithEmail: async ({ email, password }) => {
+    SignWithEmail: async ({ email, password }) => {
         const apiPath = `${API_URL}${END_POINT.SIGN_WITH_EMAIL}`;
-        const result = await ApiHelpers.sendRequest<{ token: string }>({
+        const result = await ApiHelpers.SendRequest<{ token: string }>({
             apiPath,
             method: HTTP_METHOD.POST,
             payload: {
@@ -15,9 +15,9 @@ export const AuthDataservices: AuthDataservicesInterface = {
         });
         return result.data;
     },
-    isSigned: async () => {
+    IsSigned: async () => {
         const apiPath = `${API_URL}${END_POINT.IS_SIGNED}`;
-        const result = await ApiHelpers.sendRequestWithToken<{
+        const result = await ApiHelpers.SendRequestWithToken<{
             state: boolean;
         }>({
             apiPath,

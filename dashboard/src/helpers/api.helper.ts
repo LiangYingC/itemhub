@@ -7,7 +7,7 @@ import {
 } from '@/types/helpers.type';
 
 export const ApiHelpers: ApiHelpersInterface = {
-    sendRequestWithToken: ({
+    SendRequestWithToken: ({
         apiPath,
         method,
         headers = {},
@@ -15,8 +15,8 @@ export const ApiHelpers: ApiHelpersInterface = {
         shouldDeleteContentType = false,
         callbackFunc,
     }) => {
-        const token = CookieHelpers.getToken();
-        return ApiHelpers.sendRequest({
+        const token = CookieHelpers.GetToken();
+        return ApiHelpers.SendRequest({
             apiPath,
             method,
             headers: { Authorization: `Bearer ${token}`, ...headers },
@@ -25,7 +25,7 @@ export const ApiHelpers: ApiHelpersInterface = {
             callbackFunc,
         });
     },
-    sendRequest: ({
+    SendRequest: ({
         apiPath,
         method,
         headers = {},
@@ -48,7 +48,7 @@ export const ApiHelpers: ApiHelpersInterface = {
         return new Promise(async (resolve, reject) => {
             let result: FetchResult<any>;
 
-            const response = await ApiHelpers.fetch({
+            const response = await ApiHelpers.Fetch({
                 apiPath,
                 fetchOption,
                 shouldDeleteContentType,
@@ -75,7 +75,7 @@ export const ApiHelpers: ApiHelpersInterface = {
                     contentType && downloadTypes.includes(contentType);
 
                 if (isDownloadFile) {
-                    result = await ApiHelpers.handleDownloadFile({ response });
+                    result = await ApiHelpers.HandleDownloadFile({ response });
                 } else {
                     const jsonData = await response.json();
                     result = {
@@ -101,7 +101,7 @@ export const ApiHelpers: ApiHelpersInterface = {
             resolve(result);
         });
     },
-    fetch: ({ apiPath, fetchOption, shouldDeleteContentType }) => {
+    Fetch: ({ apiPath, fetchOption, shouldDeleteContentType }) => {
         const headers = shouldDeleteContentType
             ? fetchOption.headers
             : {
@@ -131,7 +131,7 @@ export const ApiHelpers: ApiHelpersInterface = {
 
         return fetch(apiPath, finalOption);
     },
-    handleDownloadFile: async ({ response }) => {
+    HandleDownloadFile: async ({ response }) => {
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');

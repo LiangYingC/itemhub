@@ -9,19 +9,19 @@ const isProd = import.meta.env.VITE_ENV === 'prod';
 
 const App = () => {
     // TODO: dashboard dev site 暫時實作簡易的登入系統，之後 website 兩階段驗證完畢後可完全拔掉
-    const token = CookieHelpers.getToken();
+    const token = CookieHelpers.GetToken();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const signWithEmail = async () => {
+    const SignWithEmail = async () => {
         if (token === null && email && password && !isProd) {
-            const data = await AuthDataservices.signWithEmail({
+            const data = await AuthDataservices.SignWithEmail({
                 email,
                 password,
             });
             const tokenValue = data.token;
-            CookieHelpers.setCookie({
+            CookieHelpers.SetCookie({
                 name: 'token',
                 value: tokenValue,
                 days: 14,
@@ -50,7 +50,7 @@ const App = () => {
                     onChange={(e) => setPassword(e.target.value)}
                 />
             </label>
-            <button onClick={signWithEmail}>登入</button>
+            <button onClick={SignWithEmail}>登入</button>
         </>
     );
 };

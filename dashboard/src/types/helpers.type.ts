@@ -36,7 +36,7 @@ export interface FetchErrorResult {
 }
 
 export interface ApiHelpersInterface {
-    sendRequestWithToken: <T>({
+    SendRequestWithToken: <T>({
         apiPath,
         method,
         headers,
@@ -44,7 +44,7 @@ export interface ApiHelpersInterface {
         shouldDeleteContentType,
         callbackFunc,
     }: SendRequestParams) => Promise<FetchResult<T>>;
-    sendRequest: <T>({
+    SendRequest: <T>({
         apiPath,
         method,
         headers,
@@ -52,12 +52,12 @@ export interface ApiHelpersInterface {
         shouldDeleteContentType,
         callbackFunc,
     }: SendRequestParams) => Promise<FetchResult<T>>;
-    fetch: ({
+    Fetch: ({
         apiPath,
         fetchOption,
         shouldDeleteContentType,
     }: FetchParams) => Promise<Response>;
-    handleDownloadFile: ({ response }: { response: Response }) => Promise<{
+    HandleDownloadFile: ({ response }: { response: Response }) => Promise<{
         httpStatus: number;
         status: string;
         data: {
@@ -67,7 +67,7 @@ export interface ApiHelpersInterface {
 }
 
 export interface CookieHelpersInterface {
-    setCookie: ({
+    SetCookie: ({
         name,
         value,
         days,
@@ -76,7 +76,7 @@ export interface CookieHelpersInterface {
         value: string;
         days?: number;
     }) => void;
-    getCookie: ({ name }: { name: string }) => string | null;
-    eraseCookie: ({ name }: { name: string }) => void;
-    getToken: () => string | null;
+    GetCookie: ({ name }: { name: string }) => string | null;
+    EraseCookie: ({ name }: { name: string }) => void;
+    GetToken: () => string | null;
 }

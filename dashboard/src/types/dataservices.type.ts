@@ -28,20 +28,20 @@ export interface GetDevicePinsParams {
 }
 
 export interface DevicesDataservicesInterface {
-    getList: ({
+    GetList: ({
         page,
         limit,
     }: GetDevicesParams) => Promise<GetDevicesResponseData>;
-    getOne: ({ id }: GetSingleDeviceParams) => Promise<DeviceItem>;
-    updateOne: ({
+    GetOne: ({ id }: GetSingleDeviceParams) => Promise<DeviceItem>;
+    UpdateOne: ({
         id,
         editedData,
     }: UpdateSingleDeviceParams) => Promise<UpdateSingleDeviceResponseData>;
-    getOnePins: ({ id }: GetDevicePinsParams) => Promise<PinItem[]>;
+    GetOnePins: ({ id }: GetDevicePinsParams) => Promise<PinItem[]>;
 }
 
 export interface AuthDataservicesInterface {
-    signWithEmail: ({
+    SignWithEmail: ({
         email,
         password,
     }: {
@@ -50,7 +50,7 @@ export interface AuthDataservicesInterface {
     }) => Promise<{
         token: string;
     }>;
-    isSigned: () => Promise<{
+    IsSigned: () => Promise<{
         state: boolean;
     }>;
 }

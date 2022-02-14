@@ -15,7 +15,7 @@ export const ApiHelpers: ApiHelpersInterface = {
         shouldDeleteContentType = false,
         callbackFunc,
     }) => {
-        const token = CookieHelpers.GetToken();
+        const token = CookieHelpers.GetCookie({ name: 'token' }) || '';
         return ApiHelpers.SendRequest({
             apiPath,
             method,

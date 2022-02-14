@@ -29,16 +29,4 @@ export const CookieHelpers: CookieHelpersInterface = {
     EraseCookie: ({ name }) => {
         CookieHelpers.SetCookie({ name, value: '', days: -1 });
     },
-    GetToken: () => {
-        const token = CookieHelpers.GetCookie({ name: 'token' });
-        if (token) {
-            return token;
-        }
-        /** TODO:
-         * 未來會轉導到 /auth/sign-in/，並有機會藉由 history state 的紀錄，去判斷登入後，要轉導回哪一頁。
-         * 如有更多 token 相關處理邏輯，可以封裝於此 function 中。
-         */
-        window.history.pushState({}, '', '/');
-        return null;
-    },
 };

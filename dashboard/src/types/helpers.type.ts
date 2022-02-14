@@ -78,5 +78,4 @@ export interface CookieHelpersInterface {
     }) => void;
     GetCookie: ({ name }: { name: string }) => string | null;
     EraseCookie: ({ name }: { name: string }) => void;
-    GetToken: () => string | null;
 }

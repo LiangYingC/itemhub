@@ -8,7 +8,7 @@ export const END_POINT = {
     DEVICE_PINS: 'me/devices/:id/pins',
 };
 
-export const FETCH_METHOD = {
+export const HTTP_METHOD = {
     GET: 'GET',
     POST: 'POST',
     PATCH: 'PATCH',

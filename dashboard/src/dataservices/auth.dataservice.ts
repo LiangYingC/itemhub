@@ -1,4 +1,4 @@
-import { API_URL, END_POINT, FETCH_METHOD } from '@/constants/api';
+import { API_URL, END_POINT, HTTP_METHOD } from '@/constants/api';
 import { ApiHelpers } from '@/helpers/api.helper';
 import { AuthDataservicesInterface } from '@/types/dataservices.type';
 
@@ -7,7 +7,7 @@ export const AuthDataservices: AuthDataservicesInterface = {
         const apiPath = `${API_URL}${END_POINT.SIGN_WITH_EMAIL}`;
         const result = await ApiHelpers.sendRequest<{ token: string }>({
             apiPath,
-            method: FETCH_METHOD.POST,
+            method: HTTP_METHOD.POST,
             payload: {
                 email,
                 password,
@@ -21,7 +21,7 @@ export const AuthDataservices: AuthDataservicesInterface = {
             state: boolean;
         }>({
             apiPath,
-            method: FETCH_METHOD.POST,
+            method: HTTP_METHOD.POST,
         });
         return result.data;
     },

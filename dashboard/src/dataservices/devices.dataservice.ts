@@ -1,4 +1,4 @@
-import { API_URL, END_POINT, FETCH_METHOD } from '@/constants/api';
+import { API_URL, END_POINT, HTTP_METHOD } from '@/constants/api';
 import { ApiHelpers } from '@/helpers/api.helper';
 import { DeviceItem, PinItem } from '@/types/devices.type';
 import {
@@ -14,17 +14,16 @@ export const DevicesDataservices: DevicesDataservicesInterface = {
         const result =
             await ApiHelpers.sendRequestWithToken<GetDevicesResponseData>({
                 apiPath,
-                method: FETCH_METHOD.GET,
+                method: HTTP_METHOD.GET,
             });
         return result.data;
     },
     getOne: async ({ id }) => {
-        let apiPath = `${API_URL}${END_POINT.DEVICE}`;
-        apiPath = apiPath.replace(':id', id.toString());
+        const apiPath = `${API_URL}${END_POINT.DEVICE}`;
 
         const result = await ApiHelpers.sendRequestWithToken<DeviceItem>({
             apiPath,
-            method: FETCH_METHOD.GET,
+            method: HTTP_METHOD.GET,
         });
         return result.data;
     },
@@ -36,7 +35,7 @@ export const DevicesDataservices: DevicesDataservicesInterface = {
             await ApiHelpers.sendRequestWithToken<UpdateSingleDeviceResponseData>(
                 {
                     apiPath,
-                    method: FETCH_METHOD.PATCH,
+                    method: HTTP_METHOD.PATCH,
                     payload: editedData,
                 }
             );
@@ -48,7 +47,7 @@ export const DevicesDataservices: DevicesDataservicesInterface = {
 
         const result = await ApiHelpers.sendRequestWithToken<PinItem[]>({
             apiPath,
-            method: FETCH_METHOD.GET,
+            method: HTTP_METHOD.GET,
         });
         return result.data;
     },

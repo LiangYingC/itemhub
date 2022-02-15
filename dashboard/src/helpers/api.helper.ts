@@ -1,22 +1,23 @@
 import { CookieHelpers } from '@/helpers/cookie.helper';
 import { RESPONSE_STATUS } from '@/constants/api';
 import {
-    ApiHelpersInterface,
+    SendRequestParams,
+    FetchParams,
     FetchResult,
     FetchErrorResult,
 } from '@/types/helpers.type';
 
-export const ApiHelpers: ApiHelpersInterface = {
-    SendRequestWithToken: ({
+export const ApiHelpers = {
+    SendRequestWithToken: <T>({
         apiPath,
         method,
         headers = {},
-        payload = null,
+        payload,
         shouldDeleteContentType = false,
         callbackFunc,
-    }) => {
+    }: SendRequestParams<T>) => {
         const token = CookieHelpers.GetCookie({ name: 'token' }) || '';
-        return ApiHelpers.SendRequest({
+        return ApiHelpers.SendRequest<T>({
             apiPath,
             method,
             headers: { Authorization: `Bearer ${token}`, ...headers },
@@ -25,28 +26,28 @@ export const ApiHelpers: ApiHelpersInterface = {
             callbackFunc,
         });
     },
-    SendRequest: ({
+    SendRequest: <T>({
         apiPath,
         method,
         headers = {},
-        payload = null,
+        payload,
         shouldDeleteContentType = false,
         callbackFunc,
-    }) => {
+    }: SendRequestParams<T>) => {
         const fetchOption = payload
             ? {
-                  method: method,
-                  headers,
-                  body: JSON.stringify(payload),
-              }
+                method: method,
+                headers,
+                body: JSON.stringify(payload),
+            }
             : {
-                  method: method,
-                  headers,
-              };
+                method: method,
+                headers,
+            };
 
         // eslint-disable-next-line no-async-promise-executor
-        return new Promise(async (resolve, reject) => {
-            let result: FetchResult<any>;
+        return new Promise<FetchResult<T>>(async (resolve, reject) => {
+            let result: FetchResult<T>;
 
             const response = await ApiHelpers.Fetch({
                 apiPath,
@@ -88,9 +89,7 @@ export const ApiHelpers: ApiHelpersInterface = {
                 result = {
                     httpStatus: response.status,
                     status: RESPONSE_STATUS.OK,
-                    data: {
-                        message: response.statusText,
-                    },
+                    data: { message: response.statusText } as any,
                 };
             }
 
@@ -101,13 +100,13 @@ export const ApiHelpers: ApiHelpersInterface = {
             resolve(result);
         });
     },
-    Fetch: ({ apiPath, fetchOption, shouldDeleteContentType }) => {
+    Fetch: ({ apiPath, fetchOption, shouldDeleteContentType }: FetchParams) => {
         const headers = shouldDeleteContentType
             ? fetchOption.headers
             : {
-                  'Content-Type': 'application/json',
-                  ...fetchOption.headers,
-              };
+                'Content-Type': 'application/json',
+                ...fetchOption.headers,
+            };
 
         if (
             fetchOption.body &&
@@ -131,7 +130,7 @@ export const ApiHelpers: ApiHelpersInterface = {
 
         return fetch(apiPath, finalOption);
     },
-    HandleDownloadFile: async ({ response }) => {
+    HandleDownloadFile: async ({ response }: { response: Response }) => {
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -164,7 +163,7 @@ export const ApiHelpers: ApiHelpersInterface = {
             status: RESPONSE_STATUS.OK,
             data: {
                 message: 'Download file successfully.',
-            },
+            } as any,
         };
     },
 };

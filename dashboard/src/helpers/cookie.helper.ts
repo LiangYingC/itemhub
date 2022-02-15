@@ -1,7 +1,7 @@
-import { CookieHelpersInterface } from '@/types/helpers.type';
+import { SetCookieParams } from '@/types/helpers.type'
 
-export const CookieHelpers: CookieHelpersInterface = {
-    SetCookie: ({ name, value, days }) => {
+export const CookieHelpers = {
+    SetCookie: ({ name, value, days }: SetCookieParams) => {
         let expires = '';
         if (days) {
             const date = new Date();
@@ -10,7 +10,7 @@ export const CookieHelpers: CookieHelpersInterface = {
         }
         document.cookie = name + '=' + value + expires + '; path=/';
     },
-    GetCookie: ({ name }) => {
+    GetCookie: ({ name }: { name: string }) => {
         const nameEq = `${name}=`;
         const cookies = document.cookie.split(';');
 
@@ -26,7 +26,7 @@ export const CookieHelpers: CookieHelpersInterface = {
         }
         return null;
     },
-    EraseCookie: ({ name }) => {
+    EraseCookie: ({ name }: { name: string }) => {
         CookieHelpers.SetCookie({ name, value: '', days: -1 });
     },
 };

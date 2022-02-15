@@ -2,26 +2,30 @@ import 'bootstrap/scss/bootstrap.scss';
 import './app.scss';
 import { Outlet } from 'react-router-dom';
 import { useState } from 'react';
-import { AuthDataservice } from './dataservices/auth.dataservice';
-import { CookieHelper } from './helpers/cookie.helper';
+import { AuthDataservices } from './dataservices/auth.dataservice';
+import { CookieHelpers } from './helpers/cookie.helper';
 
 const isProd = import.meta.env.VITE_ENV === 'prod';
 
 const App = () => {
-    // dashboard dev site 暫時實作簡易的登入系統，之後 website 兩階段驗證完畢後可拔掉
-    const token = CookieHelper.GetCookie('token');
+    // TODO: dashboard dev site 暫時實作簡易的登入系統，之後 website 兩階段驗證完畢後可完全拔掉
+    const token = CookieHelpers.GetCookie({ name: 'token' });
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const signWithEmail = async () => {
+    const SignWithEmail = async () => {
         if (token === null && email && password && !isProd) {
-            const data = await AuthDataservice.SignWithEmail({
+            const data = await AuthDataservices.SignWithEmail({
                 email,
                 password,
             });
             const tokenValue = data.token;
-            CookieHelper.SetCookie('token', tokenValue, 7);
+            CookieHelpers.SetCookie({
+                name: 'token',
+                value: tokenValue,
+                days: 14,
+            });
             window.location.reload();
         }
     };
@@ -46,7 +50,7 @@ const App = () => {
                     onChange={(e) => setPassword(e.target.value)}
                 />
             </label>
-            <button onClick={signWithEmail}>登入</button>
+            <button onClick={SignWithEmail}>登入</button>
         </>
     );
 };

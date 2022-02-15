@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { useAppDispatch } from '@/hooks/redux.hook';
 import { useFetchApi } from '@/hooks/apis/fetch.hook';
 import { devicesActions } from '@/redux/reducers/devices.reducer';
-import { DevicesDataservice } from '@/dataservices/devices.dataservice';
+import { DevicesDataservices } from '@/dataservices/devices.dataservice';
 import { DeviceItem, PinItem } from '@/types/devices.type';
 import {
     GetDevicesParams,
@@ -11,11 +11,12 @@ import {
     UpdateSingleDeviceParams,
     UpdateSingleDeviceResponseData,
     GetDevicePinsParams,
-} from '@/types/devices.dataservice';
+} from '@/types/dataservices.type';
+import { RESPONSE_STATUS } from '@/constants/api';
 
 export const useGetDevicesApi = ({ page, limit }: GetDevicesParams) => {
     const fetchGetDevices = useCallback(() => {
-        return DevicesDataservice.GetList({ page, limit });
+        return DevicesDataservices.GetList({ page, limit });
     }, [limit, page]);
 
     const dispatch = useAppDispatch();
@@ -43,7 +44,7 @@ export const useGetDevicesApi = ({ page, limit }: GetDevicesParams) => {
 
 export const useGetSingleDeviceApi = ({ id }: GetSingleDeviceParams) => {
     const fetchGetSingleDevice = useCallback(() => {
-        return DevicesDataservice.GetOne({ id });
+        return DevicesDataservices.GetOne({ id });
     }, [id]);
 
     const dispatch = useAppDispatch();
@@ -73,7 +74,7 @@ export const useUpdateSingleDeviceApi = ({
 }: UpdateSingleDeviceParams) => {
     const fetchUpdateSingleDevice = useCallback(
         () =>
-            DevicesDataservice.UpdateOne({
+            DevicesDataservices.UpdateOne({
                 id,
                 editedData,
             }),
@@ -83,7 +84,7 @@ export const useUpdateSingleDeviceApi = ({
     const dispatch = useAppDispatch();
     const dispatchRefreshDevices = useCallback(
         (data: UpdateSingleDeviceResponseData) => {
-            if (data.status === 'OK') {
+            if (data.status === RESPONSE_STATUS.OK) {
                 dispatch(
                     devicesActions.updateSingleDevice({ ...editedData, id })
                 );
@@ -108,7 +109,7 @@ export const useUpdateSingleDeviceApi = ({
 
 export const useGetDevicePinsApi = ({ id }: GetDevicePinsParams) => {
     const fetchGetSingleDevice = useCallback(
-        () => DevicesDataservice.GetOnePins({ id }),
+        () => DevicesDataservices.GetOnePins({ id }),
         [id]
     );
 

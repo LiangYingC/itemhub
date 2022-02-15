@@ -1,32 +1,28 @@
-import { API_URL, END_POINT } from '@/constants/api';
-import { ApiHelper } from '@/helpers/api.helper';
+import { API_URL, END_POINT, HTTP_METHOD } from '@/constants/api';
+import { ApiHelpers } from '@/helpers/api.helper';
+import { SignWithEmailParams } from '@/types/dataservices.type';
 
-export const AuthDataservice = {
-    SignWithEmail: async ({
-        email,
-        password,
-    }: {
-        email: string;
-        password: string;
-    }) => {
+export const AuthDataservices = {
+    SignWithEmail: async ({ email, password }: SignWithEmailParams) => {
         const apiPath = `${API_URL}${END_POINT.SIGN_WITH_EMAIL}`;
-
-        const response: any = await ApiHelper.SendRequest({
+        const result = await ApiHelpers.SendRequest<{ token: string }>({
             apiPath,
-            method: 'POST',
+            method: HTTP_METHOD.POST,
             payload: {
                 email,
                 password,
             },
         });
-
-        return response.data as { token: string };
+        return result.data;
     },
     IsSigned: async () => {
         const apiPath = `${API_URL}${END_POINT.IS_SIGNED}`;
-        return ApiHelper.SendRequestWithToken({
+        const result = await ApiHelpers.SendRequestWithToken<{
+            state: boolean;
+        }>({
             apiPath,
-            method: 'POST',
+            method: HTTP_METHOD.POST,
         });
+        return result.data;
     },
 };

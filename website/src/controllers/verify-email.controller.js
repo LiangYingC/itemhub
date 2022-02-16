@@ -26,6 +26,11 @@ export class VerifyEmailController extends RoutingController {
         });
     }
 
+    async exit (args) {
+        clearTimeout(this.resendTimer);
+        return super.exit(args);
+    }
+
     validateEmail (event) {
         const elBtnSendVerifyEmail = this.elHTML.querySelector('.btn-send-verify-email');
         if (event.keyCode === 13) {
@@ -74,7 +79,9 @@ export class VerifyEmailController extends RoutingController {
             elButton.removeAttribute('disabled');
             elEmail.removeAttribute('disabled');
         } else {
-            this.elHTML.querySelector('[data-field="code"]').removeAttribute('disabled');
+            const elCode = this.elHTML.querySelector('[data-field="code"]');
+            elCode.removeAttribute('disabled');
+            elCode.focus();
             this._countdownResendTimerStart();
         }
     }
@@ -97,16 +104,19 @@ export class VerifyEmailController extends RoutingController {
 
     async getValidatedEmailToken (event) {
         const elForm = event.currentTarget.closest('.form');
+        const elNextButton = this.elHTML.querySelector('.btn-next');
         const data = elForm.collectFormData();
+        elNextButton.setAttribute('disabled', 'disabled');
         const resp = await AuthDataService.VerifyEmail({
             ...data,
             token: this.args.token
         });
         if (resp.status !== RESPONSE_STATUS.OK) {
             this.pageVariable.codeInvalidMessage = resp.data.message;
+            elNextButton.removeAttribute('disabled', 'disabled');
             return;
         }
-        history.pushState({}, '', `/auth/sign-up/?signUpToken=${resp.data.token}`);
+        history.pushState({}, '', `/auth/sign-up/?verifyPhoneToken=${resp.data.token}`);
     }
 
     _countdownResendTimerStart () {

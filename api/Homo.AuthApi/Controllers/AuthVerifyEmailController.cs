@@ -93,7 +93,7 @@ namespace Homo.AuthApi
             }
             record.IsUsed = true;
             _dbContext.SaveChanges();
-            return new { token = JWTHelper.GenerateToken(_verifyPhoneJwtKey, 5, new { email = record.Email }) };
+            return new { token = JWTHelper.GenerateToken(_verifyPhoneJwtKey, 5, new { Email = record.Email }) };
         }
 
     }

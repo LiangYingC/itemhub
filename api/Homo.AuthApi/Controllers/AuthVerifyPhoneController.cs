@@ -100,7 +100,7 @@ namespace Homo.AuthApi
                 throw new CustomException(ERROR_CODE.VERIFY_CODE_NOT_FOUND, System.Net.HttpStatusCode.NotFound);
             }
 
-            return new { token = JWTHelper.GenerateToken(_signUpJwtKey, 5, new { email = extraPayload.email.Value, phone = dto.Phone }) };
+            return new { token = JWTHelper.GenerateToken(_signUpJwtKey, 5, new { Email = extraPayload.Email.Value, Phone = dto.Phone }) };
         }
     }
 }

@@ -12,7 +12,6 @@ namespace Homo.Api
         {
             if (!filterContext.ModelState.IsValid)
             {
-                System.Console.WriteLine($"testing:{Newtonsoft.Json.JsonConvert.SerializeObject("testing 123123", Newtonsoft.Json.Formatting.Indented)}");
                 IEnumerable<ModelError> allErrors = filterContext.ModelState.Values.SelectMany(v => v.Errors);
                 ModelStateDictionary.KeyEnumerable keys = filterContext.ModelState.Keys;
                 Dictionary<string, dynamic> results = new Dictionary<string, dynamic>();

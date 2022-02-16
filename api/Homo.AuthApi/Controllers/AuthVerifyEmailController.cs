@@ -22,6 +22,7 @@ namespace Homo.AuthApi
         private readonly string _sendGridAPIKey;
         private readonly string _systemEmail;
         private readonly string _websiteEndpoint;
+
         private readonly string _fbAppId;
         private readonly string _googleClientId;
         private readonly string _lineClientId;
@@ -45,6 +46,7 @@ namespace Homo.AuthApi
             _fbClientSecret = secrets.FbClientSecret;
             _googleClientSecret = secrets.GoogleClientSecret;
             _lineClientSecret = secrets.LineClientSecret;
+
         }
 
 

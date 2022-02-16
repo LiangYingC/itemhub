@@ -11,9 +11,23 @@ html {
         'Microsoft JhengHei', 'Helvetica Neue', Helvetica, Arial, sans-serif,
         'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
     line-height: 1.8rem;
+    color: rgba(255, 255, 255, map-get($opacity, 85));
     @include media-breakpoint-down(lg) {
         font-size: $font-size-base-for-small-screen;
     }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5 {
+    color: white;
 }
 
 .text-sm {

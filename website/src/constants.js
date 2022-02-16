@@ -5,6 +5,10 @@ export const RESPONSE_STATUS = {
     FAILED: 'FAILED'
 };
 
+export const ERROR_KEYS = {
+    SIGN_IN_BY_OTHER_WAY: 'SIGN_IN_BY_OTHER_WAY'
+};
+
 export const API = {
     SEND_VERIFY_EMAIL: 'auth/send-verify-email',
     VERIFY_EMAIL: 'auth/verify-email',

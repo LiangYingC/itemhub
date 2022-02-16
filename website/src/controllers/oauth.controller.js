@@ -62,7 +62,7 @@ export class OauthController extends RoutingController {
 
         const respOfSignUp = await AuthDataService.SignUp({
             token: resp.data.token,
-            password: Swissknife.GenerateRandomText(36)
+            password: Swissknife.GenerateRandomText(36) // 為了讓 sign-up api 參數保持一至, 這邊產生亂數密碼用 oAuth Provider 登入用不到
         });
         if (respOfSignUp.status !== RESPONSE_STATUS.OK) {
             Toaster.popup(Toaster.TYPE.ERROR, respOfSignUp.data.message);

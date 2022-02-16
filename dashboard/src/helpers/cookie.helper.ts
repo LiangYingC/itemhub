@@ -1,25 +1,32 @@
-export const CookieHelper = {
-    SetCookie: (name: string, value: string, days: number) => {
+import { SetCookieParams } from '@/types/helpers.type'
+
+export const CookieHelpers = {
+    SetCookie: ({ name, value, days }: SetCookieParams) => {
         let expires = '';
         if (days) {
             const date = new Date();
             date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-            expires = '; expires=' + date.toUTCString();
+            expires = `; expires=${date.toUTCString()}`;
         }
         document.cookie = name + '=' + value + expires + '; path=/';
     },
-    GetCookie: (name: string): string | null => {
-        const nameEQ = name + '=';
-        const ca = document.cookie.split(';');
-        for (let i = 0; i < ca.length; i++) {
-            let c = ca[i];
-            while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-            if (c.indexOf(nameEQ) == 0)
-                return c.substring(nameEQ.length, c.length);
+    GetCookie: ({ name }: { name: string }) => {
+        const nameEq = `${name}=`;
+        const cookies = document.cookie.split(';');
+
+        for (let i = 0; i < cookies.length; i++) {
+            let cookie = cookies[i];
+            if (cookie.charAt(0) === ' ') {
+                cookie = cookie.substring(1, cookie.length);
+            }
+
+            if (cookie.indexOf(nameEq) === 0) {
+                return cookie.substring(nameEq.length, cookie.length);
+            }
         }
         return null;
     },
-    EraseCookie: (name: string) => {
-        CookieHelper.SetCookie(name, '', -1);
+    EraseCookie: ({ name }: { name: string }) => {
+        CookieHelpers.SetCookie({ name, value: '', days: -1 });
     },
 };

@@ -1,0 +1,42 @@
+export interface SendRequestParams<T> {
+    apiPath: string;
+    method: string;
+    headers?: { [key: string]: string };
+    payload?: { [key: string]: any };
+    shouldDeleteContentType?: boolean;
+    callbackFunc?: (result: FetchResult<T>) => null;
+}
+
+export interface FetchParams {
+    apiPath: string;
+    fetchOption: {
+        method: string;
+        headers: { [key: string]: string };
+        body?: string;
+    };
+    shouldDeleteContentType: boolean;
+}
+
+export type FetchResult<T> = {
+    httpStatus: number;
+    status: string;
+    data: T;
+}
+
+export interface FetchErrorResultData {
+    errorKey: string;
+    message: string;
+    payload: any[];
+    stackTrace: string;
+}
+export interface FetchErrorResult {
+    httpStatus: number;
+    status: string;
+    data: FetchErrorResultData;
+}
+
+export interface SetCookieParams {
+    name: string;
+    value: string;
+    days?: number;
+}

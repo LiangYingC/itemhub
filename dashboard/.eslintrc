@@ -14,7 +14,7 @@
         "node": false,
         "jquery": true
     },
-    "plugins": ["@typescript-eslint", "prettier", "react", "react-hooks"],
+    "plugins": ["@typescript-eslint", "react", "react-hooks", "prettier"],
     "extends": [
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
@@ -38,11 +38,21 @@
         "__dirname": "readonly"
     },
     "rules": {
-        "indent": ["off"], // When using prettier, you'd better disable eslint's indent rule. They will conflict sometimes.
-        "semi": ["error", "always"],
-        "no-var": "error",
-        "prefer-const": "error",
-        "react/react-in-jsx-scope": 0, // Can use JSX without import React
+        // eslint rules: https: //eslint.org/docs/rules/
+        "no-console": "warn",
+        // eslint-plugin-react rules: https://github.com/yannickcr/eslint-plugin-react
+        "react/jsx-fragments": "error",
+        "react/jsx-boolean-value": "error",
+        "react/jsx-wrap-multilines": "error",
+        "react/no-array-index-key": "error",
+        "react/self-closing-comp": "error",
+        "react/destructuring-assignment": "warn",
+        "react/react-in-jsx-scope": "off",
+        "react/prop-types": "off",
+        // eslint-plugin-react-hooks rules: https://github.com/facebook/react/tree/main/packages/eslint-plugin-react-hooks
+        "react-hooks/rules-of-hooks": "error",
+        "react-hooks/exhaustive-deps": "warn",
+        // @typescript-eslint/eslint-plugin rules: https://typescript-eslint.io/rules/
         "@typescript-eslint/no-empty-function": ["off"],
         "@typescript-eslint/no-explicit-any": ["off"]
     }

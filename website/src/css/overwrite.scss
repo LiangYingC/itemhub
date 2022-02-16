@@ -172,10 +172,6 @@ $utilities: map-merge(
     border: 1px solid rgba(255, 255, 255, 0.15);
     color: rgba(255, 255, 255, 0.85);
 
-    &::placeholder {
-        color: rgba(255, 255, 255, 0.15);
-    }
-
     &:focus {
         color: rgba(255, 255, 255, 0.85);
         background-color: transparent;
@@ -191,5 +187,8 @@ $utilities: map-merge(
     &:disabled {
         background: rgba(255, 255, 255, 0.09);
         border: 1px solid rgba(255, 255, 255, 0.15);
+        &::placeholder {
+            color: rgba(255, 255, 255, 0.15);
+        }
     }
 }

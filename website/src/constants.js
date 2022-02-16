@@ -42,3 +42,7 @@ export const EVENTS = {
     SIGN_OUT: 'SIGN_OUT',
     SIGN_IN: 'SIGN_IN'
 };
+
+export const ERROR_KEYS = {
+    SIGN_IN_BY_OTHER_WAY: 'SIGN_IN_BY_OTHER_WAY'
+};

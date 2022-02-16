@@ -1,7 +1,7 @@
 <div class="sign-in">
-    <div class="px-5">
+    <div class="px-0 px-sm-5 px-md-2 px-lg-5">
         <h2 class="text-center mb-5">登入</h2>
-        <div class="child-router form">
+        <div class="form">
             <label class="d-block mb-4">
                 <div class="mb-2">信箱</div>
                 <input onkeyup="controller.handleInputTypeEnter" class="form-control" data-field="email" type="text"
@@ -32,27 +32,27 @@
                 <a href="/auth/verify-email/" tabindex="8">註冊帳號</a>
             </div>
 
-            <div class="d-flex align-items-center mt-5 mb-3">
+            <div class="d-flex align-items-center mt-5 mb-4">
                 <hr class="flex-grow-1">
                 </hr>
-                <div class="px-3">使用社群帳號登入</div>
+                <div class="px-3 h4 mb-0 fw-bold">使用社群帳號登入</div>
                 <hr class="flex-grow-1">
                 </hr>
             </div>
 
             <div class="d-flex flex-row font-weight-bold auth-provider justify-content-center">
                 <button onclick="controller.signInWithFacebook" tabindex="4"
-                    class="btn btn-md btn-primary rounded-circle d-flex align-items-center justify-content-center mx-2 btn-fb">
+                    class="btn btn-md btn-primary rounded-circle d-flex align-items-center justify-content-center mx-25 btn-fb">
                     <img src="/assets/images/facebook.svg" alt="facebook icon" />
                 </button>
 
                 <button onclick="controller.signInWithLine" tabindex="6"
-                    class="btn btn-md btn-primary rounded-circle d-flex align-items-center justify-content-center mx-2 btn-line">
+                    class="btn btn-md btn-primary rounded-circle d-flex align-items-center justify-content-center mx-25 btn-line">
                     <img src="/assets/images/line.svg" alt="line icon" />
                 </button>
 
                 <button onclick="controller.signInWithGoogle" tabindex="5"
-                    class="btn btn-md btn-primary rounded-circle d-flex align-items-center justify-content-center mx-2">
+                    class="btn btn-md btn-primary rounded-circle d-flex align-items-center justify-content-center mx-25">
                     <img src="/assets/images/google.svg" alt="google icon" />
                 </button>
             </div>

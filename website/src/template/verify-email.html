@@ -1,16 +1,17 @@
 <div class="verify-email">
-    <div class="px-5">
+    <div class="px-0 px-sm-5 px-md-4 px-lg-5">
         <h2 class="text-center mb-5">註冊</h2>
-        <div class="form container">
+        <div class="form">
             <label class="row d-flex align-items-center">
-                <div class="col-12 mb-2">Email: 驗證</div>
-                <div class="col-7">
+                <div class="col-12 mb-2">Email 驗證</div>
+                <div class="col-12 col-xs-7 col-sm-7 col-md-12 col-xl-7">
                     <input data-field="email" onkeyup="controller.validateEmail" class="form-control" type="text"
                         placeholder="請輸入信箱註冊" />
                 </div>
-                <div class="col-5 align-items-cetner d-flex">
+                <div
+                    class="col-7 col-xs-5 col-sm-5 col-md-7 col-xl-5 align-items-cetner d-flex mt-3 mt-sm-0 mt-md-3 mt-lg-3 mt-xl-0">
                     <button onclick="controller.sendVerifyEmail"
-                        class="btn btn-send-verify-email w-100 btn-primary rounded-pill px-4 text-nowrap"
+                        class="btn btn-send-verify-email w-100 btn-primary rounded-pill px-4 text-nowrap py-25"
                         disabled>傳送驗證碼至信箱</button>
                 </div>
             </label>
@@ -28,7 +29,7 @@
                     class="btn-sign-in btn btn-md btn-primary rounded-pill px-4" tabindex="3" disabled>下一步</button>
             </div>
 
-            <div class="d-flex align-items-center mt-5 mb-3">
+            <div class="d-flex align-items-center mt-5 mb-4">
                 <hr class="flex-grow-1">
                 </hr>
                 <div class="px-3">使用社群帳號註冊</div>
@@ -38,22 +39,22 @@
 
             <div class="d-flex flex-row font-weight-bold auth-provider justify-content-center">
                 <button onclick="controller.signInWithFacebook" tabindex="4"
-                    class="btn btn-md btn-primary rounded-circle d-flex align-items-center justify-content-center mx-2 btn-fb">
+                    class="btn btn-md btn-primary rounded-circle d-flex align-items-center justify-content-center mx-25 btn-fb">
                     <img src="/assets/images/facebook.svg" alt="facebook icon" />
                 </button>
 
                 <button onclick="controller.signInWithLine" tabindex="6"
-                    class="btn btn-md btn-primary rounded-circle d-flex align-items-center justify-content-center mx-2 btn-line">
+                    class="btn btn-md btn-primary rounded-circle d-flex align-items-center justify-content-center mx-25 btn-line">
                     <img src="/assets/images/line.svg" alt="line icon" />
                 </button>
 
                 <button onclick="controller.signInWithGoogle" tabindex="5"
-                    class="btn btn-md btn-primary rounded-circle d-flex align-items-center justify-content-center mx-2">
+                    class="btn btn-md btn-primary rounded-circle d-flex align-items-center justify-content-center mx-25">
                     <img src="/assets/images/google.svg" alt="google icon" />
                 </button>
             </div>
 
-            <div class="d-flex align-items-center mt-5 mb-3">
+            <div class="d-flex align-items-center mt-5">
                 <hr class="flex-grow-1">
                 </hr>
                 <div class="px-3">已有帳號?</div>

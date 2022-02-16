@@ -22,5 +22,6 @@
     "DUPLICATE_SUBSCRIBE": "你重複訂閱囉, 目前的訂閱方案是: {planName}<br/> 期間: {startAt} ~ {endAt}",
     "INVALID_TOKEN": "錯誤的憑證",
     "VERIFY_PHONE_TOKEN_EXPIRED": "驗證憑證過期, 請回上一步",
-    "DUPLICATED_PHONE": "已經有人用這個手機註冊"
+    "DUPLICATED_PHONE": "已經有人用這個手機註冊",
+    "WITHOUT_PERMISSION_TO_GET_EMAIL": "沒有授權取得 Email, 可能是你未允許我們他過社群平台讀取你的 Email"
 }

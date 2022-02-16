@@ -34,7 +34,7 @@ export const AuthRoutingRule = {
         controller: VerifyEmailController,
         html: '/template/verify-email.html'
     }, {
-        path: 'sign-up/',
+        path: 'sign-up/?signUpToken',
         skipSitemap: true,
         controller: SignUpController,
         html: '/template/sign-up.html'

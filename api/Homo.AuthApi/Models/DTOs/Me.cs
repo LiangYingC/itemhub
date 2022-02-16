@@ -78,6 +78,8 @@ namespace Homo.AuthApi
             [MaxLength(6)]
             [Required]
             public string Code { get; set; }
+            [Required]
+            public string VerifyPhoneToken { get; set; }
         }
     }
 }

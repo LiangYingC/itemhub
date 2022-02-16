@@ -17,6 +17,7 @@ namespace Homo.AuthApi
             public string PseudonymousHomePhone { get; set; }
             public string PseudonymousPhone { get; set; }
             public string PseudonymousAddress { get; set; }
+            public string Phone { get; set; }
         }
     }
 }

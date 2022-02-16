@@ -10,6 +10,7 @@
     "SIGN_IN_BY_OTHER_WAY": "You register by other way, please sign in by other way",
     "TOKEN_EXPIRED": "Token expired",
     "TOO_MANY_TIMES_TO_SEND_MAIL": "You send email so much times today",
+    "TOO_MANY_TIMES_TO_SEND_PHONE": "You send sms so much times today",
     "VERIFY_CODE_NOT_FOUND": "Verify code not found",
     "INVALID_CODE_FROM_SOCIAL_MEDIA": "Invalid code from social media",
     "REMOVE_FB_SUB_INVALID_CODE": "REMOVE_FB_SUB_INVALID_CODE",
@@ -17,5 +18,8 @@
     "SMS_ERROR": "Sms provider error: {message}",
     "DATA_NOT_FOUND": "Data not round",
     "TAPPAY_TRANSACTION_ERROR": "third party payment service return error: {message}",
-    "DUPLICATE_SUBSCRIBE": "You already subscribed, current paln: {planName}, period: {startAt} ~ {endAt}"
+    "DUPLICATE_SUBSCRIBE": "You already subscribed, current paln: {planName}, period: {startAt} ~ {endAt}",
+    "INVALID_TOKEN": "Invalid token",
+    "VERIFY_PHONE_TOKEN_EXPIRED": "Verify phone token expired, back to previous step",
+    "DUPLICATED_PHONE": "This phone be registerd by other one"
 }

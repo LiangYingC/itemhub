@@ -1,36 +1,200 @@
+import { RESPONSE_STATUS } from '../constants.js';
+import { AuthDataService } from '../dataservices/auth.dataservice.js';
 import {
     RoutingController
 } from '../swim/routing-controller.js';
+import { CookieUtil } from '../util/cookie.js';
+import { Toaster } from '../util/toaster.js';
 
 export class SignUpController extends RoutingController {
+    constructor (elHTML, parentController, args, context) {
+        super(elHTML, parentController, args, context);
+        this.resendTimer = null;
+        this.resendTime = 0;
+        this.signUpToken = '';
+    }
+
     static get id () {
         return 'SignUpController';
     }
 
     async render () {
         this.meta = {
-            title: '驗證信箱 - ItemHub'
+            title: '註冊 - ItemHub'
         };
+        const jwtPayload = window.jwt_decode(this.args.verifyPhoneToken);
+
         await super.render({
+            phoneInvalidMessage: '',
+            codeInvalidMessage: '',
+            passwordInvalidMessage: '',
+            earlyBirdTipVisible: jwtPayload.extra.isEarlyBird === true ? 'd-block' : 'd-none'
         });
     }
 
     async exit (args) {
+        this.signUpToken = null;
+        clearTimeout(this.resendTimer);
         return super.exit(args);
     }
 
     async sendCodeToPhone (event) {
         const elButton = event.currentTarget;
         elButton.setAttribute('disabled', 'disabled');
-        elButton.removeAttribute('disabled');
+
+        const elForm = elButton.closest('.form');
+        const data = {
+            ...elForm.collectFormData(),
+            verifyPhoneToken: this.args.verifyPhoneToken
+        };
+
+        elButton.innerHTML = '寄送中...';
+        const elPhone = this.elHTML.querySelector('[data-field="phone"]');
+        elPhone.setAttribute('disabled', 'disabled');
+        const resp = await AuthDataService.SendSms(data);
+
+        if (resp.status !== RESPONSE_STATUS.OK) {
+            Toaster.popup(Toaster.TYPE.ERROR, resp.data.message);
+
+            elButton.innerHTML = '發送驗證碼至手機';
+            elButton.removeAttribute('disabled');
+            elPhone.removeAttribute('disabled');
+        } else {
+            const elCode = this.elHTML.querySelector('[data-field="code"]');
+            elCode.removeAttribute('disabled');
+            elCode.focus();
+            this._countdownResendTimerStart();
+        }
     }
 
-    validateCode () {
+    validatePhone (event) {
+        const elSendSmsButton = this.elHTML.querySelector('.btn-send-sms');
+        if (event.keyCode === 13) {
+            elSendSmsButton.click();
+            return;
+        }
+
+        const elPhone = this.elHTML.querySelector('[data-field="phone"]');
+        const phone = elPhone.value;
+        const phonePattern = /^[0-9]{10}$/;
+        const isValid = phonePattern.test(phone);
+        if (isValid) {
+            elSendSmsButton.removeAttribute('disabled');
+            this.pageVariable.phoneInvalidMessage = '';
+        } else {
+            elSendSmsButton.setAttribute('disabled', 'disabled');
+            this.pageVariable.phoneInvalidMessage = '手機格式錯誤';
+        }
     }
 
-    validatePassword () {
+    async validateCodeAndGetValidatedPhoneToken (event) {
+        const elCodeInput = event.currentTarget;
+        const elForm = elCodeInput.closest('.form');
+        const data = elForm.collectFormData();
+        if (event.keyCode < 96 && event.keyCode > 105) {
+            return;
+        }
+        if (event.keyCode < 48 && event.keyCode > 57) {
+            return;
+        }
+
+        if (data.code.length !== 6 || isNaN(data.code)) {
+            return;
+        }
+
+        elCodeInput.setAttribute('disabled', 'disabled');
+        const resp = await AuthDataService.VerifyPhone({
+            ...data,
+            verifyPhoneToken: this.args.verifyPhoneToken
+        });
+
+        const elPassword = this.elHTML.querySelector('[data-field="password"]');
+
+        if (resp.status !== RESPONSE_STATUS.OK) {
+            elCodeInput.removeAttribute('disabled');
+            this.pageVariable.codeInvalidMessage = resp.data.message;
+            this.signUpToken = '';
+            elPassword.setAttribute('disabled', 'disabled');
+        } else {
+            elCodeInput.setAttribute('disabled', 'disabled');
+            this.pageVariable.codeInvalidMessage = '';
+            this.signUpToken = resp.data.token;
+            elPassword.removeAttribute('disabled');
+        }
+    }
+
+    validatePassword (event) {
+        if (event.keyCode === 13) {
+            this.elHTML.querySelector('.btn-sign-up').click();
+            return;
+        }
+        const elPassword = event.currentTarget;
+        const password = elPassword.value;
+        const isValid = this._validatePassword(password);
+        const elSignUpButton = this.elHTML.querySelector('.btn-sign-up');
+        if (isValid) {
+            elSignUpButton.removeAttribute('disabled');
+            this.pageVariable.passwordInvalidMessage = '';
+        } else {
+            elSignUpButton.setAttribute('disabled', 'disabled');
+            this.pageVariable.passwordInvalidMessage = '密碼至少要 12 碼英數';
+        }
     }
 
     async signUp () {
+        const elPassword = this.elHTML.querySelector('[data-field="password"]');
+        elPassword.setAttribute('disabled', 'disabeld');
+        const resp = await AuthDataService.SignUp({
+            token: this.signUpToken,
+            password: elPassword.value
+        });
+
+        elPassword.removeAttribute('disabled');
+        if (resp.status !== RESPONSE_STATUS.OK) {
+            Toaster.popup(Toaster.TYPE.ERROR, resp.data.message);
+            this.pageVariable.passwordInvalidMessage = resp.data.message;
+            return;
+        }
+        CookieUtil.setCookie('token', resp.data.token);
+        history.pushState({}, '', '/auth/finish/');
+    }
+
+    _validatePassword (password) {
+        if (password.length < 12) {
+            return false;
+        } else if (password.search(/\d/) === -1) {
+            return false;
+        } else if (password.search(/[a-zA-Z]/) === -1) {
+            return false;
+        } else if (password.search(/[^a-zA-Z0-9\\!\\@\\#\\$\\%\\^\\&\\*\\(\\)\\_\\+]/) !== -1) {
+            return false;
+        }
+        return true;
+    }
+
+    _countdownResendTimerStart () {
+        clearTimeout(this.resendTimer);
+        this.resendTime = 60;
+        this._countdownMain();
+    }
+
+    _countdownMain () {
+        const elSendVerifyMailButton = this.elHTML.querySelector('.btn-send-sms');
+        if (this.resendTime <= 0) {
+            elSendVerifyMailButton.innerHTML = '發送驗證碼至手機';
+            elSendVerifyMailButton.removeAttribute('disabled');
+            this.elHTML.querySelector('[data-field="code"]').setAttribute('disabled', 'disabled');
+            this.elHTML.querySelector('[data-field="password"]').setAttribute('disabled', 'disabled');
+            this.elHTML.querySelector('.btn-sign-up').setAttribute('disabled', 'disabled');
+            this.elHTML.querySelector('[data-field="phone"]').removeAttribute('disabled', 'disabled');
+            this.resendTimer = null;
+            this.resendTime = 0;
+            return;
+        }
+        this.resendTime -= 1;
+        elSendVerifyMailButton.innerHTML = `可於 ${this.resendTime} 秒後重送`;
+        this.resendTimer = setTimeout(() => {
+            this._countdownMain();
+        }, 1000);
     }
 }

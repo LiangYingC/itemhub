@@ -12,6 +12,8 @@ export const ERROR_KEYS = {
 export const API = {
     SEND_VERIFY_EMAIL: 'auth/send-verify-email',
     VERIFY_EMAIL: 'auth/verify-email',
+    SEND_SMS: 'auth/send-sms',
+    VERIFY_PHONE: 'auth/verify-phone',
     SIGN_UP: 'auth/sign-up',
     SIGN_IN_WITH_EMAIL: 'auth/sign-in-with-email',
     SIGN_IN_WITH_SOCIAL_MEDIA: 'auth/sign-in-with-social-media',

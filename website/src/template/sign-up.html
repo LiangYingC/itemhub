@@ -2,46 +2,54 @@
     <div class="px-0 px-sm-5 px-md-4 px-lg-5">
         <h2 class="text-center mb-5">註冊</h2>
         <div class="form">
-            <div class="text-green d-flex align-items-center">
-                <img src="/assets/images/bird.svg" />
-                <span class="ms-2">首波早鳥登記用戶</span>
+            <div class="{earlyBirdTipVisible}">
+                <div class="text-green d-flex align-items-center">
+                    <img src="/assets/images/bird.svg" />
+                    <span class="ms-2">首波早鳥登記用戶</span>
+                </div>
+                <div>
+                    請完成以下步驟並註冊成功後，你的帳戶將自動升級成進階方案
+                </div>
             </div>
-            <div>
-                請完成以下步驟並註冊成功後，你的帳戶將自動升級成進階方案
-            </div>
+
             <label class="row mt-4 d-flex align-items-center">
                 <div class="col-12 mb-2">手機驗證</div>
                 <div class="col-12 col-xs-7 col-sm-7 col-md-12 col-xl-7">
-                    <input data-field="phone" class="form-control" type="phone" placeholder="請輸入手機號碼" />
+                    <input onkeyup="controller.validatePhone" data-field="phone" class="form-control" type="text"
+                        placeholder="請輸入手機號碼" />
                 </div>
                 <div
                     class="col-7 col-xs-5 col-sm-5 col-md-7 col-xl-5 align-items-cetner d-flex mt-3 mt-sm-0 mt-md-3 mt-lg-3 mt-xl-0">
                     <button onclick="controller.sendCodeToPhone"
-                        class="btn btn-send-verify-email w-100 btn-primary rounded-pill px-4 text-nowrap py-25"
+                        class="btn btn-send-sms w-100 btn-primary rounded-pill px-4 text-nowrap py-25"
                         disabled>發送驗證碼至手機</button>
                 </div>
+                <div class="col-12 invalid-message text-danger mt-2">{phoneInvalidMessage}</div>
             </label>
 
             <label class="row mt-4">
                 <div class="col-12 mb-2">驗證碼</div>
                 <div class="col-12">
-                    <input onkeyup="controller.validateCodeAndGetValidatedPhoneToken" class="form-control" type="code"
-                        placeholder="請輸入驗證碼" disabled />
+                    <input data-field="code" onkeyup="controller.validateCodeAndGetValidatedPhoneToken"
+                        class="form-control" type="text" placeholder="請輸入驗證碼" disabled />
                 </div>
+                <div class="col-12 invalid-message text-danger">{codeInvalidMessage}</div>
             </label>
 
             <label class="row mt-4">
                 <div class="col-12 mb-2">密碼</div>
                 <div class="col-12">
-                    <input onkeyup="controller.validatePassword" class="form-control" type="password"
-                        placeholder="請輸入 12 碼以上的英數" disabled />
+                    <input data-field="password" onkeyup="controller.validatePassword" class="form-control"
+                        type="password" placeholder="請輸入 12 碼以上的英數" disabled />
                 </div>
+                <div class="col-12 invalid-message text-danger">{passwordInvalidMessage}</div>
             </label>
 
             <div class="d-flex align-items-center justify-content-center mt-5">
                 <a href="/auth/verify-email/">上一步</a>
                 <button onclick="controller.signUp"
-                    class="btn btn-md btn-primary ms-3 rounded-pill px-4 py-2 text-nowrap" disabled>完成註冊</button>
+                    class="btn btn-sign-up btn-md btn-primary ms-3 rounded-pill px-4 py-2 text-nowrap"
+                    disabled>完成註冊</button>
             </div>
 
         </div>

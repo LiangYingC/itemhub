@@ -48,7 +48,7 @@ const extendHTMLElementProtoType = async () => {
     if (!HTMLElement.prototype.collectFormData) {
         HTMLElement.prototype.collectFormData = function (skipWithoutDataFieldInputWarn = false) {
             const result = {};
-            const inputs = this.querySelectorAll('input[type="text"],input[type="password"],input[type="number"],input[type="hidden"]');
+            const inputs = this.querySelectorAll('input[type="text"],input[type="phone"],input[type="password"],input[type="number"],input[type="hidden"]');
             inputs.forEach((el) => {
                 if (!el.dataset.field && el.type !== 'file' && !skipWithoutDataFieldInputWarn) {
                     console.warn('element data-field not exists');

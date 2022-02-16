@@ -101,7 +101,7 @@ $theme-colors: (
     'grey-700': $grey-700,
     'grey-800': $grey-800,
     'purple': $purple,
-    'green': $green
+    'green': $green,
 );
 
 @import 'bootstrap/scss/_utilities.scss';
@@ -158,10 +158,14 @@ $utilities: map-merge(
 
     &.btn-md {
         font-size: $h4-font-size;
+        @include media-breakpoint-down(lg) {
+            font-size: $h4-font-size-for-small-screen;
+        }
     }
 }
 
-.form-control, .itemhub-form-control  {
+.form-control,
+.itemhub-form-control {
     background: rgba(0, 0, 0, 0.25);
     padding: 1rem 1.5rem;
     border: 1px solid rgba(255, 255, 255, 0.15);

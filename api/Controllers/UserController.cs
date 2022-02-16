@@ -33,7 +33,7 @@ namespace Homo.IotApi
 
             string salt = CryptographicHelper.GetSalt(64);
             string hash = CryptographicHelper.GenerateSaltedHash(CryptographicHelper.GetSpecificLengthRandomString(32, true), salt);
-            UserDataservice.SignUp(_dbContext, dto.Email, "", "", "", salt, hash);
+            UserDataservice.SignUp(_dbContext, dto.Email, "", "", "", "", "", "", salt, hash);
             return new { Status = CUSTOM_RESPONSE.OK };
         }
     }

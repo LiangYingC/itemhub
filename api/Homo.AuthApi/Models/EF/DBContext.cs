@@ -23,6 +23,7 @@ namespace Homo.AuthApi
             modelBuilder.Entity<User>(entity =>
             {
                 entity.HasIndex(p => new { p.Email }).IsUnique();
+                entity.HasIndex(p => new { p.HashPhone });
             });
 
             OnModelCreatingPartial(modelBuilder);

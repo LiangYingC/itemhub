@@ -66,6 +66,11 @@ namespace Homo.AuthApi
             return queryablUser.Where(x => x.Email == email && x.DeletedAt == null).FirstOrDefault();
         }
 
+        public static User GetOneByHashPhone(DBContext dbContext, string hashPhone)
+        {
+            return dbContext.User.Where(x => x.HashPhone == hashPhone && x.DeletedAt == null).FirstOrDefault();
+        }
+
         public static User GetOneBySocialMediaSub(DBContext dbContext, SocialMediaProvider provider, string sub)
         {
             return dbContext.User.Where(
@@ -79,7 +84,20 @@ namespace Homo.AuthApi
             ).FirstOrDefault();
         }
 
-        public static User SignUpWithSocialMedia(DBContext dbContext, SocialMediaProvider provider, string sub, string email, string fullname, string picture, string firstName, string lastName, DateTime? birthday = null)
+        public static User SignUpWithSocialMedia(
+            DBContext dbContext,
+            SocialMediaProvider provider,
+            string sub,
+            string email,
+            string pseudonymousPhone,
+            string encryptPhone,
+            string hashPhone,
+            string fullname,
+            string picture,
+            string firstName,
+            string lastName,
+            DateTime? birthday = null
+        )
         {
             User newUser = new User()
             {
@@ -90,6 +108,9 @@ namespace Homo.AuthApi
                 LastName = lastName,
                 Profile = picture,
                 Birthday = birthday,
+                PseudonymousPhone = pseudonymousPhone,
+                EncryptPhone = encryptPhone,
+                HashPhone = hashPhone,
                 Status = true
             };
             if (provider == SocialMediaProvider.FACEBOOK)
@@ -116,7 +137,7 @@ namespace Homo.AuthApi
             return newUser;
         }
 
-        public static User SignUp(DBContext dbContext, string email, string password, string firstName, string lastName, string salt, string hash, DateTime? birthday = null)
+        public static User SignUp(DBContext dbContext, string email, string password, string pseudonymousPhone, string encryptPhone, string hashPhone, string firstName, string lastName, string salt, string hash, DateTime? birthday = null)
         {
             User newUser = new User()
             {
@@ -128,6 +149,9 @@ namespace Homo.AuthApi
                 FirstName = firstName,
                 LastName = lastName,
                 Birthday = birthday,
+                PseudonymousPhone = pseudonymousPhone,
+                EncryptPhone = encryptPhone,
+                HashPhone = hashPhone,
                 DeletedAt = null
             };
             try

@@ -55,6 +55,7 @@ namespace Homo.AuthApi
         public string PseudonymousPhone { get; set; }
         public string PseudonymousAddress { get; set; }
         public string EncryptPhone { get; set; }
+        public string HashPhone { get; set; }
         public string EncryptAddress { get; set; }
     }
 }

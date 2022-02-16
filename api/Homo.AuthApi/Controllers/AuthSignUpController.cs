@@ -19,6 +19,7 @@ namespace Homo.AuthApi
         private readonly DBContext _dbContext;
         private readonly string _jwtKey;
         private readonly string _signUpJwtKey;
+        private readonly string _verifyPhoneJwtKey;
         private readonly int _jwtExpirationMonth;
         private readonly string _envName;
         private readonly string _sendGridAPIKey;
@@ -31,6 +32,8 @@ namespace Homo.AuthApi
         private readonly string _googleClientSecret;
         private readonly string _lineClientSecret;
         private readonly bool _authByCookie;
+        private readonly string _PKCS1PublicKeyPath;
+        private readonly string _phoneHashSalt;
         public AuthSignUpController(DBContext dbContext, IOptions<AppSettings> appSettings, Microsoft.AspNetCore.Hosting.IWebHostEnvironment env, Homo.Api.CommonLocalizer commonLocalizer)
         {
             Secrets secrets = (Secrets)appSettings.Value.Secrets;
@@ -39,6 +42,7 @@ namespace Homo.AuthApi
             _jwtKey = secrets.JwtKey;
             _jwtExpirationMonth = common.JwtExpirationMonth;
             _signUpJwtKey = secrets.SignUpJwtKey;
+            _verifyPhoneJwtKey = secrets.VerifyPhoneJwtKey;
             _dbContext = dbContext;
             _envName = env.EnvironmentName;
             _sendGridAPIKey = secrets.SendGridApiKey;
@@ -51,6 +55,8 @@ namespace Homo.AuthApi
             _lineClientId = common.LineClientId;
             _lineClientSecret = secrets.LineClientSecret;
             _authByCookie = common.AuthByCookie;
+            _PKCS1PublicKeyPath = common.Pkcs1PublicKeyPath;
+            _phoneHashSalt = secrets.PhoneHashSalt;
         }
 
         [Route("sign-up")]
@@ -58,6 +64,7 @@ namespace Homo.AuthApi
         [HttpPost]
         public ActionResult<dynamic> signUp([FromBody] DTOs.SignUp dto, DTOs.JwtExtraPayload extraPayload)
         {
+            System.Console.WriteLine($"testing:{Newtonsoft.Json.JsonConvert.SerializeObject(extraPayload, Newtonsoft.Json.Formatting.Indented)}");
             User newUser = null;
             User user = null;
             SocialMediaProvider? socialMediaProvider = null;
@@ -90,15 +97,19 @@ namespace Homo.AuthApi
                         });
             }
 
+            string pseudoPhone = CryptographicHelper.GetHiddenString(extraPayload.Phone, 2, 2);
+            string encryptPhone = CryptographicHelper.GetRSAEncryptResult(_PKCS1PublicKeyPath, extraPayload.Phone);
+            string hashPhone = CryptographicHelper.GenerateSaltedHash(extraPayload.Phone, _phoneHashSalt);
+
             if (sub != null)
             {
-                newUser = UserDataservice.SignUpWithSocialMedia(_dbContext, socialMediaProvider.GetValueOrDefault(), sub, extraPayload.Email, null, extraPayload.Profile, extraPayload.FirstName, extraPayload.LastName, dto.Birthday);
+                newUser = UserDataservice.SignUpWithSocialMedia(_dbContext, socialMediaProvider.GetValueOrDefault(), sub, extraPayload.Email, pseudoPhone, encryptPhone, hashPhone, null, extraPayload.Profile, extraPayload.FirstName, extraPayload.LastName, dto.Birthday);
             }
             else
             {
                 string salt = CryptographicHelper.GetSalt(64);
                 string hash = CryptographicHelper.GenerateSaltedHash(dto.Password, salt);
-                newUser = UserDataservice.SignUp(_dbContext, extraPayload.Email, dto.Password, dto.FirstName, dto.LastName, salt, hash, dto.Birthday);
+                newUser = UserDataservice.SignUp(_dbContext, extraPayload.Email, dto.Password, pseudoPhone, encryptPhone, hashPhone, dto.FirstName, dto.LastName, salt, hash, dto.Birthday);
             }
 
             var userPayload = new DTOs.JwtExtraPayload()
@@ -135,66 +146,6 @@ namespace Homo.AuthApi
             }
 
             return userPayload;
-        }
-
-        [Route("send-verify-email")]
-        [HttpPost]
-        public async Task<dynamic> sendVerifyEmail([FromBody] DTOs.SendValidatedEmail dto)
-        {
-            string ip = NetworkHelper.GetIpFromRequest(Request);
-            int countByIp = VerifyCodeDataservice.GetTodayCountByIp(_dbContext, ip);
-            if (countByIp > 10)
-            {
-                throw new CustomException(ERROR_CODE.TOO_MANY_TIMES_TO_SEND_MAIL, HttpStatusCode.Forbidden);
-            }
-
-            int countByEmail = VerifyCodeDataservice.GetTodayCountByEmail(_dbContext, dto.Email);
-            if (countByEmail > 10)
-            {
-                throw new CustomException(ERROR_CODE.TOO_MANY_TIMES_TO_SEND_MAIL, HttpStatusCode.Forbidden);
-            }
-
-            User user = UserDataservice.GetOneByEmail(_dbContext, dto.Email);
-            List<string> duplicatedUserProvider = new List<string>();
-            if (user != null)
-            {
-                throw new CustomException(ERROR_CODE.SIGN_IN_BY_OTHER_WAY, HttpStatusCode.BadRequest, null, new Dictionary<string, dynamic>(){
-                            {"duplicatedUserProvider", AuthHelper.GetDuplicatedUserType(user)}
-                        });
-            }
-
-            string code = CryptographicHelper.GetSpecificLengthRandomString(6, true, true);
-            VerifyCodeDataservice.Create(_dbContext, new DTOs.VerifyCode()
-            {
-                Email = dto.Email,
-                Code = code,
-                Expiration = DateTime.Now.AddSeconds(3 * 60),
-                Ip = ip
-            });
-
-            await MailHelper.Send(MailProvider.SEND_GRID, new MailTemplate()
-            {
-                Subject = _commonLocalizer.Get("verify email"),
-                Content = _commonLocalizer.Get("verify link", null, new Dictionary<string, string>() {
-                    { "link", $"{_websiteEndpoint}/sign-up/verify-email/" },
-                    { "code", code }
-                })
-            }, _systemEmail, dto.Email, _sendGridAPIKey);
-            return new { status = CUSTOM_RESPONSE.OK };
-        }
-
-        [Route("verify-email")]
-        [HttpPost]
-        public dynamic verifyEmail([FromBody] DTOs.VerifyEmail dto)
-        {
-            VerifyCode record = VerifyCodeDataservice.GetOneUnUsedByEmail(_dbContext, dto.Email, dto.Code);
-            if (record == null)
-            {
-                throw new CustomException(ERROR_CODE.VERIFY_CODE_NOT_FOUND, HttpStatusCode.NotFound);
-            }
-            record.IsUsed = true;
-            _dbContext.SaveChanges();
-            return new { token = JWTHelper.GenerateToken(_signUpJwtKey, 5, new { email = record.Email }) };
         }
 
         [Route("auth-with-social-media")]

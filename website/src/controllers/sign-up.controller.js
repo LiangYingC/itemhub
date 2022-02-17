@@ -76,7 +76,7 @@ export class SignUpController extends RoutingController {
 
         const elPhone = this.elHTML.querySelector('[data-field="phone"]');
         const phone = elPhone.value;
-        const phonePattern = /^[0-9]{10}$/;
+        const phonePattern = /^09[0-9]{8}$/;
         const isValid = phonePattern.test(phone);
         if (isValid) {
             elSendSmsButton.removeAttribute('disabled');

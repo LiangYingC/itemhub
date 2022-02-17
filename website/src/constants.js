@@ -12,12 +12,12 @@ export const ERROR_KEYS = {
 export const API = {
     SEND_VERIFY_EMAIL: 'auth/send-verify-email',
     VERIFY_EMAIL: 'auth/verify-email',
+    VERIFY_EMAIL_WITH_SOCIAL_MEDIA: 'auth/verify-email-with-social-media',
     SEND_SMS: 'auth/send-sms',
     VERIFY_PHONE: 'auth/verify-phone',
     SIGN_UP: 'auth/sign-up',
     SIGN_IN_WITH_EMAIL: 'auth/sign-in-with-email',
     SIGN_IN_WITH_SOCIAL_MEDIA: 'auth/sign-in-with-social-media',
-    AUTH_WITH_SOCIAL_MEDIA: 'auth/auth-with-social-media',
     UNIVERSAL_SOCIAL_MEDIA_TYPE: 'universal/social-media-types',
     UNIVERSAL_PRICING_PLANS: 'universal/pricing-plans',
     NUMBER_OF_REGISTERED_USERS: 'users/number-of-registered-users',
@@ -26,7 +26,7 @@ export const API = {
 };
 
 export const OAUTH_TYPE = {
-    SIGN_UP: 'sign-up',
+    VERIFY_EMAIL_WITH_SOCIAL_MEDIA: 'verify-email-with-social-media',
     SIGN_IN: 'sign-in',
     CONNECT: 'connect'
 };

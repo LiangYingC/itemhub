@@ -64,6 +64,7 @@ namespace Homo.AuthApi
         [HttpPost]
         public ActionResult<dynamic> signUp([FromBody] DTOs.SignUp dto, DTOs.JwtExtraPayload extraPayload)
         {
+            System.Console.WriteLine($"testing:{Newtonsoft.Json.JsonConvert.SerializeObject(extraPayload, Newtonsoft.Json.Formatting.Indented)}");
             User newUser = null;
             User user = null;
             SocialMediaProvider? socialMediaProvider = null;
@@ -91,7 +92,7 @@ namespace Homo.AuthApi
 
             if (user != null)
             {
-                throw new CustomException(ERROR_CODE.SIGN_IN_BY_OTHER_WAY, HttpStatusCode.BadRequest, null, new Dictionary<string, dynamic>(){
+                throw new CustomException(ERROR_CODE.ALREADY_SIGN_UP_BY_THIS_EMAIL, HttpStatusCode.BadRequest, null, new Dictionary<string, dynamic>(){
                             {"duplicatedUserProvider", AuthHelper.GetDuplicatedUserType(user)}
                         });
             }
@@ -146,5 +147,6 @@ namespace Homo.AuthApi
 
             return userPayload;
         }
+
     }
 }

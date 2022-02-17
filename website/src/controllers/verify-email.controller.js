@@ -1,9 +1,10 @@
 import {
     RoutingController
 } from '../swim/routing-controller.js';
-import { ERROR_KEYS, RESPONSE_STATUS } from '../constants.js';
+import { ERROR_KEYS, OAUTH_PROVIDER, OAUTH_TYPE, RESPONSE_STATUS, THIRD_PARTY_KEY } from '../constants.js';
 import { AuthDataService } from '../dataservices/auth.dataservice.js';
 import { Toaster } from '../util/toaster.js';
+import { PopupHelper } from '../util/popup.helper.js';
 
 export class VerifyEmailController extends RoutingController {
     constructor (elHTML, parentController, args, context) {
@@ -117,6 +118,27 @@ export class VerifyEmailController extends RoutingController {
             return;
         }
         history.pushState({}, '', `/auth/sign-up/?verifyPhoneToken=${resp.data.token}`);
+    }
+
+    async popupFacebookAndGetCode () {
+        const state = {
+            type: OAUTH_TYPE.VERIFY_EMAIL_WITH_SOCIAL_MEDIA,
+            provider: OAUTH_PROVIDER.FACEBOOK
+        };
+        PopupHelper.PopupCenter(`https://www.facebook.com/v12.0/dialog/oauth?client_id=${THIRD_PARTY_KEY.FB_CLIENT_ID}&scope=email&redirect_uri=${window.location.origin}/oauth/&state=${JSON.stringify(state)}`, 'fb auth', 600, 500);
+    }
+
+    async popupLineAndGetCode () {
+        PopupHelper.PopupCenter(`https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${THIRD_PARTY_KEY.LINE_CLIENT_ID}&redirect_uri=${window.location.origin}/oauth/&state=${OAUTH_PROVIDER.LINE},${OAUTH_TYPE.VERIFY_EMAIL_WITH_SOCIAL_MEDIA}&bot_prompt=aggressive&scope=profile%20openid%20email`, 'line auth', 600, 500);
+    }
+
+    async popupGoogleAndGetCode () {
+        const state = {
+            type: OAUTH_TYPE.VERIFY_EMAIL_WITH_SOCIAL_MEDIA,
+            provider: OAUTH_PROVIDER.GOOGLE
+        };
+        const url = ['https://accounts.google.com/o/oauth2/v2/auth?1=1', 'scope=https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile', 'include_granted_scopes=true', 'response_type=code', `state=${JSON.stringify(state)}`, `redirect_uri=${location.origin}/oauth/`, `client_id=${THIRD_PARTY_KEY.GOOGLE_CLIENT_ID}`].join('&');
+        PopupHelper.PopupCenter(url, 'google auth', 600, 500);
     }
 
     _countdownResendTimerStart () {

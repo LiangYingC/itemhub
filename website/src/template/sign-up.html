@@ -30,7 +30,7 @@
             <label class="row mt-4">
                 <div class="col-12 mb-2">驗證碼</div>
                 <div class="col-12">
-                    <input data-field="code" onkeyup="controller.validateCodeAndGetValidatedPhoneToken"
+                    <input allow-empty data-field="code" onkeyup="controller.validateCodeAndGetValidatedPhoneToken"
                         class="form-control" type="text" placeholder="請輸入驗證碼" disabled />
                 </div>
                 <div class="col-12 invalid-message text-danger">{codeInvalidMessage}</div>

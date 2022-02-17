@@ -59,8 +59,8 @@ export const AuthDataService = {
             body: JSON.stringify(data)
         });
     },
-    AuthWithSocialMedia: async (data) => {
-        const api = APP_CONFIG.API_ENDPOINT + API.AUTH_WITH_SOCIAL_MEDIA;
+    VerifyEmailWithSocialMedia: async (data) => {
+        const api = APP_CONFIG.API_ENDPOINT + API.VERIFY_EMAIL_WITH_SOCIAL_MEDIA;
         return ApiHelper.sendRequest(api, {
             method: 'POST',
             body: JSON.stringify(data)

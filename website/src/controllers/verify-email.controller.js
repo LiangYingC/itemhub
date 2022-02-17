@@ -125,7 +125,7 @@ export class VerifyEmailController extends RoutingController {
             type: OAUTH_TYPE.VERIFY_EMAIL_WITH_SOCIAL_MEDIA,
             provider: OAUTH_PROVIDER.FACEBOOK
         };
-        PopupHelper.PopupCenter(`https://www.facebook.com/v12.0/dialog/oauth?client_id=${THIRD_PARTY_KEY.FB_CLIENT_ID}&redirect_uri=${window.location.origin}/oauth/&state=${JSON.stringify(state)}`, 'fb auth', 600, 500);
+        PopupHelper.PopupCenter(`https://www.facebook.com/v12.0/dialog/oauth?client_id=${THIRD_PARTY_KEY.FB_CLIENT_ID}&scope=email&redirect_uri=${window.location.origin}/oauth/&state=${JSON.stringify(state)}`, 'fb auth', 600, 500);
     }
 
     async popupLineAndGetCode () {

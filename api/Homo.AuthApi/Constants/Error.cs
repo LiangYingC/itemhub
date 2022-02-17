@@ -20,5 +20,6 @@ namespace Homo.AuthApi
         public static string EMAIL_ALREADY_REGISTERED = "EMAIL_ALREADY_REGISTERED";
         public static string INVALID_TOKEN = "INVALID_TOKEN";
         public static string DUPLICATED_PHONE = "DUPLICATED_PHONE";
+        public static string WITHOUT_PERMISSION_TO_GET_EMAIL = "WITHOUT_PERMISSION_TO_GET_EMAIL";
     }
 }

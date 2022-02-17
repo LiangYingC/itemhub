@@ -22,6 +22,12 @@ namespace Homo.AuthApi
         private readonly string _sendGridAPIKey;
         private readonly string _systemEmail;
         private readonly string _websiteEndpoint;
+        private readonly string _fbAppId;
+        private readonly string _googleClientId;
+        private readonly string _lineClientId;
+        private readonly string _fbClientSecret;
+        private readonly string _googleClientSecret;
+        private readonly string _lineClientSecret;
         private readonly bool _authByCookie; public AuthVerifyEmailController(DBContext dbContext, IOptions<AppSettings> appSettings, Microsoft.AspNetCore.Hosting.IWebHostEnvironment env, Homo.Api.CommonLocalizer commonLocalizer)
         {
             Secrets secrets = (Secrets)appSettings.Value.Secrets;
@@ -33,6 +39,12 @@ namespace Homo.AuthApi
             _sendGridAPIKey = secrets.SendGridApiKey;
             _systemEmail = common.SystemEmail;
             _websiteEndpoint = common.WebSiteEndpoint;
+            _fbAppId = common.FbAppId;
+            _googleClientId = common.GoogleClientId;
+            _lineClientId = common.LineClientId;
+            _fbClientSecret = secrets.FbClientSecret;
+            _googleClientSecret = secrets.GoogleClientSecret;
+            _lineClientSecret = secrets.LineClientSecret;
         }
 
 
@@ -93,8 +105,79 @@ namespace Homo.AuthApi
             }
             record.IsUsed = true;
             _dbContext.SaveChanges();
-            return new { token = JWTHelper.GenerateToken(_verifyPhoneJwtKey, 5, new { email = record.Email }) };
+            return new { token = JWTHelper.GenerateToken(_verifyPhoneJwtKey, 5, new { Email = record.Email }) };
         }
 
+        [Route("verify-email-with-social-media")]
+        [HttpPost]
+        public async Task<dynamic> verifyEmailWithSocialMedia([FromBody] DTOs.AuthWithSocialMedia dto)
+        {
+            oAuthResp authResp = null;
+            UserInfo userInfo = null;
+            User user = null;
+            SocialMediaProvider? provider = null;
+
+            try
+            {
+                if (dto.Provider == SocialMediaProvider.FACEBOOK)
+                {
+                    authResp = await FacebookOAuthHelper.GetAccessToken(_fbAppId, dto.RedirectUri, _fbClientSecret, dto.Code);
+                    userInfo = await FacebookOAuthHelper.GetUserInfo(authResp.access_token);
+                    provider = SocialMediaProvider.FACEBOOK;
+                }
+                else if (dto.Provider == SocialMediaProvider.GOOGLE)
+                {
+                    authResp = await GoogleOAuthHelper.GetAccessToken(_googleClientId, dto.RedirectUri, _googleClientSecret, dto.Code);
+                    userInfo = await GoogleOAuthHelper.GetUserInfo(authResp.access_token);
+                    provider = SocialMediaProvider.GOOGLE;
+                }
+                else if (dto.Provider == SocialMediaProvider.LINE)
+                {
+                    authResp = await LineOAuthHelper.GetAccessToken(_lineClientId, dto.RedirectUri, _lineClientSecret, dto.Code);
+                    userInfo = LineOAuthHelper.GetUserInfo(authResp.id_token);
+                    provider = SocialMediaProvider.LINE;
+                }
+                user = UserDataservice.GetOneBySocialMediaSub(_dbContext, provider.GetValueOrDefault(), userInfo.sub);
+            }
+            catch (System.Exception)
+            {
+                throw new CustomException(ERROR_CODE.INVALID_CODE_FROM_SOCIAL_MEDIA, HttpStatusCode.BadRequest);
+            }
+
+            if (user != null)
+            {
+                throw new CustomException(ERROR_CODE.SIGN_IN_BY_OTHER_WAY, HttpStatusCode.BadRequest, null, new Dictionary<string, dynamic>(){
+                            {"duplicatedUserProvider", AuthHelper.GetDuplicatedUserType(user)}
+                        });
+            }
+
+            if (userInfo.email == null)
+            {
+                throw new CustomException(ERROR_CODE.WITHOUT_PERMISSION_TO_GET_EMAIL, HttpStatusCode.BadRequest, null);
+            }
+
+            List<string> duplicatedUserProvider = new List<string>();
+            user = UserDataservice.GetOneByEmail(_dbContext, userInfo.email);
+            if (user != null)
+            {
+                throw new CustomException(ERROR_CODE.SIGN_IN_BY_OTHER_WAY, HttpStatusCode.BadRequest, null, new Dictionary<string, dynamic>(){
+                            {"duplicatedUserProvider", AuthHelper.GetDuplicatedUserType(user)}
+                        });
+            }
+            string token = "";
+            if (dto.Provider == SocialMediaProvider.FACEBOOK)
+            {
+                token = JWTHelper.GenerateToken(_verifyPhoneJwtKey, 5, new DTOs.JwtExtraPayload { Email = userInfo.email, FacebookSub = userInfo.sub, FirstName = userInfo.name, LastName = userInfo.name, Profile = userInfo.picture }, null);
+            }
+            else if (dto.Provider == SocialMediaProvider.GOOGLE)
+            {
+                token = JWTHelper.GenerateToken(_verifyPhoneJwtKey, 5, new DTOs.JwtExtraPayload { Email = userInfo.email, GoogleSub = userInfo.sub, FirstName = userInfo.name, LastName = userInfo.name, Profile = userInfo.picture }, null);
+            }
+            else if (dto.Provider == SocialMediaProvider.LINE)
+            {
+                token = JWTHelper.GenerateToken(_verifyPhoneJwtKey, 5, new DTOs.JwtExtraPayload { Email = userInfo.email, LineSub = userInfo.sub, FirstName = userInfo.name, LastName = userInfo.name, Profile = userInfo.picture }, null);
+            }
+            return new { token = token };
+        }
     }
 }

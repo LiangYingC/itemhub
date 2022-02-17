@@ -64,7 +64,6 @@ namespace Homo.AuthApi
         [HttpPost]
         public ActionResult<dynamic> signUp([FromBody] DTOs.SignUp dto, DTOs.JwtExtraPayload extraPayload)
         {
-            System.Console.WriteLine($"testing:{Newtonsoft.Json.JsonConvert.SerializeObject(extraPayload, Newtonsoft.Json.Formatting.Indented)}");
             User newUser = null;
             User user = null;
             SocialMediaProvider? socialMediaProvider = null;
@@ -147,74 +146,5 @@ namespace Homo.AuthApi
 
             return userPayload;
         }
-
-        [Route("auth-with-social-media")]
-        [HttpPost]
-        public async Task<dynamic> authWithSocialMedia([FromBody] DTOs.AuthWithSocialMedia dto)
-        {
-            oAuthResp authResp = null;
-            UserInfo userInfo = null;
-            User user = null;
-            SocialMediaProvider? provider = null;
-
-            try
-            {
-                if (dto.Provider == SocialMediaProvider.FACEBOOK)
-                {
-                    authResp = await FacebookOAuthHelper.GetAccessToken(_fbAppId, dto.RedirectUri, _fbClientSecret, dto.Code);
-                    userInfo = await FacebookOAuthHelper.GetUserInfo(authResp.access_token);
-                    provider = SocialMediaProvider.FACEBOOK;
-                }
-                else if (dto.Provider == SocialMediaProvider.GOOGLE)
-                {
-                    authResp = await GoogleOAuthHelper.GetAccessToken(_googleClientId, dto.RedirectUri, _googleClientSecret, dto.Code);
-                    userInfo = await GoogleOAuthHelper.GetUserInfo(authResp.access_token);
-                    provider = SocialMediaProvider.GOOGLE;
-                }
-                else if (dto.Provider == SocialMediaProvider.LINE)
-                {
-                    authResp = await LineOAuthHelper.GetAccessToken(_lineClientId, dto.RedirectUri, _lineClientSecret, dto.Code);
-                    userInfo = LineOAuthHelper.GetUserInfo(authResp.id_token);
-                    provider = SocialMediaProvider.LINE;
-                }
-                user = UserDataservice.GetOneBySocialMediaSub(_dbContext, provider.GetValueOrDefault(), userInfo.sub);
-            }
-            catch (System.Exception)
-            {
-                throw new CustomException(ERROR_CODE.INVALID_CODE_FROM_SOCIAL_MEDIA, HttpStatusCode.BadRequest);
-            }
-
-            if (user != null)
-            {
-                throw new CustomException(ERROR_CODE.SIGN_IN_BY_OTHER_WAY, HttpStatusCode.BadRequest, null, new Dictionary<string, dynamic>(){
-                            {"duplicatedUserProvider", AuthHelper.GetDuplicatedUserType(user)}
-                        });
-            }
-
-            List<string> duplicatedUserProvider = new List<string>();
-            user = UserDataservice.GetOneByEmail(_dbContext, userInfo.email);
-            if (user != null)
-            {
-                throw new CustomException(ERROR_CODE.SIGN_IN_BY_OTHER_WAY, HttpStatusCode.BadRequest, null, new Dictionary<string, dynamic>(){
-                            {"duplicatedUserProvider", AuthHelper.GetDuplicatedUserType(user)}
-                        });
-            }
-            string token = "";
-            if (dto.Provider == SocialMediaProvider.FACEBOOK)
-            {
-                token = JWTHelper.GenerateToken(_signUpJwtKey, 5, new DTOs.JwtExtraPayload { Email = userInfo.email, FacebookSub = userInfo.sub, FirstName = userInfo.name, LastName = userInfo.name, Profile = userInfo.picture }, null);
-            }
-            else if (dto.Provider == SocialMediaProvider.GOOGLE)
-            {
-                token = JWTHelper.GenerateToken(_signUpJwtKey, 5, new DTOs.JwtExtraPayload { Email = userInfo.email, GoogleSub = userInfo.sub, FirstName = userInfo.name, LastName = userInfo.name, Profile = userInfo.picture }, null);
-            }
-            else if (dto.Provider == SocialMediaProvider.LINE)
-            {
-                token = JWTHelper.GenerateToken(_signUpJwtKey, 5, new DTOs.JwtExtraPayload { Email = userInfo.email, LineSub = userInfo.sub, FirstName = userInfo.name, LastName = userInfo.name, Profile = userInfo.picture }, null);
-            }
-            return new { token = token };
-        }
-
-
     }
 }

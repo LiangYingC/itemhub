@@ -102,7 +102,7 @@ namespace Homo.AuthApi
             record.IsUsed = true;
             _dbContext.SaveChanges();
 
-            return new { token = JWTHelper.GenerateToken(_signUpJwtKey, 5, new { email = extraPayload.email.Value, phone = dto.Phone }) };
+            return new { token = JWTHelper.GenerateToken(_signUpJwtKey, 5, new { Email = extraPayload.Email.Value, Phone = dto.Phone }) };
         }
     }
 }

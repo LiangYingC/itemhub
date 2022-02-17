@@ -58,7 +58,6 @@ namespace Homo.AuthApi
         {
             var extraPayload = JWTHelper.GetExtraPayload(_resetPasswordJwtKey, dto.Token);
             long userId = (long)extraPayload.Id;
-            System.Console.WriteLine(userId);
             User user = UserDataservice.GetOne(_dbContext, userId, true);
             string salt = CryptographicHelper.GetSalt(64);
             string hash = CryptographicHelper.GenerateSaltedHash(dto.Password, salt);

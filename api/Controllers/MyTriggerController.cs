@@ -27,15 +27,27 @@ namespace Homo.IotApi
         public ActionResult<dynamic> getList([FromQuery] int page, [FromQuery] int limit,
             [FromQuery] long? sourceDeviceId,
             [FromQuery] string sourcePin,
+            [FromQuery] string sourceDeviceName,
             [FromQuery] long? destinationDeviceId,
             [FromQuery] string destinationPin,
+            [FromQuery] string destinationDeviceName,
             Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
             return new
             {
-                paginationData = TriggerDataservice.GetList(_dbContext, page, limit, extraPayload.Id, sourceDeviceId, sourcePin, destinationDeviceId, destinationPin),
-                rowNum = TriggerDataservice.GetRowNum(_dbContext, extraPayload.Id, sourceDeviceId, sourcePin, destinationDeviceId, destinationPin)
+                paginationData = TriggerDataservice.GetList(_dbContext, page, limit, extraPayload.Id, sourceDeviceId, sourcePin, sourceDeviceName, destinationDeviceId, destinationPin, destinationDeviceName),
+                rowNum = TriggerDataservice.GetRowNum(_dbContext, extraPayload.Id, sourceDeviceId, sourcePin, sourceDeviceName, destinationDeviceId, destinationPin, destinationDeviceName)
             };
+        }
+
+        [HttpPatch]
+        [Route("{id}")]
+        public ActionResult<dynamic> update([FromRoute] long id,
+            [FromBody] DTOs.Trigger dto,
+            Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
+        {
+            TriggerDataservice.Update(_dbContext, extraPayload.Id, id, dto);
+            return new { status = CUSTOM_RESPONSE.OK };
         }
 
         [HttpDelete]

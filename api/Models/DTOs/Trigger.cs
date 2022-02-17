@@ -17,8 +17,8 @@ namespace Homo.IotApi
             [Required]
             [MaxLength(3)]
             public string DestinationPin { get; set; }
-            public decimal DestinationDeviceSourceState { get; set; }
             public decimal DestinationDeviceTargetState { get; set; }
+            public TRIGGER_OPERATOR Operator { get; set; }
 
         }
     }

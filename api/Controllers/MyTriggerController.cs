@@ -6,7 +6,7 @@ using Homo.Core.Constants;
 namespace Homo.IotApi
 {
     [IotAuthorizeFactory]
-    [Route("v1/me/trigger")]
+    [Route("v1/me/triggers")]
     [Validate]
     public class TriggerController : ControllerBase
     {
@@ -21,6 +21,21 @@ namespace Homo.IotApi
         {
             Trigger rewRecord = TriggerDataservice.Create(_dbContext, extraPayload.Id, dto);
             return rewRecord;
+        }
+
+        [HttpGet]
+        public ActionResult<dynamic> getList([FromQuery] int page, [FromQuery] int limit,
+            [FromQuery] long? sourceDeviceId,
+            [FromQuery] string sourcePin,
+            [FromQuery] long? destinationDeviceId,
+            [FromQuery] string destinationPin,
+            Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
+        {
+            return new
+            {
+                paginationData = TriggerDataservice.GetList(_dbContext, page, limit, extraPayload.Id, sourceDeviceId, sourcePin, destinationDeviceId, destinationPin),
+                rowNum = TriggerDataservice.GetRowNum(_dbContext, extraPayload.Id, sourceDeviceId, sourcePin, destinationDeviceId, destinationPin)
+            };
         }
 
         [HttpDelete]

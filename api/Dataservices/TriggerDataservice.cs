@@ -19,12 +19,44 @@ namespace Homo.IotApi
                 .OrderByDescending(x => x.Id)
                 .ToList();
         }
-        public static int GetRowNum(IotDbContext dbContext, long ownerId)
+
+        public static List<Trigger> GetList(IotDbContext dbContext, int page, int limit, long ownerId,
+            long? sourceDeviceId,
+            string sourcePin,
+            long? destinationDeviceId,
+            string destinationPin
+        )
         {
             return dbContext.Trigger
                 .Where(x =>
                     x.DeletedAt == null
                     && x.OwnerId == ownerId
+                    && (sourceDeviceId == null || x.SourceDeviceId == sourceDeviceId)
+                    && (sourcePin == null || x.SourcePin == sourcePin)
+                    && (destinationDeviceId == null || x.DestinationDeviceId == destinationDeviceId)
+                    && (destinationPin == null || x.DestinationPin == destinationPin)
+                )
+                .OrderByDescending(x => x.Id)
+                .Skip((page - 1) * limit)
+                .Take(limit)
+                .ToList();
+        }
+
+        public static int GetRowNum(IotDbContext dbContext, long ownerId,
+            long? sourceDeviceId,
+            string sourcePin,
+            long? destinationDeviceId,
+            string destinationPin
+        )
+        {
+            return dbContext.Trigger
+                .Where(x =>
+                    x.DeletedAt == null
+                    && x.OwnerId == ownerId
+                    && (sourceDeviceId == null || x.SourceDeviceId == sourceDeviceId)
+                    && (sourcePin == null || x.SourcePin == sourcePin)
+                    && (destinationDeviceId == null || x.DestinationDeviceId == destinationDeviceId)
+                    && (destinationPin == null || x.DestinationPin == destinationPin)
                 )
                 .Count();
         }

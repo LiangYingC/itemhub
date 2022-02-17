@@ -99,6 +99,8 @@ namespace Homo.AuthApi
             {
                 throw new CustomException(ERROR_CODE.VERIFY_CODE_NOT_FOUND, System.Net.HttpStatusCode.NotFound);
             }
+            record.IsUsed = true;
+            _dbContext.SaveChanges();
 
             return new { token = JWTHelper.GenerateToken(_signUpJwtKey, 5, new { Email = extraPayload.Email.Value, Phone = dto.Phone }) };
         }

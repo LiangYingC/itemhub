@@ -104,12 +104,10 @@ namespace Homo.IotApi
 
         public static void BatchDelete(IotDbContext dbContext, long ownerId, List<long> ids)
         {
-            foreach (long id in ids)
+            dbContext.Trigger.Where(x => x.OwnerId == ownerId && ids.Contains(x.Id)).UpdateFromQuery(x => new Trigger()
             {
-                Trigger record = new Trigger { Id = id, OwnerId = ownerId };
-                dbContext.Attach<Trigger>(record);
-                record.DeletedAt = DateTime.Now;
-            }
+                DeletedAt = DateTime.Now
+            });
             dbContext.SaveChanges();
         }
 

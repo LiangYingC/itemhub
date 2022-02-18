@@ -28,5 +28,12 @@ namespace Homo.IotApi
 
             return pricingPlans;
         }
+
+        [HttpGet]
+        [Route("trigger-operators")]
+        public ActionResult<dynamic> getTriggerOperators()
+        {
+            return ConvertHelper.EnumToList(typeof(TRIGGER_OPERATOR));
+        }
     }
 }

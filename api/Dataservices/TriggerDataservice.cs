@@ -19,22 +19,70 @@ namespace Homo.IotApi
                 .OrderByDescending(x => x.Id)
                 .ToList();
         }
-        public static int GetRowNum(IotDbContext dbContext, long ownerId)
+
+        public static List<Trigger> GetList(IotDbContext dbContext, int page, int limit, long ownerId,
+            long? sourceDeviceId,
+            string sourcePin,
+            string sourceDeviceName,
+            long? destinationDeviceId,
+            string destinationPin,
+            string destinationDeviceName
+        )
         {
             return dbContext.Trigger
+                .Include(x => x.SourceDevice)
+                .Include(x => x.DestinationDevice)
                 .Where(x =>
                     x.DeletedAt == null
                     && x.OwnerId == ownerId
+                    && (sourceDeviceId == null || x.SourceDeviceId == sourceDeviceId)
+                    && (sourcePin == null || x.SourcePin == sourcePin)
+                    && (destinationDeviceId == null || x.DestinationDeviceId == destinationDeviceId)
+                    && (destinationPin == null || x.DestinationPin == destinationPin)
+                    && (sourceDeviceName == null || x.SourceDevice.Name == sourceDeviceName)
+                    && (destinationDeviceName == null || x.DestinationDevice.Name == destinationDeviceName)
+                )
+                .OrderByDescending(x => x.Id)
+                .Skip((page - 1) * limit)
+                .Take(limit)
+                .ToList();
+        }
+
+        public static int GetRowNum(IotDbContext dbContext, long ownerId,
+            long? sourceDeviceId,
+            string sourcePin,
+            string sourceDeviceName,
+            long? destinationDeviceId,
+            string destinationPin,
+            string destinationDeviceName
+        )
+        {
+            return dbContext.Trigger
+                .Include(x => x.SourceDevice)
+                .Include(x => x.DestinationDevice)
+                .Where(x =>
+                    x.DeletedAt == null
+                    && x.OwnerId == ownerId
+                    && (sourceDeviceId == null || x.SourceDeviceId == sourceDeviceId)
+                    && (sourcePin == null || x.SourcePin == sourcePin)
+                    && (destinationDeviceId == null || x.DestinationDeviceId == destinationDeviceId)
+                    && (destinationPin == null || x.DestinationPin == destinationPin)
+                    && (sourceDeviceName == null || x.SourceDevice.Name == sourceDeviceName)
+                    && (destinationDeviceName == null || x.DestinationDevice.Name == destinationDeviceName)
                 )
                 .Count();
         }
 
-        public static Trigger GetOne(IotDbContext dbContext, long ownerId, long id)
+        public static Trigger GetOne(IotDbContext dbContext, long ownerId, long? id, long? sourceDeviceId, string sourcePin, long? destinationDeviceId, string destinationPin)
         {
             return dbContext.Trigger.FirstOrDefault(x =>
                 x.DeletedAt == null
-                && x.Id == id
                 && x.OwnerId == ownerId
+                && (id == null || x.Id == id)
+                && (sourceDeviceId == null || x.SourceDeviceId == sourceDeviceId)
+                && (destinationDeviceId == null || x.DestinationDeviceId == destinationDeviceId)
+                && (sourcePin == null || x.SourcePin == sourcePin)
+                && (destinationPin == null || x.DestinationPin == destinationPin)
             );
         }
 
@@ -56,12 +104,10 @@ namespace Homo.IotApi
 
         public static void BatchDelete(IotDbContext dbContext, long ownerId, List<long> ids)
         {
-            foreach (long id in ids)
+            dbContext.Trigger.Where(x => x.OwnerId == ownerId && ids.Contains(x.Id)).UpdateFromQuery(x => new Trigger()
             {
-                Trigger record = new Trigger { Id = id, OwnerId = ownerId };
-                dbContext.Attach<Trigger>(record);
-                record.DeletedAt = DateTime.Now;
-            }
+                DeletedAt = DateTime.Now
+            });
             dbContext.SaveChanges();
         }
 

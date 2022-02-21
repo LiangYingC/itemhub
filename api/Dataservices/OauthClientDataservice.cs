@@ -95,6 +95,15 @@ namespace Homo.IotApi
             dbContext.SaveChanges();
         }
 
+
+        public static void RevokeSecret(IotDbContext dbContext, long ownerId, long id, string hashClientSecrets, string salt)
+        {
+            OauthClient record = dbContext.OauthClient.Where(x => x.Id == id && x.OwnerId == ownerId).FirstOrDefault();
+            record.HashClientSecrets = hashClientSecrets;
+            record.Salt = salt;
+            dbContext.SaveChanges();
+        }
+
         public static void Delete(IotDbContext dbContext, long ownerId, long id)
         {
             OauthClient record = dbContext.OauthClient.Where(x => x.Id == id && x.OwnerId == ownerId).FirstOrDefault();

@@ -85,14 +85,14 @@ namespace Homo.AuthApi
                 Ip = ip
             });
 
-            // await MailHelper.Send(MailProvider.SEND_GRID, new MailTemplate()
-            // {
-            //     Subject = _commonLocalizer.Get("verify email"),
-            //     Content = _commonLocalizer.Get("verify link", null, new Dictionary<string, string>() {
-            //         { "link", $"{_websiteEndpoint}/sign-up/verify-email/" },
-            //         { "code", code }
-            //     })
-            // }, _systemEmail, dto.Email, _sendGridAPIKey);
+            await MailHelper.Send(MailProvider.SEND_GRID, new MailTemplate()
+            {
+                Subject = _commonLocalizer.Get("verify email"),
+                Content = _commonLocalizer.Get("verify link", null, new Dictionary<string, string>() {
+                    { "link", $"{_websiteEndpoint}/sign-up/verify-email/" },
+                    { "code", code }
+                })
+            }, _systemEmail, dto.Email, _sendGridAPIKey);
             return new { status = CUSTOM_RESPONSE.OK };
         }
 

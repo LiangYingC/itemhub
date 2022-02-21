@@ -21,7 +21,7 @@ export type FetchResult<T> = {
     httpStatus: number;
     status: string;
     data: T;
-}
+};
 
 export interface FetchErrorResultData {
     errorKey: string;

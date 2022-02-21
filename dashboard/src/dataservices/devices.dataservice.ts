@@ -7,9 +7,8 @@ import {
     GetDevicesParams,
     GetSingleDeviceParams,
     UpdateSingleDeviceParams,
-    GetDevicePinsParams
+    GetDevicePinsParams,
 } from '@/types/dataservices.type';
-
 
 export const DevicesDataservices = {
     GetList: async ({ page, limit }: GetDevicesParams) => {

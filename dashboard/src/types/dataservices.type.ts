@@ -31,6 +31,3 @@ export interface SignWithEmailParams {
     email: string;
     password: string;
 }
-
-
-

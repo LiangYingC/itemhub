@@ -1,7 +1,7 @@
 import styles from './oauth-clients.module.scss';
 import { useEffect, useState } from 'react';
 import { useQuery } from '@/hooks/query.hook';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAppSelector } from '@/hooks/redux.hook';
 import {
     useDeleteOauthClients,
@@ -90,7 +90,6 @@ const OauthClients = () => {
             )}
             <div>Page: {page}</div>
             <Pagination rowNums={rowNums} page={page} limit={limit} />
-            <button onClick={fetchApi}>refresh oauth clients list</button>
         </div>
     );
 };

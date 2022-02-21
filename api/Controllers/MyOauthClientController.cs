@@ -73,6 +73,18 @@ namespace Homo.IotApi
             return new { status = CUSTOM_RESPONSE.OK };
         }
 
+        [HttpPost]
+        [Route("{id}/revoke-secret")]
+        public ActionResult<dynamic> revokeSecret([FromRoute] int id, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
+        {
+            long ownerId = extraPayload.Id;
+            string clientSecret = CryptographicHelper.GetSpecificLengthRandomString(64, true, false);
+            string salt = CryptographicHelper.GetSpecificLengthRandomString(128, false, false);
+            string hashClientSecrets = CryptographicHelper.GenerateSaltedHash(clientSecret, salt);
+            OauthClientDataservice.RevokeSecret(_dbContext, ownerId, id, hashClientSecrets, salt);
+            return new { secret = clientSecret };
+        }
+
         [HttpDelete]
         [Route("{id}")]
         public ActionResult<dynamic> delete([FromRoute] long id, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)

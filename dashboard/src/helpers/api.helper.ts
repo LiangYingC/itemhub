@@ -36,14 +36,14 @@ export const ApiHelpers = {
     }: SendRequestParams<T>) => {
         const fetchOption = payload
             ? {
-                method: method,
-                headers,
-                body: JSON.stringify(payload),
-            }
+                  method: method,
+                  headers,
+                  body: JSON.stringify(payload),
+              }
             : {
-                method: method,
-                headers,
-            };
+                  method: method,
+                  headers,
+              };
 
         // eslint-disable-next-line no-async-promise-executor
         return new Promise<FetchResult<T>>(async (resolve, reject) => {
@@ -104,9 +104,9 @@ export const ApiHelpers = {
         const headers = shouldDeleteContentType
             ? fetchOption.headers
             : {
-                'Content-Type': 'application/json',
-                ...fetchOption.headers,
-            };
+                  'Content-Type': 'application/json',
+                  ...fetchOption.headers,
+              };
 
         if (
             fetchOption.body &&

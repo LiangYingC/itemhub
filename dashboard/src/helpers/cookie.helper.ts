@@ -1,4 +1,4 @@
-import { SetCookieParams } from '@/types/helpers.type'
+import { SetCookieParams } from '@/types/helpers.type';
 
 export const CookieHelpers = {
     SetCookie: ({ name, value, days }: SetCookieParams) => {

@@ -12,6 +12,7 @@ import Trigger from './pages/trigger/trigger';
 import OauthClients from './pages/oauth-clients/oauth-clients';
 import { Provider } from 'react-redux';
 import store from './redux/store';
+import OauthClient from './pages/oauth-client/oauth-client';
 
 ReactDOM.render(
     <BrowserRouter>
@@ -34,6 +35,7 @@ ReactDOM.render(
                     <Route path="triggers" element={<Triggers />} />
                     <Route path="triggers/:id" element={<Trigger />} />
                     <Route path="oauth-clients" element={<OauthClients />} />
+                    <Route path="oauth-clients/:id" element={<OauthClient />} />
                 </Route>
                 <Route path="/404" element={<NotFound />} />
             </Route>

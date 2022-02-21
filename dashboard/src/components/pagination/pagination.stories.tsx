@@ -2,11 +2,11 @@
 import Pagination from './pagination';
 
 export default {
-    title: 'pagination'
+    title: 'pagination',
 };
 
 export const Default = () => <Pagination />;
 
 Default.story = {
-    name: 'default'
+    name: 'default',
 };

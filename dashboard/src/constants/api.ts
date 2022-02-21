@@ -6,6 +6,9 @@ export const END_POINT = {
     DEVICES: 'me/devices',
     DEVICE: 'me/devices/:id',
     DEVICE_PINS: 'me/devices/:id/pins',
+    OAUTH_CLIENTS: 'me/oauth-clients',
+    OAUTH_CLIENT: 'me/oauth-clients/:id',
+    OAUTH_CLIENT_REVOKE_SECRET: 'me/oauth-clients/:id/revoke-secret',
 };
 
 export const HTTP_METHOD = {

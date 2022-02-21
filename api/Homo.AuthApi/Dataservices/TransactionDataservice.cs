@@ -20,5 +20,14 @@ namespace Homo.IotApi
             dbContext.SaveChanges();
             return record;
         }
+        public static Transaction GetOne(IotDbContext dbContext, long ownerId, long id)
+        {
+            return dbContext.Transaction.Where(x => x.DeletedAt == null && x.OwnerId == ownerId && x.Id == id).FirstOrDefault();
+        }
+
+        public static Transaction GetOneByExternalId(IotDbContext dbContext, string externalTransactionId)
+        {
+            return dbContext.Transaction.Where(x => x.DeletedAt == null && x.ExternalTransactionId == externalTransactionId).FirstOrDefault();
+        }
     }
 }

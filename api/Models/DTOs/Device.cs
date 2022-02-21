@@ -15,5 +15,13 @@ namespace Homo.IotApi
             [MaxLength(128)]
             public string DeviceId { get; set; }
         }
+
+        public partial class TapPayNotify : DTOs
+        {
+            [Required]
+            public string rec_trade_id { get; set; }
+            [Required]
+            public int status { get; set; }
+        }
     }
 }

@@ -96,6 +96,8 @@ namespace Homo.IotApi
             {
                 entity.HasIndex(p => new { p.OwnerId });
                 entity.HasIndex(p => new { p.CreatedAt });
+                entity.HasIndex(p => new { p.ExternalTransactionId });
+                entity.HasIndex(p => new { p.Status });
             });
 
             OnModelCreatingPartial(modelBuilder);

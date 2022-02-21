@@ -11,7 +11,12 @@ namespace Homo.IotApi
         public DateTime? DeletedAt { get; set; }
         [Required]
         public long OwnerId { get; set; }
-        [Required]
         public string Raw { get; set; }
+        [MaxLength(64)]
+        public string ExternalTransactionId { get; set; }
+        [Required]
+        public TRANSACTION_STATUS Status { get; set; }
+        [Required]
+        public decimal Amount { get; set; }
     }
 }

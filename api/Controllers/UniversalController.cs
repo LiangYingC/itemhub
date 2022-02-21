@@ -35,5 +35,12 @@ namespace Homo.IotApi
         {
             return ConvertHelper.EnumToList(typeof(TRIGGER_OPERATOR));
         }
+
+        [HttpGet]
+        [Route("transaction-status")]
+        public ActionResult<dynamic> getTransactionStatus()
+        {
+            return ConvertHelper.EnumToList(typeof(TRANSACTION_STATUS));
+        }
     }
 }

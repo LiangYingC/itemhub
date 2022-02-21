@@ -11,6 +11,10 @@ namespace Homo.IotApi
             public string Raw { get; set; }
             [Required]
             public long OwnerId { get; set; }
+            [Required]
+            public string ExternalTransactionId { get; set; }
+            [Required]
+            public decimal Amount { get; set; }
         }
     }
 }

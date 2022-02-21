@@ -19,12 +19,17 @@ namespace Homo.IotApi
         private string _tapPayEndpoint;
         private string _tapPayPartnerKey;
         private string _tapPayMerchantId;
+        private string _websiteUrl;
+        private string _apiUrl;
         public CheckoutController(IotDbContext dbContext, IOptions<AppSettings> appSettings)
         {
             _dbContext = dbContext;
             _tapPayEndpoint = appSettings.Value.Common.TapPayEndpointByPrime;
             _tapPayPartnerKey = appSettings.Value.Secrets.TapPayPartnerKey;
             _tapPayMerchantId = appSettings.Value.Secrets.TapPayMerchantId;
+            _websiteUrl = appSettings.Value.Common.WebsiteUrl;
+            _apiUrl = appSettings.Value.Common.ApiUrl;
+
         }
 
         [HttpPost]
@@ -51,6 +56,25 @@ namespace Homo.IotApi
             DateTime endOfMonth = startOfMonth.AddDays(daysInMonth - 1).AddHours(23).AddMinutes(59).AddSeconds(59);
             int infactAmount = (int)Math.Round((decimal)amount * (endOfMonth - DateTime.Now).Days / daysInMonth);
             string planName = plans.Find(x => (int)x.Value == (int)dto.pricingPlan).Label;
+
+
+            // 在 local 端建立 subscription, transaction
+            // subscription 訂閱紀錄
+            // transaction 付款紀錄, 有可能一個訂閱紀錄有多個付款紀錄, e.g: 付款失敗再重新付款
+            Transaction transaction = TransactionDataservice.Create(_dbContext, new DTOs.Transaction()
+            {
+                OwnerId = extraPayload.Id,
+                Amount = infactAmount
+            });
+            Subscription subscription = SubscriptionDataservice.Create(_dbContext, new DTOs.Subscription()
+            {
+                OwnerId = extraPayload.Id,
+                StartAt = System.DateTime.Now,
+                EndAt = endOfMonth,
+                TransactionId = transaction.Id,
+                PricingPlan = dto.pricingPlan,
+            });
+
             var postBody = new
             {
                 prime = dto.prime,
@@ -59,8 +83,16 @@ namespace Homo.IotApi
                 amount = infactAmount,
                 details = planName,
                 cardholder = new { name = dto.name, email = dto.email, phone_number = dto.phone },
-                remember = true
+                remember = true,
+                three_domain_secure = true,
+                order_number = subscription.Id,
+                result_url = new
+                {
+                    frontend_redirect_url = $"{_websiteUrl}/transaction/{transaction.Id}/",
+                    backend_notify_url = $"{_apiUrl}/api/v1/tappay"
+                }
             };
+
             StringContent stringContent = new StringContent(JsonConvert.SerializeObject(postBody), System.Text.Encoding.UTF8, "application/json");
             HttpClient http = new HttpClient();
             http.DefaultRequestHeaders.Add("x-api-key", _tapPayPartnerKey);
@@ -72,29 +104,21 @@ namespace Homo.IotApi
             }
             DTOs.TapPayResponse response = Newtonsoft.Json.JsonConvert.DeserializeObject<DTOs.TapPayResponse>(result);
 
+            subscription.CardKey = response.card_secret.card_key;
+            subscription.CardToken = response.card_secret.card_token;
+
             // create transaction log and remove senstive information 
             var withoutSenstiveInfoResponse = JsonConvert.DeserializeObject<IDictionary<string, dynamic>>(JsonConvert.SerializeObject(response));
             withoutSenstiveInfoResponse.Remove("card_secret");
-            Transaction transaction = TransactionDataservice.Create(_dbContext, new DTOs.Transaction()
-            {
-                Raw = JsonConvert.SerializeObject(withoutSenstiveInfoResponse),
-                OwnerId = extraPayload.Id
-            });
 
-            // create user subscriont log
+            // 把交易結果存回資料庫
+            transaction.Raw = JsonConvert.SerializeObject(withoutSenstiveInfoResponse);
+            transaction.ExternalTransactionId = response.rec_trade_id;
+            _dbContext.SaveChanges();
+
             if (response.status == DTOs.TAP_PAY_TRANSACTION_STATUS.OK)
             {
-                SubscriptionDataservice.Create(_dbContext, new DTOs.Subscription()
-                {
-                    OwnerId = extraPayload.Id,
-                    StartAt = System.DateTime.Now,
-                    EndAt = endOfMonth,
-                    PricingPlan = dto.pricingPlan,
-                    TransactionId = transaction.Id,
-                    CardKey = response.card_secret.card_key,
-                    CardToken = response.card_secret.card_token,
-                });
-                return new { Status = CUSTOM_RESPONSE.OK, Amount = infactAmount };
+                return new { Status = CUSTOM_RESPONSE.OK, paymentUrl = response.payment_url };
             }
             else
             {

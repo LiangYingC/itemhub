@@ -9,6 +9,13 @@ import {
     RESPONSE_STATUS,
 } from '@/constants/api';
 import { ApiHelpers } from '@/helpers/api.helper';
+import { OauthClient } from '@/types/oauth-clients.type';
+import { ResponseOK } from '@/types/response.type';
+
+interface PaginationOauthClientType {
+    oauthClients: OauthClient[];
+    rowNums: number;
+}
 
 export const useGetOauthClients = ({
     page,
@@ -19,16 +26,17 @@ export const useGetOauthClients = ({
 }) => {
     const fetchMethod = useCallback(async () => {
         const apiPath = `${API_URL}${END_POINT.OAUTH_CLIENTS}?page=${page}&limit=${limit}`;
-        const result = await ApiHelpers.SendRequestWithToken<any>({
-            apiPath,
-            method: HTTP_METHOD.GET,
-        });
+        const result =
+            await ApiHelpers.SendRequestWithToken<PaginationOauthClientType>({
+                apiPath,
+                method: HTTP_METHOD.GET,
+            });
         return result.data;
     }, [page, limit]);
 
     const dispatch = useAppDispatch();
     const dispatchRefresh = useCallback(
-        (data: any) => {
+        (data: PaginationOauthClientType) => {
             if (data) {
                 dispatch(oauthClientsActions.refresh(data.oauthClients));
             }
@@ -36,7 +44,7 @@ export const useGetOauthClients = ({
         [dispatch]
     );
 
-    return useFetchApi<any>({
+    return useFetchApi<PaginationOauthClientType>({
         initialData: null,
         fetchMethod,
         callbackFunc: dispatchRefresh,
@@ -47,7 +55,7 @@ export const useGetOauthClient = (id: number) => {
     const fetchMethod = useCallback(async () => {
         let apiPath = `${API_URL}${END_POINT.OAUTH_CLIENT}`;
         apiPath = apiPath.replace(':id', id.toString());
-        const result = await ApiHelpers.SendRequestWithToken<any>({
+        const result = await ApiHelpers.SendRequestWithToken<OauthClient>({
             apiPath,
             method: HTTP_METHOD.GET,
         });
@@ -56,7 +64,7 @@ export const useGetOauthClient = (id: number) => {
 
     const dispatch = useAppDispatch();
     const dispatchRefresh = useCallback(
-        (data: any) => {
+        (data: OauthClient) => {
             if (data) {
                 dispatch(oauthClientsActions.refreshOne(data));
             }
@@ -64,7 +72,7 @@ export const useGetOauthClient = (id: number) => {
         [dispatch]
     );
 
-    return useFetchApi<any>({
+    return useFetchApi<OauthClient>({
         initialData: null,
         fetchMethod,
         callbackFunc: dispatchRefresh,
@@ -81,7 +89,7 @@ export const useUpdateOauthClient = ({
     const fetchMethod = useCallback(async () => {
         let apiPath = `${API_URL}${END_POINT.OAUTH_CLIENT}`;
         apiPath = apiPath.replace(':id', id.toString());
-        const result = await ApiHelpers.SendRequestWithToken<any>({
+        const result = await ApiHelpers.SendRequestWithToken<ResponseOK>({
             apiPath,
             method: HTTP_METHOD.PATCH,
             payload: {
@@ -93,7 +101,7 @@ export const useUpdateOauthClient = ({
 
     const dispatch = useAppDispatch();
     const dispatchRefresh = useCallback(
-        (data: any) => {
+        (data: ResponseOK) => {
             if (data.status === RESPONSE_STATUS.OK) {
                 dispatch(
                     oauthClientsActions.updateOne({
@@ -106,7 +114,7 @@ export const useUpdateOauthClient = ({
         [clientId, id, dispatch]
     );
 
-    return useFetchApi<any>({
+    return useFetchApi<ResponseOK>({
         initialData: null,
         fetchMethod,
         callbackFunc: dispatchRefresh,
@@ -117,7 +125,7 @@ export const useRevokeSecretOauthClient = (id: number) => {
     const fetchMethod = useCallback(async () => {
         let apiPath = `${API_URL}${END_POINT.OAUTH_CLIENT_REVOKE_SECRET}`;
         apiPath = apiPath.replace(':id', id.toString());
-        const result = await ApiHelpers.SendRequestWithToken<any>({
+        const result = await ApiHelpers.SendRequestWithToken<ResponseOK>({
             apiPath,
             method: HTTP_METHOD.POST,
         });
@@ -126,7 +134,7 @@ export const useRevokeSecretOauthClient = (id: number) => {
 
     const dispatch = useAppDispatch();
     const dispatchRefresh = useCallback(
-        (data: any) => {
+        (data: ResponseOK) => {
             if (data.status === RESPONSE_STATUS.OK) {
                 dispatch(
                     oauthClientsActions.updateOne({
@@ -138,7 +146,7 @@ export const useRevokeSecretOauthClient = (id: number) => {
         [id, dispatch]
     );
 
-    return useFetchApi<any>({
+    return useFetchApi<ResponseOK>({
         initialData: null,
         fetchMethod,
         callbackFunc: dispatchRefresh,

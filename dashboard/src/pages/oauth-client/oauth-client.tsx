@@ -23,7 +23,9 @@ const OauthClient = () => {
         (item) => item.id === Number(id)
     )[0];
 
-    const [clientId, setClientId] = useState(oauthClient?.clientId);
+    const oauthClientId = oauthClient ? oauthClient.clientId : '';
+
+    const [clientId, setClientId] = useState(oauthClientId);
 
     const { isLoading, fetchApi } = useGetOauthClient(Number(id));
     const { fetchApi: updateApi, isLoading: isUpdating } = useUpdateOauthClient(
@@ -49,8 +51,8 @@ const OauthClient = () => {
     }, [fetchApi, oauthClient, id]);
 
     useEffect(() => {
-        setClientId(oauthClient?.clientId);
-    }, [oauthClient]);
+        setClientId(oauthClientId);
+    }, [oauthClientId]);
 
     useEffect(() => {
         if (deleteOAuthClientResponse?.status === RESPONSE_STATUS.OK) {

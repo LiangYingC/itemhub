@@ -47,9 +47,9 @@ const OauthClients = () => {
         if (responseOfDelete?.status === RESPONSE_STATUS.OK) {
             setRefreshFlag(!refreshFlag);
         }
-    }, [responseOfDelete, refreshFlag]);
+    }, [responseOfDelete]);
 
-    const check = (event: any) => {
+    const check = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedIds((previous) => {
             const newSelectedIds = [...previous];
             if (event.target.checked) {

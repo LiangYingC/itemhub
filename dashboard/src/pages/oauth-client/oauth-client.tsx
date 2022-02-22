@@ -5,12 +5,12 @@ import {
     useGetOauthClient,
     useRevokeSecretOauthClient,
 } from '@/hooks/apis/oauth-clients.hook';
-import { selectOauthClients } from '../../redux/reducers/oauth-clients.reducer';
+import { selectOauthClients } from '@/redux/reducers/oauth-clients.reducer';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
     useUpdateOauthClient,
     useDeleteOauthClients,
-} from '../../hooks/apis/oauth-clients.hook';
+} from '@/hooks/apis/oauth-clients.hook';
 import { RESPONSE_STATUS } from '@/constants/api';
 
 const OauthClient = () => {

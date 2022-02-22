@@ -7,7 +7,7 @@ import {
     useDeleteOauthClients,
     useGetOauthClients,
 } from '@/hooks/apis/oauth-clients.hook';
-import { selectOauthClients } from '../../redux/reducers/oauth-clients.reducer';
+import { selectOauthClients } from '@/redux/reducers/oauth-clients.reducer';
 import Pagination from '@/components/pagination/pagination';
 import { RESPONSE_STATUS } from '@/constants/api';
 

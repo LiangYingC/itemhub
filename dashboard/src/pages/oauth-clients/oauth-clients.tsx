@@ -29,33 +29,40 @@ const OauthClients = () => {
 
     useEffect(() => {
         setPage(Number(query.get('page') || 1));
-    }, [query.get('page')]);
+    }, [query]);
 
     useEffect(() => {
         fetchApi();
     }, [page, refreshFlag]);
 
     useEffect(() => {
-        setRowNums(data?.rowNums);
+        if (data && data.rowNums) {
+            setRowNums(data?.rowNums);
+        } else {
+            setRowNums(0);
+        }
     }, [data]);
 
     useEffect(() => {
         if (responseOfDelete?.status === RESPONSE_STATUS.OK) {
             setRefreshFlag(!refreshFlag);
         }
-    }, [responseOfDelete]);
+    }, [responseOfDelete, refreshFlag]);
 
     const check = (event: any) => {
-        const _selectedIds = [...selectedIds];
-        if (event.target.checked) {
-            _selectedIds.push(Number(event.target.value));
-        } else {
-            const index = _selectedIds.findIndex(
-                (item) => item === Number(event.target.value)
-            );
-            _selectedIds.splice(index, 1);
-        }
-        setSelectedIds(_selectedIds);
+        setSelectedIds((previous) => {
+            const newSelectedIds = [...previous];
+            if (event.target.checked) {
+                newSelectedIds.push(Number(event.target.value));
+            } else {
+                const index = newSelectedIds.findIndex(
+                    (item) => item === Number(event.target.value)
+                );
+                newSelectedIds.splice(index, 1);
+            }
+
+            return newSelectedIds;
+        });
     };
 
     return (

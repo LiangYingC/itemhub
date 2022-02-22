@@ -125,7 +125,10 @@ export const useRevokeSecretOauthClient = (id: number) => {
     const fetchMethod = useCallback(async () => {
         let apiPath = `${API_URL}${END_POINT.OAUTH_CLIENT_REVOKE_SECRET}`;
         apiPath = apiPath.replace(':id', id.toString());
-        const result = await ApiHelpers.SendRequestWithToken<ResponseOK>({
+        const result = await ApiHelpers.SendRequestWithToken<{
+            status: string;
+            secret: string;
+        }>({
             apiPath,
             method: HTTP_METHOD.POST,
         });
@@ -134,7 +137,7 @@ export const useRevokeSecretOauthClient = (id: number) => {
 
     const dispatch = useAppDispatch();
     const dispatchRefresh = useCallback(
-        (data: ResponseOK) => {
+        (data: { status: string; secret: string }) => {
             if (data.status === RESPONSE_STATUS.OK) {
                 dispatch(
                     oauthClientsActions.updateOne({
@@ -146,7 +149,7 @@ export const useRevokeSecretOauthClient = (id: number) => {
         [id, dispatch]
     );
 
-    return useFetchApi<ResponseOK>({
+    return useFetchApi<{ status: string; secret: string }>({
         initialData: null,
         fetchMethod,
         callbackFunc: dispatchRefresh,

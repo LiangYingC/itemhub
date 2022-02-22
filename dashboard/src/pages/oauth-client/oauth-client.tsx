@@ -25,7 +25,6 @@ const OauthClient = () => {
 
     const [clientId, setClientId] = useState(oauthClient?.clientId);
 
-    // api hook
     const { isLoading, fetchApi } = useGetOauthClient(Number(id));
     const { fetchApi: updateApi, isLoading: isUpdating } = useUpdateOauthClient(
         { id: Number(id), clientId }

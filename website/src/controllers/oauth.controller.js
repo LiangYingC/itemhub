@@ -39,7 +39,7 @@ export class OauthController extends RoutingController {
 
         CookieUtil.setCookie('token', resp.data.token);
         opener.history.pushState({}, '', '/?tf=' + new Date().getUTCMilliseconds());
-        opener.gtag('event', EVENTS.SIGN_IN);
+        opener.window.gtag('event', EVENTS.SIGN_IN);
         window.close();
     }
 

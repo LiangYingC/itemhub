@@ -25,7 +25,7 @@ export class TransactionController extends RoutingController {
             'og:title': '付款資料 - ItemHub',
             description: '簡單三步驟輕鬆的串聯並操控各項裝置，採用安全性高的 HTTPS API，可客製化各種情境操作，並具備多元化的通知方式，ItemHub 讓你專注在智慧裝置的運用，從今天開始你的智慧生活',
             image: `${APP_CONFIG.FRONT_END_URL}/assets/images/share.png`,
-            keywords: 'ItemHub,item-hub,物聯網,iot,串聯裝置,連結裝置,low-code,no-code,iot plat  ,iot,internet of thing,iot data center'
+            keywords: 'ItemHub,item-hub,物聯網,iot,串聯裝置,連結裝置,low-code,no-code,iot platform,iot,internet of thing,iot data center'
         };
 
         await super.render({
@@ -60,7 +60,7 @@ export class TransactionController extends RoutingController {
                 this.startToGetTransactionStatus();
                 return;
             } else if (pendingStatus.value === resp.data.status && this.currentRetryCount > this.retryLimit) {
-                this.pageVariable.transactionMessage = '第三方金流未回應, 請稍後重新整理頁面, 如果重新整理頁面後還是未回應, 請聯絡我們 itemhub.tw@gmail.com';
+                this.pageVariable.transactionMessage = '刷卡服務供應商沒有回應, 請等待 10 秒後重新整理頁面, 如果重新整理頁面後還是沒有回應, 請與我們聯絡 itemhub.tw@gmail.com';
                 return;
             } else if (errorStatus.value === resp.data.status) {
                 this.pageVariable.transactionMessage = `發生錯誤: ${resp.data.message}`;

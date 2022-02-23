@@ -22,5 +22,11 @@ export const UniversalDataService = {
         return ApiHelper.sendRequest(api, {
             method: 'GET'
         });
+    },
+    GetTransactionStatus: async () => {
+        const api = APP_CONFIG.API_ENDPOINT + API.UNIVERSAL_TRANSACTION_STATUS;
+        return ApiHelper.sendRequest(api, {
+            method: 'GET'
+        });
     }
 };

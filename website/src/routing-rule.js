@@ -17,6 +17,7 @@ import { SignOutController } from './controllers/sign-out.controller.js';
 import { UniversalDataService } from './dataservices/universal.dataservice.js';
 import { CookieUtil } from './util/cookie.js';
 import { AuthRoutingRule } from './routing-rules/auth.routing-rule.js';
+import { TransactionController } from './controllers/transaction.controller.js';
 
 const gTag = {
     dependency: {
@@ -157,6 +158,26 @@ export const RoutingRule = [{
                         return (await UniversalDataService.GetPricingPlan()).data;
                     }
                 }]
+            }, {
+                path: 'transaction/{id}/?rec_trade_id&status',
+                controller: TransactionController,
+                html: '/template/transaction.html',
+                dependency: [{
+                    url: '/third-party/moment.js',
+                    checkVariable: 'moment'
+                }],
+                prepareData: [{
+                    key: 'transactionStatus',
+                    func: async () => {
+                        return (await UniversalDataService.GetTransactionStatus()).data;
+                    }
+                }, {
+                    key: 'pricingPlans',
+                    func: async () => {
+                        return (await UniversalDataService.GetPricingPlan()).data;
+                    }
+                }]
+
             }]
         }]
     }]

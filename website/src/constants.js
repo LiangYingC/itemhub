@@ -20,9 +20,12 @@ export const API = {
     SIGN_IN_WITH_SOCIAL_MEDIA: 'auth/sign-in-with-social-media',
     UNIVERSAL_SOCIAL_MEDIA_TYPE: 'universal/social-media-types',
     UNIVERSAL_PRICING_PLANS: 'universal/pricing-plans',
+    UNIVERSAL_TRANSACTION_STATUS: 'universal/transaction-status',
     NUMBER_OF_REGISTERED_USERS: 'users/number-of-registered-users',
     CHECKOUT: 'checkout',
-    CHECK_IN: 'users/check-in'
+    CHECK_IN: 'users/check-in',
+    TRANSACTION: 'my/transaction/{id}',
+    SUBSCRIPTION_BY_TRANSACTION_ID: 'my/subscription/by-transaction-id/{id}'
 };
 
 export const OAUTH_TYPE = {
@@ -47,4 +50,10 @@ export const EVENTS = {
     SIGN_UP: 'SIGN_UP',
     SIGN_OUT: 'SIGN_OUT',
     SIGN_IN: 'SIGN_IN'
+};
+
+export const TRANSACTION_STATUS = {
+    PENDING: 'PENDING',
+    PAID: 'PAID',
+    ERROR: 'ERROR'
 };

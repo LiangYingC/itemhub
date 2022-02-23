@@ -48,5 +48,10 @@ namespace Homo.IotApi
         {
 
         }
+
+        public static Subscription GetOneByTransactionId(IotDbContext dbContext, long ownerId, long transactionId)
+        {
+            return dbContext.Subscription.Where(x => x.DeletedAt == null && x.OwnerId == ownerId && x.TransactionId == transactionId).FirstOrDefault();
+        }
     }
 }

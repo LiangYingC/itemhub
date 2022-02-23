@@ -1,0 +1,4 @@
+export interface OauthClient {
+    id: number;
+    createdAt: string;
+}

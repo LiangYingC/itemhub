@@ -1,0 +1,19 @@
+.checkout {
+    .tpfield {
+        height: 40px;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 0.25rem;
+        height: 3.75rem;
+
+        &:focus {
+            background-color: transparent;
+            border-color: #30a7df;
+        }
+
+        iframe {
+            padding: 1rem 1.5rem;
+        }
+    }
+}

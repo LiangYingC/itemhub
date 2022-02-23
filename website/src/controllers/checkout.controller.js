@@ -14,12 +14,17 @@ export class CheckoutController extends RoutingController {
 
     async render () {
         this.meta = {
-            title: '結帳 - ItemHub',
-            'og:title': '結帳 - ItemHub',
+            title: '訂閱 - ItemHub',
+            'og:title': '訂閱 - ItemHub',
             description: '簡單三步驟輕鬆的串聯並操控各項裝置，採用安全性高的 HTTPS API，可客製化各種情境操作，並具備多元化的通知方式，ItemHub 讓你專注在智慧裝置的運用，從今天開始你的智慧生活',
             image: `${APP_CONFIG.FRONT_END_URL}/assets/images/share.png`,
             keywords: 'ItemHub,item-hub,物聯網,iot,串聯裝置,連結裝置,low-code,no-code,iot platform,iot,internet of thing,iot data center'
         };
+        if (!this.args.me.id) {
+            Toaster.popup(Toaster.TYPE.INFO, '請先登入在訂閱服務');
+            history.replaceState({}, '', '/sign-in/');
+            return;
+        }
         const selectedPricingPlan = this.args.pricingPlans.find(item => item.value === Number(this.args.pricingPlan));
         if (!selectedPricingPlan) {
             history.replaceState({}, '', '/pricing/');
@@ -52,8 +57,9 @@ export class CheckoutController extends RoutingController {
             },
             styles: {
                 input: {
-                    color: 'white',
-                    'font-size': '20px'
+                    'font-size': '16px',
+                    'line-height': '1em',
+                    color: 'rgba(255, 255, 255, 0.85)'
                 }
             }
         });
@@ -85,7 +91,7 @@ export class CheckoutController extends RoutingController {
             return;
         }
 
-        Toaster.popup(Toaster.TYPE.INFO, `成功訂閱: 第一期依照使用期間計費共 NTD $${resp.data.amount}`);
+        location.href = resp.data.paymentUrl;
     }
 
     async getPrime () {

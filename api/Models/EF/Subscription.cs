@@ -17,15 +17,17 @@ namespace Homo.IotApi
         public DateTime EndAt { get; set; }
         [Required]
         public int PricingPlan { get; set; }
-        [Required]
         [MaxLength(64)]
         public string CardKey { get; set; }
-        [Required]
         [MaxLength(67)]
         public string CardToken { get; set; }
-        [Required]
-        public long TransactionId { get; set; }
+        public long? TransactionId { get; set; }
         [Required]
         public bool StopNextSubscribed { get; set; }
+
+        public Subscription()
+        {
+            StopNextSubscribed = false;
+        }
     }
 }

@@ -29,6 +29,7 @@ namespace Homo.IotApi
         public virtual DbSet<Trigger> Trigger { get; set; }
         public virtual DbSet<Subscription> Subscription { get; set; }
         public virtual DbSet<Transaction> Transaction { get; set; }
+        public virtual DbSet<ThirdPartyPaymentFlow> ThirdPartyPaymentFlow { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -96,6 +97,14 @@ namespace Homo.IotApi
             {
                 entity.HasIndex(p => new { p.OwnerId });
                 entity.HasIndex(p => new { p.CreatedAt });
+                entity.HasIndex(p => new { p.ExternalTransactionId });
+                entity.HasIndex(p => new { p.Status });
+            });
+
+            modelBuilder.Entity<ThirdPartyPaymentFlow>(entity =>
+            {
+                entity.HasIndex(p => new { p.CreatedAt });
+                entity.HasIndex(p => new { p.ExternalTransactionId });
             });
 
             OnModelCreatingPartial(modelBuilder);

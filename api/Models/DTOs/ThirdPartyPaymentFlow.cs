@@ -5,16 +5,12 @@ namespace Homo.IotApi
 {
     public abstract partial class DTOs
     {
-        public partial class Transaction : DTOs
+        public partial class ThirdPartyPaymentFlow : DTOs
         {
             [Required]
             public string Raw { get; set; }
             [Required]
-            public long OwnerId { get; set; }
-            [Required]
             public string ExternalTransactionId { get; set; }
-            [Required]
-            public decimal Amount { get; set; }
         }
     }
 }

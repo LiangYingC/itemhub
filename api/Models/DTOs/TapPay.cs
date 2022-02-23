@@ -32,6 +32,30 @@ namespace Homo.IotApi
             public dynamic transaction_method_details { get; set; }
         }
 
+        public partial class TapPayNotify : DTOs
+        {
+            public string rec_trade_id { get; set; }
+            public int status { get; set; }
+            public string auth_code { get; set; }
+            public string bank_transaction_id { get; set; }
+            public string bank_order_number { get; set; }
+            public string order_number { get; set; }
+            public int amount { get; set; }
+            public string msg { get; set; }
+            public long transaction_time_millis { get; set; }
+            public dynamic pay_info { get; set; }
+            public dynamic e_invoice_carrier { get; set; }
+            public string acquirer { get; set; }
+            public string card_identifier { get; set; }
+            public string bank_result_code { get; set; }
+            public string bank_result_msg { get; set; }
+            public dynamic merchant_reference_info { get; set; }
+            public dynamic instalment_info { get; set; }
+            public dynamic redeem_info { get; set; }
+            public string event_code { get; set; }
+            public dynamic merchandise_details { get; set; }
+        }
+
         public partial class CardSecret
         {
             public string card_token { get; set; }

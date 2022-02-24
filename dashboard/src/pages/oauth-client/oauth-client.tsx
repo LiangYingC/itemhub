@@ -19,12 +19,9 @@ interface OauthClientLocationState {
 }
 
 const OauthClient = () => {
-    let { id } = useParams();
+    const { id: idFromUrl } = useParams();
     const { state } = useLocation();
-
-    if (id === 'create') {
-        id = '0';
-    }
+    const id: number | null = idFromUrl === 'create' ? null : Number(idFromUrl);
 
     const navigate = useNavigate();
 
@@ -61,7 +58,7 @@ const OauthClient = () => {
     } = useCreateOauthClients(clientId);
 
     useEffect(() => {
-        if (oauthClient || id === '0') {
+        if (oauthClient || id === null) {
             return;
         }
         fetchApi();
@@ -102,7 +99,7 @@ const OauthClient = () => {
                         onChange={(e) => setClientId(e.target.value)}
                     />
 
-                    {oauthClient ? (
+                    {id ? (
                         <div>
                             <input
                                 type="text"
@@ -110,7 +107,7 @@ const OauthClient = () => {
                                 placeholder="****************************"
                                 value={
                                     revokeSecretResponse?.secret ||
-                                    (state as OauthClientLocationState).secret
+                                    (state as OauthClientLocationState)?.secret
                                 }
                                 disabled
                             />

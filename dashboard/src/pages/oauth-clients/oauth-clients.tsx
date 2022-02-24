@@ -74,6 +74,12 @@ const OauthClients = () => {
                 >
                     {isDeleting ? 'Deleting' : 'Delete Selected Row'}
                 </button>
+                <Link
+                    to={`/dashboard/oauth-clients/create`}
+                    className="btn btn-lg"
+                >
+                    Create
+                </Link>
             </div>
 
             {isLoading || list === null ? (

@@ -44,19 +44,15 @@ export const oauthClientsSlice = createSlice({
 
             return list;
         },
-        addOne: (state, action: PayloadAction<Partial<OauthClient>>) => {
-            const list = state;
+        addOne: (state, action: PayloadAction<OauthClient>) => {
+            let list = state;
             const newOne = action.payload;
 
             if (list === null) {
-                throw new Error('Can not addOne when oauth-clients is null.');
+                list = [];
             }
 
-            const targetIndex = list.findIndex(({ id }) => id === newOne.id);
-            list[targetIndex] = {
-                ...list[targetIndex],
-                ...newOne,
-            };
+            list.push(newOne);
 
             return list;
         },

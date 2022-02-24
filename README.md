@@ -63,3 +63,9 @@ https://github.com/miterfrants/bet 先把這個專案 clone 下來, 按以下幾
 - 依照 Issue 上面的驗收列表檢驗是否真實完成
 - 如果已完成在 Issue 列表開啟 `Sync Github Issue` 把完成的 Issue 按下 `Done` 並可獲額外紅利, 投注籌碼的 1/5 紅利
 - 接著把這個 Issue Close 掉
+
+# 參考資料
+
+- 網站規劃相關文件: https://drive.google.com/drive/folders/1J7kGuGP9iTKDntaVqGkwYPG7USJ9WFIP
+- 網站規劃設計稿: https://www.figma.com/file/eqxlwbzWPRrdMDCede74yX/itemhub?node-id=46%3A1397
+- 其他參考文件: https://paper.dropbox.com/folder/show/itemhub-e.1gg8YzoPEhbTkrhvQwJ2zzRUpNqie6wHdN3EeSUW6SOikHBvFYHu

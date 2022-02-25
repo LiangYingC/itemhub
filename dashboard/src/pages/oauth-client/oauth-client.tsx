@@ -21,7 +21,8 @@ interface OauthClientLocationState {
 const OauthClient = () => {
     const { id: idFromUrl } = useParams();
     const { state } = useLocation();
-    const id: number | null = idFromUrl === 'create' ? null : Number(idFromUrl);
+    const id: number | null = idFromUrl ? Number(idFromUrl) : null;
+    const isCrateMode = id === null;
 
     const navigate = useNavigate();
 
@@ -98,8 +99,18 @@ const OauthClient = () => {
                         value={clientId}
                         onChange={(e) => setClientId(e.target.value)}
                     />
-
-                    {id ? (
+                    {isCrateMode ? (
+                        <div>
+                            <button
+                                disabled={
+                                    !clientId || clientId === '' || isCreating
+                                }
+                                onClick={createApi}
+                            >
+                                Create
+                            </button>
+                        </div>
+                    ) : (
                         <div>
                             <input
                                 type="text"
@@ -127,17 +138,6 @@ const OauthClient = () => {
                                 {isRevoking
                                     ? 'Revoking'
                                     : 'Revoke Client Secret'}
-                            </button>
-                        </div>
-                    ) : (
-                        <div>
-                            <button
-                                disabled={
-                                    !clientId || clientId === '' || isCreating
-                                }
-                                onClick={createApi}
-                            >
-                                Create
                             </button>
                         </div>
                     )}

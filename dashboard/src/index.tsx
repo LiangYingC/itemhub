@@ -35,6 +35,10 @@ ReactDOM.render(
                     <Route path="triggers" element={<Triggers />} />
                     <Route path="triggers/:id" element={<Trigger />} />
                     <Route path="oauth-clients" element={<OauthClients />} />
+                    <Route
+                        path="oauth-clients/create"
+                        element={<OauthClient />}
+                    />
                     <Route path="oauth-clients/:id" element={<OauthClient />} />
                 </Route>
                 <Route path="/404" element={<NotFound />} />

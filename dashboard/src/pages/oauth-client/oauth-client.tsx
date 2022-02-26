@@ -22,7 +22,7 @@ const OauthClient = () => {
     const { id: idFromUrl } = useParams();
     const { state } = useLocation();
     const id: number | null = idFromUrl ? Number(idFromUrl) : null;
-    const isCrateMode = id === null;
+    const isCreateMode = id === null;
 
     const navigate = useNavigate();
 
@@ -59,7 +59,7 @@ const OauthClient = () => {
     } = useCreateOauthClients(clientId);
 
     useEffect(() => {
-        if (oauthClient || id === null) {
+        if (oauthClient || isCreateMode) {
             return;
         }
         fetchApi();
@@ -99,7 +99,7 @@ const OauthClient = () => {
                         value={clientId}
                         onChange={(e) => setClientId(e.target.value)}
                     />
-                    {isCrateMode ? (
+                    {isCreateMode ? (
                         <div>
                             <button
                                 disabled={

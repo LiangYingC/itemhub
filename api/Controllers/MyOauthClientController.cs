@@ -39,7 +39,10 @@ namespace Homo.IotApi
             OauthClient rewRecord = OauthClientDataservice.Create(_dbContext, ownerId, dto, hashClientSecrets, salt);
             return new
             {
-                clientSecret
+                Id = rewRecord.Id,
+                OwnerId = rewRecord.OwnerId,
+                ClientId = rewRecord.ClientId,
+                ClientSecrets = clientSecret
             };
         }
 

@@ -2,19 +2,28 @@ import styles from './oauth-client.module.scss';
 import { useEffect, useState } from 'react';
 import { useAppSelector } from '@/hooks/redux.hook';
 import {
+    useCreateOauthClients,
     useGetOauthClient,
     useRevokeSecretOauthClient,
 } from '@/hooks/apis/oauth-clients.hook';
 import { selectOauthClients } from '@/redux/reducers/oauth-clients.reducer';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import {
     useUpdateOauthClient,
     useDeleteOauthClients,
 } from '@/hooks/apis/oauth-clients.hook';
 import { RESPONSE_STATUS } from '@/constants/api';
 
+interface OauthClientLocationState {
+    secret: string;
+}
+
 const OauthClient = () => {
-    const { id } = useParams();
+    const { id: idFromUrl } = useParams();
+    const { state } = useLocation();
+    const id: number | null = idFromUrl ? Number(idFromUrl) : null;
+    const isCreateMode = id === null;
+
     const navigate = useNavigate();
 
     const list = useAppSelector(selectOauthClients);
@@ -43,8 +52,14 @@ const OauthClient = () => {
         data: deleteOAuthClientResponse,
     } = useDeleteOauthClients([Number(id)]);
 
+    const {
+        fetchApi: createApi,
+        isLoading: isCreating,
+        data: createOAuthClientResponse,
+    } = useCreateOauthClients(clientId);
+
     useEffect(() => {
-        if (oauthClient) {
+        if (oauthClient || isCreateMode) {
             return;
         }
         fetchApi();
@@ -60,35 +75,72 @@ const OauthClient = () => {
         }
     }, [navigate, deleteOAuthClientResponse]);
 
+    useEffect(() => {
+        if (createOAuthClientResponse && !isNaN(createOAuthClientResponse.id)) {
+            navigate(`../oauth-clients/${createOAuthClientResponse?.id}`, {
+                replace: false,
+                state: {
+                    secret: createOAuthClientResponse.clientSecrets,
+                },
+            });
+        }
+    }, [navigate, createOAuthClientResponse]);
+
     return (
         <div className={styles.OauthClient} data-testid="oauth-client">
-            {isLoading || list === null ? (
+            {isLoading ? (
                 <div>Loading</div>
             ) : (
                 <div>
-                    <div>{oauthClient.id}</div>
+                    <div>{oauthClient?.id}</div>
                     <input
                         type="text"
                         className="form-control"
                         value={clientId}
                         onChange={(e) => setClientId(e.target.value)}
                     />
-                    <input
-                        type="text"
-                        className="form-control"
-                        placeholder="****************************"
-                        value={revokeSecretResponse?.secret}
-                        disabled
-                    />
-                    <button disabled={isDeleting} onClick={deleteMultipleApi}>
-                        {isDeleting ? 'Deleting' : 'Delete'}
-                    </button>
-                    <button disabled={isUpdating} onClick={updateApi}>
-                        {isUpdating ? 'Updating' : 'Update'}
-                    </button>
-                    <button disabled={isRevoking} onClick={revokeSecretApi}>
-                        {isRevoking ? 'Revoking' : 'Revoke Client Secret'}
-                    </button>
+                    {isCreateMode ? (
+                        <div>
+                            <button
+                                disabled={
+                                    !clientId || clientId === '' || isCreating
+                                }
+                                onClick={createApi}
+                            >
+                                Create
+                            </button>
+                        </div>
+                    ) : (
+                        <div>
+                            <input
+                                type="text"
+                                className="form-control"
+                                placeholder="****************************"
+                                value={
+                                    revokeSecretResponse?.secret ||
+                                    (state as OauthClientLocationState)?.secret
+                                }
+                                disabled
+                            />
+                            <button
+                                disabled={isDeleting}
+                                onClick={deleteMultipleApi}
+                            >
+                                {isDeleting ? 'Deleting' : 'Delete'}
+                            </button>
+                            <button disabled={isUpdating} onClick={updateApi}>
+                                {isUpdating ? 'Updating' : 'Update'}
+                            </button>
+                            <button
+                                disabled={isRevoking}
+                                onClick={revokeSecretApi}
+                            >
+                                {isRevoking
+                                    ? 'Revoking'
+                                    : 'Revoke Client Secret'}
+                            </button>
+                        </div>
+                    )}
                 </div>
             )}
         </div>

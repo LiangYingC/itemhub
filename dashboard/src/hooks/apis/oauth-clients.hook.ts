@@ -187,3 +187,31 @@ export const useDeleteOauthClients = (ids: number[]) => {
         callbackFunc: dispatchRefresh,
     });
 };
+
+export const useCreateOauthClients = (clientId: string) => {
+    const fetchMethod = useCallback(async () => {
+        const apiPath = `${API_URL}${END_POINT.OAUTH_CLIENTS}`;
+        const result = await ApiHelpers.SendRequestWithToken<OauthClient>({
+            apiPath,
+            method: HTTP_METHOD.POST,
+            payload: {
+                clientId,
+            },
+        });
+        return result.data;
+    }, [clientId]);
+
+    const dispatch = useAppDispatch();
+    const dispatchRefresh = useCallback(
+        (response: OauthClient) => {
+            dispatch(oauthClientsActions.addOne(response));
+        },
+        [clientId, dispatch]
+    );
+
+    return useFetchApi<OauthClient>({
+        initialData: null,
+        fetchMethod,
+        callbackFunc: dispatchRefresh,
+    });
+};

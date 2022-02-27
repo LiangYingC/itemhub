@@ -3,10 +3,10 @@ import { ApiHelpers } from '@/helpers/api.helper';
 import { DeviceItem, PinItem } from '@/types/devices.type';
 import {
     GetDevicesResponseData,
-    UpdateSingleDeviceResponseData,
+    UpdateDeviceResponseData,
     GetDevicesParams,
-    GetSingleDeviceParams,
-    UpdateSingleDeviceParams,
+    GetDeviceParams,
+    UpdateDeviceParams,
     GetDevicePinsParams,
 } from '@/types/dataservices.type';
 
@@ -21,7 +21,7 @@ export const DevicesDataservices = {
             });
         return result.data;
     },
-    GetOne: async ({ id }: GetSingleDeviceParams) => {
+    GetOne: async ({ id }: GetDeviceParams) => {
         let apiPath = `${API_URL}${END_POINT.DEVICE}`;
         apiPath = apiPath.replace(':id', id.toString());
 
@@ -31,18 +31,16 @@ export const DevicesDataservices = {
         });
         return result.data;
     },
-    UpdateOne: async ({ id, editedData }: UpdateSingleDeviceParams) => {
+    UpdateOne: async ({ id, editedData }: UpdateDeviceParams) => {
         let apiPath = `${API_URL}${END_POINT.DEVICE}`;
         apiPath = apiPath.replace(':id', id.toString());
 
         const result =
-            await ApiHelpers.SendRequestWithToken<UpdateSingleDeviceResponseData>(
-                {
-                    apiPath,
-                    method: HTTP_METHOD.PATCH,
-                    payload: editedData,
-                }
-            );
+            await ApiHelpers.SendRequestWithToken<UpdateDeviceResponseData>({
+                apiPath,
+                method: HTTP_METHOD.PATCH,
+                payload: editedData,
+            });
         return result.data;
     },
     GetOnePins: async ({ id }: GetDevicePinsParams) => {

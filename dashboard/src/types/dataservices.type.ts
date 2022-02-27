@@ -1,4 +1,4 @@
-import { DeviceItem, PinItem } from './devices.type';
+import { DeviceItem } from './devices.type';
 
 export interface GetDevicesParams {
     page: number;
@@ -10,16 +10,16 @@ export interface GetDevicesResponseData {
     rowNums: number;
 }
 
-export interface GetSingleDeviceParams {
+export interface GetDeviceParams {
     id: number;
 }
 
-export interface UpdateSingleDeviceParams {
+export interface UpdateDeviceParams {
     id: number;
     editedData: Partial<DeviceItem>;
 }
 
-export interface UpdateSingleDeviceResponseData {
+export interface UpdateDeviceResponseData {
     status: string;
 }
 

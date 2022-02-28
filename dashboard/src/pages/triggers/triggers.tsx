@@ -24,24 +24,35 @@ const Triggers = () => {
     }, [page]);
 
     return (
-        <div className={styles.Triggers} data-testid="Triggers">
+        <div className={styles.triggers} data-testid="triggers">
             {isGettingTriggers || triggers === null ? (
                 <div>Loading</div>
             ) : (
-                triggers.map(({ id, ownerId }) => (
-                    <label className="d-flex align-items-top" key={id}>
-                        <div>
+                triggers.map(
+                    ({
+                        id,
+                        ownerId,
+                        sourceDevice,
+                        sourcePin,
+                        destinationDevice,
+                        destinationPin,
+                    }) => (
+                        <label key={id} className="mt-3 mb-3">
+                            <div>Id: {id}</div>
+                            <div>OwnerId: {ownerId}</div>
+                            <div>Source Device Name: {sourceDevice.name}</div>
+                            <div>Source Device Pin: {sourcePin}</div>
                             <div>
-                                <span>Id</span>
-                                <span>OwnerId</span>
+                                Destination Device Name:{' '}
+                                {destinationDevice.name}
                             </div>
-                            <Link to={`/dashboard/trigger/${id}`}>
-                                <span>{id}</span>
-                                <span>{ownerId}</span>
+                            <div>Destination Device Pin: {destinationPin}</div>
+                            <Link to={`../triggers/${id}`}>
+                                Go to id:{id} trigger
                             </Link>
-                        </div>
-                    </label>
-                ))
+                        </label>
+                    )
+                )
             )}
             <div>Page: {page}</div>
             <Pagination page={page} rowNums={rowNums} limit={limit} />

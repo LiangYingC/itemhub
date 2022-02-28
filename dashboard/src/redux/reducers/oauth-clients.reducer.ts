@@ -65,7 +65,7 @@ export const oauthClientsSlice = createSlice({
             }
 
             return list.filter(
-                (item) => deletePayload.ids.indexOf(item.id) !== -1
+                (item) => deletePayload.ids.indexOf(item.id) === -1
             );
         },
     },

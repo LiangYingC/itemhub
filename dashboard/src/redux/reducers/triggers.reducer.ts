@@ -77,7 +77,7 @@ export const triggersSlice = createSlice({
             }
 
             const updatedTriggers = triggers.filter(
-                (trigger) => deleteTriggerIds.indexOf(trigger.id) !== -1
+                (trigger) => deleteTriggerIds.indexOf(trigger.id) === -1
             );
 
             return {

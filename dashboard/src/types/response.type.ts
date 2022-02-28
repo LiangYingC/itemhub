@@ -1,3 +1,3 @@
-export interface ResponseOK {
+export interface ResponseStatus {
     status: string;
 }

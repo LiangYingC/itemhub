@@ -10,7 +10,7 @@ import {
 } from '@/constants/api';
 import { ApiHelpers } from '@/helpers/api.helper';
 import { TriggerItem } from '@/types/triggers.type';
-import { ResponseOK } from '@/types/response.type';
+import { ResponseStatus } from '@/types/response.type';
 
 interface GetTriggersResponse {
     triggers: TriggerItem[];
@@ -116,7 +116,7 @@ export const useGetTriggerApi = (id: number) => {
 export const useDeleteTriggersApi = (ids: number[]) => {
     const fetchDeleteTriggers = useCallback(async () => {
         const apiPath = `${API_URL}${END_POINT.TRIGGERS}`;
-        const result = await ApiHelpers.SendRequestWithToken<ResponseOK>({
+        const result = await ApiHelpers.SendRequestWithToken<ResponseStatus>({
             apiPath,
             method: HTTP_METHOD.DELETE,
             payload: ids,
@@ -126,7 +126,7 @@ export const useDeleteTriggersApi = (ids: number[]) => {
 
     const dispatch = useAppDispatch();
     const dispatchRefresh = useCallback(
-        (data: ResponseOK) => {
+        (data: ResponseStatus) => {
             if (data.status === RESPONSE_STATUS.OK) {
                 dispatch(triggersActions.deleteTriggers(ids));
             }
@@ -134,7 +134,7 @@ export const useDeleteTriggersApi = (ids: number[]) => {
         [ids, dispatch]
     );
 
-    const { isLoading, error, data, fetchApi } = useFetchApi<ResponseOK>({
+    const { isLoading, error, data, fetchApi } = useFetchApi<ResponseStatus>({
         initialData: null,
         fetchMethod: fetchDeleteTriggers,
         callbackFunc: dispatchRefresh,

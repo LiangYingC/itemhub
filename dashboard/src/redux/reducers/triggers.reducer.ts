@@ -68,6 +68,23 @@ export const triggersSlice = createSlice({
                 triggers,
             };
         },
+        deleteTriggers: (state, action: PayloadAction<number[]>) => {
+            const triggers = state.triggers;
+            const deleteTriggerIds = action.payload;
+
+            if (triggers === null) {
+                throw new Error('Can not delete when triggers is null.');
+            }
+
+            const updatedTriggers = triggers.filter(
+                (trigger) => deleteTriggerIds.indexOf(trigger.id) !== -1
+            );
+
+            return {
+                ...state,
+                triggers: updatedTriggers,
+            };
+        },
     },
 });
 

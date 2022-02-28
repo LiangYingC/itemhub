@@ -28,7 +28,7 @@ const Device = () => {
     const { isLoading, getDeviceApi } = useGetDeviceApi({
         id: numId,
     });
-    const { updateSingleDeviceApi } = useUpdateDeviceApi({
+    const { updateDeviceApi } = useUpdateDeviceApi({
         id: numId,
         editedData: editedData,
     });
@@ -44,7 +44,7 @@ const Device = () => {
     };
 
     const updateDeviceData = () => {
-        updateSingleDeviceApi();
+        updateDeviceApi();
         setEditedData(initialEditedData);
         closeModal();
     };

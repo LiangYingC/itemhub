@@ -98,7 +98,7 @@ export const useUpdateDeviceApi = ({ id, editedData }: UpdateDeviceParams) => {
     return {
         isLoading,
         error,
-        updateSingleDeviceApi: fetchApi,
+        updateDeviceApi: fetchApi,
     };
 };
 

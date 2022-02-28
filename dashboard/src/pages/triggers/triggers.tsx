@@ -1,6 +1,7 @@
 import styles from './triggers.module.scss';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { RESPONSE_STATUS } from '@/constants/api';
 import { useQuery } from '@/hooks/query.hook';
 import { useAppSelector } from '@/hooks/redux.hook';
 import {
@@ -24,12 +25,21 @@ const Triggers = () => {
         limit,
     });
 
-    const { isDeletingTriggers, deletingTriggersApi } =
+    const { isDeletingTriggers, deleteTriggersApi, deleteTriggersResponse } =
         useDeleteTriggersApi(selectedIds);
 
     useEffect(() => {
         getTriggersApi();
     }, [page]);
+
+    useEffect(() => {
+        if (
+            deleteTriggersResponse &&
+            deleteTriggersResponse.status === RESPONSE_STATUS.OK
+        ) {
+            getTriggersApi();
+        }
+    }, [deleteTriggersResponse]);
 
     const checkSelectedIds = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedIds((previous) => {
@@ -52,7 +62,7 @@ const Triggers = () => {
     return (
         <>
             <button
-                onClick={deletingTriggersApi}
+                onClick={deleteTriggersApi}
                 disabled={isDeletingTriggers || selectedIds.length <= 0}
             >
                 {isDeletingTriggers

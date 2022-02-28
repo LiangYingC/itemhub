@@ -142,8 +142,8 @@ export const useDeleteTriggersApi = (ids: number[]) => {
 
     return {
         isDeletingTriggers: isLoading,
-        deletingTriggersError: error,
-        deletingTriggersResponse: data,
-        deletingTriggersApi: fetchApi,
+        deleteTriggersError: error,
+        deleteTriggersResponse: data,
+        deleteTriggersApi: fetchApi,
     };
 };

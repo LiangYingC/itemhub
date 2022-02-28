@@ -35,8 +35,8 @@ namespace Homo.IotApi
         {
             return new
             {
-                paginationData = TriggerDataservice.GetList(_dbContext, page, limit, extraPayload.Id, sourceDeviceId, sourcePin, sourceDeviceName, destinationDeviceId, destinationPin, destinationDeviceName),
-                rowNum = TriggerDataservice.GetRowNum(_dbContext, extraPayload.Id, sourceDeviceId, sourcePin, sourceDeviceName, destinationDeviceId, destinationPin, destinationDeviceName)
+                triggers = TriggerDataservice.GetList(_dbContext, page, limit, extraPayload.Id, sourceDeviceId, sourcePin, sourceDeviceName, destinationDeviceId, destinationPin, destinationDeviceName),
+                rowNums = TriggerDataservice.GetRowNum(_dbContext, extraPayload.Id, sourceDeviceId, sourcePin, sourceDeviceName, destinationDeviceId, destinationPin, destinationDeviceName)
             };
         }
 

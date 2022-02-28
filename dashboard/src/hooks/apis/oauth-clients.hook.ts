@@ -159,7 +159,7 @@ export const useRevokeSecretOauthClient = (id: number) => {
 export const useDeleteOauthClients = (ids: number[]) => {
     const fetchMethod = useCallback(async () => {
         const apiPath = `${API_URL}${END_POINT.OAUTH_CLIENTS}`;
-        const result = await ApiHelpers.SendRequestWithToken<any>({
+        const result = await ApiHelpers.SendRequestWithToken<ResponseOK>({
             apiPath,
             method: HTTP_METHOD.DELETE,
             payload: ids,
@@ -169,7 +169,7 @@ export const useDeleteOauthClients = (ids: number[]) => {
 
     const dispatch = useAppDispatch();
     const dispatchRefresh = useCallback(
-        (data: any) => {
+        (data: ResponseOK) => {
             if (data.status === RESPONSE_STATUS.OK) {
                 dispatch(
                     oauthClientsActions.deleteMultiple({
@@ -181,7 +181,7 @@ export const useDeleteOauthClients = (ids: number[]) => {
         [ids, dispatch]
     );
 
-    return useFetchApi<any>({
+    return useFetchApi<ResponseOK>({
         initialData: null,
         fetchMethod,
         callbackFunc: dispatchRefresh,

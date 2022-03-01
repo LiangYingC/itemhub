@@ -50,6 +50,13 @@ namespace Homo.IotApi
             return new { status = CUSTOM_RESPONSE.OK };
         }
 
+        [HttpGet]
+        [Route("{id}")]
+        public ActionResult<dynamic> get([FromRoute] long id, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
+        {
+            return TriggerDataservice.GetOne(_dbContext, extraPayload.Id, id, null, null, null, null);
+        }
+
         [HttpDelete]
         public ActionResult<dynamic> batchDelete([FromBody] List<long> ids, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {

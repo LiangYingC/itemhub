@@ -62,32 +62,12 @@ export const useGetTriggerApi = (id: number) => {
         let apiPath = `${API_URL}${END_POINT.TRIGGER}`;
         apiPath = apiPath.replace(':id', id.toString());
 
-        // const result = await ApiHelpers.SendRequestWithToken<TriggerItem>({
-        //     apiPath,
-        //     method: HTTP_METHOD.GET,
-        // });
+        const result = await ApiHelpers.SendRequestWithToken<TriggerItem>({
+            apiPath,
+            method: HTTP_METHOD.GET,
+        });
 
-        /**
-         * 目前 API 尚未實作完成，先吐假資料，待接下來實作 API 後，
-         * 再把打開上面打 API 的程式、下面 return 拔掉，直接回傳 “result.data” 即可。
-         * */
-        return {
-            createdAt: '2022-01-09T22:44:58',
-            deletedAt: null,
-            destinationDevice: {},
-            destinationDeviceId: 60,
-            destinationDeviceSourceState: 0,
-            destinationDeviceTargetState: 1,
-            destinationPin: 'D3',
-            editedAt: null,
-            id: 2,
-            operator: 0,
-            ownerId: 23,
-            sourceDevice: {},
-            sourceDeviceId: 60,
-            sourcePin: 'D2',
-            sourceThreshold: 62,
-        } as TriggerItem;
+        return result.data;
     }, [id]);
 
     const dispatch = useAppDispatch();

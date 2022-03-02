@@ -30,6 +30,21 @@ namespace Homo.IotApi
         }
 
         [HttpGet]
+        [Route("invoice-types")]
+        public ActionResult<dynamic> getInvoiceTypes()
+        {
+            List<dynamic> invoice = ConvertHelper.EnumToList(typeof(INVOICE_TYPES)).Select(x =>
+            new
+            {
+                x.Key,
+                x.Value,
+                x.Label
+            }).ToList<dynamic>();
+
+            return invoice;
+        }
+
+        [HttpGet]
         [Route("trigger-operators")]
         public ActionResult<dynamic> getTriggerOperators()
         {

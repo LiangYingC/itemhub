@@ -20,6 +20,7 @@ export const API = {
     SIGN_IN_WITH_SOCIAL_MEDIA: 'auth/sign-in-with-social-media',
     UNIVERSAL_SOCIAL_MEDIA_TYPE: 'universal/social-media-types',
     UNIVERSAL_PRICING_PLANS: 'universal/pricing-plans',
+    UNIVERSAL_INVOICE_TYPES: 'universal/invoice-types',
     UNIVERSAL_TRANSACTION_STATUS: 'universal/transaction-status',
     NUMBER_OF_REGISTERED_USERS: 'users/number-of-registered-users',
     CHECKOUT: 'checkout',

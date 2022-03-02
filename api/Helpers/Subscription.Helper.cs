@@ -10,6 +10,10 @@ namespace Homo.IotApi
     {
         public static decimal GetPrice(PRICING_PLAN pricingPlan)
         {
+            if (pricingPlan == PRICING_PLAN.FREE)
+            {
+                return 0;
+            }
             if (pricingPlan == PRICING_PLAN.BASIC)
             {
                 return 49;

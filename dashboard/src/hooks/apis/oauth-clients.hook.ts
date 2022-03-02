@@ -10,7 +10,7 @@ import {
 } from '@/constants/api';
 import { ApiHelpers } from '@/helpers/api.helper';
 import { OauthClient } from '@/types/oauth-clients.type';
-import { ResponseStatus } from '@/types/response.type';
+import { ResponseOK } from '@/types/response.type';
 
 interface PaginationOauthClientType {
     oauthClients: OauthClient[];
@@ -89,7 +89,7 @@ export const useUpdateOauthClient = ({
     const fetchMethod = useCallback(async () => {
         let apiPath = `${API_URL}${END_POINT.OAUTH_CLIENT}`;
         apiPath = apiPath.replace(':id', id.toString());
-        const result = await ApiHelpers.SendRequestWithToken<ResponseStatus>({
+        const result = await ApiHelpers.SendRequestWithToken<ResponseOK>({
             apiPath,
             method: HTTP_METHOD.PATCH,
             payload: {
@@ -101,7 +101,7 @@ export const useUpdateOauthClient = ({
 
     const dispatch = useAppDispatch();
     const dispatchRefresh = useCallback(
-        (data: ResponseStatus) => {
+        (data: ResponseOK) => {
             if (data.status === RESPONSE_STATUS.OK) {
                 dispatch(
                     oauthClientsActions.updateOne({
@@ -114,7 +114,7 @@ export const useUpdateOauthClient = ({
         [clientId, id, dispatch]
     );
 
-    return useFetchApi<ResponseStatus>({
+    return useFetchApi<ResponseOK>({
         initialData: null,
         fetchMethod,
         callbackFunc: dispatchRefresh,
@@ -159,7 +159,7 @@ export const useRevokeSecretOauthClient = (id: number) => {
 export const useDeleteOauthClients = (ids: number[]) => {
     const fetchMethod = useCallback(async () => {
         const apiPath = `${API_URL}${END_POINT.OAUTH_CLIENTS}`;
-        const result = await ApiHelpers.SendRequestWithToken<ResponseStatus>({
+        const result = await ApiHelpers.SendRequestWithToken<ResponseOK>({
             apiPath,
             method: HTTP_METHOD.DELETE,
             payload: ids,
@@ -169,7 +169,7 @@ export const useDeleteOauthClients = (ids: number[]) => {
 
     const dispatch = useAppDispatch();
     const dispatchRefresh = useCallback(
-        (data: ResponseStatus) => {
+        (data: ResponseOK) => {
             if (data.status === RESPONSE_STATUS.OK) {
                 dispatch(
                     oauthClientsActions.deleteMultiple({
@@ -181,7 +181,7 @@ export const useDeleteOauthClients = (ids: number[]) => {
         [ids, dispatch]
     );
 
-    return useFetchApi<ResponseStatus>({
+    return useFetchApi<ResponseOK>({
         initialData: null,
         fetchMethod,
         callbackFunc: dispatchRefresh,

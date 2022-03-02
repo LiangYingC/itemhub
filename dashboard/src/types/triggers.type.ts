@@ -4,14 +4,14 @@ export interface TriggerItem {
     id: number;
     ownerId: number;
     createdAt: string;
-    editedAt: null | string;
+    editedAt: string | null;
     deletedAt: string | null;
     operator: number;
-    sourceDevice: DeviceItem;
+    sourceDevice: DeviceItem | null;
     sourceDeviceId: number;
     sourcePin: string;
     sourceThreshold: number;
-    destinationDevice: DeviceItem;
+    destinationDevice: DeviceItem | null;
     destinationDeviceId: number;
     destinationDeviceSourceState: number;
     destinationDeviceTargetState: number;

@@ -27,11 +27,14 @@ const Trigger = () => {
                 <>
                     <div>Id: {trigger.id}</div>
                     <div>OwnerId: {trigger.ownerId}</div>
-                    <div>Source Device Name: {trigger.sourceDevice.name}</div>
+                    <div>
+                        Source Device Name:{' '}
+                        {trigger.sourceDevice?.name || 'No Data'}
+                    </div>
                     <div>Source Device Pin: {trigger.sourcePin}</div>
                     <div>
                         Destination Device Name:{' '}
-                        {trigger.destinationDevice.name}
+                        {trigger.destinationDevice?.name || 'No Data'}
                     </div>
                     <div>Destination Device Pin: {trigger.destinationPin}</div>
                     <Link to="../triggers">Back to triggers</Link>

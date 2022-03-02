@@ -91,12 +91,13 @@ const Triggers = () => {
                                 <div>Id: {id}</div>
                                 <div>OwnerId: {ownerId}</div>
                                 <div>
-                                    Source Device Name: {sourceDevice.name}
+                                    Source Device Name:{' '}
+                                    {sourceDevice?.name || 'No Data'}
                                 </div>
                                 <div>Source Device Pin: {sourcePin}</div>
                                 <div>
                                     Destination Device Name:{' '}
-                                    {destinationDevice.name}
+                                    {destinationDevice?.name || 'No Data'}
                                 </div>
                                 <div>
                                     Destination Device Pin: {destinationPin}

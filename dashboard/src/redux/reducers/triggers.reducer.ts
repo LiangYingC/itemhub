@@ -4,12 +4,12 @@ import { TriggerItem } from '@/types/triggers.type';
 
 type TriggersState = {
     triggers: TriggerItem[] | null;
-    rowNums: number;
+    rowNum: number;
 };
 
 const initialState: TriggersState = {
     triggers: null,
-    rowNums: 0,
+    rowNum: 0,
 };
 
 export const triggersSlice = createSlice({
@@ -18,11 +18,11 @@ export const triggersSlice = createSlice({
     reducers: {
         refreshTriggers: (state, action: PayloadAction<TriggersState>) => {
             const newTriggers = action.payload.triggers;
-            const newRowNums = action.payload.rowNums;
+            const newRowNums = action.payload.rowNum;
 
             return {
                 triggers: newTriggers,
-                rowNums: newRowNums,
+                rowNum: newRowNums,
             };
         },
         refreshTrigger: (state, action: PayloadAction<TriggerItem>) => {

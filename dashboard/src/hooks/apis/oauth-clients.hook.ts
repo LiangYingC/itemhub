@@ -14,7 +14,7 @@ import { ResponseOK } from '@/types/response.type';
 
 interface PaginationOauthClientType {
     oauthClients: OauthClient[];
-    rowNums: number;
+    rowNum: number;
 }
 
 export const useGetOauthClients = ({

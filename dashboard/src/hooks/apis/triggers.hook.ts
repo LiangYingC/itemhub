@@ -14,7 +14,7 @@ import { ResponseOK } from '@/types/response.type';
 
 interface GetTriggersResponse {
     triggers: TriggerItem[];
-    rowNums: number;
+    rowNum: number;
 }
 
 export const useGetTriggersApi = ({

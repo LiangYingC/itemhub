@@ -16,7 +16,7 @@ const OauthClients = () => {
     const limit = Number(query.get('limit') || 5);
     const [page, setPage] = useState(Number(query.get('page') || 1));
     const list = useAppSelector(selectOauthClients);
-    const [rowNums, setRowNums] = useState(0);
+    const [rowNum, setRowNum] = useState(0);
     const { isLoading, fetchApi, data } = useGetOauthClients({ page, limit });
     const [selectedIds, setSelectedIds] = useState(Array<number>());
     const [refreshFlag, setRefreshFlag] = useState(false);
@@ -36,10 +36,10 @@ const OauthClients = () => {
     }, [page, refreshFlag]);
 
     useEffect(() => {
-        if (data && data.rowNums) {
-            setRowNums(data?.rowNums);
+        if (data && data.rowNum) {
+            setRowNum(data?.rowNum);
         } else {
-            setRowNums(0);
+            setRowNum(0);
         }
     }, [data]);
 
@@ -102,7 +102,7 @@ const OauthClients = () => {
                 ))
             )}
             <div>Page: {page}</div>
-            <Pagination rowNums={rowNums} page={page} limit={limit} />
+            <Pagination rowNum={rowNum} page={page} limit={limit} />
         </div>
     );
 };

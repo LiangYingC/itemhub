@@ -7,7 +7,7 @@ export interface GetDevicesParams {
 
 export interface GetDevicesResponseData {
     devices: DeviceItem[];
-    rowNums: number;
+    rowNum: number;
 }
 
 export interface GetDeviceParams {

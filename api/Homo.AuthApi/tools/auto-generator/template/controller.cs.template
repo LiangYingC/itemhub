@@ -23,7 +23,7 @@ namespace {namespace}
             return new
             {
                 {firstLowerCamelCaseModelsName} = records,
-                rowNums = {firstUpperCamelCaseModelName}Dataservice.GetRowNum(_dbContext)
+                rowNum = {firstUpperCamelCaseModelName}Dataservice.GetRowNum(_dbContext)
             };
         }
 

@@ -16,7 +16,7 @@ const Triggers = () => {
     const limit = Number(query.get('limit') || 5);
     const page = Number(query.get('page') || 1);
 
-    const { triggers, rowNums } = useAppSelector(selectTriggers);
+    const { triggers, rowNum } = useAppSelector(selectTriggers);
 
     const [selectedIds, setSelectedIds] = useState(Array<number>());
 
@@ -110,7 +110,7 @@ const Triggers = () => {
                     )
                 )}
                 <div>Page: {page}</div>
-                <Pagination page={page} rowNums={rowNums} limit={limit} />
+                <Pagination page={page} rowNum={rowNum} limit={limit} />
             </div>
         </>
     );

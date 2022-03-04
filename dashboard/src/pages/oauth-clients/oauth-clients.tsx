@@ -16,13 +16,12 @@ const OauthClients = () => {
     const limit = Number(query.get('limit') || 5);
     const page = Number(query.get('page') || 1);
 
-    const list = useAppSelector(selectOauthClients);
+    const { oauthClients, rowNum } = useAppSelector(selectOauthClients);
 
-    const [rowNum, setRowNum] = useState(0);
     const [selectedIds, setSelectedIds] = useState(Array<number>());
     const [refreshFlag, setRefreshFlag] = useState(false);
 
-    const { isLoading, fetchApi, data } = useGetOauthClients({
+    const { isLoading, fetchApi } = useGetOauthClients({
         page,
         limit,
     });
@@ -36,14 +35,6 @@ const OauthClients = () => {
     useEffect(() => {
         fetchApi();
     }, [page, refreshFlag]);
-
-    useEffect(() => {
-        if (data && data.rowNum) {
-            setRowNum(data?.rowNum);
-        } else {
-            setRowNum(0);
-        }
-    }, [data]);
 
     useEffect(() => {
         if (responseOfDelete?.status === RESPONSE_STATUS.OK) {
@@ -84,10 +75,10 @@ const OauthClients = () => {
                 </Link>
             </div>
 
-            {isLoading || list === null ? (
+            {isLoading || oauthClients === null ? (
                 <div>Loading</div>
             ) : (
-                list.map(({ id, clientId }) => (
+                oauthClients.map(({ id, clientId }) => (
                     <label className="d-flex align-items-top" key={id}>
                         <input type="checkbox" onChange={check} value={id} />
                         <div>

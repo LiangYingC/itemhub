@@ -26,20 +26,21 @@ const OauthClient = () => {
 
     const navigate = useNavigate();
 
-    const list = useAppSelector(selectOauthClients);
+    const { oauthClients } = useAppSelector(selectOauthClients);
 
-    const oauthClient = (list || []).filter(
+    const oauthClient = (oauthClients || []).filter(
         (item) => item.id === Number(id)
     )[0];
-
     const oauthClientId = oauthClient ? oauthClient.clientId : '';
 
     const [clientId, setClientId] = useState(oauthClientId);
 
     const { isLoading, fetchApi } = useGetOauthClient(Number(id));
+
     const { fetchApi: updateApi, isLoading: isUpdating } = useUpdateOauthClient(
         { id: Number(id), clientId }
     );
+
     const {
         fetchApi: revokeSecretApi,
         isLoading: isRevoking,

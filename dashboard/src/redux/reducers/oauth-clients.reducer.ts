@@ -2,20 +2,33 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '@/redux/store';
 import { OauthClient } from '@/types/oauth-clients.type';
 
+type OauthClientState = {
+    oauthClients: OauthClient[] | null;
+    rowNum: number;
+};
+
+const initialState: OauthClientState = {
+    oauthClients: null,
+    rowNum: 0,
+};
+
 export const oauthClientsSlice = createSlice({
     name: 'oauth-clients',
-    initialState: null as OauthClient[] | null,
+    initialState,
     reducers: {
-        refresh: (state, action: PayloadAction<OauthClient[]>) => {
-            const list = action.payload;
-            return list;
+        refresh: (state, action: PayloadAction<OauthClientState>) => {
+            const newState = action.payload;
+            return newState;
         },
         refreshOne: (state, action: PayloadAction<OauthClient>) => {
-            const list = state;
+            const list = state.oauthClients;
             const newOne = action.payload;
 
             if (list === null) {
-                return [newOne];
+                return {
+                    ...state,
+                    triggers: [newOne],
+                };
             }
 
             const targetIndex = list.findIndex(
@@ -24,10 +37,14 @@ export const oauthClientsSlice = createSlice({
             list[targetIndex] = {
                 ...newOne,
             };
-            return list;
+
+            return {
+                ...state,
+                oauthClients: list,
+            };
         },
         updateOne: (state, action: PayloadAction<Partial<OauthClient>>) => {
-            const list = state;
+            const list = state.oauthClients;
             const newOne = action.payload;
 
             if (list === null) {
@@ -42,10 +59,13 @@ export const oauthClientsSlice = createSlice({
                 ...newOne,
             };
 
-            return list;
+            return {
+                ...state,
+                oauthClients: list,
+            };
         },
         addOne: (state, action: PayloadAction<OauthClient>) => {
-            let list = state;
+            let list = state.oauthClients;
             const newOne = action.payload;
 
             if (list === null) {
@@ -54,19 +74,27 @@ export const oauthClientsSlice = createSlice({
 
             list.push(newOne);
 
-            return list;
+            return {
+                ...state,
+                oauthClients: list,
+            };
         },
         deleteMultiple: (state, action: PayloadAction<{ ids: number[] }>) => {
-            const list = state;
+            const list = state.oauthClients;
             const deletePayload = action.payload;
 
             if (list === null) {
                 throw new Error('Can not delete when oauth-clients is null.');
             }
 
-            return list.filter(
+            const newList = list.filter(
                 (item) => deletePayload.ids.indexOf(item.id) === -1
             );
+
+            return {
+                ...state,
+                oauthClients: newList,
+            };
         },
     },
 });

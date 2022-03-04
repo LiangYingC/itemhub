@@ -8,7 +8,6 @@ import {
     HTTP_METHOD,
     RESPONSE_STATUS,
 } from '@/constants/api';
-import { ApiHelpers } from '@/helpers/api.helper';
 import { OauthClient } from '@/types/oauth-clients.type';
 import { ResponseOK } from '@/types/response.type';
 
@@ -24,16 +23,6 @@ export const useGetOauthClients = ({
     page: number;
     limit: number;
 }) => {
-    const fetchMethod = useCallback(async () => {
-        const apiPath = `${API_URL}${END_POINT.OAUTH_CLIENTS}?page=${page}&limit=${limit}`;
-        const result =
-            await ApiHelpers.SendRequestWithToken<PaginationOauthClientType>({
-                apiPath,
-                method: HTTP_METHOD.GET,
-            });
-        return result.data;
-    }, [page, limit]);
-
     const dispatch = useAppDispatch();
     const dispatchRefresh = useCallback(
         (data: PaginationOauthClientType) => {
@@ -44,24 +33,17 @@ export const useGetOauthClients = ({
         [dispatch]
     );
 
+    const apiPath = `${API_URL}${END_POINT.OAUTH_CLIENTS}?page=${page}&limit=${limit}`;
+
     return useFetchApi<PaginationOauthClientType>({
+        apiPath,
+        method: HTTP_METHOD.GET,
         initialData: null,
-        fetchMethod,
         callbackFunc: dispatchRefresh,
     });
 };
 
 export const useGetOauthClient = (id: number) => {
-    const fetchMethod = useCallback(async () => {
-        let apiPath = `${API_URL}${END_POINT.OAUTH_CLIENT}`;
-        apiPath = apiPath.replace(':id', id.toString());
-        const result = await ApiHelpers.SendRequestWithToken<OauthClient>({
-            apiPath,
-            method: HTTP_METHOD.GET,
-        });
-        return result.data;
-    }, [id]);
-
     const dispatch = useAppDispatch();
     const dispatchRefresh = useCallback(
         (data: OauthClient) => {
@@ -72,9 +54,13 @@ export const useGetOauthClient = (id: number) => {
         [dispatch]
     );
 
+    let apiPath = `${API_URL}${END_POINT.OAUTH_CLIENT}`;
+    apiPath = apiPath.replace(':id', id.toString());
+
     return useFetchApi<OauthClient>({
+        apiPath,
+        method: HTTP_METHOD.GET,
         initialData: null,
-        fetchMethod,
         callbackFunc: dispatchRefresh,
     });
 };
@@ -86,19 +72,6 @@ export const useUpdateOauthClient = ({
     id: number;
     clientId: string;
 }) => {
-    const fetchMethod = useCallback(async () => {
-        let apiPath = `${API_URL}${END_POINT.OAUTH_CLIENT}`;
-        apiPath = apiPath.replace(':id', id.toString());
-        const result = await ApiHelpers.SendRequestWithToken<ResponseOK>({
-            apiPath,
-            method: HTTP_METHOD.PATCH,
-            payload: {
-                clientId,
-            },
-        });
-        return result.data;
-    }, [id, clientId]);
-
     const dispatch = useAppDispatch();
     const dispatchRefresh = useCallback(
         (data: ResponseOK) => {
@@ -114,27 +87,21 @@ export const useUpdateOauthClient = ({
         [clientId, id, dispatch]
     );
 
+    let apiPath = `${API_URL}${END_POINT.OAUTH_CLIENT}`;
+    apiPath = apiPath.replace(':id', id.toString());
+
     return useFetchApi<ResponseOK>({
+        apiPath,
+        method: HTTP_METHOD.PATCH,
         initialData: null,
-        fetchMethod,
+        payload: {
+            clientId,
+        },
         callbackFunc: dispatchRefresh,
     });
 };
 
 export const useRevokeSecretOauthClient = (id: number) => {
-    const fetchMethod = useCallback(async () => {
-        let apiPath = `${API_URL}${END_POINT.OAUTH_CLIENT_REVOKE_SECRET}`;
-        apiPath = apiPath.replace(':id', id.toString());
-        const result = await ApiHelpers.SendRequestWithToken<{
-            status: string;
-            secret: string;
-        }>({
-            apiPath,
-            method: HTTP_METHOD.POST,
-        });
-        return result.data;
-    }, [id]);
-
     const dispatch = useAppDispatch();
     const dispatchRefresh = useCallback(
         (data: { status: string; secret: string }) => {
@@ -149,24 +116,18 @@ export const useRevokeSecretOauthClient = (id: number) => {
         [id, dispatch]
     );
 
+    let apiPath = `${API_URL}${END_POINT.OAUTH_CLIENT_REVOKE_SECRET}`;
+    apiPath = apiPath.replace(':id', id.toString());
+
     return useFetchApi<{ status: string; secret: string }>({
+        apiPath,
+        method: HTTP_METHOD.POST,
         initialData: null,
-        fetchMethod,
         callbackFunc: dispatchRefresh,
     });
 };
 
 export const useDeleteOauthClients = (ids: number[]) => {
-    const fetchMethod = useCallback(async () => {
-        const apiPath = `${API_URL}${END_POINT.OAUTH_CLIENTS}`;
-        const result = await ApiHelpers.SendRequestWithToken<ResponseOK>({
-            apiPath,
-            method: HTTP_METHOD.DELETE,
-            payload: ids,
-        });
-        return result.data;
-    }, [ids]);
-
     const dispatch = useAppDispatch();
     const dispatchRefresh = useCallback(
         (data: ResponseOK) => {
@@ -181,37 +142,34 @@ export const useDeleteOauthClients = (ids: number[]) => {
         [ids, dispatch]
     );
 
+    const apiPath = `${API_URL}${END_POINT.OAUTH_CLIENTS}`;
+
     return useFetchApi<ResponseOK>({
+        apiPath,
+        method: HTTP_METHOD.DELETE,
         initialData: null,
-        fetchMethod,
         callbackFunc: dispatchRefresh,
     });
 };
 
 export const useCreateOauthClients = (clientId: string) => {
-    const fetchMethod = useCallback(async () => {
-        const apiPath = `${API_URL}${END_POINT.OAUTH_CLIENTS}`;
-        const result = await ApiHelpers.SendRequestWithToken<OauthClient>({
-            apiPath,
-            method: HTTP_METHOD.POST,
-            payload: {
-                clientId,
-            },
-        });
-        return result.data;
-    }, [clientId]);
-
     const dispatch = useAppDispatch();
     const dispatchRefresh = useCallback(
         (response: OauthClient) => {
             dispatch(oauthClientsActions.addOne(response));
         },
-        [clientId, dispatch]
+        [dispatch]
     );
 
+    const apiPath = `${API_URL}${END_POINT.OAUTH_CLIENTS}`;
+
     return useFetchApi<OauthClient>({
+        apiPath,
+        method: HTTP_METHOD.POST,
+        payload: {
+            clientId,
+        },
         initialData: null,
-        fetchMethod,
         callbackFunc: dispatchRefresh,
     });
 };

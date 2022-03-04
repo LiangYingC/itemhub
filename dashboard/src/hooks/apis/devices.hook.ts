@@ -3,7 +3,6 @@ import { useAppDispatch } from '@/hooks/redux.hook';
 import { useFetchApi } from '@/hooks/apis/fetch.hook';
 import { devicesActions } from '@/redux/reducers/devices.reducer';
 import { DeviceItem, PinItem } from '@/types/devices.type';
-import { ApiHelpers } from '@/helpers/api.helper';
 import {
     API_URL,
     END_POINT,
@@ -24,16 +23,6 @@ export const useGetDevicesApi = ({
     page: number;
     limit: number;
 }) => {
-    const fetchGetDevices = useCallback(async () => {
-        const apiPath = `${API_URL}${END_POINT.DEVICES}?page=${page}&limit=${limit}`;
-        const result =
-            await ApiHelpers.SendRequestWithToken<GetDevicesResponseData>({
-                apiPath,
-                method: HTTP_METHOD.GET,
-            });
-        return result.data;
-    }, [limit, page]);
-
     const dispatch = useAppDispatch();
     const dispatchRefreshDevices = useCallback(
         (data: GetDevicesResponseData) => {
@@ -43,10 +32,12 @@ export const useGetDevicesApi = ({
         },
         [dispatch]
     );
+    const apiPath = `${API_URL}${END_POINT.DEVICES}?page=${page}&limit=${limit}`;
 
     const { isLoading, error, fetchApi } = useFetchApi<GetDevicesResponseData>({
+        apiPath,
+        method: HTTP_METHOD.GET,
         initialData: null,
-        fetchMethod: fetchGetDevices,
         callbackFunc: dispatchRefreshDevices,
     });
 
@@ -58,17 +49,6 @@ export const useGetDevicesApi = ({
 };
 
 export const useGetDeviceApi = ({ id }: { id: number }) => {
-    const fetchGetDevice = useCallback(async () => {
-        let apiPath = `${API_URL}${END_POINT.DEVICE}`;
-        apiPath = apiPath.replace(':id', id.toString());
-
-        const result = await ApiHelpers.SendRequestWithToken<DeviceItem>({
-            apiPath,
-            method: HTTP_METHOD.GET,
-        });
-        return result.data;
-    }, [id]);
-
     const dispatch = useAppDispatch();
     const dispatchRefreshDevice = useCallback(
         (data: DeviceItem) => {
@@ -77,9 +57,13 @@ export const useGetDeviceApi = ({ id }: { id: number }) => {
         [dispatch]
     );
 
+    let apiPath = `${API_URL}${END_POINT.DEVICE}`;
+    apiPath = apiPath.replace(':id', id.toString());
+
     const { isLoading, error, fetchApi } = useFetchApi<DeviceItem>({
+        apiPath,
+        method: HTTP_METHOD.GET,
         initialData: null,
-        fetchMethod: fetchGetDevice,
         callbackFunc: dispatchRefreshDevice,
     });
 
@@ -97,18 +81,6 @@ export const useUpdateDeviceApi = ({
     id: number;
     editedData: Partial<DeviceItem>;
 }) => {
-    const fetchUpdateDevice = useCallback(async () => {
-        let apiPath = `${API_URL}${END_POINT.DEVICE}`;
-        apiPath = apiPath.replace(':id', id.toString());
-
-        const result = await ApiHelpers.SendRequestWithToken<ResponseOK>({
-            apiPath,
-            method: HTTP_METHOD.PATCH,
-            payload: editedData,
-        });
-        return result.data;
-    }, [editedData, id]);
-
     const dispatch = useAppDispatch();
     const dispatchRefreshDevices = useCallback(
         (data: ResponseOK) => {
@@ -119,9 +91,14 @@ export const useUpdateDeviceApi = ({
         [editedData, id, dispatch]
     );
 
+    let apiPath = `${API_URL}${END_POINT.DEVICE}`;
+    apiPath = apiPath.replace(':id', id.toString());
+
     const { isLoading, error, fetchApi } = useFetchApi<ResponseOK>({
+        apiPath,
+        method: HTTP_METHOD.PATCH,
+        payload: editedData,
         initialData: null,
-        fetchMethod: fetchUpdateDevice,
         callbackFunc: dispatchRefreshDevices,
     });
 
@@ -133,20 +110,13 @@ export const useUpdateDeviceApi = ({
 };
 
 export const useGetDevicePinsApi = ({ id }: { id: number }) => {
-    const fetchGetDevice = useCallback(async () => {
-        let apiPath = `${API_URL}${END_POINT.DEVICE_PINS}`;
-        apiPath = apiPath.replace(':id', id.toString());
-
-        const result = await ApiHelpers.SendRequestWithToken<PinItem[]>({
-            apiPath,
-            method: HTTP_METHOD.GET,
-        });
-        return result.data;
-    }, [id]);
+    let apiPath = `${API_URL}${END_POINT.DEVICE_PINS}`;
+    apiPath = apiPath.replace(':id', id.toString());
 
     const { isLoading, error, data, fetchApi } = useFetchApi<PinItem[]>({
+        apiPath,
+        method: HTTP_METHOD.GET,
         initialData: null,
-        fetchMethod: fetchGetDevice,
     });
 
     return {

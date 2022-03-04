@@ -1,13 +1,18 @@
 import { useState, useCallback } from 'react';
 import { FetchErrorResultData } from '@/types/helpers.type';
+import { ApiHelpers } from '@/helpers/api.helper';
 
 export const useFetchApi = <T>({
+    apiPath,
+    method,
+    payload,
     initialData,
-    fetchMethod,
     callbackFunc,
 }: {
+    apiPath: string;
+    method: string;
+    payload?: { [key: string]: any };
     initialData: T | null;
-    fetchMethod: () => Promise<T>;
     callbackFunc?: (data: T) => void;
 }) => {
     const [data, setData] = useState<T | null>(initialData);
@@ -20,7 +25,13 @@ export const useFetchApi = <T>({
         try {
             setIsLoading(true);
 
-            const data: T = await fetchMethod();
+            const result = await ApiHelpers.SendRequestWithToken<T>({
+                apiPath,
+                method,
+                payload,
+            });
+            const data = result.data;
+
             if (callbackFunc) {
                 callbackFunc(data);
             }
@@ -42,7 +53,7 @@ export const useFetchApi = <T>({
         } finally {
             setIsLoading(false);
         }
-    }, [isLoading, fetchMethod, callbackFunc]);
+    }, [isLoading, apiPath, method, payload, callbackFunc]);
 
     return {
         isLoading,

@@ -5,7 +5,7 @@ export default {
     title: 'pagination',
 };
 
-export const Default = () => <Pagination rowNums={100} limit={5} page={1} />;
+export const Default = () => <Pagination rowNum={100} limit={5} page={1} />;
 
 Default.story = {
     name: 'default',

@@ -18,11 +18,11 @@ export const triggersSlice = createSlice({
     reducers: {
         refreshTriggers: (state, action: PayloadAction<TriggersState>) => {
             const newTriggers = action.payload.triggers;
-            const newRowNums = action.payload.rowNum;
+            const newRowNum = action.payload.rowNum;
 
             return {
                 triggers: newTriggers,
-                rowNum: newRowNums,
+                rowNum: newRowNum,
             };
         },
         refreshTrigger: (state, action: PayloadAction<TriggerItem>) => {

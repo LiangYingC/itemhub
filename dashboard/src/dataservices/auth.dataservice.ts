@@ -1,9 +1,14 @@
 import { API_URL, END_POINT, HTTP_METHOD } from '@/constants/api';
 import { ApiHelpers } from '@/helpers/api.helper';
-import { SignWithEmailParams } from '@/types/dataservices.type';
 
 export const AuthDataservices = {
-    SignWithEmail: async ({ email, password }: SignWithEmailParams) => {
+    SignWithEmail: async ({
+        email,
+        password,
+    }: {
+        email: string;
+        password: string;
+    }) => {
         const apiPath = `${API_URL}${END_POINT.SIGN_WITH_EMAIL}`;
         const result = await ApiHelpers.SendRequest<{ token: string }>({
             apiPath,

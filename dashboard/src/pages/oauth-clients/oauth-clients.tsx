@@ -14,22 +14,24 @@ import { RESPONSE_STATUS } from '@/constants/api';
 const OauthClients = () => {
     const query = useQuery();
     const limit = Number(query.get('limit') || 5);
-    const [page, setPage] = useState(Number(query.get('page') || 1));
+    const page = Number(query.get('page') || 1);
+
     const list = useAppSelector(selectOauthClients);
+
     const [rowNum, setRowNum] = useState(0);
-    const { isLoading, fetchApi, data } = useGetOauthClients({ page, limit });
     const [selectedIds, setSelectedIds] = useState(Array<number>());
     const [refreshFlag, setRefreshFlag] = useState(false);
+
+    const { isLoading, fetchApi, data } = useGetOauthClients({
+        page,
+        limit,
+    });
 
     const {
         isLoading: isDeleting,
         fetchApi: deleteMultipleApi,
         data: responseOfDelete,
     } = useDeleteOauthClients(selectedIds);
-
-    useEffect(() => {
-        setPage(Number(query.get('page') || 1));
-    }, [query]);
 
     useEffect(() => {
         fetchApi();

@@ -2,8 +2,8 @@
 
 目前總共有兩個專案項目，分別為：
 
-- Dashboard : 後台系統，前端位於 dashboard 資料夾中，API 端位於 api 資料夾中。
-- Website : 前台官網，前端位於 website 資料夾中，API 端位於 api 資料夾中。
+- Website : 前台官網，前端位於 [website 資料夾](./website)中，API 端位於 [api 資料夾](./api)中。
+- Dashboard : 後台系統，前端位於 [dashboard 資料夾](./dashboard)中，API 端位於 [api 資料夾](./api)中。
 
 各個專案項目的說明，請參見各自資料夾中的 README。
 

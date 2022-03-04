@@ -10,7 +10,7 @@ export const devicesSlice = createSlice({
             const newDevices = action.payload;
             return newDevices;
         },
-        refreshSingleDevice: (state, action: PayloadAction<DeviceItem>) => {
+        refreshDevice: (state, action: PayloadAction<DeviceItem>) => {
             const devices = state;
             const newDeviceData = action.payload;
 
@@ -26,17 +26,12 @@ export const devicesSlice = createSlice({
             };
             return devices;
         },
-        updateSingleDevice: (
-            state,
-            action: PayloadAction<Partial<DeviceItem>>
-        ) => {
+        updateDevice: (state, action: PayloadAction<Partial<DeviceItem>>) => {
             const devices = state;
             const newDeviceData = action.payload;
 
             if (devices === null) {
-                throw new Error(
-                    'Can not updateSingleDevice when devices is null.'
-                );
+                throw new Error('Can not updateDevice when devices is null.');
             }
 
             const targetIndex = devices.findIndex(

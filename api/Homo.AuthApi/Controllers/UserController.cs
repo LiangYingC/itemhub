@@ -29,7 +29,7 @@ namespace Homo.AuthApi
             return new
             {
                 users = records,
-                rowNums = UserDataservice.GetRowNums(_dbContext, email, userIds)
+                rowNum = UserDataservice.GetRowNum(_dbContext, email, userIds)
             };
         }
 

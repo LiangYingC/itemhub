@@ -21,7 +21,7 @@ namespace Homo.AuthApi
             return new
             {
                 groups = records,
-                rowNums = GroupDataservice.GetRowNum(_dbContext, name)
+                rowNum = GroupDataservice.GetRowNum(_dbContext, name)
             };
         }
 

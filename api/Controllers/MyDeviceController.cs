@@ -34,7 +34,7 @@ namespace Homo.IotApi
             return new
             {
                 devices = records,
-                rowNums = DeviceDataservice.GetRowNum(_dbContext, ownerId)
+                rowNum = DeviceDataservice.GetRowNum(_dbContext, ownerId)
             };
         }
 

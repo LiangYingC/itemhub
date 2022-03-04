@@ -25,7 +25,7 @@ namespace Homo.IotApi
             return new
             {
                 oauthClients = records,
-                rowNums = OauthClientDataservice.GetRowNum(_dbContext, ownerId)
+                rowNum = OauthClientDataservice.GetRowNum(_dbContext, ownerId)
             };
         }
 

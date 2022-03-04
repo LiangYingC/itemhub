@@ -18,7 +18,7 @@ namespace Homo.IotApi
         [Route("number-of-registered-users")]
         public ActionResult<dynamic> getNumberOfRegisteredUsers()
         {
-            return new { nums = UserDataservice.GetRowNums(_dbContext, null, null) };
+            return new { nums = UserDataservice.GetRowNum(_dbContext, null, null) };
         }
 
         [HttpPost]

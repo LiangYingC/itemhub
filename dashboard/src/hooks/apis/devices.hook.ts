@@ -7,9 +7,9 @@ import { DeviceItem, PinItem } from '@/types/devices.type';
 import {
     GetDevicesParams,
     GetDevicesResponseData,
-    GetSingleDeviceParams,
-    UpdateSingleDeviceParams,
-    UpdateSingleDeviceResponseData,
+    GetDeviceParams,
+    UpdateDeviceParams,
+    UpdateDeviceResponseData,
     GetDevicePinsParams,
 } from '@/types/dataservices.type';
 import { RESPONSE_STATUS } from '@/constants/api';
@@ -42,37 +42,34 @@ export const useGetDevicesApi = ({ page, limit }: GetDevicesParams) => {
     };
 };
 
-export const useGetSingleDeviceApi = ({ id }: GetSingleDeviceParams) => {
-    const fetchGetSingleDevice = useCallback(() => {
+export const useGetDeviceApi = ({ id }: GetDeviceParams) => {
+    const fetchGetDevice = useCallback(() => {
         return DevicesDataservices.GetOne({ id });
     }, [id]);
 
     const dispatch = useAppDispatch();
-    const dispatchRefreshDevices = useCallback(
+    const dispatchRefreshDevice = useCallback(
         (data: DeviceItem) => {
-            dispatch(devicesActions.refreshSingleDevice(data));
+            dispatch(devicesActions.refreshDevice(data));
         },
         [dispatch]
     );
 
     const { isLoading, error, fetchApi } = useFetchApi<DeviceItem>({
         initialData: null,
-        fetchMethod: fetchGetSingleDevice,
-        callbackFunc: dispatchRefreshDevices,
+        fetchMethod: fetchGetDevice,
+        callbackFunc: dispatchRefreshDevice,
     });
 
     return {
         isLoading,
         error,
-        getSingleDeviceApi: fetchApi,
+        getDeviceApi: fetchApi,
     };
 };
 
-export const useUpdateSingleDeviceApi = ({
-    id,
-    editedData,
-}: UpdateSingleDeviceParams) => {
-    const fetchUpdateSingleDevice = useCallback(
+export const useUpdateDeviceApi = ({ id, editedData }: UpdateDeviceParams) => {
+    const fetchUpdateDevice = useCallback(
         () =>
             DevicesDataservices.UpdateOne({
                 id,
@@ -83,39 +80,37 @@ export const useUpdateSingleDeviceApi = ({
 
     const dispatch = useAppDispatch();
     const dispatchRefreshDevices = useCallback(
-        (data: UpdateSingleDeviceResponseData) => {
+        (data: UpdateDeviceResponseData) => {
             if (data.status === RESPONSE_STATUS.OK) {
-                dispatch(
-                    devicesActions.updateSingleDevice({ ...editedData, id })
-                );
+                dispatch(devicesActions.updateDevice({ ...editedData, id }));
             }
         },
         [editedData, id, dispatch]
     );
 
     const { isLoading, error, fetchApi } =
-        useFetchApi<UpdateSingleDeviceResponseData>({
+        useFetchApi<UpdateDeviceResponseData>({
             initialData: null,
-            fetchMethod: fetchUpdateSingleDevice,
+            fetchMethod: fetchUpdateDevice,
             callbackFunc: dispatchRefreshDevices,
         });
 
     return {
         isLoading,
         error,
-        updateSingleDeviceApi: fetchApi,
+        updateDeviceApi: fetchApi,
     };
 };
 
 export const useGetDevicePinsApi = ({ id }: GetDevicePinsParams) => {
-    const fetchGetSingleDevice = useCallback(
+    const fetchGetDevice = useCallback(
         () => DevicesDataservices.GetOnePins({ id }),
         [id]
     );
 
     const { isLoading, error, data, fetchApi } = useFetchApi<PinItem[]>({
         initialData: null,
-        fetchMethod: fetchGetSingleDevice,
+        fetchMethod: fetchGetDevice,
     });
 
     return {

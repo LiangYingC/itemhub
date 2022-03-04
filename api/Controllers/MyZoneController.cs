@@ -23,7 +23,7 @@ namespace Homo.IotApi
             return new
             {
                 zones = records,
-                rowNums = ZoneDataservice.GetRowNum(_dbContext, extraPayload.Id)
+                rowNum = ZoneDataservice.GetRowNum(_dbContext, extraPayload.Id)
             };
         }
 

@@ -8,7 +8,6 @@ import {
     HTTP_METHOD,
     RESPONSE_STATUS,
 } from '@/constants/api';
-import { ApiHelpers } from '@/helpers/api.helper';
 import { TriggerItem } from '@/types/triggers.type';
 import { ResponseOK } from '@/types/response.type';
 
@@ -24,16 +23,6 @@ export const useGetTriggersApi = ({
     page: number;
     limit: number;
 }) => {
-    const fetchGetTriggers = useCallback(async () => {
-        const apiPath = `${API_URL}${END_POINT.TRIGGERS}?page=${page}&limit=${limit}`;
-        const result =
-            await ApiHelpers.SendRequestWithToken<GetTriggersResponse>({
-                apiPath,
-                method: HTTP_METHOD.GET,
-            });
-        return result.data;
-    }, [page, limit]);
-
     const dispatch = useAppDispatch();
     const dispatchRefreshTriggers = useCallback(
         (data: GetTriggersResponse) => {
@@ -44,9 +33,12 @@ export const useGetTriggersApi = ({
         [dispatch]
     );
 
+    const apiPath = `${API_URL}${END_POINT.TRIGGERS}?page=${page}&limit=${limit}`;
+
     const { isLoading, error, fetchApi } = useFetchApi<GetTriggersResponse>({
+        apiPath,
+        method: HTTP_METHOD.GET,
         initialData: null,
-        fetchMethod: fetchGetTriggers,
         callbackFunc: dispatchRefreshTriggers,
     });
 
@@ -58,18 +50,6 @@ export const useGetTriggersApi = ({
 };
 
 export const useGetTriggerApi = (id: number) => {
-    const fetchGetTrigger = useCallback(async () => {
-        let apiPath = `${API_URL}${END_POINT.TRIGGER}`;
-        apiPath = apiPath.replace(':id', id.toString());
-
-        const result = await ApiHelpers.SendRequestWithToken<TriggerItem>({
-            apiPath,
-            method: HTTP_METHOD.GET,
-        });
-
-        return result.data;
-    }, [id]);
-
     const dispatch = useAppDispatch();
     const dispatchRefreshTrigger = useCallback(
         (data: TriggerItem) => {
@@ -80,9 +60,13 @@ export const useGetTriggerApi = (id: number) => {
         [dispatch]
     );
 
+    let apiPath = `${API_URL}${END_POINT.TRIGGER}`;
+    apiPath = apiPath.replace(':id', id.toString());
+
     const { isLoading, error, fetchApi } = useFetchApi<TriggerItem>({
+        apiPath,
+        method: HTTP_METHOD.GET,
         initialData: null,
-        fetchMethod: fetchGetTrigger,
         callbackFunc: dispatchRefreshTrigger,
     });
 
@@ -94,16 +78,6 @@ export const useGetTriggerApi = (id: number) => {
 };
 
 export const useDeleteTriggersApi = (ids: number[]) => {
-    const fetchDeleteTriggers = useCallback(async () => {
-        const apiPath = `${API_URL}${END_POINT.TRIGGERS}`;
-        const result = await ApiHelpers.SendRequestWithToken<ResponseOK>({
-            apiPath,
-            method: HTTP_METHOD.DELETE,
-            payload: ids,
-        });
-        return result.data;
-    }, [ids]);
-
     const dispatch = useAppDispatch();
     const dispatchRefresh = useCallback(
         (data: ResponseOK) => {
@@ -114,9 +88,13 @@ export const useDeleteTriggersApi = (ids: number[]) => {
         [ids, dispatch]
     );
 
+    const apiPath = `${API_URL}${END_POINT.TRIGGERS}`;
+
     const { isLoading, error, data, fetchApi } = useFetchApi<ResponseOK>({
+        apiPath,
+        method: HTTP_METHOD.DELETE,
+        payload: ids,
         initialData: null,
-        fetchMethod: fetchDeleteTriggers,
         callbackFunc: dispatchRefresh,
     });
 

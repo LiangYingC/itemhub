@@ -72,11 +72,9 @@ export const oauthClientsSlice = createSlice({
                 list = [];
             }
 
-            list.push(newOne);
-
             return {
                 ...state,
-                oauthClients: list,
+                oauthClients: [newOne, ...list],
             };
         },
         deleteMultiple: (state, action: PayloadAction<{ ids: number[] }>) => {

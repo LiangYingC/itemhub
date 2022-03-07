@@ -11,7 +11,6 @@ namespace Homo.IotApi
         private static Dictionary<long, CancellationTokenSource> tokenSourceCollections = new Dictionary<long, CancellationTokenSource>();
         public static void StartAsync(long ownerId, long deviceId, string dbc)
         {
-
             if (tokenSourceCollections.ContainsKey(deviceId))
             {
                 var previousTokenSource = tokenSourceCollections[deviceId];
@@ -30,7 +29,13 @@ namespace Homo.IotApi
                 var serverVersion = new MySqlServerVersion(new Version(8, 0, 25));
                 builder.UseMySql(dbc, serverVersion);
                 IotDbContext newDbContext = new IotDbContext(builder.Options);
-                DeviceDataservice.Switch(newDbContext, ownerId, deviceId, false);
+
+                // 15 秒內 device activity log 沒查到資料就當作下線
+                int count = DeviceActivityLogDataservice.GetRowNumThis15Seconds(newDbContext, ownerId, deviceId);
+                if (count == 0)
+                {
+                    DeviceDataservice.Switch(newDbContext, ownerId, deviceId, false);
+                }
             }, tokenSource.Token);
 
             if (tokenSourceCollections.ContainsKey(deviceId))

@@ -35,7 +35,9 @@ const OauthClient = () => {
 
     const [clientId, setClientId] = useState(oauthClientId);
 
-    const { isLoading, fetchApi } = useGetOauthClient(Number(id));
+    const { isLoading: isGetting, fetchApi: getApi } = useGetOauthClient(
+        Number(id)
+    );
 
     const { fetchApi: updateApi, isLoading: isUpdating } = useUpdateOauthClient(
         { id: Number(id), clientId }
@@ -60,11 +62,11 @@ const OauthClient = () => {
     } = useCreateOauthClients(clientId);
 
     useEffect(() => {
-        if (oauthClient || isCreateMode) {
+        if (oauthClient || isDeleting || isCreateMode) {
             return;
         }
-        fetchApi();
-    }, [fetchApi, oauthClient, id]);
+        getApi();
+    }, [getApi, oauthClient, isDeleting, isCreateMode]);
 
     useEffect(() => {
         setClientId(oauthClientId);
@@ -89,7 +91,7 @@ const OauthClient = () => {
 
     return (
         <div className={styles.OauthClient} data-testid="oauth-client">
-            {isLoading ? (
+            {isGetting ? (
                 <div>Loading</div>
             ) : (
                 <div>

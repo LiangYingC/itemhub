@@ -44,7 +44,7 @@ namespace Homo.AuthApi
                 .Count();
         }
 
-        public static VerifyCode GetOneUnUsedByEmail(DBContext dbContext, string email, string code)
+        public static VerifyCode GetOneUnUsedByEmail(DBContext dbContext, string email, string code, bool? isTwoFactorAuth = null)
         {
             return dbContext.VerifyCode
                 .Where(
@@ -52,6 +52,7 @@ namespace Homo.AuthApi
                     && x.Code == code
                     && x.Expiration >= DateTime.Now
                     && (x.IsUsed == null || x.IsUsed == false)
+                    && (x.IsTwoFactorAuth == null || x.IsTwoFactorAuth == isTwoFactorAuth)
                 ).OrderByDescending(x => x.CreatedAt).FirstOrDefault();
         }
 

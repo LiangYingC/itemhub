@@ -80,7 +80,7 @@ export class SignInController extends RoutingController {
             return;
         }
         CookieUtil.setCookie('token', resp.data.token);
-        if (this.args.redirectUrl.indexOf('http') === 0) {
+        if (this.args.redirectUrl && this.args.redirectUrl.indexOf('http') === 0) {
             location.href = this.args.redirectUrl;
         } else {
             history.replaceState({}, '', this.args.redirectUrl ? this.args.redirectUrl : '/me/');

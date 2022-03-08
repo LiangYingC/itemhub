@@ -50,11 +50,11 @@ namespace Homo.AuthApi
                 Expiration = System.DateTime.Now.AddMinutes(5)
             });
 
-            await MailHelper.Send(MailProvider.SEND_GRID, new MailTemplate()
-            {
-                Subject = "Itemhub - 兩階段驗證信",
-                Content = $"驗證碼為: {verifyCode}"
-            }, _systemEmail, user.Email, _sendGridApiKey); // 未來如果人多的時候就直接用 amazon ses 
+            // await MailHelper.Send(MailProvider.SEND_GRID, new MailTemplate()
+            // {
+            //     Subject = "Itemhub - 兩階段驗證信",
+            //     Content = $"驗證碼為: {verifyCode}"
+            // }, _systemEmail, user.Email, _sendGridApiKey); // 未來如果人多的時候就直接用 amazon ses 
 
             return new { status = CUSTOM_RESPONSE.OK };
         }

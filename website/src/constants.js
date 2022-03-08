@@ -18,6 +18,8 @@ export const API = {
     SIGN_UP: 'auth/sign-up',
     SIGN_IN_WITH_EMAIL: 'auth/sign-in-with-email',
     SIGN_IN_WITH_SOCIAL_MEDIA: 'auth/sign-in-with-social-media',
+    SEND_TWO_FACTOR_AUTH_MAIL: 'auth/send-two-factor-auth-mail',
+    EXCHANGE_DASHBOARD_TOKEN: 'auth/exchange-dashboard-token',
     UNIVERSAL_SOCIAL_MEDIA_TYPE: 'universal/social-media-types',
     UNIVERSAL_PRICING_PLANS: 'universal/pricing-plans',
     UNIVERSAL_TRANSACTION_STATUS: 'universal/transaction-status',

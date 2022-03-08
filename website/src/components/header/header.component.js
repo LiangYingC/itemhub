@@ -1,3 +1,4 @@
+import { APP_CONFIG } from '../../config.js';
 import {
     BaseComponent
 } from '../../swim/base.component.js';
@@ -14,7 +15,8 @@ export class HeaderComponent extends BaseComponent {
             ...this.variable,
             hasSignedInvisibility: CookieUtil.getCookie('token') ? 'd-none' : 'd-block',
             hasSignedVisibility: CookieUtil.getCookie('token') ? 'd-block' : 'd-none',
-            isExpanded: false
+            isExpanded: false,
+            dashboardUrl: APP_CONFIG.DASHBOARD_URL
         });
     }
 
@@ -34,5 +36,17 @@ export class HeaderComponent extends BaseComponent {
 
     collapse () {
         this.variable.isExpanded = false;
+    }
+
+    redirectToDashboard () {
+        const dashboardToken = CookieUtil.getCookie('dashboardToken');
+        const token = CookieUtil.getCookie('token');
+        if (dashboardToken) {
+            location.href = APP_CONFIG.DASHBOARD_URL;
+        } else if (token && !dashboardToken) {
+            history.pushState({}, '', '/auth/two-factor-auth/');
+        } else if (!token) {
+            history.replaceState({}, '', `/auth/sign-in/?redirectUrl=${encodeURIComponent('/two-factor-auth/')}`);
+        }
     }
 }

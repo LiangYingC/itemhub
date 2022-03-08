@@ -43,6 +43,8 @@ export class TwoFactorAuthController extends RoutingController {
         });
         if (resp.status !== RESPONSE_STATUS.OK) {
             Toaster.popup(Toaster.TYPE.ERROR, resp.data.message);
+            elButton.removeAttribute('disabled');
+            this.pageVariable.sendLabel = '傳送驗證碼至信箱';
             return;
         }
         this.pageVariable.countdownDuration = this.countdownDuration;
@@ -78,6 +80,7 @@ export class TwoFactorAuthController extends RoutingController {
         });
         if (resp.status !== RESPONSE_STATUS.OK) {
             Toaster.popup(Toaster.TYPE.ERROR, resp.data.message);
+            elButton.removeAttribute('disabled');
             return;
         }
 

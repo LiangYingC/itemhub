@@ -27,7 +27,7 @@ export const useGetOauthClients = ({
     const dispatchRefresh = useCallback(
         (data: PaginationOauthClientType) => {
             if (data) {
-                dispatch(oauthClientsActions.refresh(data.oauthClients));
+                dispatch(oauthClientsActions.refresh(data));
             }
         },
         [dispatch]

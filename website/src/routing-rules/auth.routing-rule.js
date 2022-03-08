@@ -10,7 +10,7 @@ export const AuthRoutingRule = {
     controller: AuthController,
     html: '/template/auth.html',
     children: [{
-        path: 'sign-in/',
+        path: 'sign-in/?redirectUrl',
         skipSitemap: true,
         controller: SignInController,
         html: '/template/sign-in.html',

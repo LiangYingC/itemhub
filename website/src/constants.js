@@ -58,3 +58,8 @@ export const TRANSACTION_STATUS = {
     PAID: 'PAID',
     ERROR: 'ERROR'
 };
+
+export const INVOICE_TYPES = {
+    CLOUD_INVOICE: 'CLOUD_INVOICE',
+    TRIPLE_INVOICE: 'TRIPLE_INVOICE'
+};

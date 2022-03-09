@@ -157,6 +157,11 @@ export const RoutingRule = [{
                     func: async () => {
                         return (await UniversalDataService.GetPricingPlan()).data;
                     }
+                }, {
+                    key: 'invoiceTypes',
+                    func: async () => {
+                        return (await UniversalDataService.GetInvoiceTypes()).data;
+                    }
                 }]
             }, {
                 path: 'transaction/{id}/?rec_trade_id&status',

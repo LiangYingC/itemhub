@@ -66,6 +66,12 @@ export const Swissknife = {
         }
         return result;
     },
+    convertNumberWithComma (num) {
+        if (num.toString().length <= 3) {
+            return num.toString();
+        }
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    },
     formatNumberInput: (elRoot, selector) => {
         elRoot.querySelectorAll(selector).forEach((elInput) => {
             elInput.addEventListener('keydown', (e) => {

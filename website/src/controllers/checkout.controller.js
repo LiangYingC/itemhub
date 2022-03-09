@@ -4,8 +4,9 @@ import { CookieUtil } from '../util/cookie.js';
 import {
     RoutingController
 } from '../swim/routing-controller.js';
-import { RESPONSE_STATUS } from '../constants.js';
+import { INVOICE_TYPES, RESPONSE_STATUS } from '../constants.js';
 import { Toaster } from '../util/toaster.js';
+import { Swissknife } from '../util/swissknife.js';
 
 export class CheckoutController extends RoutingController {
     static get id () {
@@ -25,26 +26,42 @@ export class CheckoutController extends RoutingController {
             history.replaceState({}, '', '/sign-in/');
             return;
         }
+
         const selectedPricingPlan = this.args.pricingPlans.find(item => item.value === Number(this.args.pricingPlan));
         if (!selectedPricingPlan) {
             history.replaceState({}, '', '/pricing/');
             return;
         }
+
+        this.args.pricingPlans.forEach((item) => {
+            item.price = Swissknife.convertNumberWithComma(item.price);
+        });
+
         await super.render({
+            pricingPlans: this.args.pricingPlans,
+            invoiceTypes: 0,
+            universalInvoiceTypes: this.args.invoiceTypes,
             selectedPricingPlan: selectedPricingPlan,
             selectedPricingPlanName: selectedPricingPlan.label,
             selectedPricingPlanPrice: selectedPricingPlan.price
+        });
+
+        this.elHTML.querySelectorAll('[name="pricing"]').forEach((item) => {
+            if (Number(item.value) === selectedPricingPlan.value) {
+                item.setAttribute('checked', 'checked');
+            }
         });
     }
 
     async postRender () {
         await super.postRender();
+
         window.TPDirect.setupSDK('123053', 'app_TqsnC7DDhb2B1J4kT89cO71uJRhfpkNC6c6TgphTYdgBG4IO6BzanakHWgn3', APP_CONFIG.ENV === 'dev' ? 'sandbox' : 'production');
         window.TPDirect.card.setup({
             fields: {
                 number: {
                     element: '.card-number',
-                    placeholder: '**** **** **** ****'
+                    placeholder: '請輸入信用卡卡號'
                 },
                 expirationDate: {
                     element: '.expiration',
@@ -52,14 +69,15 @@ export class CheckoutController extends RoutingController {
                 },
                 ccv: {
                     element: '.ccv',
-                    placeholder: '後三碼'
+                    placeholder: '請輸入後三碼'
                 }
             },
             styles: {
                 input: {
                     'font-size': '16px',
                     'line-height': '1em',
-                    color: 'rgba(255, 255, 255, 0.85)'
+                    'background-color': '#fff',
+                    color: 'rgba(0, 0, 0, 0.85)'
                 }
             }
         });
@@ -67,6 +85,10 @@ export class CheckoutController extends RoutingController {
 
     async checkout (event) {
         event.preventDefault();
+        const selectedPricingPlan = this.elHTML.querySelector('[name="pricing"]:checked').value;
+        if (selectedPricingPlan === null || selectedPricingPlan === undefined) {
+            Toaster.popup(Toaster.TYPE.ERROR, '訂閱失敗: 無方案資料');
+        }
 
         // 取得 TapPay Fields 的 status
         const tappayStatus = window.TPDirect.card.getTappayFieldsStatus();
@@ -103,5 +125,14 @@ export class CheckoutController extends RoutingController {
                 resolve(result.card.prime);
             });
         });
+    }
+
+    showTripleInvoiceDetail (event) {
+        const tripleInvoice = this.args.invoiceTypes.find(type => type.key === INVOICE_TYPES.TRIPLE_INVOICE);
+        if (Number(event.target.value) === tripleInvoice.value) {
+            this.elHTML.querySelector('.triple-invoice-detail').removeClass('d-none');
+        } else {
+            this.elHTML.querySelector('.triple-invoice-detail').addClass('d-none');
+        }
     }
 }

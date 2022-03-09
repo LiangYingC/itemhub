@@ -23,6 +23,11 @@ export class TwoFactorAuthController extends RoutingController {
         };
 
         const token = CookieUtil.getCookie('token');
+        if (!token) {
+            history.pushState({}, '', `/auth/sign-in/?redirectUrl=${encodeURIComponent('/auth/two-factor-auth/')}`);
+            return;
+        }
+
         const payload = window.jwt_decode(token);
 
         await super.render({
@@ -69,14 +74,26 @@ export class TwoFactorAuthController extends RoutingController {
     }
 
     async exchangeDashboardToken (event) {
+        const elCode = this.elHTML.querySelector('.code');
+        const code = elCode.value;
+
+        if (code === '') {
+            Toaster.popup(Toaster.TYPE.ERROR, '請輸入驗證碼');
+            return;
+        }
+
+        if (code.length !== 6 || isNaN(Number(code)) {
+            Toaster.popup(Toaster.TYPE.ERROR, '驗證碼為六碼數字');
+            return;
+        }
+
         const elButton = event.currentTarget;
         elButton.setAttribute('disabled', 'disabled');
         const token = CookieUtil.getCookie('token');
-        const elCode = this.elHTML.querySelector('.code');
 
         const resp = await AuthDataService.ExchangeDashboardToken({
             token,
-            code: elCode.value
+            code
         });
         if (resp.status !== RESPONSE_STATUS.OK) {
             Toaster.popup(Toaster.TYPE.ERROR, resp.data.message);

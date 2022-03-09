@@ -2,23 +2,27 @@ import { useCallback } from 'react';
 import { useAppDispatch } from '@/hooks/redux.hook';
 import { useFetchApi } from '@/hooks/apis/fetch.hook';
 import { devicesActions } from '@/redux/reducers/devices.reducer';
-import { DevicesDataservices } from '@/dataservices/devices.dataservice';
 import { DeviceItem, PinItem } from '@/types/devices.type';
 import {
-    GetDevicesParams,
-    GetDevicesResponseData,
-    GetDeviceParams,
-    UpdateDeviceParams,
-    UpdateDeviceResponseData,
-    GetDevicePinsParams,
-} from '@/types/dataservices.type';
-import { RESPONSE_STATUS } from '@/constants/api';
+    API_URL,
+    END_POINT,
+    HTTP_METHOD,
+    RESPONSE_STATUS,
+} from '@/constants/api';
+import { ResponseOK } from '@/types/response.type';
 
-export const useGetDevicesApi = ({ page, limit }: GetDevicesParams) => {
-    const fetchGetDevices = useCallback(() => {
-        return DevicesDataservices.GetList({ page, limit });
-    }, [limit, page]);
+interface GetDevicesResponseData {
+    devices: DeviceItem[];
+    rowNum: number;
+}
 
+export const useGetDevicesApi = ({
+    page,
+    limit,
+}: {
+    page: number;
+    limit: number;
+}) => {
     const dispatch = useAppDispatch();
     const dispatchRefreshDevices = useCallback(
         (data: GetDevicesResponseData) => {
@@ -28,10 +32,12 @@ export const useGetDevicesApi = ({ page, limit }: GetDevicesParams) => {
         },
         [dispatch]
     );
+    const apiPath = `${API_URL}${END_POINT.DEVICES}?page=${page}&limit=${limit}`;
 
     const { isLoading, error, fetchApi } = useFetchApi<GetDevicesResponseData>({
+        apiPath,
+        method: HTTP_METHOD.GET,
         initialData: null,
-        fetchMethod: fetchGetDevices,
         callbackFunc: dispatchRefreshDevices,
     });
 
@@ -42,11 +48,7 @@ export const useGetDevicesApi = ({ page, limit }: GetDevicesParams) => {
     };
 };
 
-export const useGetDeviceApi = ({ id }: GetDeviceParams) => {
-    const fetchGetDevice = useCallback(() => {
-        return DevicesDataservices.GetOne({ id });
-    }, [id]);
-
+export const useGetDeviceApi = ({ id }: { id: number }) => {
     const dispatch = useAppDispatch();
     const dispatchRefreshDevice = useCallback(
         (data: DeviceItem) => {
@@ -55,9 +57,13 @@ export const useGetDeviceApi = ({ id }: GetDeviceParams) => {
         [dispatch]
     );
 
+    let apiPath = `${API_URL}${END_POINT.DEVICE}`;
+    apiPath = apiPath.replace(':id', id.toString());
+
     const { isLoading, error, fetchApi } = useFetchApi<DeviceItem>({
+        apiPath,
+        method: HTTP_METHOD.GET,
         initialData: null,
-        fetchMethod: fetchGetDevice,
         callbackFunc: dispatchRefreshDevice,
     });
 
@@ -68,19 +74,16 @@ export const useGetDeviceApi = ({ id }: GetDeviceParams) => {
     };
 };
 
-export const useUpdateDeviceApi = ({ id, editedData }: UpdateDeviceParams) => {
-    const fetchUpdateDevice = useCallback(
-        () =>
-            DevicesDataservices.UpdateOne({
-                id,
-                editedData,
-            }),
-        [editedData, id]
-    );
-
+export const useUpdateDeviceApi = ({
+    id,
+    editedData,
+}: {
+    id: number;
+    editedData: Partial<DeviceItem>;
+}) => {
     const dispatch = useAppDispatch();
     const dispatchRefreshDevices = useCallback(
-        (data: UpdateDeviceResponseData) => {
+        (data: ResponseOK) => {
             if (data.status === RESPONSE_STATUS.OK) {
                 dispatch(devicesActions.updateDevice({ ...editedData, id }));
             }
@@ -88,12 +91,16 @@ export const useUpdateDeviceApi = ({ id, editedData }: UpdateDeviceParams) => {
         [editedData, id, dispatch]
     );
 
-    const { isLoading, error, fetchApi } =
-        useFetchApi<UpdateDeviceResponseData>({
-            initialData: null,
-            fetchMethod: fetchUpdateDevice,
-            callbackFunc: dispatchRefreshDevices,
-        });
+    let apiPath = `${API_URL}${END_POINT.DEVICE}`;
+    apiPath = apiPath.replace(':id', id.toString());
+
+    const { isLoading, error, fetchApi } = useFetchApi<ResponseOK>({
+        apiPath,
+        method: HTTP_METHOD.PATCH,
+        payload: editedData,
+        initialData: null,
+        callbackFunc: dispatchRefreshDevices,
+    });
 
     return {
         isLoading,
@@ -102,15 +109,14 @@ export const useUpdateDeviceApi = ({ id, editedData }: UpdateDeviceParams) => {
     };
 };
 
-export const useGetDevicePinsApi = ({ id }: GetDevicePinsParams) => {
-    const fetchGetDevice = useCallback(
-        () => DevicesDataservices.GetOnePins({ id }),
-        [id]
-    );
+export const useGetDevicePinsApi = ({ id }: { id: number }) => {
+    let apiPath = `${API_URL}${END_POINT.DEVICE_PINS}`;
+    apiPath = apiPath.replace(':id', id.toString());
 
     const { isLoading, error, data, fetchApi } = useFetchApi<PinItem[]>({
+        apiPath,
+        method: HTTP_METHOD.GET,
         initialData: null,
-        fetchMethod: fetchGetDevice,
     });
 
     return {

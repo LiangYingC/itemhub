@@ -22,7 +22,7 @@ export class CheckoutController extends RoutingController {
         };
         if (!this.args.me.id) {
             Toaster.popup(Toaster.TYPE.INFO, '請先登入在訂閱服務');
-            history.replaceState({}, '', '/sign-in/');
+            history.replaceState({}, '', '/auth/sign-in/');
             return;
         }
         const selectedPricingPlan = this.args.pricingPlans.find(item => item.value === Number(this.args.pricingPlan));

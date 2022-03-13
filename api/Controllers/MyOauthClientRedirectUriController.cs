@@ -23,7 +23,7 @@ namespace Homo.IotApi
             return new
             {
                 oauthClientRedirectUris = records,
-                rowNums = OauthClientRedirectUriDataservice.GetRowNum(_dbContext, extraPayload.Id)
+                rowNum = OauthClientRedirectUriDataservice.GetRowNum(_dbContext, extraPayload.Id)
             };
         }
 

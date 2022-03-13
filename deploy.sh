@@ -3,7 +3,7 @@
 ENV="$NODE_ENV";
 
 cd ./api
-git pull origin master
+git pull origin dev
 
 sudo docker build -t itemhub-api ./
 

@@ -26,6 +26,15 @@ namespace Homo.AuthApi
                 entity.HasIndex(p => new { p.HashPhone });
             });
 
+            modelBuilder.Entity<VerifyCode>(entity =>
+            {
+                entity.HasIndex(p => new { p.Email });
+                entity.HasIndex(p => new { p.Phone });
+                entity.HasIndex(p => new { p.IsUsed });
+                entity.HasIndex(p => new { p.Code });
+                entity.HasIndex(p => new { p.IsTwoFactorAuth });
+            });
+
             OnModelCreatingPartial(modelBuilder);
         }
 

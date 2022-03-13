@@ -22,7 +22,7 @@ namespace Homo.AuthApi
                 .ToList();
         }
 
-        public static int GetRowNums(DBContext dbContext, string email, List<long> userIds)
+        public static int GetRowNum(DBContext dbContext, string email, List<long> userIds)
         {
             return dbContext.User
                 .Where(

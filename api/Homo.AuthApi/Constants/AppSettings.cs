@@ -21,6 +21,7 @@ namespace Homo.AuthApi
         public string LineClientSecret { get; set; }
         public string SmsUsername { get; set; }
         public string SmsPassword { get; set; }
+        public string DashboardJwtKey { get; set; }
 
 
     }

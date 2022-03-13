@@ -9,6 +9,8 @@ export const END_POINT = {
     OAUTH_CLIENTS: 'me/oauth-clients',
     OAUTH_CLIENT: 'me/oauth-clients/:id',
     OAUTH_CLIENT_REVOKE_SECRET: 'me/oauth-clients/:id/revoke-secret',
+    TRIGGERS: 'me/triggers',
+    TRIGGER: 'me/triggers/:id',
 };
 
 export const HTTP_METHOD = {

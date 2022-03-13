@@ -14,12 +14,17 @@ import { RESPONSE_STATUS } from '@/constants/api';
 const OauthClients = () => {
     const query = useQuery();
     const limit = Number(query.get('limit') || 5);
-    const [page, setPage] = useState(Number(query.get('page') || 1));
-    const list = useAppSelector(selectOauthClients);
-    const [rowNums, setRowNums] = useState(0);
-    const { isLoading, fetchApi, data } = useGetOauthClients({ page, limit });
+    const page = Number(query.get('page') || 1);
+
+    const { oauthClients, rowNum } = useAppSelector(selectOauthClients);
+
     const [selectedIds, setSelectedIds] = useState(Array<number>());
     const [refreshFlag, setRefreshFlag] = useState(false);
+
+    const { isLoading, fetchApi } = useGetOauthClients({
+        page,
+        limit,
+    });
 
     const {
         isLoading: isDeleting,
@@ -28,20 +33,8 @@ const OauthClients = () => {
     } = useDeleteOauthClients(selectedIds);
 
     useEffect(() => {
-        setPage(Number(query.get('page') || 1));
-    }, [query]);
-
-    useEffect(() => {
         fetchApi();
     }, [page, refreshFlag]);
-
-    useEffect(() => {
-        if (data && data.rowNums) {
-            setRowNums(data?.rowNums);
-        } else {
-            setRowNums(0);
-        }
-    }, [data]);
 
     useEffect(() => {
         if (responseOfDelete?.status === RESPONSE_STATUS.OK) {
@@ -82,10 +75,10 @@ const OauthClients = () => {
                 </Link>
             </div>
 
-            {isLoading || list === null ? (
+            {isLoading || oauthClients === null ? (
                 <div>Loading</div>
             ) : (
-                list.map(({ id, clientId }) => (
+                oauthClients.map(({ id, clientId }) => (
                     <label className="d-flex align-items-top" key={id}>
                         <input type="checkbox" onChange={check} value={id} />
                         <div>
@@ -102,7 +95,7 @@ const OauthClients = () => {
                 ))
             )}
             <div>Page: {page}</div>
-            <Pagination rowNums={rowNums} page={page} limit={limit} />
+            <Pagination rowNum={rowNum} page={page} limit={limit} />
         </div>
     );
 };

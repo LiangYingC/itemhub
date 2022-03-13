@@ -26,20 +26,23 @@ const OauthClient = () => {
 
     const navigate = useNavigate();
 
-    const list = useAppSelector(selectOauthClients);
+    const { oauthClients } = useAppSelector(selectOauthClients);
 
-    const oauthClient = (list || []).filter(
+    const oauthClient = (oauthClients || []).filter(
         (item) => item.id === Number(id)
     )[0];
-
     const oauthClientId = oauthClient ? oauthClient.clientId : '';
 
     const [clientId, setClientId] = useState(oauthClientId);
 
-    const { isLoading, fetchApi } = useGetOauthClient(Number(id));
+    const { isLoading: isGetting, fetchApi: getApi } = useGetOauthClient(
+        Number(id)
+    );
+
     const { fetchApi: updateApi, isLoading: isUpdating } = useUpdateOauthClient(
         { id: Number(id), clientId }
     );
+
     const {
         fetchApi: revokeSecretApi,
         isLoading: isRevoking,
@@ -59,11 +62,11 @@ const OauthClient = () => {
     } = useCreateOauthClients(clientId);
 
     useEffect(() => {
-        if (oauthClient || isCreateMode) {
+        if (oauthClient || isDeleting || isCreateMode) {
             return;
         }
-        fetchApi();
-    }, [fetchApi, oauthClient, id]);
+        getApi();
+    }, [getApi, oauthClient, isDeleting, isCreateMode]);
 
     useEffect(() => {
         setClientId(oauthClientId);
@@ -88,7 +91,7 @@ const OauthClient = () => {
 
     return (
         <div className={styles.OauthClient} data-testid="oauth-client">
-            {isLoading ? (
+            {isGetting ? (
                 <div>Loading</div>
             ) : (
                 <div>

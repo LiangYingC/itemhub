@@ -18,6 +18,9 @@ const App = () => {
         });
     }
     const token = CookieHelpers.GetCookie({ name: 'dashboardToken' });
+    if (!token) {
+        location.href = import.meta.env.VITE_WEBSITE_URL;
+    }
     return token ? <Outlet /> : <>Redirect</>;
 };
 

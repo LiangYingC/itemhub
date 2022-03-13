@@ -71,7 +71,7 @@ namespace Homo.AuthApi
                 throw new CustomException(ERROR_CODE.VERIFY_CODE_NOT_FOUND, System.Net.HttpStatusCode.NotFound);
             }
             VerifyCodeDataservice.UseVerifyCode(verifyCode, _dbContext);
-            string token = JWTHelper.GenerateToken(_dashboardJwtKey, 3 * 24 * 60);
+            string token = JWTHelper.GenerateToken(_dashboardJwtKey, 3 * 24 * 60, extraPayload);
             return new { token = token };
         }
     }

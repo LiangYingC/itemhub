@@ -12,7 +12,7 @@ using Homo.Core.Constants;
 
 namespace Homo.IotApi
 {
-    [IotAuthorizeFactory]
+    [IotDashboardAuthorizeFactory]
     [Route("v1/me/devices")]
     [Validate]
     public class MyDeviceController : ControllerBase

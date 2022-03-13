@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace Homo.IotApi
 {
-    [IotAuthorizeFactory]
+    [IotDashboardAuthorizeFactory]
     [Route("v1/google-smart-home")]
     [Validate]
     public class GoogleSmartHomeController : ControllerBase

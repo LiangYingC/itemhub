@@ -41,7 +41,7 @@ export class HeaderComponent extends BaseComponent {
     redirectToDashboard () {
         const dashboardToken = CookieUtil.getCookie('dashboardToken');
         const token = CookieUtil.getCookie('token');
-        if (dashboardToken) {
+        if (token && dashboardToken) {
             location.href = APP_CONFIG.DASHBOARD_URL;
         } else if (token && !dashboardToken) {
             history.pushState({}, '', '/auth/two-factor-auth/');

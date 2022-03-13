@@ -4,13 +4,14 @@ import { AuthController } from '../controllers/auth.controller.js';
 import { VerifyEmailController } from '../controllers/verify-email.controller.js';
 import { SignUpController } from '../controllers/sign-up.controller.js';
 import { SignUpFinishController } from '../controllers/sign-up-finish.controller.js';
+import { TwoFactorAuthController } from '../controllers/two-factor-auth.controller.js';
 
 export const AuthRoutingRule = {
     path: '/auth/',
     controller: AuthController,
     html: '/template/auth.html',
     children: [{
-        path: 'sign-in/',
+        path: 'sign-in/?redirectUrl',
         skipSitemap: true,
         controller: SignInController,
         html: '/template/sign-in.html',
@@ -43,5 +44,9 @@ export const AuthRoutingRule = {
         skipSitemap: true,
         controller: SignUpFinishController,
         html: '/template/sign-up-finish.html'
+    }, {
+        path: 'two-factor-auth/',
+        controller: TwoFactorAuthController,
+        html: '/template/two-factor-auth.html'
     }]
 };

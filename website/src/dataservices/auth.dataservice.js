@@ -79,5 +79,26 @@ export const AuthDataService = {
             method: 'POST',
             body: JSON.stringify(data)
         });
+    },
+    SendTwoFactorAuthMail: async (data) => {
+        const api = APP_CONFIG.API_ENDPOINT + API.SEND_TWO_FACTOR_AUTH_MAIL;
+        return ApiHelper.sendRequest(api, {
+            method: 'POST',
+            headers: {
+                Authorization: 'Bearer ' + data.token
+            }
+        });
+    },
+    ExchangeDashboardToken: async (data) => {
+        const api = APP_CONFIG.API_ENDPOINT + API.EXCHANGE_DASHBOARD_TOKEN;
+        return ApiHelper.sendRequest(api, {
+            method: 'POST',
+            headers: {
+                Authorization: 'Bearer ' + data.token
+            },
+            body: JSON.stringify({
+                code: data.code
+            })
+        });
     }
 };

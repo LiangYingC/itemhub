@@ -18,5 +18,6 @@ namespace Homo.AuthApi
         public string Phone { get; set; }
         public bool? IsUsed { get; set; }
         public string Email { get; set; }
+        public bool? IsTwoFactorAuth { get; set; }
     }
 }

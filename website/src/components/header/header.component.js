@@ -46,7 +46,7 @@ export class HeaderComponent extends BaseComponent {
         } else if (token && !dashboardToken) {
             history.pushState({}, '', '/auth/two-factor-auth/');
         } else if (!token) {
-            history.replaceState({}, '', `/auth/sign-in/?redirectUrl=${encodeURIComponent('/two-factor-auth/')}`);
+            history.replaceState({}, '', `/auth/sign-in/?redirectUrl=${encodeURIComponent('/auth/two-factor-auth/')}`);
         }
     }
 }

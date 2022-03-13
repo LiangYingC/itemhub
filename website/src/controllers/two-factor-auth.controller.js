@@ -82,7 +82,7 @@ export class TwoFactorAuthController extends RoutingController {
             return;
         }
 
-        if (code.length !== 6 || isNaN(Number(code)) {
+        if (code.length !== 6 || isNaN(Number(code))) {
             Toaster.popup(Toaster.TYPE.ERROR, '驗證碼為六碼數字');
             return;
         }

@@ -6,6 +6,7 @@ import {
     FetchResult,
     FetchErrorResult,
 } from '@/types/helpers.type';
+import { COOKIE_KEY } from '@/constants/cookie-key';
 
 export const ApiHelpers = {
     SendRequestWithToken: <T>({
@@ -16,7 +17,8 @@ export const ApiHelpers = {
         shouldDeleteContentType = false,
         callbackFunc,
     }: SendRequestParams<T>) => {
-        const token = CookieHelpers.GetCookie({ name: 'dashboardToken' }) || '';
+        const token =
+            CookieHelpers.GetCookie({ name: COOKIE_KEY.DASHBOARD_TOKEN }) || '';
         return ApiHelpers.SendRequest<T>({
             apiPath,
             method,

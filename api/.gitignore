@@ -3,6 +3,6 @@ bin/
 appsettings.json
 secrets/
 node_modules
-Migrations/
 secrets.json
+secrets.migration.json
 package-lock.json

@@ -27,7 +27,7 @@ export const oauthClientsSlice = createSlice({
             if (list === null) {
                 return {
                     ...state,
-                    triggers: [newOne],
+                    oauthClients: [newOne],
                 };
             }
 

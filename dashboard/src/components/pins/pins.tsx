@@ -1,10 +1,10 @@
 import styles from './pins.module.scss';
 import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 import { useGetDevicePinsApi } from '@/hooks/apis/devices.hook';
+import Pin from '../switch-pin/pin';
 
-const Pins = () => {
-    const { id } = useParams();
+const Pins = (props: { id: number; isEditMode: boolean }) => {
+    const { id, isEditMode } = props;
     const { isLoading, devicePins, getDevicePinsApi } = useGetDevicePinsApi({
         id: Number(id),
     });
@@ -19,15 +19,16 @@ const Pins = () => {
             {isLoading || devicePins === null ? (
                 <div>Loading</div>
             ) : (
-                devicePins.map(({ deviceId, pin, state }) => (
-                    <div key={deviceId}>
-                        <div>deviceId: {deviceId}</div>
-                        <div>pin: {pin}</div>
-                        <div>state: {state}</div>
-                    </div>
-                ))
+                <div>
+                    {devicePins.map((pin) => (
+                        <Pin
+                            pinItem={pin}
+                            isEditMode={isEditMode}
+                            key={`${pin.deviceId}-${pin}`}
+                        />
+                    ))}
+                </div>
             )}
-            <button onClick={getDevicePinsApi}>refresh pin list</button>
         </div>
     );
 };

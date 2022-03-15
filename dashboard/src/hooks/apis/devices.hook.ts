@@ -10,6 +10,7 @@ import {
     RESPONSE_STATUS,
 } from '@/constants/api';
 import { ResponseOK } from '@/types/response.type';
+import { pinsActions } from '@/redux/reducers/pins.reducer';
 
 interface GetDevicesResponseData {
     devices: DeviceItem[];
@@ -110,6 +111,13 @@ export const useUpdateDeviceApi = ({
 };
 
 export const useGetDevicePinsApi = ({ id }: { id: number }) => {
+    const dispatch = useAppDispatch();
+    const dispatchRefreshPins = useCallback(
+        (data: PinItem[]) => {
+            dispatch(pinsActions.refreshPins(data));
+        },
+        [id, dispatch]
+    );
     let apiPath = `${API_URL}${END_POINT.DEVICE_PINS}`;
     apiPath = apiPath.replace(':id', id.toString());
 
@@ -117,6 +125,7 @@ export const useGetDevicePinsApi = ({ id }: { id: number }) => {
         apiPath,
         method: HTTP_METHOD.GET,
         initialData: null,
+        callbackFunc: dispatchRefreshPins,
     });
 
     return {
@@ -124,5 +133,86 @@ export const useGetDevicePinsApi = ({ id }: { id: number }) => {
         error,
         devicePins: data,
         getDevicePinsApi: fetchApi,
+    };
+};
+
+export const useUpdateDevicePinNameApi = ({
+    deviceId,
+    pin,
+    name,
+    callback,
+}: {
+    deviceId: number;
+    pin: string;
+    name: string | null;
+    callback: () => void;
+}) => {
+    const dispatch = useAppDispatch();
+    const dispatchUpdatePin = useCallback(
+        (data: ResponseOK) => {
+            if (data.status === RESPONSE_STATUS.OK) {
+                callback();
+                dispatch(pinsActions.updatePin({ name, deviceId, pin }));
+            }
+        },
+        [name, deviceId, pin, dispatch, callback]
+    );
+
+    let apiPath = `${API_URL}${END_POINT.DEVICE_PIN}`;
+    apiPath = apiPath.replace(':id', deviceId.toString()).replace(':pin', pin);
+
+    const { isLoading, error, fetchApi } = useFetchApi<ResponseOK>({
+        apiPath,
+        method: HTTP_METHOD.PATCH,
+        payload: {
+            name: name,
+        },
+        initialData: null,
+        callbackFunc: dispatchUpdatePin,
+    });
+
+    return {
+        isLoading,
+        error,
+        updateDevicePinNameApi: fetchApi,
+    };
+};
+
+export const useUpdateDeviceSwitchPinApi = ({
+    deviceId,
+    pin,
+    state,
+}: {
+    deviceId: number;
+    pin: string;
+    state: number;
+}) => {
+    const dispatch = useAppDispatch();
+    const dispatchUpdatePin = useCallback(
+        (data: ResponseOK) => {
+            if (data.status === RESPONSE_STATUS.OK) {
+                dispatch(pinsActions.updatePin({ state, deviceId, pin }));
+            }
+        },
+        [state, deviceId, pin, dispatch]
+    );
+
+    let apiPath = `${API_URL}${END_POINT.DEVICE_SWITCH_PIN}`;
+    apiPath = apiPath.replace(':id', deviceId.toString()).replace(':pin', pin);
+
+    const { isLoading, error, fetchApi } = useFetchApi<ResponseOK>({
+        apiPath,
+        method: HTTP_METHOD.PATCH,
+        payload: {
+            state,
+        },
+        initialData: null,
+        callbackFunc: dispatchUpdatePin,
+    });
+
+    return {
+        isLoading,
+        error,
+        updateDeviceSwitchPinApi: fetchApi,
     };
 };

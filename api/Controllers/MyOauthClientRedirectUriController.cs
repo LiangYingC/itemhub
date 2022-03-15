@@ -5,7 +5,7 @@ using Homo.Core.Constants;
 
 namespace Homo.IotApi
 {
-    [IotAuthorizeFactory]
+    [IotDashboardAuthorizeFactory]
     [Route("v1/me/oauth-client-redirect-uris")]
     [Validate]
     public class OauthClientRedirectUriController : ControllerBase

@@ -6,7 +6,7 @@ using Homo.Core.Helpers;
 
 namespace Homo.IotApi
 {
-    [IotAuthorizeFactory]
+    [IotDashboardAuthorizeFactory]
     [Route("v1/me/oauth-clients")]
     [Validate]
     public class OauthClientController : ControllerBase

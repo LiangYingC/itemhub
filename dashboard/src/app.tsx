@@ -3,7 +3,7 @@ import './app.scss';
 import { Outlet } from 'react-router-dom';
 import { CookieHelpers } from './helpers/cookie.helper';
 
-const isProd = import.meta.env.VITE_ENV === 'prod';
+const isDev = import.meta.env.VITE_ENV === 'dev';
 import { useQuery } from './hooks/query.hook';
 import { COOKIE_KEY } from './constants/cookie-key';
 
@@ -11,7 +11,7 @@ const App = () => {
     const query = useQuery();
     const dashboardTokenFromQueryString =
         query.get(COOKIE_KEY.DASHBOARD_TOKEN) || '';
-    if (!isProd && dashboardTokenFromQueryString) {
+    if (isDev && dashboardTokenFromQueryString) {
         CookieHelpers.SetCookie({
             name: COOKIE_KEY.DASHBOARD_TOKEN,
             value: dashboardTokenFromQueryString,

@@ -140,22 +140,19 @@ export const useUpdateDevicePinNameApi = ({
     deviceId,
     pin,
     name,
-    callback,
 }: {
     deviceId: number;
     pin: string;
     name: string | null;
-    callback: () => void;
 }) => {
     const dispatch = useAppDispatch();
     const dispatchUpdatePin = useCallback(
         (data: ResponseOK) => {
             if (data.status === RESPONSE_STATUS.OK) {
-                callback();
                 dispatch(pinsActions.updatePin({ name, deviceId, pin }));
             }
         },
-        [name, deviceId, pin, dispatch, callback]
+        [name, deviceId, pin, dispatch]
     );
 
     let apiPath = `${API_URL}${END_POINT.DEVICE_PIN}`;

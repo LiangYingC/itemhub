@@ -42,7 +42,7 @@ const Devices = () => {
                             <Link to={`/dashboard/devices/${id}`}>編輯</Link>
                         </div>
 
-                        <Pins id={Number(id)} isEditMode={false} />
+                        <Pins deviceId={Number(id)} isEditMode={false} />
                     </div>
                 ))
             )}

@@ -1,12 +1,12 @@
 import styles from './pins.module.scss';
 import { useEffect } from 'react';
 import { useGetDevicePinsApi } from '@/hooks/apis/devices.hook';
-import Pin from '../switch-pin/pin';
+import Pin from '@/components/pin/pin';
 
-const Pins = (props: { id: number; isEditMode: boolean }) => {
-    const { id, isEditMode } = props;
+const Pins = (props: { deviceId: number; isEditMode: boolean }) => {
+    const { deviceId, isEditMode } = props;
     const { isLoading, devicePins, getDevicePinsApi } = useGetDevicePinsApi({
-        id: Number(id),
+        id: Number(deviceId),
     });
 
     useEffect(() => {
@@ -20,11 +20,11 @@ const Pins = (props: { id: number; isEditMode: boolean }) => {
                 <div>Loading</div>
             ) : (
                 <div>
-                    {devicePins.map((pin) => (
+                    {devicePins.map((item) => (
                         <Pin
-                            pinItem={pin}
+                            pinItem={item}
                             isEditMode={isEditMode}
-                            key={`${pin.deviceId}-${pin}`}
+                            key={`${item.deviceId}-${item.pin}`}
                         />
                     ))}
                 </div>

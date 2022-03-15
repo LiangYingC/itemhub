@@ -1,8 +1,8 @@
 import { useUpdateDeviceSwitchPinApi } from '@/hooks/apis/devices.hook';
 import styles from './pin.module.scss';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useUpdateDevicePinNameApi } from '@/hooks/apis/devices.hook';
-import { useDebounce } from '../../hooks/debounce.hook';
+import { useDebounce } from '@/hooks/debounce.hook';
 import { PinItem } from '@/types/devices.type';
 
 const Pin = (props: { pinItem: PinItem; isEditMode: boolean }) => {
@@ -17,8 +17,7 @@ const Pin = (props: { pinItem: PinItem; isEditMode: boolean }) => {
     } = pinItem;
     const [value, setValue] = useState(valueFromPorps);
     const [name, setName] = useState(nameFromProps);
-    const [isNameChanged, setIsNameChanged] = useState(false);
-    const [hasInitialized, setHasInitialized] = useState(false);
+    const isNameChangedRef = useRef(false);
     const isSwitch = mode === 1;
 
     const { isLoading: isChanging, updateDeviceSwitchPinApi } =
@@ -33,9 +32,6 @@ const Pin = (props: { pinItem: PinItem; isEditMode: boolean }) => {
             deviceId,
             pin,
             name,
-            callback: () => {
-                setIsNameChanged(false);
-            },
         });
     const debounceUpdatePinName = useDebounce(updateDevicePinNameApi, 800);
 
@@ -45,20 +41,16 @@ const Pin = (props: { pinItem: PinItem; isEditMode: boolean }) => {
 
     const updateLocalPinName = (event: React.ChangeEvent<HTMLInputElement>) => {
         setName(event.target.value);
-        setIsNameChanged(true);
+        isNameChangedRef.current = true;
         debounceUpdatePinName();
     };
 
     useEffect(() => {
-        if (!hasInitialized) {
+        if (value && !isSwitch) {
             return;
         }
         updateDeviceSwitchPinApi();
     }, [value]);
-
-    useEffect(() => {
-        setHasInitialized(true);
-    }, []);
 
     return (
         <div className={`${styles.pin} d-flex align-items-center`}>
@@ -73,7 +65,7 @@ const Pin = (props: { pinItem: PinItem; isEditMode: boolean }) => {
                             onChange={updateLocalPinName}
                         />
                         <div>
-                            {isNameChanged
+                            {isNameChangedRef.current
                                 ? '名稱有異動'
                                 : isNameUpdating
                                 ? '更新中'

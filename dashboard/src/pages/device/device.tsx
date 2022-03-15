@@ -89,7 +89,7 @@ const Device = () => {
                     </div>
                     <div>
                         <h2>Pins Data</h2>
-                        <Pins id={Number(id)} isEditMode />
+                        <Pins deviceId={Number(id)} isEditMode />
                     </div>
                 </div>
             )}

@@ -12,6 +12,7 @@ export class SignOutController extends RoutingController {
     async render () {
         this.args.gtag('event', EVENTS.SIGN_OUT);
         CookieUtil.eraseCookie('token');
+        CookieUtil.eraseCookie('dashboardToken');
         history.pushState({}, '', '/');
     }
 }

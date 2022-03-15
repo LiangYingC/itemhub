@@ -39,7 +39,12 @@ const Devices = () => {
                             <div className="me-3">
                                 {online ? '在線' : '離線'}
                             </div>
-                            <Link to={`/dashboard/devices/${id}`}>編輯</Link>
+                            <Link
+                                className="me-3"
+                                to={`/dashboard/devices/${id}`}
+                            >
+                                編輯
+                            </Link>
                         </div>
 
                         <Pins deviceId={Number(id)} isEditMode={false} />

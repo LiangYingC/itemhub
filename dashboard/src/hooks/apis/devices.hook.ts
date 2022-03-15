@@ -110,6 +110,35 @@ export const useUpdateDeviceApi = ({
     };
 };
 
+export const useDeleteDeviceApi = ({ id }: { id: number }) => {
+    const dispatch = useAppDispatch();
+    const dispatchDeleteDeivce = useCallback(
+        (data: ResponseOK) => {
+            if (data.status === RESPONSE_STATUS.OK) {
+                dispatch(devicesActions.deleteDevice({ id }));
+            }
+        },
+        [id, dispatch]
+    );
+
+    let apiPath = `${API_URL}${END_POINT.DEVICE}`;
+    apiPath = apiPath.replace(':id', id.toString());
+
+    const { isLoading, error, fetchApi, data } = useFetchApi<ResponseOK>({
+        apiPath,
+        method: HTTP_METHOD.DELETE,
+        initialData: null,
+        callbackFunc: dispatchDeleteDeivce,
+    });
+
+    return {
+        isLoading,
+        error,
+        deleteDeviceApi: fetchApi,
+        data,
+    };
+};
+
 export const useGetDevicePinsApi = ({ id }: { id: number }) => {
     const dispatch = useAppDispatch();
     const dispatchRefreshPins = useCallback(

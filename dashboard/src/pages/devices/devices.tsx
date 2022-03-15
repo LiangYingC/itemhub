@@ -35,7 +35,7 @@ const Devices = () => {
                         title={`建立時間: ${createdAt}`}
                     >
                         <div className="d-flex">
-                            <div className="me-3">{name}</div>
+                            <div className="me-3 h2">{name}</div>
                             <div className="me-3">
                                 {online ? '在線' : '離線'}
                             </div>

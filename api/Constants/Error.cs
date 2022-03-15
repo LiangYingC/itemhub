@@ -9,6 +9,7 @@ namespace Homo.IotApi
         public static string DEVICE_STATE_EXISTS = "DEVICE_STATE_EXISTS";
         public static string TAPPAY_TRANSACTION_ERROR = "TAPPAY_TRANSACTION_ERROR";
         public static string DUPLICATE_SUBSCRIBE = "DUPLICATE_SUBSCRIBE";
+        public static string NO_SUBSCRIPTION = "NO_SUBSCRIPTION";
 
     }
 }

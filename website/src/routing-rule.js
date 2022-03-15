@@ -18,6 +18,8 @@ import { UniversalDataService } from './dataservices/universal.dataservice.js';
 import { CookieUtil } from './util/cookie.js';
 import { AuthRoutingRule } from './routing-rules/auth.routing-rule.js';
 import { TransactionController } from './controllers/transaction.controller.js';
+import { SubscriptionDataService } from './dataservices/subscription.dataservice.js';
+import { RESPONSE_STATUS } from './constants.js';
 
 const gTag = {
     dependency: {
@@ -142,7 +144,24 @@ export const RoutingRule = [{
                 path: 'me/',
                 skipSitemap: true,
                 controller: MeController,
-                html: '/template/me.html'
+                html: '/template/me.html',
+                prepareData: [{
+                    key: 'currentSubscription',
+                    func: async () => {
+                        const resp = (await SubscriptionDataService.GetMyCurrentSubscription({
+                            token: CookieUtil.getCookie('token')
+                        }));
+                        if (resp.status !== RESPONSE_STATUS.OK) {
+                            return null;
+                        }
+                        return resp.data;
+                    }
+                }, {
+                    key: 'pricingPlans',
+                    func: async () => {
+                        return (await UniversalDataService.GetPricingPlan()).data;
+                    }
+                }]
             }, {
                 path: 'checkout/?pricingPlan',
                 skipSitemap: true,

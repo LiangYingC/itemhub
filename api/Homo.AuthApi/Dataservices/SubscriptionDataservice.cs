@@ -31,6 +31,14 @@ namespace Homo.IotApi
             ).ToList<Subscription>();
         }
 
+        public static Subscription GetOne(IotDbContext dbContext, long? ownerId)
+        {
+            return dbContext.Subscription.Where(x =>
+                (ownerId == null || x.OwnerId == ownerId)
+                && x.DeletedAt == null
+            ).OrderByDescending(x => x.Id).FirstOrDefault();
+        }
+
         public static List<Subscription> GetShouldBeAutoPayNextPeriod(IotDbContext dbContext, DateTime nextStartAt)
         {
             DateTime filterStartAt = nextStartAt.AddMonths(-1);
@@ -46,7 +54,8 @@ namespace Homo.IotApi
 
         public static void CancelSubscription(IotDbContext dbContext, long ownerId)
         {
-
+            dbContext.Subscription.Where(x => x.DeletedAt == null && x.OwnerId == ownerId).UpdateFromQuery(x => new Subscription() { DeletedAt = DateTime.Now });
+            dbContext.SaveChanges();
         }
 
         public static Subscription GetOneByTransactionId(IotDbContext dbContext, long ownerId, long transactionId)

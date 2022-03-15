@@ -27,7 +27,8 @@ export const API = {
     CHECKOUT: 'checkout',
     CHECK_IN: 'users/check-in',
     TRANSACTION: 'my/transaction/{id}',
-    SUBSCRIPTION_BY_TRANSACTION_ID: 'my/subscription/by-transaction-id/{id}'
+    SUBSCRIPTION_BY_TRANSACTION_ID: 'my/subscription/by-transaction-id/{id}',
+    SUBSCRIPTION: 'my/subscription'
 };
 
 export const OAUTH_TYPE = {

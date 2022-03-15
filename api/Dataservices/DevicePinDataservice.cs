@@ -31,7 +31,7 @@ namespace Homo.IotApi
                     DeviceId = x.DeviceId,
                     Pin = x.Pin,
                     Mode = DEVICE_MODE.SENSOR,
-                    State = (decimal)y.Value,
+                    Value = (decimal)y.Value,
                     CreatedAt = y.CreatedAt,
                     OwnerId = ownerId
                 });
@@ -47,7 +47,7 @@ namespace Homo.IotApi
                     DeviceId = x.DeviceId,
                     Pin = x.Pin,
                     Mode = DEVICE_MODE.SWITCH,
-                    State = (decimal)x.Value,
+                    Value = (decimal)x.Value,
                     CreatedAt = null,
                     OwnerId = x.OwnerId
                 });
@@ -64,7 +64,7 @@ namespace Homo.IotApi
                 DeviceId = x.SensorGroupByDevice.DeviceId,
                 Pin = x.SensorGroupByDevice.Pin,
                 Mode = x.SensorGroupByDevice.Mode,
-                State = x.SensorGroupByDevice.State,
+                Value = x.SensorGroupByDevice.Value,
                 CreatedAt = x.SensorGroupByDevice.CreatedAt,
                 Name = x.DevicePinName
             }).ToList<DevicePin>();
@@ -111,7 +111,7 @@ namespace Homo.IotApi
         public string Pin { get; set; }
         public long DeviceId { get; set; }
         public DEVICE_MODE Mode { get; set; }
-        public decimal State { get; set; }
+        public decimal Value { get; set; }
         public DateTime? CreatedAt { get; set; }
         public string Name { get; set; }
         public long OwnerId { get; set; }

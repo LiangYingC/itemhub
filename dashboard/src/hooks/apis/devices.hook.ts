@@ -181,20 +181,20 @@ export const useUpdateDevicePinNameApi = ({
 export const useUpdateDeviceSwitchPinApi = ({
     deviceId,
     pin,
-    state,
+    value,
 }: {
     deviceId: number;
     pin: string;
-    state: number;
+    value: number;
 }) => {
     const dispatch = useAppDispatch();
     const dispatchUpdatePin = useCallback(
         (data: ResponseOK) => {
             if (data.status === RESPONSE_STATUS.OK) {
-                dispatch(pinsActions.updatePin({ state, deviceId, pin }));
+                dispatch(pinsActions.updatePin({ value, deviceId, pin }));
             }
         },
-        [state, deviceId, pin, dispatch]
+        [value, deviceId, pin, dispatch]
     );
 
     let apiPath = `${API_URL}${END_POINT.DEVICE_SWITCH_PIN}`;
@@ -204,7 +204,7 @@ export const useUpdateDeviceSwitchPinApi = ({
         apiPath,
         method: HTTP_METHOD.PATCH,
         payload: {
-            state,
+            value,
         },
         initialData: null,
         callbackFunc: dispatchUpdatePin,

@@ -1,6 +1,6 @@
 import { useUpdateDeviceSwitchPinApi } from '@/hooks/apis/devices.hook';
 import styles from './pin.module.scss';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useUpdateDevicePinNameApi } from '@/hooks/apis/devices.hook';
 import { useDebounce } from '../../hooks/debounce.hook';
 import { PinItem } from '@/types/devices.type';
@@ -12,19 +12,20 @@ const Pin = (props: { pinItem: PinItem; isEditMode: boolean }) => {
         pin,
         createdAt,
         mode,
-        state: stateFromPorps,
+        value: valueFromPorps,
         name: nameFromProps,
     } = pinItem;
-    const [state, setState] = useState(stateFromPorps);
+    const [value, setValue] = useState(valueFromPorps);
     const [name, setName] = useState(nameFromProps);
     const [isNameChanged, setIsNameChanged] = useState(false);
+    const [hasInitialized, setHasInitialized] = useState(false);
     const isSwitch = mode === 1;
 
     const { isLoading: isChanging, updateDeviceSwitchPinApi } =
         useUpdateDeviceSwitchPinApi({
             deviceId,
             pin,
-            state,
+            value,
         });
 
     const { updateDevicePinNameApi, isLoading: isNameUpdating } =
@@ -38,9 +39,8 @@ const Pin = (props: { pinItem: PinItem; isEditMode: boolean }) => {
         });
     const debounceUpdatePinName = useDebounce(updateDevicePinNameApi, 800);
 
-    const updateState = () => {
-        setState(state === 1 ? 0 : 1);
-        updateDeviceSwitchPinApi();
+    const toggleSwitch = () => {
+        setValue(value === 1 ? 0 : 1);
     };
 
     const updateLocalPinName = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,6 +48,17 @@ const Pin = (props: { pinItem: PinItem; isEditMode: boolean }) => {
         setIsNameChanged(true);
         debounceUpdatePinName();
     };
+
+    useEffect(() => {
+        if (!hasInitialized) {
+            return;
+        }
+        updateDeviceSwitchPinApi();
+    }, [value]);
+
+    useEffect(() => {
+        setHasInitialized(true);
+    }, []);
 
     return (
         <div className={`${styles.pin} d-flex align-items-center`}>
@@ -77,11 +88,11 @@ const Pin = (props: { pinItem: PinItem; isEditMode: boolean }) => {
             {isSwitch ? (
                 <div className="state d-flex align-items-center">
                     開關:
-                    <div>{state === 1 ? '開' : '關'}</div>
+                    <div>{value === 1 ? '開' : '關'}</div>
                     {isEditMode ? (
                         <button
                             className="btn border ms-3"
-                            onClick={updateState}
+                            onClick={toggleSwitch}
                             disabled={isChanging}
                         >
                             切換
@@ -90,7 +101,7 @@ const Pin = (props: { pinItem: PinItem; isEditMode: boolean }) => {
                 </div>
             ) : (
                 <div>
-                    感測器: {state}
+                    感測器: {value}
                     <span>(最後收到資料的時間 {createdAt})</span>
                 </div>
             )}

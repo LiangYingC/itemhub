@@ -26,6 +26,7 @@ namespace Homo.IotApi
 
         public virtual DbSet<DevicePinSwitch> DevicePinSwitch { get; set; }
         public virtual DbSet<DevicePinSensor> DevicePinSensor { get; set; }
+        public virtual DbSet<DevicePinName> DevicePinName { get; set; }
         public virtual DbSet<Trigger> Trigger { get; set; }
         public virtual DbSet<Subscription> Subscription { get; set; }
         public virtual DbSet<Transaction> Transaction { get; set; }
@@ -70,6 +71,13 @@ namespace Homo.IotApi
                 entity.HasIndex(p => new { p.DeviceId });
                 entity.HasIndex(p => new { p.OwnerId });
                 entity.HasOne(p => p.Device).WithMany().HasForeignKey(p => p.DeviceId);
+            });
+
+            modelBuilder.Entity<DevicePinName>(entity =>
+            {
+                entity.HasIndex(p => new { p.Pin });
+                entity.HasIndex(p => new { p.DeviceId });
+                entity.HasIndex(p => new { p.OwnerId });
             });
 
             modelBuilder.Entity<Trigger>(entity =>

@@ -32,6 +32,9 @@ const Pin = (props: { pinItem: PinItem; isEditMode: boolean }) => {
             deviceId,
             pin,
             name,
+            callbackFunc: () => {
+                isNameChangedRef.current = false;
+            },
         });
     const debounceUpdatePinName = useDebounce(updateDevicePinNameApi, 800);
 
@@ -50,7 +53,7 @@ const Pin = (props: { pinItem: PinItem; isEditMode: boolean }) => {
             return;
         }
         updateDeviceSwitchPinApi();
-    }, [value]);
+    }, [value, isSwitch]);
 
     return (
         <div className={`${styles.pin} d-flex align-items-center`}>

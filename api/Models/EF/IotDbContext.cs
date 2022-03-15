@@ -44,7 +44,7 @@ namespace Homo.IotApi
             {
                 entity.HasIndex(p => new { p.ClientId });
                 entity.HasIndex(p => new { p.OwnerId });
-                entity.HasIndex(p => new { p.OwnerId, p.ClientId }).IsUnique();
+                entity.HasIndex(p => new { p.OwnerId, p.ClientId, p.DeletedAt }).IsUnique();
             });
 
             modelBuilder.Entity<Device>(entity =>

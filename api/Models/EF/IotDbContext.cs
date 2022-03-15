@@ -42,8 +42,9 @@ namespace Homo.IotApi
 
             modelBuilder.Entity<OauthClient>(entity =>
             {
-                entity.HasIndex(p => new { p.ClientId }).IsUnique();
+                entity.HasIndex(p => new { p.ClientId });
                 entity.HasIndex(p => new { p.OwnerId });
+                entity.HasIndex(p => new { p.OwnerId, p.ClientId }).IsUnique();
             });
 
             modelBuilder.Entity<Device>(entity =>

@@ -156,6 +156,7 @@ export class SignUpController extends RoutingController {
             return;
         }
         CookieUtil.setCookie('token', resp.data.token);
+        CookieUtil.setCookie('dashboardToken', resp.data.dashboardToken);
         history.pushState({}, '', '/auth/finish/');
     }
 

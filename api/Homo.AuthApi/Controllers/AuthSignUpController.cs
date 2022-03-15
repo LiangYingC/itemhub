@@ -18,6 +18,7 @@ namespace Homo.AuthApi
         private readonly Homo.Api.CommonLocalizer _commonLocalizer;
         private readonly DBContext _dbContext;
         private readonly string _jwtKey;
+        private readonly string _dashboardJwtKey;
         private readonly string _signUpJwtKey;
         private readonly string _verifyPhoneJwtKey;
         private readonly int _jwtExpirationMonth;
@@ -40,6 +41,7 @@ namespace Homo.AuthApi
             Common common = (Common)appSettings.Value.Common;
             _commonLocalizer = commonLocalizer;
             _jwtKey = secrets.JwtKey;
+            _dashboardJwtKey = secrets.DashboardJwtKey;
             _jwtExpirationMonth = common.JwtExpirationMonth;
             _signUpJwtKey = secrets.SignUpJwtKey;
             _verifyPhoneJwtKey = secrets.VerifyPhoneJwtKey;
@@ -132,16 +134,19 @@ namespace Homo.AuthApi
             string[] roles = permissions.SelectMany(x => Newtonsoft.Json.JsonConvert.DeserializeObject<string[]>(x.Roles)).ToArray();
 
             string token = JWTHelper.GenerateToken(_jwtKey, _jwtExpirationMonth * 30 * 24 * 60, userPayload);
+            string dashboardToken = JWTHelper.GenerateToken(_dashboardJwtKey, _jwtExpirationMonth * 3 * 24 * 60, userPayload);
 
             if (_authByCookie)
             {
                 Response.Cookies.Append("token", token, AuthHelper.GetSecureCookieOptions());
+                Response.Cookies.Append("dashboardToken", dashboardToken, AuthHelper.GetSecureCookieOptions());
             }
             else
             {
                 return new
                 {
-                    Token = token
+                    Token = token,
+                    DashboardToken = dashboardToken
                 };
             }
 

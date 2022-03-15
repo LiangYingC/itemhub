@@ -101,7 +101,11 @@ export class TwoFactorAuthController extends RoutingController {
             return;
         }
 
-        CookieUtil.setCookie('dashboardToken', resp.data.token);
-        location.href = APP_CONFIG.DASHBOARD_URL;
+        if (APP_CONFIG.ENV === 'dev') {
+            location.href = `${APP_CONFIG.DASHBOARD_URL}?dashboardToken=${resp.data.token}`;
+        } else {
+            CookieUtil.setCookie('dashboardToken', resp.data.token);
+            location.href = APP_CONFIG.DASHBOARD_URL;
+        }
     }
 }

@@ -23,6 +23,8 @@ namespace Homo.IotApi
         public string TapPayPartnerKey { get; set; }
         public string TapPayMerchantId { get; set; }
 
+        public string DashboardJwtKey { get; set; }
+
     }
 
     public class Common : Homo.Api.ICommon

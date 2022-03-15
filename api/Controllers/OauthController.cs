@@ -22,7 +22,7 @@ namespace Homo.IotApi
             _iotDbContext = iotDbContext;
             _dbContext = dbContext;
             AppSettings settings = optionAppSettings.Value;
-            _jwtKey = settings.Secrets.JwtKey;
+            _jwtKey = settings.Secrets.DashboardJwtKey;
             _refreshJwtKey = settings.Secrets.RefreshJwtKey;
         }
 

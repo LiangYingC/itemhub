@@ -1,9 +1,6 @@
 @import 'overwrite.scss';
 
 .checkout {
-    .transaction-content {
-        max-width: 37.5em;
-    }
     .checkout-content {
         max-width: 37.5em;
     }
@@ -12,6 +9,7 @@
             visibility: hidden;
             opacity: 0;
             max-height: 0;
+            overflow: hidden;
         }
         input[type='radio']:checked {
             ~ .pricing-item {

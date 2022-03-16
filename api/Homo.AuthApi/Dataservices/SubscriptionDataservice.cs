@@ -54,7 +54,7 @@ namespace Homo.IotApi
 
         public static void CancelSubscription(IotDbContext dbContext, long ownerId)
         {
-            dbContext.Subscription.Where(x => x.DeletedAt == null && x.OwnerId == ownerId).UpdateFromQuery(x => new Subscription() { DeletedAt = DateTime.Now });
+            dbContext.Subscription.Where(x => x.DeletedAt == null && x.OwnerId == ownerId).UpdateFromQuery(x => new Subscription() { StopNextSubscribed = true });
             dbContext.SaveChanges();
         }
 

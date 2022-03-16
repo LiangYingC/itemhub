@@ -52,16 +52,11 @@ namespace Homo.IotApi
         }
 
         [HttpDelete]
-        public async Task<dynamic> cancelSubscription(Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
+        public ActionResult<dynamic> cancelSubscription(Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
             long ownerId = extraPayload.Id;
             var subscription = SubscriptionDataservice.GetOne(_dbContext, ownerId);
             SubscriptionDataservice.CancelSubscription(_dbContext, ownerId);
-            await MailHelper.Send(MailProvider.SEND_GRID, new MailTemplate()
-            {
-                Subject = "使用者取消訂閱 - 請手動退款",
-                Content = $"取消的 Subscripton ID: {subscription.Id}"
-            }, _systemEmail, "itemhub.tw@gmail.com", _sendGridApiKey);
             return new { status = CUSTOM_RESPONSE.OK };
         }
 

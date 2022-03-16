@@ -44,7 +44,8 @@ namespace Homo.AuthApi
                 throw new CustomException(ERROR_CODE.UNAUTH_ACCESS_API, HttpStatusCode.Unauthorized);
             }
 
-            long? userId = JWTHelper.GetUserIdFromRequest(_jwtKey, context.HttpContext.Request);
+            var extraPayload = Newtonsoft.Json.JsonConvert.DeserializeObject<DTOs.JwtExtraPayload>(payload.FindFirstValue("extra"));
+            long? userId = extraPayload.Id;
 
             if (userId == null && isSignUp == false)
             {

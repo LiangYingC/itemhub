@@ -135,4 +135,9 @@ export class CheckoutController extends RoutingController {
             this.elHTML.querySelector('.triple-invoice-detail').addClass('d-none');
         }
     }
+
+    changeUrlPricingPlanValue () {
+        const path = `/checkout/?pricingPlan=${this.elHTML.querySelector('[name="pricing"]:checked').value}`;
+        history.replaceState({}, '', path);
+    }
 }

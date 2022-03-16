@@ -10,10 +10,6 @@ namespace Homo.IotApi
     {
         public static decimal GetPrice(PRICING_PLAN pricingPlan)
         {
-            if (pricingPlan == PRICING_PLAN.FREE)
-            {
-                return 0;
-            }
             if (pricingPlan == PRICING_PLAN.BASIC)
             {
                 return 49;
@@ -34,10 +30,6 @@ namespace Homo.IotApi
         }
         public static decimal GetDeviceCount(PRICING_PLAN pricingPlan)
         {
-            if (pricingPlan == PRICING_PLAN.FREE)
-            {
-                return 2;
-            }
             if (pricingPlan == PRICING_PLAN.BASIC)
             {
                 return 5;
@@ -58,10 +50,6 @@ namespace Homo.IotApi
         }
         public static decimal GetFrequency(PRICING_PLAN pricingPlan)
         {
-            if (pricingPlan == PRICING_PLAN.FREE)
-            {
-                return 30;
-            }
             if (pricingPlan == PRICING_PLAN.BASIC)
             {
                 return 15;
@@ -82,10 +70,6 @@ namespace Homo.IotApi
         }
         public static string GetStorageTime(PRICING_PLAN pricingPlan)
         {
-            if (pricingPlan == PRICING_PLAN.FREE)
-            {
-                return "30 分鐘";
-            }
             if (pricingPlan == PRICING_PLAN.BASIC)
             {
                 return "6 小時";

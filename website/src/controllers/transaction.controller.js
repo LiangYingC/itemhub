@@ -29,6 +29,7 @@ export class TransactionController extends RoutingController {
         };
 
         await super.render({
+            transactionOrder: '',
             transactionMessage: '交易進行中',
             subscriptionPeriod: '',
             priceAtThisPeriod: '',

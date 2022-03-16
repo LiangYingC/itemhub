@@ -1,20 +1,22 @@
 <div class="bg-dark-blue">
     <div class="checkout container">
         <link href="/css/checkout.css" rel="stylesheet">
-        <div class="checkout-content mx-auto text-black-opacity-85">
+        <div class="checkout-content mx-auto text-black-opacity-85 checkout-form">
             <h2 class="text-center py-4">
                 訂閱 ItemHub
             </h2>
-            <div class="rounded bg-white px-4 pt-45 pb-4 mb-4 checkout-form">
+            <div class="rounded bg-white px-4 pt-45 pb-4 mb-4">
                 <div class="d-flex align-items-center mb-4">
                     <h4 class="flex-shrink-0 text-black-opacity-85 pe-3 mb-0">訂閱方案</h4>
                     <div class="border-top border-black-opacity-15 flex-fill"></div>
                 </div>
                 <div swim-for="pricing in pricingPlans" class="pricing">
                     <label
-                        class="d-block border border-black-opacity-25 rounded position-relative border-black-opacity-15 mb-3">
+                        class="d-block border border-black-opacity-25 rounded position-relative border-black-opacity-15 mb-3"
+                        role="button">
                         <input type="radio" name="pricing" value="{value}"
-                            class="w-100 h-100 position-absolute top-0 invisible">
+                            class="w-100 h-100 position-absolute top-0 invisible"
+                            onclick="controller.changeUrlPricingPlanValue">
                         <div class="d-flex justify-content-between p-3 pricing-item">
                             <div class="">
                                 <span class="d-none icon-check">✓</span>
@@ -57,8 +59,37 @@
             </div>
             <div class="rounded bg-white px-4 py-45 mb-4">
                 <div class="d-flex align-items-center mb-4">
-                    <h4 class="flex-shrink-0 text-black-opacity-85 pe-3 mb-0">付款</h4>
+                    <h4 class="flex-shrink-0 text-black-opacity-85 pe-3 mb-0">付款資訊</h4>
                     <div class="border-top border-black-opacity-15 flex-fill"></div>
+                </div>
+                <div class="d-md-flex justify-content-between mt-4">
+                    <label class="flex-fill w-100">
+                        <div class="mb-2">持卡人姓名</div>
+                        <input class="form-control bg-white text-black-opacity-85 border-black-opacity-25 px-3 py-25"
+                            data-field="name" type="text" value="vicky" placeholder="請輸入姓名" tabindex="1">
+                        <div class="validation text-danger mt-2">
+
+                        </div>
+                    </label>
+                    <label class="flex-fill w-100 ps-md-4 mt-4 mt-md-0">
+                        <div class="mb-2">電話</div>
+                        <input class="form-control bg-white text-black-opacity-85 border-black-opacity-25 px-3 py-25"
+                            data-field="phone" type="text" value="0908966725" placeholder="請輸入電話" tabindex="2">
+                        <div class="validation text-danger mt-2">
+
+                        </div>
+                    </label>
+                </div>
+                <div>
+                    <label class="w-100 mt-4 mt-md-0">
+                        <div class="mb-2">Email</div>
+                        <input class="form-control bg-white text-black-opacity-85 border-black-opacity-25 px-3 py-25"
+                            data-field="email" type="text" value="vickychou99@gmail.com" placeholder="請輸入Email"
+                            tabindex="3">
+                        <div class="validation text-danger mt-2">
+
+                        </div>
+                    </label>
                 </div>
                 <div>
                     <div class="mb-2">信用卡卡號</div>
@@ -69,18 +100,18 @@
                 </div>
                 <div class="d-md-flex justify-content-between mt-4">
                     <label class="flex-fill w-100">
-                        <div class="mb-2">後三碼</div>
-                        <div class="">
-                            <div class="tpfield ccv"></div>
+                        <div class="mb-2">到期日</div>
+                        <div class="d-flex align-items-center">
+                            <div class="tpfield expiration"></div>
                         </div>
                         <div class="validation text-danger mt-2">
 
                         </div>
                     </label>
                     <label class="flex-fill w-100 ms-0 ms-md-4 mt-4 mt-md-0">
-                        <div class="mb-2">到期日</div>
-                        <div class="d-flex align-items-center">
-                            <div class="tpfield expiration"></div>
+                        <div class="mb-2">後三碼</div>
+                        <div class="">
+                            <div class="tpfield ccv"></div>
                         </div>
                         <div class="validation text-danger mt-2">
 

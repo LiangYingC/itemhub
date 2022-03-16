@@ -41,7 +41,7 @@ namespace Homo.IotApi
             var serverVersion = new MySqlServerVersion(new Version(8, 0, 25));
             iotBuilder.UseMySql(_dbc, serverVersion);
             IotDbContext _iotDbContext = new IotDbContext(iotBuilder.Options);
-            DeviceActivityLogDataservice.Delete(_iotDbContext, DateTime.Now.AddDays(-7));
+            DeviceActivityLogDataservice.Delete(_iotDbContext, DateTime.Now.AddDays(-1));
             return Task.CompletedTask;
         }
 

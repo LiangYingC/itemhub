@@ -21,5 +21,15 @@ namespace Homo.IotApi
             [MaxLength(128)]
             public string client_secret { get; set; }
         }
+
+        public partial class ExchangeTokenByDevice : DTOs
+        {
+            [Required]
+            [MaxLength(128)]
+            public string clientId { get; set; }
+            [Required]
+            [MaxLength(128)]
+            public string clientSecret { get; set; }
+        }
     }
 }

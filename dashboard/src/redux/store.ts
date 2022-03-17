@@ -1,4 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
+import pinsReducer from './reducers/pins.reducer';
 import devicesReducer from './reducers/devices.reducer';
 import oauthClientsReducer from './reducers/oauth-clients.reducer';
 import triggersReducer from './reducers/triggers.reducer';
@@ -8,6 +9,7 @@ const store = configureStore({
         devices: devicesReducer,
         oauthClients: oauthClientsReducer,
         triggers: triggersReducer,
+        pins: pinsReducer,
     },
 });
 

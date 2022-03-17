@@ -27,6 +27,8 @@ $font-size-base-for-small-screen: 14px;
 $small-font-size: 14px;
 $small-font-size-for-small-screen: 12px;
 
+$font-weight-bold: 600;
+
 $opacity: (
     100: 1,
     85: 0.85,
@@ -84,6 +86,7 @@ $theme-colors: (
     'darkest-blue': $darkest-blue,
     'deep-dark-blue': $deep-dark-blue,
     'black-opacity-25': rgba($black, 0.25),
+    'black-opacity-85': rgba($black, 0.85),
     'primary-100': $primary-100,
     'primary-200': $primary-200,
     'primary-300': $primary-300,

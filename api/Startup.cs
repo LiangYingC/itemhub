@@ -21,11 +21,15 @@ namespace Homo.IotApi
         {
             Console.WriteLine(env.EnvironmentName);
             _env = env;
+            string secretsFilename = "secrets.json";
+            if (_env.EnvironmentName == "migration") // 測試環境必須要有 secrets.migration.json 才有辦法透過 webhook-deployment 來做 production db migration
+            {
+                secretsFilename = "secrets.migration.json";
+            }
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddJsonFile($"secrets.json", optional: true)
+                .AddJsonFile(secretsFilename, optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
         }

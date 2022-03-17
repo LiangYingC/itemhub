@@ -36,5 +36,14 @@ namespace Homo.IotApi
             return new { status = CUSTOM_RESPONSE.OK };
         }
 
+        [HttpPatch]
+        [Route("{pin}")]
+        public ActionResult<dynamic> updatePinName([FromRoute] long id, [FromRoute] string pin, [FromBody] DTOs.DevicePinName dto, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
+        {
+            long ownerId = extraPayload.Id;
+            DevicePinDataservice.UpdatePinName(_dbContext, ownerId, id, pin, dto.Name);
+            return new { status = CUSTOM_RESPONSE.OK };
+        }
+
     }
 }

@@ -44,6 +44,15 @@ export const devicesSlice = createSlice({
 
             return devices;
         },
+        deleteDevice: (state, action: PayloadAction<Partial<DeviceItem>>) => {
+            const devices = state;
+
+            if (devices === null) {
+                throw new Error('Can not updateDevice when devices is null.');
+            }
+
+            return devices.filter((item) => item.id === action.payload.id);
+        },
     },
 });
 

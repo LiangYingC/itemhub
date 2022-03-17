@@ -81,5 +81,12 @@ namespace Homo.AuthApi
             [Required]
             public string VerifyPhoneToken { get; set; }
         }
+
+        public partial class UpdateName
+        {
+            public string FirstName { get; set; }
+
+            public string LastName { get; set; }
+        }
     }
 }

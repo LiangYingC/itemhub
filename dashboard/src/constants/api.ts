@@ -6,6 +6,8 @@ export const END_POINT = {
     DEVICES: 'me/devices',
     DEVICE: 'me/devices/:id',
     DEVICE_PINS: 'me/devices/:id/pins',
+    DEVICE_SWITCH_PIN: 'me/devices/:id/switches/:pin',
+    DEVICE_PIN: 'me/devices/:id/pins/:pin',
     OAUTH_CLIENTS: 'me/oauth-clients',
     OAUTH_CLIENT: 'me/oauth-clients/:id',
     OAUTH_CLIENT_REVOKE_SECRET: 'me/oauth-clients/:id/revoke-secret',

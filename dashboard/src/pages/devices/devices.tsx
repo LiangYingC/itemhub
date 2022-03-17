@@ -5,6 +5,7 @@ import { useQuery } from '@/hooks/query.hook';
 import { useAppSelector } from '@/hooks/redux.hook';
 import { useGetDevicesApi } from '@/hooks/apis/devices.hook';
 import { selectDevices } from '@/redux/reducers/devices.reducer';
+import Pins from '@/components/pins/pins';
 
 const Devices = () => {
     const query = useQuery();
@@ -23,29 +24,30 @@ const Devices = () => {
 
     return (
         // UI 結構等設計稿後再重構調整
-        <div className={styles.devices} data-testid="Devices">
+        <div className={`${styles.devices} `} data-testid="Devices">
             {isLoading || devices === null ? (
                 <div>Loading</div>
             ) : (
-                devices.map(({ id, name, createdAt }) => (
-                    <div key={id}>
-                        <table>
-                            <tr>
-                                <th>Id</th>
-                                <th>Name</th>
-                                <th>CreateTime</th>
-                            </tr>
-                            <tr>
-                                <td>{id}</td>
-                                <td>{name}</td>
-                                <td>{createdAt}</td>
-                            </tr>
-                            <tr>
-                                <Link to={`/dashboard/devices/${id}`}>
-                                    Go to {name} detail page
-                                </Link>
-                            </tr>
-                        </table>
+                devices.map(({ id, name, createdAt, online }) => (
+                    <div
+                        className="mb-3 border w-50"
+                        key={id}
+                        title={`建立時間: ${createdAt}`}
+                    >
+                        <div className="d-flex">
+                            <div className="me-3 h2">{name}</div>
+                            <div className="me-3">
+                                {online ? '在線' : '離線'}
+                            </div>
+                            <Link
+                                className="me-3"
+                                to={`/dashboard/devices/${id}`}
+                            >
+                                編輯
+                            </Link>
+                        </div>
+
+                        <Pins deviceId={Number(id)} isEditMode={false} />
                     </div>
                 ))
             )}

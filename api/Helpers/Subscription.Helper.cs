@@ -66,7 +66,7 @@ namespace Homo.IotApi
             {
                 return 1;
             }
-            return 0;
+            return 999999;
         }
         public static string GetStorageTime(PRICING_PLAN pricingPlan)
         {
@@ -86,7 +86,7 @@ namespace Homo.IotApi
             {
                 return "7天";
             }
-            return "0 分鐘";
+            return "";
         }
     }
 }

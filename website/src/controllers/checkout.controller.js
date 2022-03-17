@@ -52,6 +52,26 @@ export class CheckoutController extends RoutingController {
                 item.setAttribute('checked', 'checked');
             }
         });
+
+        const token = CookieUtil.getCookie('token');
+        const payload = window.jwt_decode(token);
+
+        const firstName = payload.extra.FirstName;
+        const lastName = payload.extra.LastName;
+        let name = '';
+        if (firstName !== null && firstName !== undefined) {
+            name = firstName;
+        }
+        if (lastName !== null && lastName !== undefined) {
+            name += lastName;
+        }
+        if (lastName !== null && lastName !== undefined) {
+            name += lastName;
+        }
+
+        this.elHTML.querySelector('[data-field=email').value = payload.extra.Email;
+        this.elHTML.querySelector('[data-field=name').value = name;
+        this.elHTML.querySelector('[data-field=phone').value = payload.extra.PseudonymousPhone;
     }
 
     async postRender () {

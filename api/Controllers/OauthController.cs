@@ -159,7 +159,7 @@ namespace Homo.IotApi
 
             string token = JWTHelper.GenerateToken(_jwtKey, 24 * 30 * 24 * 60, new
             {
-                pricingPlan = subscrioption.PricingPlan
+                pricingPlan = subscrioption?.PricingPlan
             }, null);
 
             return new

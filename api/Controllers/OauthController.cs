@@ -144,9 +144,6 @@ namespace Homo.IotApi
         [HttpPost]
         public ActionResult<dynamic> exchangeTokenForDevice([FromBody] DTOs.ExchangeTokenByDevice dto)
         {
-            System.Console.WriteLine($"testing:{Newtonsoft.Json.JsonConvert.SerializeObject(dto.clientId, Newtonsoft.Json.Formatting.Indented)}");
-            System.Console.WriteLine($"testing:{Newtonsoft.Json.JsonConvert.SerializeObject(CryptographicHelper.GenerateSaltedHash("@Testing123123", "YJRXWMTWDHHBUCDUGCXXGGXQXVUIJCSSFRZKDHCQFKPXKRLXYNUNJYNRMBZASLMBPOWDDSRZAGRVQZFFJXJVIFJHDHYBHBYUXOIVVIUFWUNCGRAMVUQVBQSKFOZVTPSY"), Newtonsoft.Json.Formatting.Indented)}");
-
             OauthClient client = OauthClientDataservice.GetOneByClientId(_iotDbContext, dto.clientId);
             if (client == null)
             {
@@ -157,8 +154,18 @@ namespace Homo.IotApi
             {
                 throw new CustomException(ERROR_CODE.OAUTH_CLIENT_SECRET_ERROR, System.Net.HttpStatusCode.Unauthorized);
             }
-            string token = JWTHelper.GenerateToken(_jwtKey, 24 * 30 * 24 * 60, null, null);
-            return new { token = token };
+
+            Subscription subscrioption = SubscriptionDataservice.GetOne(_iotDbContext, client.OwnerId);
+
+            string token = JWTHelper.GenerateToken(_jwtKey, 24 * 30 * 24 * 60, new
+            {
+                pricingPlan = subscrioption.PricingPlan
+            }, null);
+
+            return new
+            {
+                token = token
+            };
         }
     }
 }

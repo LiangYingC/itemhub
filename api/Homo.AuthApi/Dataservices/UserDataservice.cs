@@ -219,6 +219,28 @@ namespace Homo.AuthApi
             dbContext.SaveChanges();
         }
 
+        public static void UpdateName(DBContext dbContext, long id, DTOs.UpdateName dto, long editedBy)
+        {
+            System.Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject("!!", Newtonsoft.Json.Formatting.Indented));
+            User record = dbContext.User.Where(x => x.Id == id).FirstOrDefault();
+            foreach (var propOfDTO in dto.GetType().GetProperties())
+            {
+                var value = propOfDTO.GetValue(dto);
+                try
+                {
+                    var prop = record.GetType().GetProperty(propOfDTO.Name);
+                    prop.SetValue(record, value);
+                }
+                catch (System.Exception ex)
+                {
+                    throw new Exception(propOfDTO.Name + ", " + ex.Message + "\r\n" + ex.StackTrace);
+                }
+            }
+            record.EditedAt = DateTime.Now;
+            record.EditedBy = editedBy;
+            dbContext.SaveChanges();
+        }
+
         public static void UpdatePhone(DBContext dbContext, long id, string encryptPhone, string pseudonymousPhone, long editedBy)
         {
             User record = new User() { Id = id };

@@ -22,12 +22,14 @@ export const API = {
     EXCHANGE_DASHBOARD_TOKEN: 'auth/exchange-dashboard-token',
     UNIVERSAL_SOCIAL_MEDIA_TYPE: 'universal/social-media-types',
     UNIVERSAL_PRICING_PLANS: 'universal/pricing-plans',
+    UNIVERSAL_INVOICE_TYPES: 'universal/invoice-types',
     UNIVERSAL_TRANSACTION_STATUS: 'universal/transaction-status',
     NUMBER_OF_REGISTERED_USERS: 'users/number-of-registered-users',
     CHECKOUT: 'checkout',
     CHECK_IN: 'users/check-in',
     TRANSACTION: 'my/transaction/{id}',
-    SUBSCRIPTION_BY_TRANSACTION_ID: 'my/subscription/by-transaction-id/{id}'
+    SUBSCRIPTION_BY_TRANSACTION_ID: 'my/subscription/by-transaction-id/{id}',
+    SUBSCRIPTION: 'my/subscription'
 };
 
 export const OAUTH_TYPE = {
@@ -58,4 +60,9 @@ export const TRANSACTION_STATUS = {
     PENDING: 'PENDING',
     PAID: 'PAID',
     ERROR: 'ERROR'
+};
+
+export const INVOICE_TYPES = {
+    CLOUD_INVOICE: 'CLOUD_INVOICE',
+    TRIPLE_INVOICE: 'TRIPLE_INVOICE'
 };

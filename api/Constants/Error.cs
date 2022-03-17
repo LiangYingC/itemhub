@@ -10,6 +10,7 @@ namespace Homo.IotApi
         public static string TAPPAY_TRANSACTION_ERROR = "TAPPAY_TRANSACTION_ERROR";
         public static string DUPLICATE_SUBSCRIBE = "DUPLICATE_SUBSCRIBE";
         public static string NO_SUBSCRIPTION = "NO_SUBSCRIPTION";
+        public static string OAUTH_CLIENT_SECRET_ERROR = "OAUTH_CLIENT_SECRET_ERROR";
 
     }
 }

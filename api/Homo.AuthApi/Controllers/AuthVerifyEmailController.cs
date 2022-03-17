@@ -100,6 +100,11 @@ namespace Homo.AuthApi
         [HttpPost]
         public dynamic verifyEmail([FromBody] DTOs.VerifyEmail dto)
         {
+            User user = UserDataservice.GetOneByEmail(_dbContext, dto.Email);
+            if (user != null)
+            {
+                throw new CustomException(ERROR_CODE.DUPLICATE_EMAIL, HttpStatusCode.BadRequest);
+            }
             VerifyCode record = VerifyCodeDataservice.GetOneUnUsedByEmail(_dbContext, dto.Email, dto.Code);
             if (record == null)
             {

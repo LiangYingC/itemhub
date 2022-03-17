@@ -16,14 +16,16 @@ namespace Homo.IotApi
     public class CheckoutController : ControllerBase
     {
         private readonly IotDbContext _dbContext;
+        private readonly Homo.AuthApi.DBContext _authDbContext;
         private string _tapPayEndpoint;
         private string _tapPayPartnerKey;
         private string _tapPayMerchantId;
         private string _websiteUrl;
         private string _apiUrl;
-        public CheckoutController(IotDbContext dbContext, IOptions<AppSettings> appSettings)
+        public CheckoutController(IotDbContext dbContext, Homo.AuthApi.DBContext authDbContext, IOptions<AppSettings> appSettings)
         {
             _dbContext = dbContext;
+            _authDbContext = authDbContext;
             _tapPayEndpoint = appSettings.Value.Common.TapPayEndpointByPrime;
             _tapPayPartnerKey = appSettings.Value.Secrets.TapPayPartnerKey;
             _tapPayMerchantId = appSettings.Value.Secrets.TapPayMerchantId;
@@ -115,6 +117,13 @@ namespace Homo.IotApi
             transaction.Raw = JsonConvert.SerializeObject(withoutSenstiveInfoResponse);
             transaction.ExternalTransactionId = response.rec_trade_id;
             _dbContext.SaveChanges();
+
+            // 更新姓名
+            Homo.AuthApi.DTOs.UpdateName name = new Homo.AuthApi.DTOs.UpdateName();
+            name.FirstName = dto.name.Substring(1, dto.name.Length - 1);
+            name.LastName = dto.name.Substring(0, 1);
+            UserDataservice.UpdateName(_authDbContext, extraPayload.Id, name, extraPayload.Id);
+
 
             if (response.status == DTOs.TAP_PAY_TRANSACTION_STATUS.OK)
             {

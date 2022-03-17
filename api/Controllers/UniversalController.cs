@@ -23,10 +23,28 @@ namespace Homo.IotApi
                 x.Key,
                 x.Value,
                 x.Label,
-                Price = SubscriptionHelper.GetPrice((PRICING_PLAN)x.Value)
+                Price = SubscriptionHelper.GetPrice((PRICING_PLAN)x.Value),
+                DeviceCount = SubscriptionHelper.GetDeviceCount((PRICING_PLAN)x.Value),
+                Frequency = SubscriptionHelper.GetFrequency((PRICING_PLAN)x.Value),
+                StorageTime = SubscriptionHelper.GetStorageTime((PRICING_PLAN)x.Value),
             }).ToList<dynamic>();
 
             return pricingPlans;
+        }
+
+        [HttpGet]
+        [Route("invoice-types")]
+        public ActionResult<dynamic> getInvoiceTypes()
+        {
+            List<dynamic> invoice = ConvertHelper.EnumToList(typeof(INVOICE_TYPES)).Select(x =>
+            new
+            {
+                x.Key,
+                x.Value,
+                x.Label
+            }).ToList<dynamic>();
+
+            return invoice;
         }
 
         [HttpGet]

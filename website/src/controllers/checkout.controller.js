@@ -149,7 +149,7 @@ export class CheckoutController extends RoutingController {
         }
 
         const selectedPricingPlan = this.elHTML.querySelector('[name="pricing"]:checked').value;
-        if (selectedPricingPlan === null || selectedPricingPlan === undefined) {
+        if (!selectedPricingPlan) {
             Toaster.popup(Toaster.TYPE.ERROR, '訂閱失敗: 無方案資料');
             elButton.removeAttribute('disabled');
             return;

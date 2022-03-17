@@ -83,7 +83,6 @@ export class TransactionController extends RoutingController {
             this.pageVariable.transactionMessage = `訂閱方案: ${pricingPlan.label} NTD $${pricingPlan.price}`;
             this.pageVariable.subscriptionPeriod = `本期起迄日: ${startAt} ~ ${endAt}`;
             this.pageVariable.priceAtThisPeriod = `本期金額: ${resp.data.amount} (依照今天日期到月底照比例計算)`;
-            // this.pageVariable.wholePrice = `並於下一個月初完整扣款, 扣款金額為: ${pricingPlan.price}`;
             this.pageVariable.transactionSuccessVisible = '';
             this.pageVariable.transactionPricingPlanName = pricingPlan.label;
             this.pageVariable.transactionPricingPlanPrice = pricingPlan.price;

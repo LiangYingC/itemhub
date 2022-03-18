@@ -26,4 +26,4 @@ cd ../website
 nvm use 16 && npm install && FORCE_UPDATE=false NODE_ENV=$ENV npm run swim-build
 
 cd ../dashboard
-nvm use 16 && npm i && npm run build
+nvm use 16 && npm i && npm run build-staging

@@ -7,6 +7,44 @@ namespace Homo.IotApi
 {
     public class DevicePinSensorDataservice
     {
+
+        public static long? DeleteExpiredDataAndGetLatestItemId(IotDbContext dbContext, int page = 1, int limit = 50, long? latestItemId = null)
+        {
+            List<DevicePinSensor> data = dbContext.DevicePinSensor
+                .Where(x =>
+                    x.DeletedAt == null
+                    && (latestItemId == null || x.Id <= latestItemId)
+                )
+                .OrderByDescending(x => x.Id)
+                .Skip((page - 1) * limit)
+                .Take(limit)
+                .ToList();
+
+            long? latestId = data.LastOrDefault()?.Id;
+
+            List<long> shouldBeDeletedIds = data.GroupJoin(dbContext.Subscription, x => x.OwnerId, y => y.OwnerId, (x, y) => new
+            {
+                x.Id,
+                x.CreatedAt,
+                PricingPlan = y.Where(item => item.DeletedAt == null).OrderByDescending(item => item.CreatedAt).FirstOrDefault()?.PricingPlan
+            })
+            .Select(x => new
+            {
+                x.Id,
+                x.CreatedAt,
+                SavingSeconds = SubscriptionHelper.GetStorageSavingSeconds((PRICING_PLAN)x.PricingPlan)
+            })
+            .Where(x => x.CreatedAt.AddSeconds(x.SavingSeconds) < DateTime.Now)
+            .Select(x => x.Id)
+            .ToList<long>();
+
+            dbContext.DevicePinSensor.Where(x => shouldBeDeletedIds.Contains(x.Id)).DeleteFromQuery();
+            dbContext.SaveChanges();
+
+
+            return latestId;
+        }
+
         public static List<DevicePinSensor> GetList(IotDbContext dbContext, long? ownerId, List<long> deviceIds, byte? mode, string pin, int page = 1, int limit = 50)
         {
             return dbContext.DevicePinSensor

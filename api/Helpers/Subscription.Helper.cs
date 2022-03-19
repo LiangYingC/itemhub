@@ -88,5 +88,26 @@ namespace Homo.IotApi
             }
             return "";
         }
+
+        public static int GetStorageSavingSeconds(PRICING_PLAN pricingPlan)
+        {
+            if (pricingPlan == PRICING_PLAN.BASIC)
+            {
+                return 6 * 60 * 60;
+            }
+            else if (pricingPlan == PRICING_PLAN.ADVANCE)
+            {
+                return 24 * 60 * 60;
+            }
+            else if (pricingPlan == PRICING_PLAN.GROWTH)
+            {
+                return 3 * 24 * 60 * 60;
+            }
+            else if (pricingPlan == PRICING_PLAN.SMALL_BUSINESS)
+            {
+                return 7 * 24 * 60 * 60;
+            }
+            return 0;
+        }
     }
 }

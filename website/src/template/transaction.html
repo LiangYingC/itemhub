@@ -1,11 +1,39 @@
-<div class="transaction container">
-    <div>{transactionMessage}</div>
-    <div>{subscriptionPeriod}</div>
-    <div>{priceAtThisPeriod}</div>
-    <div>{wholePrice}</div>
-
-    <div class="{transactionSuccessVisible}">倒數 {redirectCountdownPeriod} 秒將導到管理系統, 或是直接點擊
-        <a href="{DASHBOARD_URL}">管理系統</a>
+<div class="bg-dark-blue">
+    <div class="transaction container">
+        <link href="/css/transaction.css" rel="stylesheet">
+        <div class="transaction-content mx-auto">
+            <h2 class="text-center pt-4">
+                訂閱成功
+            </h2>
+            <div class="text-center pt-4">
+                你已成功訂閱 ItemHub 服務！
+            </div>
+            <div class="text-center py-4">
+                <img src="/assets/images/sign-up-finish.svg" />
+            </div>
+            <div class="rounded bg-white px-4 pt-45 pb-4 mb-4 text-black-opacity-85">
+                <div class="fw-bold">訂單資訊</div>
+                <div>
+                    {transactionOrder}
+                </div>
+                <div>
+                    {transactionMessage}
+                </div>
+                <br />
+                <div>
+                    {priceAtThisPeriod}
+                </div>
+                <div>
+                    {subscriptionPeriod}
+                </div>
+            </div>
+            <div class="text-center mt-3 pb-6 mb-4 {transactionSuccessVisible}">
+                倒數 {redirectCountdownPeriod} 秒將導到管理系統, 或是直接點擊
+                <a class="btn btn-lg btn-primary rounded-pill d-inline-flex align-items-center px-4 py-2 ms-3"
+                    href="{DASHBOARD_URL}">
+                    立即使用 <img src="/assets/images/right-arrow-s.svg" alt="right-arrow" class="ps-1">
+                </a>
+            </div>
+        </div>
     </div>
-
 </div>

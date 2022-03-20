@@ -33,6 +33,12 @@ namespace Homo.IotApi
         public ActionResult<dynamic> create([FromBody] DTOs.OauthClient dto, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
             long ownerId = extraPayload.Id;
+            OauthClient client = OauthClientDataservice.GetOneByClientId(_dbContext, dto.ClientId);
+            if (client != null)
+            {
+                throw new CustomException(ERROR_CODE.DUPLICATE_OAUTH_CLIENT_ID, System.Net.HttpStatusCode.BadRequest);
+            }
+
             string clientSecret = CryptographicHelper.GetSpecificLengthRandomString(64, true, false);
             string salt = CryptographicHelper.GetSpecificLengthRandomString(128, false, false);
             string hashClientSecrets = CryptographicHelper.GenerateSaltedHash(clientSecret, salt);

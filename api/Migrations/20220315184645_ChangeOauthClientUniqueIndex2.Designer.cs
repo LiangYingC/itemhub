@@ -3,14 +3,16 @@ using System;
 using Homo.IotApi;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IotApi.Migrations
 {
     [DbContext(typeof(IotDbContext))]
-    partial class IotDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220315184645_ChangeOauthClientUniqueIndex2")]
+    partial class ChangeOauthClientUniqueIndex2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -265,9 +267,6 @@ namespace IotApi.Migrations
                     b.HasIndex("ClientId");
 
                     b.HasIndex("OwnerId");
-
-                    b.HasIndex("ClientId", "DeletedAt")
-                        .IsUnique();
 
                     b.HasIndex("OwnerId", "ClientId", "DeletedAt")
                         .IsUnique();
@@ -534,29 +533,6 @@ namespace IotApi.Migrations
                     b.HasIndex("SourcePin");
 
                     b.ToTable("Trigger");
-                });
-
-            modelBuilder.Entity("Homo.IotApi.TriggerLog", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Raw")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<long>("TriggerId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedAt");
-
-                    b.ToTable("TriggerLog");
                 });
 
             modelBuilder.Entity("Homo.IotApi.Zone", b =>

@@ -29,6 +29,7 @@ export class TransactionController extends RoutingController {
         };
 
         await super.render({
+            transactionOrder: '',
             transactionMessage: '交易進行中',
             subscriptionPeriod: '',
             priceAtThisPeriod: '',
@@ -78,11 +79,13 @@ export class TransactionController extends RoutingController {
             const pricingPlan = this.args.pricingPlans.find(item => item.value === respOfSubscription.data.pricingPlan);
             const startAt = window.moment(respOfSubscription.data.startAt).format('YYYY-MM-DD HH:mm');
             const endAt = window.moment(respOfSubscription.data.endAt).format('YYYY-MM-DD HH:mm');
-            this.pageVariable.transactionMessage = `訂閱成功 你所訂閱的方案為 ${pricingPlan.label}`;
-            this.pageVariable.subscriptionPeriod = `時間: ${startAt} ~ ${endAt}`;
-            this.pageVariable.priceAtThisPeriod = `扣款金額: ${resp.data.amount} (依照今天日期到月底照比例計算)`;
-            this.pageVariable.wholePrice = `並於下一個月初完整扣款, 扣款金額為: ${pricingPlan.price}`;
+            this.pageVariable.transactionOrder = `訂單編號: ${resp.data.id}`;
+            this.pageVariable.transactionMessage = `訂閱方案: ${pricingPlan.label} NTD $${pricingPlan.price}`;
+            this.pageVariable.subscriptionPeriod = `本期起迄日: ${startAt} ~ ${endAt}`;
+            this.pageVariable.priceAtThisPeriod = `本期金額: ${resp.data.amount} (依照今天日期到月底照比例計算)`;
             this.pageVariable.transactionSuccessVisible = '';
+            this.pageVariable.transactionPricingPlanName = pricingPlan.label;
+            this.pageVariable.transactionPricingPlanPrice = pricingPlan.price;
             this.startTimerToReddirectToDashboard();
         }, 2000);
     }

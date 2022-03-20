@@ -27,5 +27,11 @@ namespace Homo.IotApi
             dbContext.SaveChanges();
             return record;
         }
+
+        public static void Delete(IotDbContext dbContext, DateTime endAt)
+        {
+            dbContext.DeviceActivityLog.Where(x => x.CreatedAt <= endAt).DeleteFromQuery();
+            dbContext.SaveChanges();
+        }
     }
 }

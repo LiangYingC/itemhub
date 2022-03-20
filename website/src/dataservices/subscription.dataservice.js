@@ -20,5 +20,23 @@ export const SubscriptionDataService = {
                 Authorization: 'Bearer ' + data.token
             }
         }, true);
+    },
+    GetMyCurrentSubscription: async (data) => {
+        const api = APP_CONFIG.API_ENDPOINT + API.SUBSCRIPTION;
+        return ApiHelper.sendRequest(api, {
+            method: 'GET',
+            headers: {
+                Authorization: 'Bearer ' + data.token
+            }
+        });
+    },
+    Cancel: async (data) => {
+        const api = APP_CONFIG.API_ENDPOINT + API.SUBSCRIPTION;
+        return ApiHelper.sendRequest(api, {
+            method: 'DELETE',
+            headers: {
+                Authorization: 'Bearer ' + data.token
+            }
+        });
     }
 };

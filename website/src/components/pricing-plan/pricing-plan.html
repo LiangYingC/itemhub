@@ -7,14 +7,8 @@
             <img src="/assets/images/pricing.svg" />
         </div>
     </div>
-    <div class="d-flex justify-content-center position-relative">
-        <div class="promote mt-5 p-4">
-            <component-check-in></component-check-in>
-        </div>
-    </div>
-
     <div class="pricing-plan-container container my-6 d-block d-md-flex position-relative">
-        <div class="pricing-plan-card overflow-hidden mt-4 mt-md-0">
+        <div class="pricing-plan-card overflow-hidden mt-4 mt-md-0" role="button">
             <h4 class="title text-white bg-blue mb-0 py-25 text-center">免費方案</h4>
             <div class="content py-45">
                 <div class="text-promoted text-center">{ 裝置限制 }</div>
@@ -31,10 +25,16 @@
                 <div class="text-center">
                     Free
                 </div>
+                <div class="text-center mt-3">
+                    <div class="btn btn-primary rounded-pill d-inline-flex align-items-center px-3 py-2"
+                        onclick="controller.redirectToDashboard">
+                        立即使用 <img src="/assets/images/right-arrow-s.svg" alt="right-arrow" class="ps-1">
+                    </div>
+                </div>
             </div>
         </div>
 
-        <a href="/checkout/?pricingPlan=0" class="pricing-plan-card promoting mt-4 mt-md-0 overflow-hidden">
+        <div class="pricing-plan-card promoting mt-4 mt-md-0 overflow-hidden">
             <div
                 class="title text-white bg-blue mb-0 py-25 text-center position-relative d-flex justify-content-center align-items-center">
                 <div class="position-absolute popular-label bg-purple px-3 rounded-3">推薦</div>
@@ -55,10 +55,17 @@
                 <div class="text-center text-black opacity-65">
                     NTD $49 / 月
                 </div>
+                <div class="text-center mt-3">
+                    <a href="/checkout/?pricingPlan=0"
+                        class="btn btn-light-blue text-white rounded-pill d-inline-flex align-items-center px-3 py-2">
+                        立即訂閱 <img src="/assets/images/right-arrow-s-white.svg" alt="right-arrow"
+                            class="ps-1 flex-shrink-0">
+                    </a>
+                </div>
             </div>
-        </a>
+        </div>
 
-        <a href="/checkout/?pricingPlan=1" class="pricing-plan-card overflow-hidden mt-4 mt-md-0">
+        <div href="/checkout/?pricingPlan=1" class="pricing-plan-card overflow-hidden mt-4 mt-md-0">
             <h4 class="title text-white bg-blue mb-0 py-25 text-center">進階方案</h4>
             <div class="content py-45">
                 <div class="text-promoted text-center">{ 裝置限制 }</div>
@@ -75,10 +82,16 @@
                 <div class="text-center text-white">
                     NTD $199 / 月
                 </div>
+                <div class="text-center mt-3">
+                    <a href="/checkout/?pricingPlan=1"
+                        class="btn btn-primary rounded-pill d-inline-flex align-items-center px-3 py-2">
+                        立即訂閱 <img src="/assets/images/right-arrow-s.svg" alt="right-arrow" class="ps-1">
+                    </a>
+                </div>
             </div>
-        </a>
+        </div>
 
-        <a href="/checkout/?pricingPlan=2" class="pricing-plan-card overflow-hidden mt-4 mt-md-0">
+        <div class="pricing-plan-card overflow-hidden mt-4 mt-md-0">
             <h4 class="title text-white bg-blue mb-0 py-25 text-center">Growth</h4>
             <div class="content py-45">
                 <div class="text-promoted text-center">{ 裝置限制 }</div>
@@ -95,10 +108,16 @@
                 <div class="text-center text-white">
                     NTD $999 / 月
                 </div>
+                <div class="text-center mt-3">
+                    <a href="/checkout/?pricingPlan=2"
+                        class="btn btn-primary rounded-pill d-inline-flex align-items-center px-3 py-2">
+                        立即訂閱 <img src="/assets/images/right-arrow-s.svg" alt="right-arrow" class="ps-1">
+                    </a>
+                </div>
             </div>
-        </a>
+        </div>
 
-        <a href="/checkout/?pricingPlan=3" class="pricing-plan-card overflow-hidden mt-4 mt-md-0">
+        <div class="pricing-plan-card overflow-hidden mt-4 mt-md-0">
             <h4 class="title text-white bg-blue mb-0 py-25 text-center">Small Business</h4>
             <div class="content py-45">
                 <div class="text-promoted text-center">{ 裝置限制 }</div>
@@ -115,8 +134,14 @@
                 <div class="text-center text-white">
                     NTD $4,999 / 月
                 </div>
+                <div class="text-center mt-3">
+                    <a href="/checkout/?pricingPlan=3"
+                        class="btn btn-primary rounded-pill d-inline-flex align-items-center px-3 py-2">
+                        立即訂閱 <img src="/assets/images/right-arrow-s.svg" alt="right-arrow" class="ps-1">
+                    </a>
+                </div>
             </div>
-        </a>
+        </div>
     </div>
     <div class="enterprice-plan d-flex justify-content-center py-5 position-relative">
         <div class="text-center">

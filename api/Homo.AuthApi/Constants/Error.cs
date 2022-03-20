@@ -22,5 +22,6 @@ namespace Homo.AuthApi
         public static string DUPLICATED_PHONE = "DUPLICATED_PHONE";
         public static string WITHOUT_PERMISSION_TO_GET_EMAIL = "WITHOUT_PERMISSION_TO_GET_EMAIL";
         public static string ALREADY_SIGN_UP_BY_THIS_EMAIL = "ALREADY_SIGN_UP_BY_THIS_EMAIL";
+        public static string DUPLICATE_EMAIL = "DUPLICATE_EMAIL";
     }
 }

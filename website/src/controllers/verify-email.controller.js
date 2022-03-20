@@ -68,7 +68,7 @@ export class VerifyEmailController extends RoutingController {
             for (const provider in resp.data.payload.duplicatedUserProvider) {
                 duplicateProviderMessag.push(`${provider}: ${resp.data.payload.duplicatedUserProvider[provider]}`);
             }
-            Toaster.popup(Toaster.TYPE.ERROR, `你已經註冊過囉~ 你所登入的方式是 <br/> ${duplicateProviderMessag.join('<br/>')}`);
+            Toaster.popup(Toaster.TYPE.ERROR, `你已經註冊過囉~<br/>已使用 ${duplicateProviderMessag.join('<br/>')} 註冊`);
 
             elButton.innerHTML = '傳送驗證碼至信箱';
             elButton.removeAttribute('disabled');

@@ -1,4 +1,22 @@
 <div class="me">
-    Me
-    {name}
+    <div>{name}</div>
+    <div class="d-flex">
+        <div class="me-2">訂閱方案: </div>
+        <div>
+            {pricingPlanLabel}
+        </div>
+    </div>
+
+    <div class="{hasSubscribed}">
+        <div class="d-flex">
+            <div class="me-2">當前扣款: </div>
+            <div>
+                {amount}
+            </div>
+        </div>
+
+        <div class="d-flex">
+            <button onclick="controller.cancelSubscription">取消自動訂閱</button>
+        </div>
+    </div>
 </div>

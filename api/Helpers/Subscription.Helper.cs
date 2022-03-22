@@ -107,7 +107,7 @@ namespace Homo.IotApi
             {
                 return 7 * 24 * 60 * 60;
             }
-            return 0;
+            return 30 * 60;
         }
     }
 }

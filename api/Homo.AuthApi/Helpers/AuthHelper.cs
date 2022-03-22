@@ -21,7 +21,7 @@ namespace Homo.AuthApi
             }
             if (user.FacebookSub == null && user.LineSub == null && user.GoogleSub == null)
             {
-                duplicatedUserList.Add("origin", user.Email);
+                duplicatedUserList.Add("email", user.Email);
             }
             return duplicatedUserList;
         }

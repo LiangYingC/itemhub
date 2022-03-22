@@ -3,14 +3,16 @@ using System;
 using Homo.IotApi;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IotApi.Migrations
 {
     [DbContext(typeof(IotDbContext))]
-    partial class IotDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220316200131_AddTriggerLogTable")]
+    partial class AddTriggerLogTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -262,15 +264,10 @@ namespace IotApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClientId");
+                    b.HasIndex("ClientId")
+                        .IsUnique();
 
                     b.HasIndex("OwnerId");
-
-                    b.HasIndex("ClientId", "DeletedAt")
-                        .IsUnique();
-
-                    b.HasIndex("OwnerId", "ClientId", "DeletedAt")
-                        .IsUnique();
 
                     b.ToTable("OauthClient");
                 });
@@ -379,7 +376,7 @@ namespace IotApi.Migrations
                     b.Property<bool>("StopNextSubscribed")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("tinyint(1)")
-                        .HasDefaultValueSql("0");
+                        .HasDefaultValueSql("1");
 
                     b.Property<long?>("TransactionId")
                         .HasColumnType("bigint");

@@ -84,6 +84,20 @@ namespace Homo.IotApi
                     c.CronExpression = @"0 0 * * *";
                 });
             }
+
+            services.AddCronJob<TriggerLogCronJob>(c =>
+                {
+                    c.TimeZoneInfo = TimeZoneInfo.Local;
+                    c.CronExpression = @"0 0 * * *";
+                });
+
+            services.AddCronJob<DeviceActivityLogCronJobService>(c =>
+
+                {
+                    c.TimeZoneInfo = TimeZoneInfo.Local;
+                    c.CronExpression = @"0 0 * * *";
+                });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo() { Title = "Api Doc", Version = "v1" });

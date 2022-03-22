@@ -51,6 +51,18 @@ export const AuthDataService = {
             }
         });
     },
+    EarlyBirdBinding: async (data) => {
+        const api = APP_CONFIG.API_ENDPOINT + API.EARLY_BIRD_BINDING;
+        const token = data.token;
+        delete data.token;
+        return ApiHelper.sendRequest(api, {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
+        });
+    },
     SignIn: async (data) => {
         const api = APP_CONFIG.API_ENDPOINT + API.SIGN_IN_WITH_EMAIL;
         delete data.token;

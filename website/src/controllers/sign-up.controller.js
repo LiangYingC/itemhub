@@ -12,6 +12,7 @@ export class SignUpController extends RoutingController {
         this.resendTimer = null;
         this.resendTime = 0;
         this.signUpToken = '';
+        this.validPhone = false;
     }
 
     static get id () {
@@ -28,8 +29,15 @@ export class SignUpController extends RoutingController {
             phoneInvalidMessage: '',
             codeInvalidMessage: '',
             passwordInvalidMessage: '',
-            earlyBirdTipVisible: jwtPayload.extra.isEarlyBird === true ? 'd-block' : 'd-none'
+            isEarlyBirdTipVisible: jwtPayload.roles[0] === 'earlyBird' ? 'd-block' : 'd-none',
+            isEarlyBirdTipDisible: jwtPayload.roles[0] !== 'earlyBird' ? 'd-block' : 'd-none'
         });
+
+        if (jwtPayload.roles[0] === 'earlyBird') {
+            this.pageVariable.isEarlyBird = 'd-block';
+        } else {
+            this.pageVariable.isEarlyBird = 'd-none';
+        }
     }
 
     async exit (args) {
@@ -91,6 +99,8 @@ export class SignUpController extends RoutingController {
         const elCodeInput = event.currentTarget;
         const elForm = elCodeInput.closest('.form');
         const data = elForm.collectFormData();
+        const elSendSmsButton = this.elHTML.querySelector('.btn-send-sms');
+
         if (event.keyCode < 96 && event.keyCode > 105) {
             return;
         }
@@ -116,6 +126,9 @@ export class SignUpController extends RoutingController {
             this.signUpToken = '';
             elPassword.setAttribute('disabled', 'disabled');
         } else {
+            elSendSmsButton.setAttribute('disabled', 'disabled');
+            this.validPhone = true;
+            elSendSmsButton.innerHTML = '驗證成功';
             elCodeInput.setAttribute('disabled', 'disabled');
             this.pageVariable.codeInvalidMessage = '';
             this.signUpToken = resp.data.token;
@@ -160,6 +173,26 @@ export class SignUpController extends RoutingController {
         history.pushState({}, '', '/auth/finish/');
     }
 
+    async earlyBirdBinding () {
+        const elPassword = this.elHTML.querySelector('[data-field="password"]');
+        elPassword.setAttribute('disabled', 'disabeld');
+
+        const resp = await AuthDataService.EarlyBirdBinding({
+            token: this.signUpToken,
+            password: elPassword.value
+        });
+
+        elPassword.removeAttribute('disabled');
+        if (resp.status !== RESPONSE_STATUS.OK) {
+            Toaster.popup(Toaster.TYPE.ERROR, resp.data.message);
+            this.pageVariable.passwordInvalidMessage = resp.data.message;
+            return;
+        }
+        CookieUtil.setCookie('token', resp.data.token);
+        CookieUtil.setCookie('dashboardToken', resp.data.dashboardToken);
+        history.pushState({}, '', '/auth/finish/');
+    }
+
     _validatePassword (password) {
         if (password.length < 12) {
             return false;
@@ -181,6 +214,9 @@ export class SignUpController extends RoutingController {
 
     _countdownMain () {
         const elSendVerifyMailButton = this.elHTML.querySelector('.btn-send-sms');
+        if (this.validPhone) {
+            return;
+        }
         if (this.resendTime <= 0) {
             elSendVerifyMailButton.innerHTML = '發送驗證碼至手機';
             elSendVerifyMailButton.removeAttribute('disabled');

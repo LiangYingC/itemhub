@@ -16,6 +16,7 @@ export const API = {
     SEND_SMS: 'auth/send-sms',
     VERIFY_PHONE: 'auth/verify-phone',
     SIGN_UP: 'auth/sign-up',
+    EARLY_BIRD_BINDING: 'auth/early-bird-binding',
     SIGN_IN_WITH_EMAIL: 'auth/sign-in-with-email',
     SIGN_IN_WITH_SOCIAL_MEDIA: 'auth/sign-in-with-social-media',
     SEND_TWO_FACTOR_AUTH_MAIL: 'auth/send-two-factor-auth-mail',

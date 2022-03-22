@@ -21,6 +21,13 @@ namespace Homo.AuthApi
             public string Email { get; set; }
         }
 
+        public class SendEarlyBirdUserBindingEmail
+        {
+            [Required]
+            [MaxLength(64)]
+            public string Email { get; set; }
+        }
+
         public class VerifyEmail
         {
             [Required]

@@ -68,8 +68,10 @@ namespace Homo.AuthApi
             }
 
             User user = UserDataservice.GetOneByEmail(_dbContext, dto.Email);
+            User earlyBird = UserDataservice.GetBindingUserByEmail(_dbContext, dto.Email);
+
             List<string> duplicatedUserProvider = new List<string>();
-            if (user != null)
+            if (user != null && earlyBird == null)
             {
                 throw new CustomException(ERROR_CODE.SIGN_IN_BY_OTHER_WAY, HttpStatusCode.BadRequest, null, new Dictionary<string, dynamic>(){
                             {"duplicatedUserProvider", AuthHelper.GetDuplicatedUserType(user)}
@@ -89,10 +91,31 @@ namespace Homo.AuthApi
             {
                 Subject = _commonLocalizer.Get("verify email"),
                 Content = _commonLocalizer.Get("verify link", null, new Dictionary<string, string>() {
-                    { "link", $"{_websiteEndpoint}/sign-up/verify-email/" },
+                    { "link", $"{_websiteEndpoint}/auth/sign-up/verify-email/" },
                     { "code", code }
                 })
             }, _systemEmail, dto.Email, _sendGridAPIKey);
+            return new { status = CUSTOM_RESPONSE.OK };
+        }
+
+        [Route("send-early-bird-binding-email")]
+        [HttpPost]
+        public async Task<dynamic> sendBindingEmail([FromBody] DTOs.SendEarlyBirdUserBindingEmail dto)
+        {
+            User user = UserDataservice.GetBindingUserByEmail(_dbContext, dto.Email);
+            if (user == null)
+            {
+                throw new CustomException(ERROR_CODE.USER_NOT_FOUND, HttpStatusCode.NotFound);
+            }
+            string token = JWTHelper.GenerateToken(_verifyPhoneJwtKey, 60 * 24 * 7, new { Id = user.Id, Email = user.Email }, new string[] { "earlyBird" });
+
+            await MailHelper.Send(MailProvider.SEND_GRID, new MailTemplate()
+            {
+                Subject = _commonLocalizer.Get("binding email"),
+                Content = _commonLocalizer.Get("binding link", null, new Dictionary<string, string>() {
+                    { "link", $"{_websiteEndpoint}/auth/sign-up/?verifyPhoneToken={token}" }
+                })
+            }, _systemEmail, user.Email, _sendGridAPIKey);
             return new { status = CUSTOM_RESPONSE.OK };
         }
 
@@ -101,7 +124,9 @@ namespace Homo.AuthApi
         public dynamic verifyEmail([FromBody] DTOs.VerifyEmail dto)
         {
             User user = UserDataservice.GetOneByEmail(_dbContext, dto.Email);
-            if (user != null)
+            User earlyBird = UserDataservice.GetBindingUserByEmail(_dbContext, dto.Email);
+
+            if (user != null && earlyBird == null)
             {
                 throw new CustomException(ERROR_CODE.DUPLICATE_EMAIL, HttpStatusCode.BadRequest);
             }
@@ -112,7 +137,13 @@ namespace Homo.AuthApi
             }
             record.IsUsed = true;
             _dbContext.SaveChanges();
-            return new { token = JWTHelper.GenerateToken(_verifyPhoneJwtKey, 5, new { Email = record.Email }) };
+
+            if (earlyBird != null)
+            {
+                return new { token = JWTHelper.GenerateToken(_verifyPhoneJwtKey, 1150, new { Id = record.Id, Email = record.Email }, new string[] { "earlyBird" }) };
+            }
+
+            return new { token = JWTHelper.GenerateToken(_verifyPhoneJwtKey, 1150, new { Email = record.Email }) };
         }
 
         [Route("verify-email-with-social-media")]

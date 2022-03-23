@@ -173,11 +173,11 @@ export class SignUpController extends RoutingController {
         history.pushState({}, '', '/auth/finish/');
     }
 
-    async earlyBirdBinding () {
+    async registerForEarlyBird () {
         const elPassword = this.elHTML.querySelector('[data-field="password"]');
         elPassword.setAttribute('disabled', 'disabeld');
 
-        const resp = await AuthDataService.EarlyBirdBinding({
+        const resp = await AuthDataService.RegisterForEarlyBird({
             token: this.signUpToken,
             password: elPassword.value
         });

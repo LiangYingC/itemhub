@@ -173,7 +173,7 @@ namespace Homo.AuthApi
 
 
 
-        public static User UpdateEarlyBird(DBContext dbContext, long id, string encryptPhone, string pseudonymousPhone, string hashPhone, string salt, string hash)
+        public static User RegisterForEarlyAdaptor(DBContext dbContext, long id, string encryptPhone, string pseudonymousPhone, string hashPhone, string salt, string hash)
         {
             User record = new User() { Id = id };
             dbContext.Attach(record);

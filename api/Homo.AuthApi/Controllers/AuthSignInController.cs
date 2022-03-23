@@ -71,7 +71,7 @@ namespace Homo.AuthApi
             }
             if (user.HashPhone == null) // 早鳥用戶
             {
-                throw new CustomException(ERROR_CODE.NEED_BINDING_USER, HttpStatusCode.Forbidden);
+                throw new CustomException(ERROR_CODE.LEAK_PHONE, HttpStatusCode.Forbidden);
             }
 
             if (user.Hash != Homo.Core.Helpers.CryptographicHelper.GenerateSaltedHash(dto.Password, user.Salt))

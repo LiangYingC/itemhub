@@ -13,48 +13,34 @@ namespace Homo.AuthApi
 {
     [Route("v1/auth")]
     [Homo.Api.Validate]
-    public class AuthUpdateEarlyBirdController : ControllerBase
+    public class AuthRegisterForEarlyBirdController : ControllerBase
     {
-        private readonly Homo.Api.CommonLocalizer _commonLocalizer;
         private readonly DBContext _dbContext;
         private readonly string _jwtKey;
         private readonly string _dashboardJwtKey;
         private readonly string _signUpJwtKey;
-        private readonly string _verifyPhoneJwtKey;
         private readonly int _jwtExpirationMonth;
-        private readonly string _envName;
-        private readonly string _sendGridAPIKey;
-        private readonly string _systemEmail;
-        private readonly string _websiteEndpoint;
         private readonly bool _authByCookie;
         private readonly string _PKCS1PublicKeyPath;
         private readonly string _phoneHashSalt;
-        public AuthUpdateEarlyBirdController(DBContext dbContext, IOptions<AppSettings> appSettings, Microsoft.AspNetCore.Hosting.IWebHostEnvironment env, Homo.Api.CommonLocalizer commonLocalizer)
+        public AuthRegisterForEarlyBirdController(DBContext dbContext, IOptions<AppSettings> appSettings, Microsoft.AspNetCore.Hosting.IWebHostEnvironment env, Homo.Api.CommonLocalizer commonLocalizer)
         {
             Secrets secrets = (Secrets)appSettings.Value.Secrets;
             Common common = (Common)appSettings.Value.Common;
-            _commonLocalizer = commonLocalizer;
             _jwtKey = secrets.JwtKey;
             _dashboardJwtKey = secrets.DashboardJwtKey;
             _jwtExpirationMonth = common.JwtExpirationMonth;
-            _signUpJwtKey = secrets.SignUpJwtKey;
-            _verifyPhoneJwtKey = secrets.VerifyPhoneJwtKey;
             _dbContext = dbContext;
-            _envName = env.EnvironmentName;
-            _sendGridAPIKey = secrets.SendGridApiKey;
-            _systemEmail = common.SystemEmail;
-            _websiteEndpoint = common.WebSiteEndpoint;
             _authByCookie = common.AuthByCookie;
             _PKCS1PublicKeyPath = common.Pkcs1PublicKeyPath;
             _phoneHashSalt = secrets.PhoneHashSalt;
         }
 
-        [Route("early-bird-binding")]
+        [Route("register-for-early-bird")]
         [AuthorizeFactory(AUTH_TYPE.SIGN_UP)]
         [HttpPost]
-        public ActionResult<dynamic> signUp([FromBody] DTOs.SignUp dto, DTOs.JwtExtraPayload extraPayload)
+        public ActionResult<dynamic> registerForEarlyBird([FromBody] DTOs.SignUp dto, DTOs.JwtExtraPayload extraPayload)
         {
-            System.Console.WriteLine($"early-bird-binding:{Newtonsoft.Json.JsonConvert.SerializeObject(extraPayload, Newtonsoft.Json.Formatting.Indented)}");
             User user = UserDataservice.GetOneByEmail(_dbContext, extraPayload.Email, true);
             if (user == null)
             {
@@ -67,7 +53,7 @@ namespace Homo.AuthApi
             string salt = CryptographicHelper.GetSalt(64);
             string hash = CryptographicHelper.GenerateSaltedHash(dto.Password, salt);
 
-            UserDataservice.UpdateEarlyBird(_dbContext, user.Id, encryptPhone, pseudoPhone, hashPhone, salt, hash);
+            UserDataservice.RegisterForEarlyAdaptor(_dbContext, user.Id, encryptPhone, pseudoPhone, hashPhone, salt, hash);
 
             var userPayload = new DTOs.JwtExtraPayload()
             {

@@ -51,8 +51,8 @@ export const AuthDataService = {
             }
         });
     },
-    EarlyBirdBinding: async (data) => {
-        const api = APP_CONFIG.API_ENDPOINT + API.EARLY_BIRD_BINDING;
+    RegisterForEarlyBird: async (data) => {
+        const api = APP_CONFIG.API_ENDPOINT + API.REGISTER_FOR_EARLY_BIRD;
         const token = data.token;
         delete data.token;
         return ApiHelper.sendRequest(api, {

@@ -140,10 +140,10 @@ namespace Homo.AuthApi
 
             if (earlyBird != null)
             {
-                return new { token = JWTHelper.GenerateToken(_verifyPhoneJwtKey, 1150, new { Id = record.Id, Email = record.Email }, new string[] { "earlyBird" }) };
+                return new { token = JWTHelper.GenerateToken(_verifyPhoneJwtKey, 5, new { Id = record.Id, Email = record.Email }, new string[] { "earlyBird" }) };
             }
 
-            return new { token = JWTHelper.GenerateToken(_verifyPhoneJwtKey, 1150, new { Email = record.Email }) };
+            return new { token = JWTHelper.GenerateToken(_verifyPhoneJwtKey, 5, new { Email = record.Email }) };
         }
 
         [Route("verify-email-with-social-media")]

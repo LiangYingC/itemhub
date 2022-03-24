@@ -134,7 +134,7 @@ namespace Homo.AuthApi
             string[] roles = permissions.SelectMany(x => Newtonsoft.Json.JsonConvert.DeserializeObject<string[]>(x.Roles)).ToArray();
 
             string token = JWTHelper.GenerateToken(_jwtKey, _jwtExpirationMonth * 30 * 24 * 60, userPayload);
-            string dashboardToken = JWTHelper.GenerateToken(_dashboardJwtKey, _jwtExpirationMonth * 30 * 24 * 60, userPayload);
+            string dashboardToken = JWTHelper.GenerateToken(_dashboardJwtKey, 3 * 24 * 60, userPayload);
 
             if (_authByCookie)
             {

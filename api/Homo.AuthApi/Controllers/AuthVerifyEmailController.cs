@@ -21,8 +21,7 @@ namespace Homo.AuthApi
         private readonly string _envName;
         private readonly string _sendGridAPIKey;
         private readonly string _systemEmail;
-        private readonly string _websiteEndpoint;
-
+        private readonly string _websiteUrl;
         private readonly string _fbAppId;
         private readonly string _googleClientId;
         private readonly string _lineClientId;
@@ -39,7 +38,7 @@ namespace Homo.AuthApi
             _envName = env.EnvironmentName;
             _sendGridAPIKey = secrets.SendGridApiKey;
             _systemEmail = common.SystemEmail;
-            _websiteEndpoint = common.WebSiteEndpoint;
+            _websiteUrl = common.WebsiteUrl;
             _fbAppId = common.FbAppId;
             _googleClientId = common.GoogleClientId;
             _lineClientId = common.LineClientId;
@@ -91,7 +90,7 @@ namespace Homo.AuthApi
             {
                 Subject = _commonLocalizer.Get("verify email"),
                 Content = _commonLocalizer.Get("verify link", null, new Dictionary<string, string>() {
-                    { "link", $"{_websiteEndpoint}/auth/sign-up/verify-email/" },
+                    { "link", $"{_websiteUrl}/auth/sign-up/verify-email/" },
                     { "code", code }
                 })
             }, _systemEmail, dto.Email, _sendGridAPIKey);
@@ -113,7 +112,7 @@ namespace Homo.AuthApi
             {
                 Subject = _commonLocalizer.Get("binding email"),
                 Content = _commonLocalizer.Get("binding link", null, new Dictionary<string, string>() {
-                    { "link", $"{_websiteEndpoint}/auth/sign-up/?verifyPhoneToken={token}" }
+                    { "link", $"{_websiteUrl}/auth/sign-up/?verifyPhoneToken={token}" }
                 })
             }, _systemEmail, user.Email, _sendGridAPIKey);
             return new { status = CUSTOM_RESPONSE.OK };

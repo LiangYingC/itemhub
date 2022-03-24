@@ -98,14 +98,14 @@ namespace Homo.AuthApi
 
         [Route("send-register-email-to-early-bird")]
         [HttpPost]
-        public async Task<dynamic> sendBindingEmail([FromBody] DTOs.SendRegisterEmailToEarlyBird dto)
+        public async Task<dynamic> sendRegisterEmailToEarlyBird([FromBody] DTOs.SendRegisterEmailToEarlyBird dto)
         {
             User user = UserDataservice.GetEarlyBirdByEmail(_dbContext, dto.Email);
             if (user == null)
             {
                 throw new CustomException(ERROR_CODE.USER_NOT_FOUND, HttpStatusCode.NotFound);
             }
-            string token = JWTHelper.GenerateToken(_verifyPhoneJwtKey, 60 * 24 * 7, new { Id = user.Id, Email = user.Email, Identity = "earlyBird" }, null);
+            string token = JWTHelper.GenerateToken(_verifyPhoneJwtKey, 60 * 24 * 7, new { Id = user.Id, Email = user.Email, IsEarlyBird = true }, null);
 
             await MailHelper.Send(MailProvider.SEND_GRID, new MailTemplate()
             {
@@ -137,7 +137,7 @@ namespace Homo.AuthApi
 
             if (user != null && user.HashPhone == null)
             {
-                return new { token = JWTHelper.GenerateToken(_verifyPhoneJwtKey, 5, new { Id = record.Id, Email = record.Email, Identity = "earlyBird" }, null) };
+                return new { token = JWTHelper.GenerateToken(_verifyPhoneJwtKey, 5, new { Id = record.Id, Email = record.Email, IsEarlyBird = true }, null) };
             }
 
             return new { token = JWTHelper.GenerateToken(_verifyPhoneJwtKey, 5, new { Email = record.Email }) };

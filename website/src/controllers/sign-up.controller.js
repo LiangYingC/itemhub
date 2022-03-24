@@ -24,20 +24,14 @@ export class SignUpController extends RoutingController {
             title: '註冊 - ItemHub'
         };
         const jwtPayload = window.jwt_decode(this.args.verifyPhoneToken);
-
+        console.log('jwtPayload.extra.IsEarlyBird', jwtPayload.extra.IsEarlyBird);
         await super.render({
             phoneInvalidMessage: '',
             codeInvalidMessage: '',
             passwordInvalidMessage: '',
-            isEarlyBirdTipVisible: jwtPayload.extra.Identity === 'earlyBird' ? 'd-block' : 'd-none',
-            isEarlyBirdTipDisible: jwtPayload.extra.Identity !== 'earlyBird' ? 'd-block' : 'd-none'
+            isEarlyBirdTipVisible: jwtPayload.extra.IsEarlyBird === true ? 'd-block' : 'd-none',
+            isEarlyBirdTipDisible: jwtPayload.extra.IsEarlyBird === undefined ? 'd-block' : 'd-none'
         });
-
-        if (jwtPayload.extra.Identity === 'earlyBird') {
-            this.pageVariable.isEarlyBird = 'd-block';
-        } else {
-            this.pageVariable.isEarlyBird = 'd-none';
-        }
     }
 
     async exit (args) {

@@ -28,8 +28,7 @@ export class SignUpController extends RoutingController {
             phoneInvalidMessage: '',
             codeInvalidMessage: '',
             passwordInvalidMessage: '',
-            isEarlyBirdTipVisible: jwtPayload.extra.IsEarlyBird === true ? 'd-block' : 'd-none',
-            isEarlyBirdTipInvisible: jwtPayload.extra.IsEarlyBird === false ? 'd-block' : 'd-none'
+            isEarlyBirdTipVisible: jwtPayload.extra.IsEarlyBird === true ? 'd-block' : 'd-none'
         });
     }
 
@@ -131,19 +130,31 @@ export class SignUpController extends RoutingController {
 
     validatePassword (event) {
         if (event.keyCode === 13) {
-            this.elHTML.querySelector('.btn-sign-up').click();
+            this.elHTML.querySelector('.btn-finish').click();
             return;
         }
+
         const elPassword = event.currentTarget;
         const password = elPassword.value;
         const isValid = this._validatePassword(password);
-        const elSignUpButton = this.elHTML.querySelector('.btn-sign-up');
+        const elFinishButton = this.elHTML.querySelector('.btn-finish');
+
         if (isValid) {
-            elSignUpButton.removeAttribute('disabled');
+            elFinishButton.removeAttribute('disabled');
             this.pageVariable.passwordInvalidMessage = '';
         } else {
-            elSignUpButton.setAttribute('disabled', 'disabled');
+            elFinishButton.setAttribute('disabled', 'disabled');
             this.pageVariable.passwordInvalidMessage = '密碼至少要 12 碼英數';
+        }
+    }
+
+    action () {
+        const jwtPayload = window.jwt_decode(this.args.verifyPhoneToken);
+        const isEarlyBird = jwtPayload.extra.IsEarlyBird;
+        if (isEarlyBird) {
+            this.registerForEarlyBird();
+        } else {
+            this.signUp();
         }
     }
 

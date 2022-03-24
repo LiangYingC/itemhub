@@ -67,9 +67,10 @@ namespace Homo.AuthApi
             }
 
             User user = UserDataservice.GetOneByEmail(_dbContext, dto.Email);
-
             List<string> duplicatedUserProvider = new List<string>();
-            if (user != null && user.HashPhone != null)
+
+            bool isEarlyBird = user != null && user.HashPhone == null;
+            if (user != null && !isEarlyBird)
             {
                 throw new CustomException(ERROR_CODE.SIGN_IN_BY_OTHER_WAY, HttpStatusCode.BadRequest, null, new Dictionary<string, dynamic>(){
                             {"duplicatedUserProvider", AuthHelper.GetDuplicatedUserType(user)}

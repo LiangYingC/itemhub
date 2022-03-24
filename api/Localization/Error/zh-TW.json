@@ -3,7 +3,7 @@
     "UNAUTH_ACCESS_API": "未授權使用 API",
     "INVALID_FORM": "表單驗證發生錯誤",
     "SIGNIN_FAILED": "帳號或密碼錯誤",
-    "NEED_BINDING_USER": "尚未綁定成會員，請使用 Email 重新註冊",
+    "LACK_PHONE": "尚未綁定成會員，請使用 Email 重新註冊",
     "USER_BE_BLOCKED": "使用者被封鎖",
     "SMS_ERROR": "簡訊商回傳錯誤: {message}",
     "OAUTH_TYPE_ONLY_SUPPORT_CODE": "oAuth 只支援 response_type = code",

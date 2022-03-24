@@ -4,7 +4,7 @@
     "UNAUTH_ACCESS_API": "you could not access api",
     "INVALID_FORM": "invalid form",
     "SIGNIN_FAILED": "Email Or Password Failed",
-    "NEED_BINDING_USER": "You need to verify phone, please sign up again",
+    "LACK_PHONE": "You need to verify phone, please sign up again",
     "USER_BE_BLOCKED": "User had be blocked",
     "EMAIL_ALREADY_REGISTERED": "Email has been registered",
     "USER_NOT_FOUND": "User not found",

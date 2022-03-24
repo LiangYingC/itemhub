@@ -29,11 +29,11 @@ export class SignUpController extends RoutingController {
             phoneInvalidMessage: '',
             codeInvalidMessage: '',
             passwordInvalidMessage: '',
-            isEarlyBirdTipVisible: jwtPayload.roles[0] === 'earlyBird' ? 'd-block' : 'd-none',
-            isEarlyBirdTipDisible: jwtPayload.roles[0] !== 'earlyBird' ? 'd-block' : 'd-none'
+            isEarlyBirdTipVisible: jwtPayload.extra.Identity === 'earlyBird' ? 'd-block' : 'd-none',
+            isEarlyBirdTipDisible: jwtPayload.extra.Identity !== 'earlyBird' ? 'd-block' : 'd-none'
         });
 
-        if (jwtPayload.roles[0] === 'earlyBird') {
+        if (jwtPayload.extra.Identity === 'earlyBird') {
             this.pageVariable.isEarlyBird = 'd-block';
         } else {
             this.pageVariable.isEarlyBird = 'd-none';

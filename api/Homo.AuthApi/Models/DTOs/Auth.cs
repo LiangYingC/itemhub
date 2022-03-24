@@ -21,7 +21,7 @@ namespace Homo.AuthApi
             public string Email { get; set; }
         }
 
-        public class SendEarlyBirdUserBindingEmail
+        public class SendRegisterEmailToEarlyBird
         {
             [Required]
             [MaxLength(64)]

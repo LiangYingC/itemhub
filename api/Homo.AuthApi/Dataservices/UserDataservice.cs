@@ -66,7 +66,7 @@ namespace Homo.AuthApi
             return queryablUser.Where(x => x.Email == email && x.DeletedAt == null).FirstOrDefault();
         }
 
-        public static User GetBindingUserByEmail(DBContext dbContext, string email)
+        public static User GetEarlyBirdByEmail(DBContext dbContext, string email)
         {
             return dbContext.User.Where(x => x.Email == email && x.DeletedAt == null && x.HashPhone == null).FirstOrDefault();
         }

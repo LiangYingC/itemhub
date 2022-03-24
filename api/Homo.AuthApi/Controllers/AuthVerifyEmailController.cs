@@ -122,8 +122,9 @@ namespace Homo.AuthApi
         public dynamic verifyEmail([FromBody] DTOs.VerifyEmail dto)
         {
             User user = UserDataservice.GetOneByEmail(_dbContext, dto.Email);
+            bool isEarlyBird = user != null && user.HashPhone == null;
 
-            if (user != null && user.HashPhone != null)
+            if (user != null && !isEarlyBird)
             {
                 throw new CustomException(ERROR_CODE.DUPLICATE_EMAIL, HttpStatusCode.BadRequest);
             }
@@ -135,12 +136,7 @@ namespace Homo.AuthApi
             record.IsUsed = true;
             _dbContext.SaveChanges();
 
-            if (user != null && user.HashPhone == null)
-            {
-                return new { token = JWTHelper.GenerateToken(_verifyPhoneJwtKey, 5, new { Id = record.Id, Email = record.Email, IsEarlyBird = true }, null) };
-            }
-
-            return new { token = JWTHelper.GenerateToken(_verifyPhoneJwtKey, 5, new { Email = record.Email }) };
+            return new { token = JWTHelper.GenerateToken(_verifyPhoneJwtKey, 5, new { Id = record.Id, Email = record.Email, IsEarlyBird = isEarlyBird }, null) };
         }
 
         [Route("verify-email-with-social-media")]

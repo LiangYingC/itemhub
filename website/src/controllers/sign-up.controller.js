@@ -29,8 +29,8 @@ export class SignUpController extends RoutingController {
             phoneInvalidMessage: '',
             codeInvalidMessage: '',
             passwordInvalidMessage: '',
-            isEarlyBirdTipVisible: jwtPayload.extra.IsEarlyBird === true ? 'd-block' : 'd-none',
-            isEarlyBirdTipDisible: jwtPayload.extra.IsEarlyBird === undefined ? 'd-block' : 'd-none'
+            isEarlyBirdTipAvailable: jwtPayload.extra.IsEarlyBird === true ? 'd-block' : 'd-none',
+            isEarlyBirdTipDisible: jwtPayload.extra.IsEarlyBird === false ? 'd-block' : 'd-none'
         });
     }
 

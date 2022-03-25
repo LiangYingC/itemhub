@@ -66,6 +66,11 @@ namespace Homo.AuthApi
             return queryablUser.Where(x => x.Email == email && x.DeletedAt == null).FirstOrDefault();
         }
 
+        public static User GetEarlyBirdByEmail(DBContext dbContext, string email)
+        {
+            return dbContext.User.Where(x => x.Email == email && x.DeletedAt == null && x.HashPhone == null).FirstOrDefault();
+        }
+
         public static User GetOneByHashPhone(DBContext dbContext, string hashPhone)
         {
             return dbContext.User.Where(x => x.HashPhone == hashPhone && x.DeletedAt == null).FirstOrDefault();
@@ -166,6 +171,23 @@ namespace Homo.AuthApi
             return newUser;
         }
 
+
+
+        public static User RegisterForEarlyAdaptor(DBContext dbContext, long id, string encryptPhone, string pseudonymousPhone, string hashPhone, string salt, string hash)
+        {
+            User record = new User() { Id = id };
+            dbContext.Attach(record);
+            record.EncryptPhone = encryptPhone;
+            record.PseudonymousPhone = pseudonymousPhone;
+            record.HashPhone = hashPhone;
+            record.Salt = salt;
+            record.Hash = hash;
+            record.EditedAt = DateTime.Now;
+            record.EditedBy = id;
+            dbContext.SaveChanges();
+            return record;
+        }
+
         public static void SetUserToForgotPasswordState(DBContext dbContext, long userId)
         {
             var record = new User() { Id = userId };
@@ -221,7 +243,6 @@ namespace Homo.AuthApi
 
         public static void UpdateName(DBContext dbContext, long id, DTOs.UpdateName dto, long editedBy)
         {
-            System.Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject("!!", Newtonsoft.Json.Formatting.Indented));
             User record = dbContext.User.Where(x => x.Id == id).FirstOrDefault();
             foreach (var propOfDTO in dto.GetType().GetProperties())
             {

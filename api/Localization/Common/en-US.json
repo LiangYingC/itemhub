@@ -4,5 +4,7 @@
     "verify link": "Verify Link {link}, Verify Code {code}",
     "reset email": "Reset Password Email Subject",
     "reset link": "Reset Password Link: {link}",
-    "sms template": "Verify Code: {code}"
+    "sms template": "Verify Code: {code}",
+    "early bird register": "Early bird register",
+    "early bird register link": "early bird register link {link}"
 }

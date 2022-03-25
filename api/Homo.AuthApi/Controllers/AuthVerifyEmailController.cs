@@ -21,8 +21,7 @@ namespace Homo.AuthApi
         private readonly string _envName;
         private readonly string _sendGridAPIKey;
         private readonly string _systemEmail;
-        private readonly string _websiteEndpoint;
-
+        private readonly string _websiteUrl;
         private readonly string _fbAppId;
         private readonly string _googleClientId;
         private readonly string _lineClientId;
@@ -39,7 +38,7 @@ namespace Homo.AuthApi
             _envName = env.EnvironmentName;
             _sendGridAPIKey = secrets.SendGridApiKey;
             _systemEmail = common.SystemEmail;
-            _websiteEndpoint = common.WebSiteEndpoint;
+            _websiteUrl = common.WebsiteUrl;
             _fbAppId = common.FbAppId;
             _googleClientId = common.GoogleClientId;
             _lineClientId = common.LineClientId;
@@ -69,7 +68,9 @@ namespace Homo.AuthApi
 
             User user = UserDataservice.GetOneByEmail(_dbContext, dto.Email);
             List<string> duplicatedUserProvider = new List<string>();
-            if (user != null)
+
+            bool isEarlyBird = user != null && user.HashPhone == null;
+            if (user != null && !isEarlyBird)
             {
                 throw new CustomException(ERROR_CODE.SIGN_IN_BY_OTHER_WAY, HttpStatusCode.BadRequest, null, new Dictionary<string, dynamic>(){
                             {"duplicatedUserProvider", AuthHelper.GetDuplicatedUserType(user)}
@@ -89,10 +90,31 @@ namespace Homo.AuthApi
             {
                 Subject = _commonLocalizer.Get("verify email"),
                 Content = _commonLocalizer.Get("verify link", null, new Dictionary<string, string>() {
-                    { "link", $"{_websiteEndpoint}/sign-up/verify-email/" },
+                    { "link", $"{_websiteUrl}/auth/sign-up/verify-email/" },
                     { "code", code }
                 })
             }, _systemEmail, dto.Email, _sendGridAPIKey);
+            return new { status = CUSTOM_RESPONSE.OK };
+        }
+
+        [Route("send-register-email-to-early-bird")]
+        [HttpPost]
+        public async Task<dynamic> sendRegisterEmailToEarlyBird([FromBody] DTOs.SendRegisterEmailToEarlyBird dto)
+        {
+            User user = UserDataservice.GetEarlyBirdByEmail(_dbContext, dto.Email);
+            if (user == null)
+            {
+                throw new CustomException(ERROR_CODE.USER_NOT_FOUND, HttpStatusCode.NotFound);
+            }
+            string token = JWTHelper.GenerateToken(_verifyPhoneJwtKey, 60 * 24 * 7, new { Id = user.Id, Email = user.Email, IsEarlyBird = true }, null);
+
+            await MailHelper.Send(MailProvider.SEND_GRID, new MailTemplate()
+            {
+                Subject = _commonLocalizer.Get("early bird register"),
+                Content = _commonLocalizer.Get("early bird register link", null, new Dictionary<string, string>() {
+                    { "link", $"{_websiteUrl}/auth/sign-up/?verifyPhoneToken={token}" }
+                })
+            }, _systemEmail, user.Email, _sendGridAPIKey);
             return new { status = CUSTOM_RESPONSE.OK };
         }
 
@@ -101,7 +123,9 @@ namespace Homo.AuthApi
         public dynamic verifyEmail([FromBody] DTOs.VerifyEmail dto)
         {
             User user = UserDataservice.GetOneByEmail(_dbContext, dto.Email);
-            if (user != null)
+            bool isEarlyBird = user != null && user.HashPhone == null;
+
+            if (user != null && !isEarlyBird)
             {
                 throw new CustomException(ERROR_CODE.DUPLICATE_EMAIL, HttpStatusCode.BadRequest);
             }
@@ -112,7 +136,8 @@ namespace Homo.AuthApi
             }
             record.IsUsed = true;
             _dbContext.SaveChanges();
-            return new { token = JWTHelper.GenerateToken(_verifyPhoneJwtKey, 5, new { Email = record.Email }) };
+
+            return new { token = JWTHelper.GenerateToken(_verifyPhoneJwtKey, 5, new { Id = record.Id, Email = record.Email, IsEarlyBird = isEarlyBird }, null) };
         }
 
         [Route("verify-email-with-social-media")]

@@ -58,6 +58,8 @@ namespace Homo.AuthApi
         public dynamic signInWithEmail([FromBody] DTOs.SignInWithEmail dto)
         {
             User user = UserDataservice.GetOneByEmail(_dbContext, dto.Email);
+            bool isEarlyBird = user != null && user.HashPhone == null;
+
             if (user == null)
             {
                 throw new CustomException(ERROR_CODE.USER_NOT_FOUND, HttpStatusCode.NotFound);
@@ -68,6 +70,10 @@ namespace Homo.AuthApi
                 throw new CustomException(ERROR_CODE.SIGN_IN_BY_OTHER_WAY, HttpStatusCode.BadRequest, null, new Dictionary<string, dynamic>(){
                         {"duplicatedUserProviders", AuthHelper.GetDuplicatedUserType(user)}
                     });
+            }
+            if (isEarlyBird)
+            {
+                throw new CustomException(ERROR_CODE.LACK_PHONE, HttpStatusCode.Forbidden);
             }
 
             if (user.Hash != Homo.Core.Helpers.CryptographicHelper.GenerateSaltedHash(dto.Password, user.Salt))

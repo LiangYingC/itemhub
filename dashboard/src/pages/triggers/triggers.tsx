@@ -59,10 +59,16 @@ const Triggers = () => {
         });
     };
 
+    const confirmToDeleteTriggers = () => {
+        if (prompt('請再次輸入 delete，藉此執行刪除') === 'delete') {
+            deleteTriggersApi();
+        }
+    };
+
     return (
         <>
             <button
-                onClick={deleteTriggersApi}
+                onClick={confirmToDeleteTriggers}
                 disabled={isDeletingTriggers || selectedIds.length <= 0}
             >
                 {isDeletingTriggers

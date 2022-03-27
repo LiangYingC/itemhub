@@ -41,7 +41,7 @@ const Triggers = () => {
         }
     }, [deleteTriggersResponse]);
 
-    const checkSelectedIds = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const updateSelectedIds = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedIds((previous) => {
             const id = event.target.value;
             const newSelectedIds = [...previous];
@@ -91,7 +91,7 @@ const Triggers = () => {
                             <label key={id} className="mt-2 mb-2">
                                 <input
                                     type="checkbox"
-                                    onChange={checkSelectedIds}
+                                    onChange={updateSelectedIds}
                                     value={id}
                                 />
                                 <div>Id: {id}</div>

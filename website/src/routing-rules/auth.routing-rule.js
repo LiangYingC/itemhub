@@ -5,6 +5,9 @@ import { VerifyEmailController } from '../controllers/verify-email.controller.js
 import { SignUpController } from '../controllers/sign-up.controller.js';
 import { SignUpFinishController } from '../controllers/sign-up-finish.controller.js';
 import { TwoFactorAuthController } from '../controllers/two-factor-auth.controller.js';
+import { ForgetPasswordController } from '../controllers/forget-password.js';
+import { ResetPasswordController } from '../controllers/reset-password.js';
+import { ResetPasswordFinishController } from '../controllers/reset-password-finish.js';
 
 export const AuthRoutingRule = {
     path: '/auth/',
@@ -46,7 +49,23 @@ export const AuthRoutingRule = {
         html: '/template/sign-up-finish.html'
     }, {
         path: 'two-factor-auth/',
+        skipSitemap: true,
         controller: TwoFactorAuthController,
         html: '/template/two-factor-auth.html'
+    }, {
+        path: 'forget-password/',
+        skipSitemap: true,
+        controller: ForgetPasswordController,
+        html: '/template/forget-password.html'
+    }, {
+        path: 'reset-password/?token',
+        skipSitemap: true,
+        controller: ResetPasswordController,
+        html: '/template/reset-password.html'
+    }, {
+        path: 'reset-password-finish/',
+        skipSitemap: true,
+        controller: ResetPasswordFinishController,
+        html: '/template/reset-password-finish.html'
     }]
 };

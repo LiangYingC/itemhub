@@ -31,7 +31,6 @@ namespace Homo.AuthApi
         public string LocalizationResourcesPath { get; set; }
         public int JwtExpirationMonth { get; set; }
         public string SystemEmail { get; set; }
-        public string WebSiteEndpoint { get; set; }
         public string WebsiteUrl { get; set; }
         public string FbAppId { get; set; }
         public string GoogleClientId { get; set; }

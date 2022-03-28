@@ -16,13 +16,13 @@ namespace Homo.AuthApi
 
         private readonly DBContext _dbContext;
         private readonly string _fbClientSecret;
-        private readonly string _frontEndUrl;
+        private readonly string _websiteUrl;
         public AuthRemoveFbSubController(DBContext dbContext, IOptions<AppSettings> appSettings, Microsoft.AspNetCore.Hosting.IWebHostEnvironment env)
         {
             Secrets secrets = (Secrets)appSettings.Value.Secrets;
             Common common = (Common)appSettings.Value.Common;
             _fbClientSecret = secrets.FbClientSecret;
-            _frontEndUrl = common.WebSiteEndpoint;
+            _websiteUrl = common.WebsiteUrl;
             _dbContext = dbContext;
         }
         [HttpGet]
@@ -71,7 +71,7 @@ namespace Homo.AuthApi
             UserDataservice.RemoveFbSub(_dbContext, payloadObject.user_id, confirmCode);
             return new
             {
-                url = $"{_frontEndUrl}api/v1/auth/fb-sub?confirmCode={confirmCode}",
+                url = $"{_websiteUrl}api/v1/auth/fb-sub?confirmCode={confirmCode}",
                 confirmation_code = confirmCode
             };
         }

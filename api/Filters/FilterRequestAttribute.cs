@@ -56,7 +56,7 @@ namespace Homo.IotApi
             }
 
             int requestFrequency = (int)SubscriptionHelper.GetFrequency(pricingPlan);
-            if (checkData.DevicePinSensor.CreatedAt.AddSeconds(requestFrequency) >= DateTime.Now)
+            if (checkData != null && checkData.DevicePinSensor.CreatedAt.AddSeconds(requestFrequency) >= DateTime.Now)
             {
                 throw new CustomException(ERROR_CODE.TOO_MANY_REQUEST, System.Net.HttpStatusCode.Forbidden);
             }

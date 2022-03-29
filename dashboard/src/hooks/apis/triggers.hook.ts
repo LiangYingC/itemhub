@@ -77,6 +77,58 @@ export const useGetTriggerApi = (id: number) => {
     };
 };
 
+export const useCreateTriggerApi = ({
+    sourceDeviceId,
+    sourcePin,
+    sourceThreshold,
+    destinationDeviceId,
+    destinationPin,
+    destinationDeviceTargetState,
+    operator,
+}: {
+    sourceDeviceId: number;
+    sourcePin: string;
+    sourceThreshold: number;
+    destinationDeviceId: number;
+    destinationPin: string;
+    destinationDeviceTargetState: number;
+    operator: number;
+}) => {
+    const dispatch = useAppDispatch();
+    const dispatchAddTrigger = useCallback(
+        (data: TriggerItem) => {
+            if (data) {
+                dispatch(triggersActions.addTrigger(data));
+            }
+        },
+        [dispatch]
+    );
+
+    const apiPath = `${API_URL}${END_POINT.TRIGGERS}`;
+    const { isLoading, error, data, fetchApi } = useFetchApi<TriggerItem>({
+        apiPath,
+        method: HTTP_METHOD.POST,
+        payload: {
+            sourceDeviceId,
+            sourcePin,
+            sourceThreshold,
+            destinationDeviceId,
+            destinationPin,
+            destinationDeviceTargetState,
+            operator,
+        },
+        initialData: null,
+        callbackFunc: dispatchAddTrigger,
+    });
+
+    return {
+        isCreatingTrigger: isLoading,
+        createTriggerError: error,
+        createTriggerResponse: data,
+        createTriggerApi: fetchApi,
+    };
+};
+
 export const useDeleteTriggersApi = (ids: number[]) => {
     const dispatch = useAppDispatch();
     const dispatchRefresh = useCallback(

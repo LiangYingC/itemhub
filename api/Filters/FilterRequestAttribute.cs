@@ -50,13 +50,13 @@ namespace Homo.IotApi
                 .FirstOrDefault();
 
             PRICING_PLAN? pricingPlan = null;
-            if (checkData != null)
+            if (checkData != null && checkData.Subscription != null)
             {
                 pricingPlan = (PRICING_PLAN)checkData.Subscription.PricingPlan;
             }
 
             int requestFrequency = (int)SubscriptionHelper.GetFrequency(pricingPlan);
-            if (checkData != null && checkData.DevicePinSensor.CreatedAt.AddSeconds(requestFrequency) >= DateTime.Now)
+            if (checkData != null && checkData.DevicePinSensor != null && checkData.DevicePinSensor.CreatedAt.AddSeconds(requestFrequency) >= DateTime.Now)
             {
                 throw new CustomException(ERROR_CODE.TOO_MANY_REQUEST, System.Net.HttpStatusCode.Forbidden);
             }

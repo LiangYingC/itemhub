@@ -159,7 +159,8 @@ export const useUpdateTriggerApi = ({
         [trigerId, updatedData, dispatch]
     );
 
-    const apiPath = `${API_URL}${END_POINT.TRIGGERS}/${trigerId}`;
+    let apiPath = `${API_URL}${END_POINT.TRIGGER}`;
+    apiPath = apiPath.replace(':id', trigerId.toString());
 
     const { isLoading, error, data, fetchApi } = useFetchApi<ResponseOK>({
         apiPath,

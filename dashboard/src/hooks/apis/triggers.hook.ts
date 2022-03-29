@@ -131,7 +131,7 @@ export const useCreateTriggerApi = ({
 
 export const useDeleteTriggersApi = (ids: number[]) => {
     const dispatch = useAppDispatch();
-    const dispatchRefresh = useCallback(
+    const dispatchDeleteTriggers = useCallback(
         (data: ResponseOK) => {
             if (data.status === RESPONSE_STATUS.OK) {
                 dispatch(triggersActions.deleteTriggers(ids));
@@ -147,7 +147,7 @@ export const useDeleteTriggersApi = (ids: number[]) => {
         method: HTTP_METHOD.DELETE,
         payload: ids,
         initialData: null,
-        callbackFunc: dispatchRefresh,
+        callbackFunc: dispatchDeleteTriggers,
     });
 
     return {

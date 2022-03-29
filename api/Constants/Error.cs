@@ -12,5 +12,6 @@ namespace Homo.IotApi
         public static string DUPLICATE_OAUTH_CLIENT_ID = "DUPLICATE_OAUTH_CLIENT_ID";
         public static string NO_SUBSCRIPTION = "NO_SUBSCRIPTION";
         public static string OAUTH_CLIENT_SECRET_ERROR = "OAUTH_CLIENT_SECRET_ERROR";
+        public static string TOO_MANY_REQUEST = "TOO_MANY_REQUEST";
     }
 }

@@ -17,6 +17,7 @@ namespace Homo.IotApi
         }
 
         [HttpPost]
+        [FilterRequestFactory]
         [Route("{pin}")]
         public ActionResult<dynamic> create([FromRoute] long id, [FromRoute] string pin, [FromBody] DTOs.DevicePinSensor dto, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {

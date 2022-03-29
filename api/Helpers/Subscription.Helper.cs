@@ -48,7 +48,7 @@ namespace Homo.IotApi
             }
             return 0;
         }
-        public static decimal GetFrequency(PRICING_PLAN pricingPlan)
+        public static decimal GetFrequency(PRICING_PLAN? pricingPlan)
         {
             if (pricingPlan == PRICING_PLAN.BASIC)
             {
@@ -66,7 +66,10 @@ namespace Homo.IotApi
             {
                 return 1;
             }
-            return 999999;
+            else
+            {
+                return 30;
+            }
         }
         public static string GetStorageTime(PRICING_PLAN pricingPlan)
         {

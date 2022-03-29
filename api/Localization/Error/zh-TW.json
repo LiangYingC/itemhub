@@ -28,5 +28,6 @@
     "ALREADY_SIGN_UP_BY_THIS_EMAIL": "這個 Email 已經被其他使用者註冊過了, 請試著登入或是更換 Email",
     "DUPLICATE_OAUTH_CLIENT_ID": "這個 oAuth Client Id 已經有人使用過了, 請重新輸入",
     "NO_SUBSCRIPTION": "目前沒有訂閱紀錄",
-    "DUPLICATE_EMAIL": "重複的 Email"
+    "DUPLICATE_EMAIL": "重複的 Email",
+    "TOO_MANY_REQUEST": "送 Request 頻率太高, 已經超越你所訂閱的方案"
 }

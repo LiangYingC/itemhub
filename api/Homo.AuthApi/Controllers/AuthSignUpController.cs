@@ -25,7 +25,6 @@ namespace Homo.AuthApi
         private readonly string _envName;
         private readonly string _sendGridAPIKey;
         private readonly string _systemEmail;
-        private readonly string _websiteEndpoint;
         private readonly string _fbAppId;
         private readonly string _googleClientId;
         private readonly string _lineClientId;
@@ -49,7 +48,6 @@ namespace Homo.AuthApi
             _envName = env.EnvironmentName;
             _sendGridAPIKey = secrets.SendGridApiKey;
             _systemEmail = common.SystemEmail;
-            _websiteEndpoint = common.WebSiteEndpoint;
             _fbAppId = common.FbAppId;
             _fbClientSecret = secrets.FbClientSecret;
             _googleClientId = common.GoogleClientId;
@@ -134,7 +132,7 @@ namespace Homo.AuthApi
             string[] roles = permissions.SelectMany(x => Newtonsoft.Json.JsonConvert.DeserializeObject<string[]>(x.Roles)).ToArray();
 
             string token = JWTHelper.GenerateToken(_jwtKey, _jwtExpirationMonth * 30 * 24 * 60, userPayload);
-            string dashboardToken = JWTHelper.GenerateToken(_dashboardJwtKey, _jwtExpirationMonth * 3 * 24 * 60, userPayload);
+            string dashboardToken = JWTHelper.GenerateToken(_dashboardJwtKey, 3 * 24 * 60, userPayload);
 
             if (_authByCookie)
             {

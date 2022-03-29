@@ -16,7 +16,7 @@ namespace Homo.AuthApi
         private readonly DBContext _dbContext;
         private readonly string _resetPasswordJwtKey;
         private readonly CommonLocalizer _commonLocalizer;
-        private readonly string _websiteEndpoint;
+        private readonly string _websiteUrl;
         private readonly string _systemEmail;
         private readonly string _sendGridApiKey;
         public AuthResetPasswordController(DBContext dbContext, IOptions<AppSettings> appSettings, Microsoft.AspNetCore.Hosting.IWebHostEnvironment env, Homo.Api.CommonLocalizer commonLocalizer)
@@ -25,7 +25,7 @@ namespace Homo.AuthApi
             Common common = (Common)appSettings.Value.Common;
             _resetPasswordJwtKey = secrets.ResetPasswordJwtKey;
             _commonLocalizer = commonLocalizer;
-            _websiteEndpoint = common.WebSiteEndpoint;
+            _websiteUrl = common.WebsiteUrl;
             _systemEmail = common.SystemEmail;
             _sendGridApiKey = secrets.SendGridApiKey;
             _dbContext = dbContext;
@@ -46,7 +46,7 @@ namespace Homo.AuthApi
             {
                 Subject = _commonLocalizer.Get("reset email"),
                 Content = _commonLocalizer.Get("reset link", null, new Dictionary<string, string>() {
-                    { "link", $"{_websiteEndpoint}/auth/reset-password?token={resetPasswordToken}" }
+                    { "link", $"{_websiteUrl}/auth/reset-password?token={resetPasswordToken}" }
                 })
             }, _systemEmail, dto.Email, _sendGridApiKey);
             return new { status = CUSTOM_RESPONSE.OK };

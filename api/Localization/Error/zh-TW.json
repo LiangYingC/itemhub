@@ -3,6 +3,7 @@
     "UNAUTH_ACCESS_API": "未授權使用 API",
     "INVALID_FORM": "表單驗證發生錯誤",
     "SIGNIN_FAILED": "帳號或密碼錯誤",
+    "LACK_PHONE": "尚未綁定成會員，請使用 Email 重新註冊",
     "USER_BE_BLOCKED": "使用者被封鎖",
     "SMS_ERROR": "簡訊商回傳錯誤: {message}",
     "OAUTH_TYPE_ONLY_SUPPORT_CODE": "oAuth 只支援 response_type = code",
@@ -25,6 +26,8 @@
     "DUPLICATED_PHONE": "已經有人用這個手機註冊",
     "WITHOUT_PERMISSION_TO_GET_EMAIL": "無法取得 Email, 可能是你不允許我們透過社群平台讀取你的 Email",
     "ALREADY_SIGN_UP_BY_THIS_EMAIL": "這個 Email 已經被其他使用者註冊過了, 請試著登入或是更換 Email",
+    "DUPLICATE_OAUTH_CLIENT_ID": "這個 oAuth Client Id 已經有人使用過了, 請重新輸入",
     "NO_SUBSCRIPTION": "目前沒有訂閱紀錄",
-    "DUPLICATE_EMAIL": "重複的 Email"
+    "DUPLICATE_EMAIL": "重複的 Email",
+    "TOO_MANY_REQUEST": "送 Request 頻率太高, 已經超越你所訂閱的方案"
 }

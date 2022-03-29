@@ -48,7 +48,7 @@ namespace Homo.IotApi
             }
             return 0;
         }
-        public static decimal GetFrequency(PRICING_PLAN pricingPlan)
+        public static decimal GetFrequency(PRICING_PLAN? pricingPlan)
         {
             if (pricingPlan == PRICING_PLAN.BASIC)
             {
@@ -66,7 +66,10 @@ namespace Homo.IotApi
             {
                 return 1;
             }
-            return 999999;
+            else
+            {
+                return 30;
+            }
         }
         public static string GetStorageTime(PRICING_PLAN pricingPlan)
         {
@@ -87,6 +90,27 @@ namespace Homo.IotApi
                 return "7天";
             }
             return "";
+        }
+
+        public static int GetStorageSavingSeconds(PRICING_PLAN pricingPlan)
+        {
+            if (pricingPlan == PRICING_PLAN.BASIC)
+            {
+                return 6 * 60 * 60;
+            }
+            else if (pricingPlan == PRICING_PLAN.ADVANCE)
+            {
+                return 24 * 60 * 60;
+            }
+            else if (pricingPlan == PRICING_PLAN.GROWTH)
+            {
+                return 3 * 24 * 60 * 60;
+            }
+            else if (pricingPlan == PRICING_PLAN.SMALL_BUSINESS)
+            {
+                return 7 * 24 * 60 * 60;
+            }
+            return 30 * 60;
         }
     }
 }

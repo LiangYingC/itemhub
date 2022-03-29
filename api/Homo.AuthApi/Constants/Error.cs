@@ -12,6 +12,7 @@ namespace Homo.AuthApi
         public static string VERIFY_CODE_NOT_FOUND = "VERIFY_CODE_NOT_FOUND";
         public static string INVALID_CODE_FROM_SOCIAL_MEDIA = "INVALID_CODE_FROM_SOCIAL_MEDIA";
         public static string SIGNIN_FAILED = "SIGNIN_FAILED";
+        public static string LACK_PHONE = "LACK_PHONE";
         public static string USER_BE_BLOCKED = "USER_BE_BLOCKED";
         public static string REMOVE_FB_SUB_INVALID_CODE = "REMOVE_FB_SUB_INVALID_CODE";
         public static string WRONG_PASSWORD = "WRONG_PASSWORD";

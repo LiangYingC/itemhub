@@ -12,6 +12,7 @@ export class SignUpController extends RoutingController {
         this.resendTimer = null;
         this.resendTime = 0;
         this.signUpToken = '';
+        this.validPhone = false;
     }
 
     static get id () {
@@ -23,12 +24,11 @@ export class SignUpController extends RoutingController {
             title: '註冊 - ItemHub'
         };
         const jwtPayload = window.jwt_decode(this.args.verifyPhoneToken);
-
         await super.render({
             phoneInvalidMessage: '',
             codeInvalidMessage: '',
             passwordInvalidMessage: '',
-            earlyBirdTipVisible: jwtPayload.extra.isEarlyBird === true ? 'd-block' : 'd-none'
+            isEarlyBirdTipVisible: jwtPayload.extra.IsEarlyBird === true ? 'd-block' : 'd-none'
         });
     }
 
@@ -91,6 +91,8 @@ export class SignUpController extends RoutingController {
         const elCodeInput = event.currentTarget;
         const elForm = elCodeInput.closest('.form');
         const data = elForm.collectFormData();
+        const elSendSmsButton = this.elHTML.querySelector('.btn-send-sms');
+
         if (event.keyCode < 96 && event.keyCode > 105) {
             return;
         }
@@ -116,6 +118,9 @@ export class SignUpController extends RoutingController {
             this.signUpToken = '';
             elPassword.setAttribute('disabled', 'disabled');
         } else {
+            elSendSmsButton.setAttribute('disabled', 'disabled');
+            this.validPhone = true;
+            elSendSmsButton.innerHTML = '驗證成功';
             elCodeInput.setAttribute('disabled', 'disabled');
             this.pageVariable.codeInvalidMessage = '';
             this.signUpToken = resp.data.token;
@@ -125,19 +130,31 @@ export class SignUpController extends RoutingController {
 
     validatePassword (event) {
         if (event.keyCode === 13) {
-            this.elHTML.querySelector('.btn-sign-up').click();
+            this.elHTML.querySelector('.btn-finish').click();
             return;
         }
+
         const elPassword = event.currentTarget;
         const password = elPassword.value;
         const isValid = this._validatePassword(password);
-        const elSignUpButton = this.elHTML.querySelector('.btn-sign-up');
+        const elFinishButton = this.elHTML.querySelector('.btn-finish');
+
         if (isValid) {
-            elSignUpButton.removeAttribute('disabled');
+            elFinishButton.removeAttribute('disabled');
             this.pageVariable.passwordInvalidMessage = '';
         } else {
-            elSignUpButton.setAttribute('disabled', 'disabled');
+            elFinishButton.setAttribute('disabled', 'disabled');
             this.pageVariable.passwordInvalidMessage = '密碼至少要 12 碼英數';
+        }
+    }
+
+    action () {
+        const jwtPayload = window.jwt_decode(this.args.verifyPhoneToken);
+        const isEarlyBird = jwtPayload.extra.IsEarlyBird;
+        if (isEarlyBird) {
+            this.registerForEarlyBird();
+        } else {
+            this.signUp();
         }
     }
 
@@ -145,6 +162,26 @@ export class SignUpController extends RoutingController {
         const elPassword = this.elHTML.querySelector('[data-field="password"]');
         elPassword.setAttribute('disabled', 'disabeld');
         const resp = await AuthDataService.SignUp({
+            token: this.signUpToken,
+            password: elPassword.value
+        });
+
+        elPassword.removeAttribute('disabled');
+        if (resp.status !== RESPONSE_STATUS.OK) {
+            Toaster.popup(Toaster.TYPE.ERROR, resp.data.message);
+            this.pageVariable.passwordInvalidMessage = resp.data.message;
+            return;
+        }
+        CookieUtil.setCookie('token', resp.data.token);
+        CookieUtil.setCookie('dashboardToken', resp.data.dashboardToken);
+        history.pushState({}, '', '/auth/finish/');
+    }
+
+    async registerForEarlyBird () {
+        const elPassword = this.elHTML.querySelector('[data-field="password"]');
+        elPassword.setAttribute('disabled', 'disabeld');
+
+        const resp = await AuthDataService.RegisterForEarlyBird({
             token: this.signUpToken,
             password: elPassword.value
         });
@@ -181,6 +218,9 @@ export class SignUpController extends RoutingController {
 
     _countdownMain () {
         const elSendVerifyMailButton = this.elHTML.querySelector('.btn-send-sms');
+        if (this.validPhone) {
+            return;
+        }
         if (this.resendTime <= 0) {
             elSendVerifyMailButton.innerHTML = '發送驗證碼至手機';
             elSendVerifyMailButton.removeAttribute('disabled');

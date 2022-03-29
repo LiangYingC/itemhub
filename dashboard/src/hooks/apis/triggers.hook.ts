@@ -129,6 +129,54 @@ export const useCreateTriggerApi = ({
     };
 };
 
+export const useUpdateTriggerApi = ({
+    trigerId,
+    updatedData,
+}: {
+    trigerId: number;
+    updatedData: {
+        sourceDeviceId: number;
+        sourcePin: string;
+        sourceThreshold: number;
+        destinationDeviceId: number;
+        destinationPin: string;
+        destinationDeviceTargetState: number;
+        operator: number;
+    };
+}) => {
+    const dispatch = useAppDispatch();
+    const dispatchUpdateTrigger = useCallback(
+        (data: ResponseOK) => {
+            if (data.status === RESPONSE_STATUS.OK) {
+                dispatch(
+                    triggersActions.updateTrigger({
+                        id: trigerId,
+                        ...updatedData,
+                    })
+                );
+            }
+        },
+        [trigerId, updatedData, dispatch]
+    );
+
+    const apiPath = `${API_URL}${END_POINT.TRIGGERS}/${trigerId}`;
+
+    const { isLoading, error, data, fetchApi } = useFetchApi<ResponseOK>({
+        apiPath,
+        method: HTTP_METHOD.PATCH,
+        payload: updatedData,
+        initialData: null,
+        callbackFunc: dispatchUpdateTrigger,
+    });
+
+    return {
+        isUpdatingTrigger: isLoading,
+        updateTriggerError: error,
+        updateTriggerResponse: data,
+        updateTriggerApi: fetchApi,
+    };
+};
+
 export const useDeleteTriggersApi = (ids: number[]) => {
     const dispatch = useAppDispatch();
     const dispatchDeleteTriggers = useCallback(

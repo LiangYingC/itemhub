@@ -150,6 +150,7 @@ namespace Homo.IotApi
                 throw new CustomException(ERROR_CODE.OAUTH_CLIENT_ID_NOT_FOUND, System.Net.HttpStatusCode.NotFound);
             }
             string hashClientSecrets = CryptographicHelper.GenerateSaltedHash(dto.clientSecret, client.Salt);
+            User user = UserDataservice.GetOne(_dbContext, client.OwnerId, true);
             if (client.HashClientSecrets != hashClientSecrets)
             {
                 throw new CustomException(ERROR_CODE.OAUTH_CLIENT_SECRET_ERROR, System.Net.HttpStatusCode.Unauthorized);
@@ -159,7 +160,8 @@ namespace Homo.IotApi
 
             string token = JWTHelper.GenerateToken(_jwtKey, 24 * 30 * 24 * 60, new
             {
-                pricingPlan = subscrioption?.PricingPlan
+                pricingPlan = subscrioption?.PricingPlan,
+                Id = user.Id
             }, null);
 
             return new

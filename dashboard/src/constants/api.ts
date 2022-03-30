@@ -1,6 +1,7 @@
 export const API_URL = import.meta.env.VITE_API_URL;
 
 export const END_POINT = {
+    TRIGGER_OPERATORS: 'universal/trigger-operators',
     SIGN_WITH_EMAIL: 'auth/sign-in-with-email',
     IS_SIGNED: 'auth/is-sign-in',
     DEVICES: 'me/devices',

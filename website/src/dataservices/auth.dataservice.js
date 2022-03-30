@@ -101,6 +101,23 @@ export const AuthDataService = {
             }
         });
     },
+    SendResetPasswordMail: async (data) => {
+        const api = APP_CONFIG.API_ENDPOINT + API.SEND_RESET_PASSWORD_MAIL;
+        return ApiHelper.sendRequest(api, {
+            method: 'POST',
+            body: JSON.stringify(data)
+        });
+    },
+    ResetPassword: async (data) => {
+        const api = APP_CONFIG.API_ENDPOINT + API.RESET_PASSWORD;
+        return ApiHelper.sendRequest(api, {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                Authorization: 'Bearer ' + data.token
+            }
+        });
+    },
     ExchangeDashboardToken: async (data) => {
         const api = APP_CONFIG.API_ENDPOINT + API.EXCHANGE_DASHBOARD_TOKEN;
         return ApiHelper.sendRequest(api, {

@@ -17,7 +17,7 @@ export class ForgetPasswordController extends RoutingController {
         };
 
         await super.render({
-            isFormVisibility: 'd-block',
+            isFormVisible: 'd-block',
             isSendMailVisible: 'd-none'
         });
     }
@@ -75,7 +75,7 @@ export class ForgetPasswordController extends RoutingController {
             return;
         }
 
-        this.pageVariable.isFormVisibility = 'd-none';
+        this.pageVariable.isFormVisible = 'd-none';
         this.pageVariable.isSendMailVisible = '';
     }
 }

@@ -10,7 +10,6 @@
     "OAUTH_REDIRECT_URI_NOT_IN_WHITLIST": "redirect_uri 不在設定的白名單",
     "USER_NOT_FOUND": "你還未註冊為使用者",
     "SIGN_IN_BY_OTHER_WAY": "你當初不是用這個方式註冊, 請更換方式登入",
-    "SIGN_IN_BY_SOCIAL_MEDIA": "你當初使用 {type} 註冊 , 請使用 {type} 登入",
     "TOKEN_EXPIRED": "認證已經過期囉! 請重新登入",
     "TOO_MANY_TIMES_TO_SEND_MAIL": "你今天重送太多次 Email",
     "TOO_MANY_TIMES_TO_SEND_PHONE": "你今天重送太多次簡訊",

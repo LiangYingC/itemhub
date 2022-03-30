@@ -50,24 +50,6 @@ namespace Homo.AuthApi
             {
                 throw new CustomException(ERROR_CODE.LACK_PHONE, HttpStatusCode.Forbidden);
             }
-            if (user.FacebookSub != null)
-            {
-                throw new CustomException(ERROR_CODE.SIGN_IN_BY_SOCIAL_MEDIA,
-                System.Net.HttpStatusCode.Forbidden,
-                new Dictionary<string, string> { { "type", "Facebook" } });
-            }
-            if (user.LineSub != null)
-            {
-                throw new CustomException(ERROR_CODE.SIGN_IN_BY_SOCIAL_MEDIA,
-                System.Net.HttpStatusCode.Forbidden,
-                new Dictionary<string, string> { { "type", "Line" } });
-            }
-            if (user.GoogleSub != null)
-            {
-                throw new CustomException(ERROR_CODE.SIGN_IN_BY_SOCIAL_MEDIA,
-                System.Net.HttpStatusCode.Forbidden,
-                new Dictionary<string, string> { { "type", "Google" } });
-            }
 
             UserDataservice.SetUserToForgotPasswordState(_dbContext, user.Id);
             string resetPasswordToken = JWTHelper.GenerateToken(_resetPasswordJwtKey, 10, new { Id = user.Id });

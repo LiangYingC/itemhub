@@ -9,7 +9,6 @@
     "EMAIL_ALREADY_REGISTERED": "Email has been registered",
     "USER_NOT_FOUND": "User not found",
     "SIGN_IN_BY_OTHER_WAY": "You register by other way, please sign in by other way",
-    "SIGN_IN_BY_SOCIAL_MEDIA":"You register by {type}, please use {type} login",
     "TOKEN_EXPIRED": "Token expired",
     "TOO_MANY_TIMES_TO_SEND_MAIL": "You send email so much times today",
     "TOO_MANY_TIMES_TO_SEND_PHONE": "You send sms so much times today",

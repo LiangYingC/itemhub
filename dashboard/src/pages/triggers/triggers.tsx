@@ -46,8 +46,6 @@ const Triggers = () => {
     const page = Number(query.get('page') || 1);
 
     const { triggers, rowNum } = useAppSelector(selectTriggers);
-
-    const [selectedIds, setSelectedIds] = useState(Array<number>());
     const [sourceDeviceNameFilter, setSourceDeviceNameFilter] = useState('');
     const [destinationDeviceNameFilter, setDestinationDeviceNameFilter] =
         useState('');
@@ -73,21 +71,13 @@ const Triggers = () => {
         destinationDeviceName: destinationDeviceNameFilter,
     });
 
-    const { isDeletingTriggers, deleteTriggersApi, deleteTriggersResponse } =
-        useDeleteTriggersApi(selectedIds);
-
     useEffect(() => {
         getTriggersApi();
     }, [getTriggersApi]);
 
-    useEffect(() => {
-        if (
-            deleteTriggersResponse &&
-            deleteTriggersResponse.status === RESPONSE_STATUS.OK
-        ) {
-            getTriggersApi();
-        }
-    }, [deleteTriggersResponse, getTriggersApi]);
+    const [selectedIds, setSelectedIds] = useState(Array<number>());
+    const { isDeletingTriggers, deleteTriggersApi, deleteTriggersResponse } =
+        useDeleteTriggersApi(selectedIds);
 
     const updateSelectedIds = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedIds((previous) => {
@@ -112,6 +102,15 @@ const Triggers = () => {
             deleteTriggersApi();
         }
     };
+
+    useEffect(() => {
+        if (
+            deleteTriggersResponse &&
+            deleteTriggersResponse.status === RESPONSE_STATUS.OK
+        ) {
+            getTriggersApi();
+        }
+    }, [deleteTriggersResponse, getTriggersApi]);
 
     return (
         <>

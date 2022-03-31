@@ -9,7 +9,36 @@ import {
     useDeleteTriggersApi,
 } from '@/hooks/apis/triggers.hook';
 import { selectTriggers } from '@/redux/reducers/triggers.reducer';
+import { ArrayHelpers } from '@/helpers/array.helper';
+import { TriggerItem } from '@/types/triggers.type';
 import Pagination from '@/components/pagination/pagination';
+
+const filterTriggers = ({
+    triggers,
+    sourceDeviceNameFilter,
+    destinationDeviceNameFilter,
+}: {
+    triggers: TriggerItem[] | null;
+    sourceDeviceNameFilter: string;
+    destinationDeviceNameFilter: string;
+}) => {
+    if (triggers === null) {
+        return [];
+    }
+    const filteredTriggers = triggers.filter(
+        ({ sourceDevice, destinationDevice }) => {
+            const sourceDeviceName = sourceDevice?.name;
+            const destinationDeviceName = destinationDevice?.name;
+            const isReserved =
+                (sourceDeviceNameFilter === '' &&
+                    destinationDeviceNameFilter === '') ||
+                sourceDeviceNameFilter === sourceDeviceName ||
+                destinationDeviceNameFilter === destinationDeviceName;
+            return isReserved;
+        }
+    );
+    return filteredTriggers;
+};
 
 const Triggers = () => {
     const query = useQuery();
@@ -19,10 +48,29 @@ const Triggers = () => {
     const { triggers, rowNum } = useAppSelector(selectTriggers);
 
     const [selectedIds, setSelectedIds] = useState(Array<number>());
+    const [sourceDeviceNameFilter, setSourceDeviceNameFilter] = useState('');
+    const [destinationDeviceNameFilter, setDestinationDeviceNameFilter] =
+        useState('');
+
+    const filteredTriggers = filterTriggers({
+        triggers,
+        sourceDeviceNameFilter,
+        destinationDeviceNameFilter,
+    });
+    const sourceDeviceNameOptions = ArrayHelpers.FilterDuplicatedString(
+        filteredTriggers.map(({ sourceDevice }) => sourceDevice?.name || '')
+    );
+    const destinationDeviceNameOptions = ArrayHelpers.FilterDuplicatedString(
+        filteredTriggers.map(
+            ({ destinationDevice }) => destinationDevice?.name || ''
+        )
+    );
 
     const { isGettingTriggers, getTriggersApi } = useGetTriggersApi({
         page,
         limit,
+        sourceDeviceName: sourceDeviceNameFilter,
+        destinationDeviceName: destinationDeviceNameFilter,
     });
 
     const { isDeletingTriggers, deleteTriggersApi, deleteTriggersResponse } =
@@ -30,7 +78,7 @@ const Triggers = () => {
 
     useEffect(() => {
         getTriggersApi();
-    }, [page]);
+    }, [getTriggersApi]);
 
     useEffect(() => {
         if (
@@ -39,7 +87,7 @@ const Triggers = () => {
         ) {
             getTriggersApi();
         }
-    }, [deleteTriggersResponse]);
+    }, [deleteTriggersResponse, getTriggersApi]);
 
     const updateSelectedIds = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedIds((previous) => {
@@ -67,6 +115,44 @@ const Triggers = () => {
 
     return (
         <>
+            <div>
+                <label>
+                    SourceDeviceName:
+                    <select
+                        value={sourceDeviceNameFilter}
+                        onChange={(e) => {
+                            setSourceDeviceNameFilter(e.target.value);
+                        }}
+                    >
+                        <option value="">All</option>
+                        {sourceDeviceNameOptions.map((name, index) => {
+                            return (
+                                <option key={`${name}-${index}`} value={name}>
+                                    {name}
+                                </option>
+                            );
+                        })}
+                    </select>
+                </label>
+                <label>
+                    DestinationDeviceName:
+                    <select
+                        value={destinationDeviceNameFilter}
+                        onChange={(e) => {
+                            setDestinationDeviceNameFilter(e.target.value);
+                        }}
+                    >
+                        <option value="">All</option>
+                        {destinationDeviceNameOptions.map((name, index) => {
+                            return (
+                                <option key={`${name}-${index}`} value={name}>
+                                    {name}
+                                </option>
+                            );
+                        })}
+                    </select>
+                </label>
+            </div>
             <button
                 onClick={confirmToDeleteTriggers}
                 disabled={isDeletingTriggers || selectedIds.length <= 0}
@@ -79,7 +165,7 @@ const Triggers = () => {
                 {isGettingTriggers || triggers === null ? (
                     <div>Loading</div>
                 ) : (
-                    triggers.map(
+                    filteredTriggers.map(
                         ({
                             id,
                             ownerId,

@@ -143,6 +143,11 @@ void auth()
     client.post("/api/v1/oauth/exchange-token-for-device", "application/json", postData.c_str());
     std::string body = std::string(client.responseBody().c_str());
     token = ItemhubUtilities::Extract(body, "token");
+    if (token.size() == 0)
+    {
+        delay(1000);
+        auth();
+    }
 }
 
 void setupRemoteDeviceId()
@@ -186,6 +191,11 @@ void setupRemoteDeviceId()
     }
 
     remoteDeviceId = ItemhubUtilities::Extract(resp, "id");
+    if (remoteDeviceId.size() == 0)
+    {
+        delay(1000);
+        setupRemoteDeviceId();
+    }
 }
 
 void online()
@@ -222,6 +232,10 @@ void checkSwitchState()
     resp.insert(0, "{\"data\":");
     resp.append("}");
     json_t const *jsonData = json_create((char *)resp.c_str(), pool, MAX_FIELDS);
+    if (jsonData == NULL)
+    {
+        return;
+    }
     json_t const *data = json_getProperty(jsonData, "data");
     json_t const *item;
     for (int i = 0; i < pins.size(); i++)

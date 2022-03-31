@@ -19,9 +19,13 @@ interface GetTriggersResponse {
 export const useGetTriggersApi = ({
     page,
     limit,
+    sourceDeviceName,
+    destinationDeviceName,
 }: {
     page: number;
     limit: number;
+    sourceDeviceName: string;
+    destinationDeviceName: string;
 }) => {
     const dispatch = useAppDispatch();
     const dispatchRefreshTriggers = useCallback(
@@ -33,7 +37,7 @@ export const useGetTriggersApi = ({
         [dispatch]
     );
 
-    const apiPath = `${API_URL}${END_POINT.TRIGGERS}?page=${page}&limit=${limit}`;
+    const apiPath = `${API_URL}${END_POINT.TRIGGERS}?page=${page}&limit=${limit}&sourceDeviceName=${sourceDeviceName}&destinationDeviceName=${destinationDeviceName}`;
 
     const { isLoading, error, fetchApi } = useFetchApi<GetTriggersResponse>({
         apiPath,

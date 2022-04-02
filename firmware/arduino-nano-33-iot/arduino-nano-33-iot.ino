@@ -21,6 +21,10 @@
         disconnect();                                                       \
         connect();                                                          \
         return;                                                             \
+    }                                                                       \
+    else if (httpStatus != 200)                                             \
+    {                                                                       \
+        return;                                                             \
     }
 
 char ssid[] = "Peter Home";
@@ -217,7 +221,7 @@ void online()
 
 void checkSwitchState()
 {
-    Serial.println("check switch state");
+    Serial.println("Check switch state");
     std::string deviceStateEndpoint = "/api/v1/me/devices/";
     deviceStateEndpoint.append(remoteDeviceId);
     deviceStateEndpoint.append("/switches");
@@ -275,7 +279,6 @@ void checkSwitchState()
                 digitalWrite(pins[i].pin, HIGH);
             }
         }
-
         if (isExists == false)
         {
             std::string endpoint = "/api/v1/me/devices/";

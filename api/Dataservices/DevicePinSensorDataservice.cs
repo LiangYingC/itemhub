@@ -27,6 +27,7 @@ namespace Homo.IotApi
                 return null;
             }
 
+
             List<long> shouldBeDeletedIds = data.GroupJoin(dbContext.Subscription, x => x.OwnerId, y => y.OwnerId, (x, y) => new
             {
                 x.Id,
@@ -37,7 +38,7 @@ namespace Homo.IotApi
             {
                 x.Id,
                 x.CreatedAt,
-                SavingSeconds = SubscriptionHelper.GetStorageSavingSeconds(x == null ? null : (PRICING_PLAN)x.PricingPlan)
+                SavingSeconds = SubscriptionHelper.GetStorageSavingSeconds(x == null || x.PricingPlan == null ? null : (PRICING_PLAN)x.PricingPlan)
             })
             .Where(x => x.CreatedAt.AddSeconds(x.SavingSeconds) < DateTime.Now)
             .Select(x => x.Id)

@@ -40,10 +40,13 @@ export class HeaderComponent extends BaseComponent {
 
     redirectToDashboard () {
         const dashboardToken = CookieUtil.getCookie('dashboardToken');
+        const payload = window.jwt_decode(dashboardToken);
+        const nowUnixTimestamp = new Date() / 1000;
+        const validatedDashboardToken = payload.exp >= nowUnixTimestamp;
         const token = CookieUtil.getCookie('token');
-        if (token && dashboardToken) {
+        if (token && dashboardToken && validatedDashboardToken) {
             location.href = APP_CONFIG.DASHBOARD_URL;
-        } else if (token && !dashboardToken) {
+        } else if (token && (!dashboardToken || !validatedDashboardToken)) {
             history.pushState({}, '', '/auth/two-factor-auth/');
         } else if (!token) {
             history.replaceState({}, '', `/auth/sign-in/?redirectUrl=${encodeURIComponent('/auth/two-factor-auth/')}`);

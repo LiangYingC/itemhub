@@ -77,7 +77,8 @@ void setup()
 
     // itemhub setup remote device id
     setupRemoteDeviceId();
-    Serial.println("setup remote device id");
+    Serial.print("remote device id: ");
+    Serial.println(remoteDeviceId.c_str());
 
     tokenHeader = "Authorization: Bearer ";
     tokenHeader.append(token);

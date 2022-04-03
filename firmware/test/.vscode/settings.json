@@ -1,0 +1,14 @@
+{
+    "files.associations": {
+        "*.html": "html",
+        "*.js": "javascript",
+        "*.sql": "sql",
+        "*.aspx": "cshtml-tm",
+        "*.vue": "vue",
+        "string": "cpp",
+        "string_view": "cpp",
+        "*.tcc": "cpp",
+        "unordered_map": "cpp",
+        "functional": "cpp"
+    }
+}

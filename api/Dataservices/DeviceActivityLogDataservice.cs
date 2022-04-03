@@ -28,10 +28,22 @@ namespace Homo.IotApi
             return record;
         }
 
-        public static void Delete(IotDbContext dbContext, DateTime endAt)
+        public static long? Delete(IotDbContext dbContext, DateTime endAt, int page, int limit, long? lastId)
         {
-            dbContext.DeviceActivityLog.Where(x => x.CreatedAt <= endAt).DeleteFromQuery();
+            List<long> ids = dbContext.DeviceActivityLog
+                .Where(x =>
+                    x.CreatedAt <= endAt
+                    && (lastId == null || x.Id < lastId)
+                )
+                .OrderBy(x => x.Id)
+                .Select(x => x.Id)
+                .Skip((page - 1) * limit)
+                .Take(limit)
+                .ToList();
+
+            dbContext.DeviceActivityLog.Where(x => ids.Contains(x.Id)).DeleteFromQuery();
             dbContext.SaveChanges();
+            return ids.LastOrDefault();
         }
     }
 }

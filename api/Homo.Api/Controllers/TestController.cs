@@ -4,6 +4,7 @@ using Homo.Core.Constants;
 namespace Homo.Api
 {
     [Route("v1/test")]
+    [SwaggerUiInvisibility]
     public class TestController : ControllerBase
     {
         public TestController(Microsoft.AspNetCore.Hosting.IWebHostEnvironment env)

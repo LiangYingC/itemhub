@@ -5,12 +5,14 @@ using System;
 using System.Text;
 using Homo.Core.Constants;
 using Homo.Core.Helpers;
+using Homo.Api;
 
 namespace Homo.AuthApi
 {
 
 
     [Route("v1/auth/fb-sub")]
+    [SwaggerUiInvisibility]
     public class AuthRemoveFbSubController : ControllerBase
     {
 

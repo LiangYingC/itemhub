@@ -8,8 +8,9 @@ using System.Linq;
 
 namespace Homo.IotApi
 {
-    [IotAuthorizeFactory]
     [Route("v1/my/transaction/{id}")]
+    [SwaggerUiInvisibility]
+    [IotAuthorizeFactory]
     [Validate]
     public class MyTransactionController : ControllerBase
     {

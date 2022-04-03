@@ -11,6 +11,7 @@ using System.Security.Claims;
 namespace Homo.AuthApi
 {
     [Route("v1/auth")]
+    [SwaggerUiInvisibility]
     public class AuthResetPasswordController : ControllerBase
     {
 

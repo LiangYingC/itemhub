@@ -8,8 +8,8 @@ using System.Linq;
 
 namespace Homo.IotApi
 {
+    [Route("v1/my/devices/{id}/pins")]
     [IotDashboardAuthorizeFactory]
-    [Route("v1/me/devices/{id}/pins")]
     [Validate]
     public class MyDevicePinController : ControllerBase
     {

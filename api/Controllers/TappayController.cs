@@ -9,6 +9,7 @@ using System.Linq;
 namespace Homo.IotApi
 {
     [Route("v1/tappay")]
+    [SwaggerUiInvisibility]
     [Validate]
     public class TappayController : ControllerBase
     {

@@ -1,10 +1,12 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Homo.Core.Constants;
+using Homo.Api;
 
 namespace Homo.AuthApi
 {
     [Route("v1/groups")]
+    [SwaggerUiInvisibility]
     [AuthorizeFactory(AUTH_TYPE.COMMON, new ROLE[] { ROLE.USER })]
     public class GroupController : ControllerBase
     {

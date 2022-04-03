@@ -6,7 +6,7 @@ using Homo.Core.Constants;
 namespace Homo.IotApi
 {
     [IotDashboardAuthorizeFactory]
-    [Route("v1/me/triggers")]
+    [Route("v1/my/triggers")]
     [Validate]
     public class TriggerController : ControllerBase
     {

@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Homo.Core.Constants;
 using Homo.Core.Helpers;
+using Homo.Api;
 
 namespace Homo.AuthApi
 {
     [Route("v1/auth")]
+    [SwaggerUiInvisibility]
     [AuthorizeFactory()]
     public class AuthTwoFactorController : ControllerBase
     {

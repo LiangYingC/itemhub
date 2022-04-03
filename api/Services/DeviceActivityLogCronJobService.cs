@@ -30,25 +30,32 @@ namespace Homo.IotApi
             return base.StartAsync(cancellationToken);
         }
 
-        public override Task DoWork(CancellationToken cancellationToken)
+        public override async Task<dynamic> DoWork(CancellationToken cancellationToken)
         {
-            if (DateTime.Now.Day == 1)
-            {
-                return Task.CompletedTask;
-            }
             Console.WriteLine($"{DateTime.Now:hh:mm:ss} DeviceActivityLogCronJobService is working.");
-            DbContextOptionsBuilder<IotDbContext> iotBuilder = new DbContextOptionsBuilder<IotDbContext>();
-            var serverVersion = new MySqlServerVersion(new Version(8, 0, 25));
-            iotBuilder.UseMySql(_dbc, serverVersion);
-            IotDbContext _iotDbContext = new IotDbContext(iotBuilder.Options);
-            DeviceActivityLogDataservice.Delete(_iotDbContext, DateTime.Now.AddDays(-1));
-            return Task.CompletedTask;
+            Task<dynamic> task = (await recursiveDeleteActivityLogs(null));
+            return task;
         }
 
         public override Task StopAsync(CancellationToken cancellationToken)
         {
             Console.WriteLine("DeviceActivityLogCronJobService is stopping.");
             return base.StopAsync(cancellationToken);
+        }
+
+        public async Task<dynamic> recursiveDeleteActivityLogs(long? latestId)
+        {
+            DbContextOptionsBuilder<IotDbContext> iotBuilder = new DbContextOptionsBuilder<IotDbContext>();
+            var serverVersion = new MySqlServerVersion(new Version(8, 0, 25));
+            iotBuilder.UseMySql(_dbc, serverVersion);
+            IotDbContext _iotDbContext = new IotDbContext(iotBuilder.Options);
+            long? currentLatestId = DeviceActivityLogDataservice.Delete(_iotDbContext, DateTime.Now.AddDays(-1), 1, 500, latestId);
+            if (currentLatestId == null)
+            {
+                return Task.CompletedTask;
+            }
+            await Task.Delay(5 * 1000);
+            return recursiveDeleteActivityLogs(currentLatestId);
         }
     }
 }

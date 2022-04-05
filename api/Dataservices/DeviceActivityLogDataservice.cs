@@ -30,7 +30,7 @@ namespace Homo.IotApi
 
         public static long? Delete(IotDbContext dbContext, DateTime endAt, int page, int limit, long? lastId)
         {
-            List<long> ids = dbContext.DeviceActivityLog
+            List<long> ids = dbContext.DeviceActivityLog.AsNoTracking()
                 .Where(x =>
                     x.CreatedAt <= endAt
                     && (lastId == null || x.Id < lastId)

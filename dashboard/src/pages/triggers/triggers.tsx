@@ -100,6 +100,8 @@ const Triggers = () => {
     const confirmToDeleteTriggers = () => {
         if (prompt('請再次輸入 delete，藉此執行刪除') === 'delete') {
             deleteTriggersApi();
+        } else {
+            alert('輸入錯誤，請再次嘗試');
         }
     };
 

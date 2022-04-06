@@ -1,5 +1,5 @@
 import styles from './triggers.module.scss';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { RESPONSE_STATUS } from '@/constants/api';
 import { useQuery } from '@/hooks/query.hook';
@@ -45,7 +45,55 @@ const Triggers = () => {
     const limit = Number(query.get('limit') || 5);
     const page = Number(query.get('page') || 1);
 
+    const sourceDeviceNameOptionsRef = useRef<string[]>([]);
+    const destinationDeviceNameOptionsRef = useRef<string[]>([]);
+    const sourceDeviceNameOptions = ArrayHelpers.FilterDuplicatedString(
+        sourceDeviceNameOptionsRef.current
+    );
+    const destinationDeviceNameOptions = ArrayHelpers.FilterDuplicatedString(
+        destinationDeviceNameOptionsRef.current
+    );
+
     const { triggers, rowNum } = useAppSelector(selectTriggers);
+
+    useEffect(() => {
+        if (
+            triggers &&
+            sourceDeviceNameOptions.length === 0 &&
+            destinationDeviceNameOptions.length === 0
+        ) {
+            const initialOptions = {
+                sourceDeviceNames: ['All'],
+                destinationDeviceNames: ['All'],
+            };
+
+            const options = triggers.reduce((accumOptions, currentTrigger) => {
+                const sourceDeviceName = currentTrigger.sourceDevice?.name;
+                const destinationDeviceName =
+                    currentTrigger.destinationDevice?.name;
+
+                if (sourceDeviceName) {
+                    accumOptions.sourceDeviceNames.push(sourceDeviceName);
+                }
+                if (destinationDeviceName) {
+                    accumOptions.destinationDeviceNames.push(
+                        destinationDeviceName
+                    );
+                }
+
+                return accumOptions;
+            }, initialOptions);
+
+            sourceDeviceNameOptionsRef.current = options.sourceDeviceNames;
+            destinationDeviceNameOptionsRef.current =
+                options.destinationDeviceNames;
+        }
+    }, [
+        destinationDeviceNameOptions.length,
+        sourceDeviceNameOptions.length,
+        triggers,
+    ]);
+
     const [sourceDeviceNameFilter, setSourceDeviceNameFilter] = useState('');
     const [destinationDeviceNameFilter, setDestinationDeviceNameFilter] =
         useState('');
@@ -55,14 +103,6 @@ const Triggers = () => {
         sourceDeviceNameFilter,
         destinationDeviceNameFilter,
     });
-    const sourceDeviceNameOptions = ArrayHelpers.FilterDuplicatedString(
-        filteredTriggers.map(({ sourceDevice }) => sourceDevice?.name || '')
-    );
-    const destinationDeviceNameOptions = ArrayHelpers.FilterDuplicatedString(
-        filteredTriggers.map(
-            ({ destinationDevice }) => destinationDevice?.name || ''
-        )
-    );
 
     const { isGettingTriggers, getTriggersApi } = useGetTriggersApi({
         page,
@@ -125,10 +165,10 @@ const Triggers = () => {
                             setSourceDeviceNameFilter(e.target.value);
                         }}
                     >
-                        <option value="">All</option>
                         {sourceDeviceNameOptions.map((name, index) => {
+                            const value = name === 'All' ? '' : name;
                             return (
-                                <option key={`${name}-${index}`} value={name}>
+                                <option key={`${name}-${index}`} value={value}>
                                     {name}
                                 </option>
                             );
@@ -143,10 +183,10 @@ const Triggers = () => {
                             setDestinationDeviceNameFilter(e.target.value);
                         }}
                     >
-                        <option value="">All</option>
                         {destinationDeviceNameOptions.map((name, index) => {
+                            const value = name === 'All' ? '' : name;
                             return (
-                                <option key={`${name}-${index}`} value={name}>
+                                <option key={`${name}-${index}`} value={value}>
                                     {name}
                                 </option>
                             );
@@ -164,7 +204,9 @@ const Triggers = () => {
             </button>
             <div className={styles.triggers} data-testid="triggers">
                 {isGettingTriggers || triggers === null ? (
-                    <div>Loading</div>
+                    <h1>Loading</h1>
+                ) : filteredTriggers.length === 0 ? (
+                    <h1>No Triggers</h1>
                 ) : (
                     filteredTriggers.map(
                         ({

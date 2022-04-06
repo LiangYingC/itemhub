@@ -37,7 +37,13 @@ export const useGetTriggersApi = ({
         [dispatch]
     );
 
-    const apiPath = `${API_URL}${END_POINT.TRIGGERS}?page=${page}&limit=${limit}&sourceDeviceName=${sourceDeviceName}&destinationDeviceName=${destinationDeviceName}`;
+    let apiPath = `${API_URL}${END_POINT.TRIGGERS}?page=${page}&limit=${limit}`;
+    if (sourceDeviceName) {
+        apiPath = `${apiPath}&sourceDeviceName=${sourceDeviceName}`;
+    }
+    if (destinationDeviceName) {
+        apiPath = `${apiPath}&destinationDeviceName=${destinationDeviceName}`;
+    }
 
     const { isLoading, error, fetchApi } = useFetchApi<GetTriggersResponse>({
         apiPath,

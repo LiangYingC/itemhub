@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 import { useAppDispatch } from '@/hooks/redux.hook';
 import { useFetchApi } from '@/hooks/apis/fetch.hook';
 import { triggersActions } from '@/redux/reducers/triggers.reducer';
+import { ApiHelpers } from '@/helpers/api.helper';
 import {
     API_URL,
     END_POINT,
@@ -37,13 +38,15 @@ export const useGetTriggersApi = ({
         [dispatch]
     );
 
-    let apiPath = `${API_URL}${END_POINT.TRIGGERS}?page=${page}&limit=${limit}`;
-    if (sourceDeviceName) {
-        apiPath = `${apiPath}&sourceDeviceName=${sourceDeviceName}`;
-    }
-    if (destinationDeviceName) {
-        apiPath = `${apiPath}&destinationDeviceName=${destinationDeviceName}`;
-    }
+    const apiPath = ApiHelpers.AppendQueryStrings({
+        basicPath: `${API_URL}${END_POINT.TRIGGERS}`,
+        queryStrings: {
+            page,
+            limit,
+            sourceDeviceName,
+            destinationDeviceName,
+        },
+    });
 
     const { isLoading, error, fetchApi } = useFetchApi<GetTriggersResponse>({
         apiPath,

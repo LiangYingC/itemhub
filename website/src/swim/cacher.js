@@ -62,6 +62,12 @@ import oauthHTML from '../template/oauth.html';
 
 import pricingHTML from '../template/pricing.html';
 
+import forgetPasswordHTML from '../template/forget-password.html';
+
+import resetPasswordHTML from '../template/reset-password.html';
+
+import resetPasswordFinishHTML from '../template/reset-password-finish.html';
+
 import privacyPolicyHTML from '../template/privacy-policy.html';
 
 import signInHTML from '../template/sign-in.html';
@@ -88,6 +94,8 @@ import '../css/sign-in.css';
 import '../css/zindex.css';
 import '../css/auth.scss';
 import '../css/checkout.scss';
+import '../css/forget-password.scss';
+import '../css/reset-password.scss';
 import '../css/common.scss';
 import '../css/cooperation.scss';
 import '../css/main.scss';
@@ -140,6 +148,9 @@ export const Cacher = {
         window.SwimAppLoaderCache[`${APP_CONFIG.FRONT_END_PREFIX}/template/transaction.html`] = transactionHTML;
         window.SwimAppLoaderCache[`${APP_CONFIG.FRONT_END_PREFIX}/template/two-factor-auth.html`] = twoFactorAuthHTML;
         window.SwimAppLoaderCache[`${APP_CONFIG.FRONT_END_PREFIX}/template/verify-email.html`] = verifyEmailHTML;
+        window.SwimAppLoaderCache[`${APP_CONFIG.FRONT_END_PREFIX}/template/forget-password.html`] = forgetPasswordHTML;
+        window.SwimAppLoaderCache[`${APP_CONFIG.FRONT_END_PREFIX}/template/reset-password.html`] = resetPasswordHTML;
+        window.SwimAppLoaderCache[`${APP_CONFIG.FRONT_END_PREFIX}/template/reset-password-finish.html`] = resetPasswordFinishHTML;
         window.SwimAppStylesheet.push(`${APP_CONFIG.FRONT_END_PREFIX}/css/auth.css`);
         window.SwimAppStylesheet.push(`${APP_CONFIG.FRONT_END_PREFIX}/css/checkout.css`);
         window.SwimAppStylesheet.push(`${APP_CONFIG.FRONT_END_PREFIX}/css/common.css`);
@@ -152,6 +163,9 @@ export const Cacher = {
         window.SwimAppStylesheet.push(`${APP_CONFIG.FRONT_END_PREFIX}/css/zindex.css`);
         window.SwimAppStylesheet.push(`${APP_CONFIG.FRONT_END_PREFIX}/css/auth.css`);
         window.SwimAppStylesheet.push(`${APP_CONFIG.FRONT_END_PREFIX}/css/checkout.css`);
+        window.SwimAppStylesheet.push(`${APP_CONFIG.FRONT_END_PREFIX}/css/forget-password.css`);
+        window.SwimAppStylesheet.push(`${APP_CONFIG.FRONT_END_PREFIX}/css/reset-password.css`);
+        window.SwimAppStylesheet.push(`${APP_CONFIG.FRONT_END_PREFIX}/css/reset-password-finish.css`);
         window.SwimAppStylesheet.push(`${APP_CONFIG.FRONT_END_PREFIX}/css/common.css`);
         window.SwimAppStylesheet.push(`${APP_CONFIG.FRONT_END_PREFIX}/css/cooperation.css`);
         window.SwimAppStylesheet.push(`${APP_CONFIG.FRONT_END_PREFIX}/css/main.css`);

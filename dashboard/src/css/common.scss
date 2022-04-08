@@ -3,6 +3,7 @@
 @import 'zindex.scss';
 
 /* Common */
+
 body,
 html {
     padding: 0;
@@ -36,31 +37,6 @@ h5,
     }
 }
 
-.nav-link,
-.link {
-    &:focus-visible {
-        outline: none;
-    }
-}
-
-.nav-link {
-    color: white;
-    text-decoration: none;
-    border-left: 0;
-    border-top: 0;
-    border-right: 0;
-    border-bottom: 1px solid transparent;
-    background: none;
-
-    &:hover,
-    &:active,
-    &:focus {
-        color: $primary;
-        border-bottom: 1px solid $primary;
-        text-decoration: none;
-    }
-}
-
 /* purgecss start ignore */
 /* Toaster */
 .toaster {
@@ -69,12 +45,9 @@ h5,
     right: 100px;
     z-index: 10000;
     padding-bottom: 20px;
-    @include media-breakpoint-down(md) {
-        right: 20px;
-    }
-    @include media-breakpoint-down(sm) {
-        right: auto;
-        width: 100%;
+    @media only screen and (max-width: 992) {
+        top: auto;
+        bottom: 20px;
     }
 }
 
@@ -93,11 +66,6 @@ h5,
     padding-left: 36px;
     padding-top: 55px;
     border: 1px solid #2c2c2c;
-
-    @include media-breakpoint-down(sm) {
-        margin: 0 auto;
-        width: calc(100% - 20px);
-    }
 }
 
 .toaster-item.show {

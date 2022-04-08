@@ -39,6 +39,11 @@ namespace Homo.IotApi
                 .Take(limit)
                 .ToList();
 
+            if (items.Count() == 0)
+            {
+                return null;
+            }
+
             items.ForEach(item =>
             {
                 dbContext.DeviceActivityLog.Remove(item);

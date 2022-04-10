@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 import { useAppDispatch } from '@/hooks/redux.hook';
 import { useFetchApi } from '@/hooks/apis/fetch.hook';
 import { devicesActions } from '@/redux/reducers/devices.reducer';
+import { ApiHelpers } from '@/helpers/api.helper';
 import { DeviceItem, PinItem } from '@/types/devices.type';
 import {
     API_URL,
@@ -33,7 +34,13 @@ export const useGetDevicesApi = ({
         },
         [dispatch]
     );
-    const apiPath = `${API_URL}${END_POINT.DEVICES}?page=${page}&limit=${limit}`;
+    const apiPath = ApiHelpers.AppendQueryStrings({
+        basicPath: `${API_URL}${END_POINT.DEVICES}`,
+        queryStrings: {
+            page,
+            limit,
+        },
+    });
 
     const { isLoading, error, fetchApi } = useFetchApi<GetDevicesResponseData>({
         apiPath,

@@ -33,6 +33,7 @@ ReactDOM.render(
                         element={<DevicePinData />}
                     />
                     <Route path="triggers" element={<Triggers />} />
+                    <Route path="triggers/create" element={<Trigger />} />
                     <Route path="triggers/:id" element={<Trigger />} />
                     <Route path="oauth-clients" element={<OauthClients />} />
                     <Route

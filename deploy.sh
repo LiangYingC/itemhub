@@ -19,6 +19,7 @@ sudo docker run -d \
    --name itemhub-api \
    -v /var/project/itemhub/api/appsettings.json:/app/appsettings.json \
    -v /var/project/itemhub/api/secrets.json:/app/secrets.json \
+   -v /var/project/itemhub/api/secrets:/app/secrets \
    -v /var/project/itemhub/api/Localization:/app/Localization \
    itemhub-api
 

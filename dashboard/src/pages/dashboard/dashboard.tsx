@@ -5,7 +5,7 @@ import Footer from '@/components/footer/footer';
 
 const Dashboard = () => {
     return (
-        <div className={`${styles.dashboard} bg-dark`} data-testid="Dashboard">
+        <div className={`${styles.dashboard}`} data-testid="Dashboard">
             <div>
                 <Header />
                 <nav className="mx-3">

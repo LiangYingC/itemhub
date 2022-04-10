@@ -12,7 +12,8 @@ html {
         'Microsoft JhengHei', 'Helvetica Neue', Helvetica, Arial, sans-serif,
         'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
     line-height: 1.8rem;
-    color: rgba(255, 255, 255, map-get($opacity, 85));
+    color: rgba(0, 0, 0, map-get($opacity, 65));
+    font-size: $font-size-base;
     @include media-breakpoint-down(lg) {
         font-size: $font-size-base-for-small-screen;
     }
@@ -28,7 +29,8 @@ h5,
 .h3,
 .h4,
 .h5 {
-    color: white;
+    font-weight: 600;
+    color: rgba(0, 0, 0, map-get($opacity, 85));
 }
 
 .text-sm {

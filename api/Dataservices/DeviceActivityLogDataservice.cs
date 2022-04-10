@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 
 namespace Homo.IotApi
 {
@@ -30,20 +29,29 @@ namespace Homo.IotApi
 
         public static long? Delete(IotDbContext dbContext, DateTime endAt, int page, int limit, long? lastId)
         {
-            List<long> ids = dbContext.DeviceActivityLog.AsNoTracking()
+            List<DeviceActivityLog> items = dbContext.DeviceActivityLog
                 .Where(x =>
                     x.CreatedAt <= endAt
                     && (lastId == null || x.Id < lastId)
                 )
                 .OrderBy(x => x.Id)
-                .Select(x => x.Id)
                 .Skip((page - 1) * limit)
                 .Take(limit)
                 .ToList();
 
-            dbContext.DeviceActivityLog.Where(x => ids.Contains(x.Id)).DeleteFromQuery();
+            if (items.Count() == 0)
+            {
+                return null;
+            }
+
+            items.ForEach(item =>
+            {
+                dbContext.DeviceActivityLog.Remove(item);
+            });
+            DeviceActivityLog lastOne = items.LastOrDefault();
+            long? currentLastId = lastOne == null ? null : lastOne.Id;
             dbContext.SaveChanges();
-            return ids.LastOrDefault();
+            return currentLastId;
         }
     }
 }

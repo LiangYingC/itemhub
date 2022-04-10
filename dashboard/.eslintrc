@@ -44,11 +44,11 @@
         "react/jsx-fragments": "error",
         "react/jsx-boolean-value": "error",
         "react/jsx-wrap-multilines": "error",
-        "react/no-array-index-key": "error",
         "react/self-closing-comp": "error",
         "react/destructuring-assignment": "warn",
         "react/react-in-jsx-scope": "off",
         "react/prop-types": "off",
+        "react/no-array-index-key": "off",
         // eslint-plugin-react-hooks rules: https://github.com/facebook/react/tree/main/packages/eslint-plugin-react-hooks
         "react-hooks/rules-of-hooks": "error",
         "react-hooks/exhaustive-deps": "warn",

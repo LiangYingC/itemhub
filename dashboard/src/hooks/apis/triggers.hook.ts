@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 import { useAppDispatch } from '@/hooks/redux.hook';
 import { useFetchApi } from '@/hooks/apis/fetch.hook';
 import { triggersActions } from '@/redux/reducers/triggers.reducer';
+import { ApiHelpers } from '@/helpers/api.helper';
 import {
     API_URL,
     END_POINT,
@@ -19,9 +20,13 @@ interface GetTriggersResponse {
 export const useGetTriggersApi = ({
     page,
     limit,
+    sourceDeviceName,
+    destinationDeviceName,
 }: {
     page: number;
     limit: number;
+    sourceDeviceName: string;
+    destinationDeviceName: string;
 }) => {
     const dispatch = useAppDispatch();
     const dispatchRefreshTriggers = useCallback(
@@ -33,7 +38,15 @@ export const useGetTriggersApi = ({
         [dispatch]
     );
 
-    const apiPath = `${API_URL}${END_POINT.TRIGGERS}?page=${page}&limit=${limit}`;
+    const apiPath = ApiHelpers.AppendQueryStrings({
+        basicPath: `${API_URL}${END_POINT.TRIGGERS}`,
+        queryStrings: {
+            page,
+            limit,
+            sourceDeviceName,
+            destinationDeviceName,
+        },
+    });
 
     const { isLoading, error, fetchApi } = useFetchApi<GetTriggersResponse>({
         apiPath,
@@ -77,9 +90,110 @@ export const useGetTriggerApi = (id: number) => {
     };
 };
 
+export const useCreateTriggerApi = ({
+    sourceDeviceId,
+    sourcePin,
+    sourceThreshold,
+    destinationDeviceId,
+    destinationPin,
+    destinationDeviceTargetState,
+    operator,
+}: {
+    sourceDeviceId: number;
+    sourcePin: string;
+    sourceThreshold: number;
+    destinationDeviceId: number;
+    destinationPin: string;
+    destinationDeviceTargetState: number;
+    operator: number;
+}) => {
+    const dispatch = useAppDispatch();
+    const dispatchAddTrigger = useCallback(
+        (data: TriggerItem) => {
+            if (data) {
+                dispatch(triggersActions.addTrigger(data));
+            }
+        },
+        [dispatch]
+    );
+
+    const apiPath = `${API_URL}${END_POINT.TRIGGERS}`;
+    const { isLoading, error, data, fetchApi } = useFetchApi<TriggerItem>({
+        apiPath,
+        method: HTTP_METHOD.POST,
+        payload: {
+            sourceDeviceId,
+            sourcePin,
+            sourceThreshold,
+            destinationDeviceId,
+            destinationPin,
+            destinationDeviceTargetState,
+            operator,
+        },
+        initialData: null,
+        callbackFunc: dispatchAddTrigger,
+    });
+
+    return {
+        isCreatingTrigger: isLoading,
+        createTriggerError: error,
+        createTriggerResponse: data,
+        createTriggerApi: fetchApi,
+    };
+};
+
+export const useUpdateTriggerApi = ({
+    trigerId,
+    updatedData,
+}: {
+    trigerId: number;
+    updatedData: {
+        sourceDeviceId: number;
+        sourcePin: string;
+        sourceThreshold: number;
+        destinationDeviceId: number;
+        destinationPin: string;
+        destinationDeviceTargetState: number;
+        operator: number;
+    };
+}) => {
+    const dispatch = useAppDispatch();
+    const dispatchUpdateTrigger = useCallback(
+        (data: ResponseOK) => {
+            if (data.status === RESPONSE_STATUS.OK) {
+                dispatch(
+                    triggersActions.updateTrigger({
+                        id: trigerId,
+                        ...updatedData,
+                    })
+                );
+            }
+        },
+        [trigerId, updatedData, dispatch]
+    );
+
+    let apiPath = `${API_URL}${END_POINT.TRIGGER}`;
+    apiPath = apiPath.replace(':id', trigerId.toString());
+
+    const { isLoading, error, data, fetchApi } = useFetchApi<ResponseOK>({
+        apiPath,
+        method: HTTP_METHOD.PATCH,
+        payload: updatedData,
+        initialData: null,
+        callbackFunc: dispatchUpdateTrigger,
+    });
+
+    return {
+        isUpdatingTrigger: isLoading,
+        updateTriggerError: error,
+        updateTriggerResponse: data,
+        updateTriggerApi: fetchApi,
+    };
+};
+
 export const useDeleteTriggersApi = (ids: number[]) => {
     const dispatch = useAppDispatch();
-    const dispatchRefresh = useCallback(
+    const dispatchDeleteTriggers = useCallback(
         (data: ResponseOK) => {
             if (data.status === RESPONSE_STATUS.OK) {
                 dispatch(triggersActions.deleteTriggers(ids));
@@ -95,7 +209,7 @@ export const useDeleteTriggersApi = (ids: number[]) => {
         method: HTTP_METHOD.DELETE,
         payload: ids,
         initialData: null,
-        callbackFunc: dispatchRefresh,
+        callbackFunc: dispatchDeleteTriggers,
     });
 
     return {

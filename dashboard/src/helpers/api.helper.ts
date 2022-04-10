@@ -168,4 +168,24 @@ export const ApiHelpers = {
             } as any,
         };
     },
+    AppendQueryStrings: ({
+        basicPath,
+        queryStrings,
+    }: {
+        basicPath: string;
+        queryStrings: { [key: string]: string | number };
+    }) => {
+        const finalQueryStrings = Object.entries(queryStrings).reduce(
+            (accQueryStrings, [key, value]) => {
+                if (value || value === 0) {
+                    return accQueryStrings === ''
+                        ? `?${key}=${value}`
+                        : `${accQueryStrings}&${key}=${value}`;
+                }
+                return accQueryStrings;
+            },
+            ''
+        );
+        return `${basicPath}${finalQueryStrings}`;
+    },
 };

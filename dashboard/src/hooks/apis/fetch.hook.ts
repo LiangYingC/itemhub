@@ -23,8 +23,6 @@ export const useFetchApi = <T>({
     const [error, setError] = useState<FetchErrorResultData | null>(null);
 
     const fetchApi = useCallback(async () => {
-        if (isLoading) return;
-
         try {
             setIsLoading(true);
 
@@ -64,7 +62,7 @@ export const useFetchApi = <T>({
         } finally {
             setIsLoading(false);
         }
-    }, [isLoading, apiPath, method, payload, callbackFunc]);
+    }, [apiPath, method, payload, callbackFunc]);
 
     return {
         isLoading,

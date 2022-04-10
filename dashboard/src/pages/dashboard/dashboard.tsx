@@ -5,10 +5,10 @@ import Footer from '@/components/footer/footer';
 
 const Dashboard = () => {
     return (
-        <div className={styles.dashboard} data-testid="Dashboard">
+        <div className={`${styles.dashboard} bg-dark`} data-testid="Dashboard">
             <div>
                 <Header />
-                <nav>
+                <nav className="mx-3">
                     <Link to="/dashboard/devices">Devices</Link> |{' '}
                     <Link to="/dashboard/triggers">Triggers</Link> |{' '}
                     <Link to="/dashboard/oauth-clients">oAuth Clients</Link>

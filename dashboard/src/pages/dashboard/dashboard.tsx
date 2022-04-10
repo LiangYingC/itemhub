@@ -8,12 +8,9 @@ const Dashboard = () => {
         <div className={styles.dashboard} data-testid="Dashboard">
             <div>
                 <Header />
-                <nav>
-                    <Link to="/dashboard/devices">Devices</Link> |{' '}
-                    <Link to="/dashboard/triggers">Triggers</Link> |{' '}
-                    <Link to="/dashboard/oauth-clients">oAuth Clients</Link>
-                </nav>
-                <Outlet />
+                <div className={styles.content + ' position-relative'}>
+                    <Outlet />
+                </div>
                 <Footer />
             </div>
         </div>

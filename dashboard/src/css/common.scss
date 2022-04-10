@@ -14,6 +14,7 @@ html {
     line-height: 1.8rem;
     color: rgba(0, 0, 0, map-get($opacity, 65));
     font-size: $font-size-base;
+    background: $grey-150;
     @include media-breakpoint-down(lg) {
         font-size: $font-size-base-for-small-screen;
     }
@@ -37,6 +38,10 @@ h5,
     @include media-breakpoint-down(lg) {
         font-size: $small-font-size-for-small-screen;
     }
+}
+
+.content {
+    padding-top: $top-attr-height;
 }
 
 /* purgecss start ignore */

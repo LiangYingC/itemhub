@@ -22,9 +22,9 @@ $h3-font-size: 24px;
 $h3-font-size-for-small-screen: 20px;
 $h4-font-size: 20px;
 $h4-font-size-for-small-screen: 16px;
-$font-size-base: 16px;
+$h5-font-size: 16px;
 $font-size-base-for-small-screen: 14px;
-$small-font-size: 14px;
+$h6-font-size: 14px;
 $small-font-size-for-small-screen: 12px;
 
 $font-weight-bold: 600;
@@ -48,11 +48,12 @@ $dark-blue: #141b5e; // deprecated
 $darkest-blue: #161c2e; // deprecated
 $dark: #161c2e; // deprecated
 $black-opacity25: rgba(0, 0, 0, 0.25); // deprecated
+$white-opacity-15: rgba(255, 255, 255, 0.15); // deprecated
 $blue: #0048ff; // deprecated
 $danger: #ff4747;
 $purple: #d415a1;
 $primary-900: #1f305a;
-$primary-800: #23469e;
+$primary-800: #163c9d;
 $primary-700: #1679c0;
 $primary-600: #30a7df;
 $primary-500: #4ac5ff;
@@ -69,6 +70,7 @@ $grey-500: #404350;
 $grey-400: #666a7f;
 $grey-300: #8a90ad;
 $grey-200: #dbdbdb;
+$grey-150: #e5e5e5;
 $grey-100: #e5eaff;
 
 $bg-blue2green: linear-gradient(135deg, #0048ff 0%, #14ffca 100%);
@@ -85,7 +87,9 @@ $theme-colors: (
     'danger': $danger,
     'darkest-blue': $darkest-blue,
     'deep-dark-blue': $deep-dark-blue,
+    'black-opacity-04': rgba($black, 0.04),
     'black-opacity-25': rgba($black, 0.25),
+    'black-opacity-45': rgba($black, 0.45),
     'black-opacity-85': rgba($black, 0.85),
     'primary-100': $primary-100,
     'primary-200': $primary-200,
@@ -107,6 +111,25 @@ $theme-colors: (
     'purple': $purple,
     'green': $green,
 );
+
+$font-sizes: (
+    1: $h1-font-size,
+    2: $h2-font-size,
+    3: $h3-font-size,
+    4: $h4-font-size,
+    5: $h5-font-size,
+    6: 14px,
+);
+
+$text-opacity: (
+    25: 0.25,
+    45: 0.45,
+    50: 0.5,
+    75: 0.75,
+    100: 1,
+);
+
+$top-attr-height: 90px;
 
 @import 'bootstrap/scss/_utilities.scss';
 
@@ -133,6 +156,12 @@ $utilities: map-merge(
             property: 'opacity',
             class: 'opacity',
             values: $opacity,
+        ),
+        'font-size': (
+            // rfs: true,
+            property: font-size,
+            class: 'fs',
+            values: $font-sizes,
         ),
     )
 );
@@ -195,3 +224,5 @@ $utilities: map-merge(
         }
     }
 }
+
+// @import 'bootstrap';

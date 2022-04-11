@@ -52,10 +52,12 @@ namespace Homo.IotApi
             long? currentLatestId = DeviceActivityLogDataservice.Delete(_iotDbContext, DateTime.Now.AddDays(-1), 1, 500, latestId);
             if (currentLatestId == null)
             {
-                return Task.CompletedTask;
+                Task task = new Task<dynamic>(() => new { });
+                task.Start();
+                return task;
             }
             await Task.Delay(5 * 1000);
-            return recursiveDeleteActivityLogs(currentLatestId);
+            return (await recursiveDeleteActivityLogs(currentLatestId));
         }
     }
 }

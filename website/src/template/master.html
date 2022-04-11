@@ -1,8 +1,22 @@
 <div class="master bg-dark">
+
     <link href="/css/master.css" rel="stylesheet">
     <component-header class="w-100 py-3 bg-dark-blue d-block" bind-user="user" bind-name="name" bind-email="email">
     </component-header>
     <main class="child-router">
     </main>
+
     <component-footer></component-footer>
+    <div class="position-fixed w-100 bottom-0 py-4 {overSubscriptionPlanVisible}">
+        <div class="bg-warn opacity-85 w-100 h-100 position-absolute top-0"></div>
+
+        <div class="py-4 px-5 position-relative w-100 text-center h5 text-gray">
+            目前你的用量已經超過訂閱方案, 如需要系統保存所有的資料, 請升級訂閱方案
+        </div>
+        <div class="d-flex w-100 position-relative justify-content-center">
+            <button onclick="controller.jumpToNextPlan" class="btn btn-primary mx-3 rounded-pill px-3">升級</button>
+            <button onclick="controller.hideOverSubscriptionBanner"
+                class="btn btn-primary bg-transparent rounded-pill px-3 border mx-3">取消</button>
+        </div>
+    </div>
 </div>

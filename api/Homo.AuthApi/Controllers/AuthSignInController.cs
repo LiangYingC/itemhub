@@ -100,7 +100,8 @@ namespace Homo.AuthApi
                 LineSub = user.LineSub,
                 Profile = user.Profile,
                 PseudonymousPhone = user.PseudonymousPhone,
-                PseudonymousAddress = user.PseudonymousAddress
+                PseudonymousAddress = user.PseudonymousAddress,
+                IsOverSubscriptionPlan = user.IsOverSubscriptionPlan
             };
 
             List<ViewRelationOfGroupAndUser> permissions = RelationOfGroupAndUserDataservice.GetRelationByUserId(_dbContext, user.Id);
@@ -180,7 +181,8 @@ namespace Homo.AuthApi
                 LineSub = user.LineSub,
                 Profile = user.Profile,
                 PseudonymousPhone = user.PseudonymousPhone,
-                PseudonymousAddress = user.PseudonymousAddress
+                PseudonymousAddress = user.PseudonymousAddress,
+                IsOverSubscriptionPlan = user.IsOverSubscriptionPlan
             };
 
             List<ViewRelationOfGroupAndUser> permissions = RelationOfGroupAndUserDataservice.GetRelationByUserId(_dbContext, user.Id);

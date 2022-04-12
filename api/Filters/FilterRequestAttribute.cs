@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using Homo.Core.Constants;
 using System.Linq;
-using System.Collections.Generic;
+using Homo.AuthApi;
 
 namespace Homo.IotApi
 {
@@ -27,9 +27,13 @@ namespace Homo.IotApi
             }
 
             DbContextOptionsBuilder<IotDbContext> iotBuilder = new DbContextOptionsBuilder<IotDbContext>();
+            DbContextOptionsBuilder<DBContext> dbContextBuilder = new DbContextOptionsBuilder<DBContext>();
             var serverVersion = new MySqlServerVersion(new Version(8, 0, 25));
             iotBuilder.UseMySql(_dbc, serverVersion);
             IotDbContext _iotDbContext = new IotDbContext(iotBuilder.Options);
+            DBContext dbContext = new DBContext(dbContextBuilder.Options);
+
+
 
             var checkData = _iotDbContext.DevicePinSensor
                 .Where(x => x.DeletedAt == null && x.DeviceId == deviceId)
@@ -58,6 +62,11 @@ namespace Homo.IotApi
             int requestFrequency = (int)SubscriptionHelper.GetFrequency(pricingPlan);
             if (checkData != null && checkData.DevicePinSensor != null && checkData.DevicePinSensor.CreatedAt.AddSeconds(requestFrequency) >= DateTime.Now)
             {
+                dbContext.User.Where(x => x.Id == checkData.DevicePinSensor.OwnerId).UpdateFromQuery(x => new User()
+                {
+                    IsOverSubscriptionPlan = true
+                });
+                dbContext.SaveChanges();
                 throw new CustomException(ERROR_CODE.TOO_MANY_REQUEST, System.Net.HttpStatusCode.Forbidden);
             }
         }

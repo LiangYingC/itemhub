@@ -18,6 +18,7 @@ namespace Homo.AuthApi
             public string PseudonymousPhone { get; set; }
             public string PseudonymousAddress { get; set; }
             public string Phone { get; set; }
+            public bool? IsOverSubscriptionPlan { get; set; }
         }
     }
 }

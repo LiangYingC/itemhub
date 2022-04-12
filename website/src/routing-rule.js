@@ -103,14 +103,17 @@ export const RoutingRule = [{
                     return {
                         id: null,
                         name: '',
-                        email: ''
+                        email: '',
+                        isOverSubscriptionPlan: false
                     };
                 }
+
                 const extra = window.jwt_decode(args.token).extra;
                 return {
                     id: extra.Id,
                     name: `${extra.LastName || ''}${extra.FirstName || ''}`,
-                    email: extra.Email
+                    email: extra.Email,
+                    isOverSubscriptionPlan: extra.IsOverSubscriptionPlan
                 };
             }
         }, {

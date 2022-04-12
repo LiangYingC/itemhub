@@ -18,10 +18,10 @@ namespace Homo.IotApi
         }
 
         [HttpGet]
-        public ActionResult<dynamic> getList([FromQuery] int limit, [FromQuery] int page, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
+        public ActionResult<dynamic> getList([FromQuery] int limit, [FromQuery] int page, [FromQuery] bool isDeviceClient, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
             long ownerId = extraPayload.Id;
-            List<OauthClient> records = OauthClientDataservice.GetList(_dbContext, ownerId, page, limit);
+            List<OauthClient> records = OauthClientDataservice.GetList(_dbContext, ownerId, isDeviceClient, null, page, limit);
             return new
             {
                 oauthClients = records,
@@ -101,6 +101,20 @@ namespace Homo.IotApi
             long ownerId = extraPayload.Id;
             OauthClientDataservice.Delete(_dbContext, ownerId, id);
             return new { status = CUSTOM_RESPONSE.OK };
+        }
+
+
+        [HttpGet]
+        [Route("by-device-id/{deviceId}")]
+        public ActionResult<dynamic> getOneByDeviceId([FromRoute] long deviceId, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
+        {
+            long ownerId = extraPayload.Id;
+            OauthClient record = OauthClientDataservice.GetOneByDeviceId(_dbContext, ownerId, deviceId);
+            if (record == null)
+            {
+                throw new CustomException(Homo.AuthApi.ERROR_CODE.DATA_NOT_FOUND, System.Net.HttpStatusCode.NotFound);
+            }
+            return record;
         }
 
     }

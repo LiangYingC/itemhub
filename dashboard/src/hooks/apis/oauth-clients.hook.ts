@@ -39,6 +39,7 @@ export const useGetOauthClients = ({
         queryStrings: {
             page,
             limit,
+            isDeviceClient: false,
         },
     });
 

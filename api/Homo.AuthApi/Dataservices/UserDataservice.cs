@@ -293,5 +293,10 @@ namespace Homo.AuthApi
             dbContext.SaveChanges();
         }
 
+        public static List<User> GetOverPlanAll(DBContext dbContext)
+        {
+            return dbContext.User.Where(x => x.DeletedAt == null && x.IsOverSubscriptionPlan == true).ToList();
+        }
+
     }
 }

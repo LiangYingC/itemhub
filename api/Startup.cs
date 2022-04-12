@@ -104,6 +104,12 @@ namespace Homo.IotApi
                     c.CronExpression = @"0 0 * * *";
                 });
 
+            services.AddCronJob<SendOverPlanNotificationCronJobService>(c =>
+                {
+                    c.TimeZoneInfo = TimeZoneInfo.Local;
+                    c.CronExpression = @"* * * * *";
+                });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo() { Title = "Api Doc", Version = "v1" });

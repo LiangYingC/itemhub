@@ -8,7 +8,7 @@ using Homo.AuthApi;
 using System.Linq;
 using System.Net.Http;
 using Newtonsoft.Json;
-using Homo.Core.Constants;
+using Homo.Core.Helpers;
 
 namespace Homo.IotApi
 {
@@ -44,6 +44,7 @@ namespace Homo.IotApi
                 return Task.CompletedTask;
             }
 
+
             Console.WriteLine($"{DateTime.Now:hh:mm:ss} AutoPaymentCronJob is working.");
             DbContextOptionsBuilder<IotDbContext> iotBuilder = new DbContextOptionsBuilder<IotDbContext>();
             DbContextOptionsBuilder<DBContext> builder = new DbContextOptionsBuilder<DBContext>();
@@ -53,7 +54,18 @@ namespace Homo.IotApi
             IotDbContext _iotDbContext = new IotDbContext(iotBuilder.Options);
             DBContext _dbContext = new DBContext(builder.Options);
 
+            string lockerKey = CryptographicHelper.GetSpecificLengthRandomString(12, true);
+            SystemConfigDataservice.OccupeAutoPaymentLocker(_iotDbContext, lockerKey);
+
+            await Task.Delay(5000);
+            SystemConfig locker = SystemConfigDataservice.GetOne(_iotDbContext, SYSTEM_CONFIG.AUTO_PAYMENT_LOCKER);
+            if (locker.Value != lockerKey)
+            {
+                return Task.CompletedTask;
+            }
+
             List<Subscription> subscriptions = SubscriptionDataservice.GetShouldBeAutoPayNextPeriod(_iotDbContext, DateTime.Now);
+
             List<long> subscriberIds = subscriptions.Select(x => x.OwnerId).ToList<long>();
             List<User> subscribers = UserDataservice.GetAllByIds(subscriberIds, _dbContext);
             List<ConvertHelper.EnumList> plans = ConvertHelper.EnumToList(typeof(PRICING_PLAN));
@@ -68,52 +80,70 @@ namespace Homo.IotApi
                     Console.WriteLine($"Could not find subscriber by id: {subscription.OwnerId}");
                     continue;
                 }
-                var postBody = new
+
+
+                DTOs.TapPayResponse response = null;
+                long transactionId = 0;
+
+                if (!subscriber.IsEarlyBird)
                 {
-                    card_key = subscription.CardKey,
-                    card_token = subscription.CardToken,
-                    partner_key = _tapPayPartnerKey,
-                    currency = "TWD",
-                    merchant_id = _tapPayMerchantId,
-                    details = planName,
-                    amount = amount
-                };
-                StringContent stringContent = new StringContent(JsonConvert.SerializeObject(postBody), System.Text.Encoding.UTF8, "application/json");
-                HttpClient http = new HttpClient();
-                http.DefaultRequestHeaders.Add("x-api-key", _tapPayPartnerKey);
-                HttpResponseMessage responseStream = await http.PostAsync(_tapPayEndpointByToken, stringContent);
-                string result = "";
-                using (var sr = new System.IO.StreamReader(await responseStream.Content.ReadAsStreamAsync(), System.Text.Encoding.UTF8))
-                {
-                    result = sr.ReadToEnd();
+                    var postBody = new
+                    {
+                        card_key = subscription.CardKey,
+                        card_token = subscription.CardToken,
+                        partner_key = _tapPayPartnerKey,
+                        currency = "TWD",
+                        merchant_id = _tapPayMerchantId,
+                        details = planName,
+                        amount = amount
+                    };
+                    StringContent stringContent = new StringContent(JsonConvert.SerializeObject(postBody), System.Text.Encoding.UTF8, "application/json");
+                    HttpClient http = new HttpClient();
+                    http.DefaultRequestHeaders.Add("x-api-key", _tapPayPartnerKey);
+                    HttpResponseMessage responseStream = await http.PostAsync(_tapPayEndpointByToken, stringContent);
+                    string result = "";
+                    using (var sr = new System.IO.StreamReader(await responseStream.Content.ReadAsStreamAsync(), System.Text.Encoding.UTF8))
+                    {
+                        result = sr.ReadToEnd();
+                    }
+                    response = Newtonsoft.Json.JsonConvert.DeserializeObject<DTOs.TapPayResponse>(result);
+
+                    // create transaction log and remove senstive information 
+                    Transaction transaction = TransactionDataservice.Create(_iotDbContext, new DTOs.Transaction()
+                    {
+                        Raw = JsonConvert.SerializeObject(response),
+                        OwnerId = subscriber.Id,
+                        Amount = amount,
+                        ExternalTransactionId = response.rec_trade_id,
+                        Status = response.status == DTOs.TAP_PAY_TRANSACTION_STATUS.OK ? TRANSACTION_STATUS.PAID :
+                            response.status == DTOs.TAP_PAY_TRANSACTION_STATUS.ERROR ? TRANSACTION_STATUS.ERROR :
+                            TRANSACTION_STATUS.PENDING
+                    });
+                    transactionId = transaction.Id;
                 }
-                DTOs.TapPayResponse response = Newtonsoft.Json.JsonConvert.DeserializeObject<DTOs.TapPayResponse>(result);
 
-                // create transaction log and remove senstive information 
-                Transaction transaction = TransactionDataservice.Create(_iotDbContext, new DTOs.Transaction()
-                {
-                    Raw = JsonConvert.SerializeObject(response),
-                    OwnerId = subscriber.Id
-                });
-
-                // create user subscriont log
+                // create user subscription log
                 DateTime startAt = DateTime.Now;
                 int daysInMonth = System.DateTime.DaysInMonth(startAt.Year, startAt.Month);
                 DateTime startOfMonth = new DateTime(startAt.Year, startAt.Month, 1);
                 DateTime endOfMonth = startOfMonth.AddDays(daysInMonth - 1).AddHours(23).AddMinutes(59).AddSeconds(59);
-                if (response.status == DTOs.TAP_PAY_TRANSACTION_STATUS.OK)
+
+                if (
+                    subscriber.IsEarlyBird ||
+                    (response != null && response.status == DTOs.TAP_PAY_TRANSACTION_STATUS.OK)
+                )
                 {
+                    // System.Console.WriteLine($"testing:{Newtonsoft.Json.JsonConvert.SerializeObject(subscriber.Id, Newtonsoft.Json.Formatting.Indented)}");
                     SubscriptionDataservice.Create(_iotDbContext, new DTOs.Subscription()
                     {
                         OwnerId = subscriber.Id,
                         StartAt = startOfMonth,
                         EndAt = endOfMonth,
                         PricingPlan = (PRICING_PLAN)subscription.PricingPlan,
-                        TransactionId = transaction.Id,
+                        TransactionId = transactionId,
                         CardKey = subscription.CardKey,
                         CardToken = subscription.CardToken,
                     });
-                    return new { Status = CUSTOM_RESPONSE.OK, Amount = amount };
                 }
                 else
                 {

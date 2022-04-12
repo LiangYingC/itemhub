@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
+using Homo.Api;
 
 namespace Homo.AuthApi
 {
     [Route("v1/me")]
+    [SwaggerUiInvisibility]
     [AuthorizeFactory]
     public class MeController : ControllerBase
     {

@@ -5,8 +5,9 @@ using Homo.Core.Constants;
 
 namespace Homo.IotApi
 {
+    [Route("v1/my/zones")]
+    [SwaggerUiInvisibility]
     [IotAuthorizeFactory]
-    [Route("v1/me/zones")]
     [Validate]
     public class MyZoneController : ControllerBase
     {

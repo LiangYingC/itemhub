@@ -32,6 +32,7 @@ namespace Homo.IotApi
                 .AddJsonFile(secretsFilename, optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
+            EnvService.Set(env);
         }
 
         public IConfiguration Configuration { get; }
@@ -75,6 +76,7 @@ namespace Homo.IotApi
             var secrets = (Homo.IotApi.Secrets)appSettings.Secrets;
             services.AddDbContext<IotDbContext>(options => options.UseMySql(secrets.DBConnectionString, serverVersion));
             services.AddDbContext<Homo.AuthApi.DBContext>(options => options.UseMySql(secrets.DBConnectionString, serverVersion));
+
             services.AddControllers();
             if (_env.EnvironmentName.ToLower() != "dev")
             {
@@ -133,12 +135,9 @@ namespace Homo.IotApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.EnvironmentName == "dev")
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "homo auth api v1"));
-            }
+            app.UseDeveloperExceptionPage();
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "itemhub api v1"));
 
             var supportedCultures = new[] {
                 new CultureInfo("zh-TW"),

@@ -2,10 +2,12 @@ using Microsoft.AspNetCore.Mvc;
 using Homo.AuthApi;
 using System.Collections.Generic;
 using System.Linq;
+using Homo.Api;
 
 namespace Homo.IotApi
 {
     [Route("v1/universal")]
+    [SwaggerUiInvisibility]
     public class IotUniversalController : ControllerBase
     {
 

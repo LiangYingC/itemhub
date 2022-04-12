@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 namespace Homo.IotApi
 {
     [Route("v1/checkout")]
+    [SwaggerUiInvisibility]
     [AuthorizeFactory()]
     public class CheckoutController : ControllerBase
     {

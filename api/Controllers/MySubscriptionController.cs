@@ -8,8 +8,9 @@ using System.Threading.Tasks;
 
 namespace Homo.IotApi
 {
-    [IotAuthorizeFactory]
     [Route("v1/my/subscription")]
+    [SwaggerUiInvisibility]
+    [IotAuthorizeFactory]
     [Validate]
     public class MySubscriptionController : ControllerBase
     {

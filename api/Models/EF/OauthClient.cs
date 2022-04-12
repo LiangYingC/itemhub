@@ -9,6 +9,7 @@ namespace Homo.IotApi
         public DateTime CreatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
         public long OwnerId { get; set; }
+        public long? DeviceId { get; set; }
 
         [Required]
         [MaxLength(128)]

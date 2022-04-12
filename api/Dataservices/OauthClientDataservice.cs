@@ -7,12 +7,14 @@ namespace Homo.IotApi
 {
     public class OauthClientDataservice
     {
-        public static List<OauthClient> GetList(IotDbContext dbContext, long ownerId, int page, int limit)
+        public static List<OauthClient> GetList(IotDbContext dbContext, long ownerId, bool isDeviceClient, long? deviceId, int page, int limit)
         {
             return dbContext.OauthClient
                 .Where(x =>
                     x.DeletedAt == null
                     && x.OwnerId == ownerId
+                    && (isDeviceClient == false && x.DeviceId == null)
+                    && (deviceId == null && x.DeviceId == deviceId)
                 )
                 .OrderByDescending(x => x.Id)
                 .Skip(limit * (page - 1))
@@ -45,6 +47,13 @@ namespace Homo.IotApi
             return dbContext.OauthClient.FirstOrDefault(x => x.DeletedAt == null
             && x.OwnerId == ownerId
             && x.Id == id);
+        }
+
+        public static OauthClient GetOneByDeviceId(IotDbContext dbContext, long ownerId, long deviceId)
+        {
+            return dbContext.OauthClient.FirstOrDefault(x => x.DeletedAt == null
+            && x.OwnerId == ownerId
+            && x.DeviceId == deviceId);
         }
 
         public static OauthClient GetOneByClientId(IotDbContext dbContext, string clientId)

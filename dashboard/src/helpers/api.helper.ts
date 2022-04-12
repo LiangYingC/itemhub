@@ -173,7 +173,7 @@ export const ApiHelpers = {
         queryStrings,
     }: {
         basicPath: string;
-        queryStrings: { [key: string]: string | number };
+        queryStrings: { [key: string]: string | number | boolean };
     }) => {
         const finalQueryStrings = Object.entries(queryStrings).reduce(
             (accQueryStrings, [key, value]) => {

@@ -60,5 +60,6 @@ namespace Homo.AuthApi
         public bool? IsOverSubscriptionPlan { get; set; }
         public DateTime? SendOverPlanNotificationAt { get; set; }
         public int SendOverPlanNotificationCount { get; set; }
+        public bool IsEarlyBird { get; set; }
     }
 }

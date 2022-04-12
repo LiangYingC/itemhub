@@ -15,6 +15,7 @@ namespace Homo.IotApi
             public string ExternalTransactionId { get; set; }
             [Required]
             public decimal Amount { get; set; }
+            public TRANSACTION_STATUS Status { get; set; }
         }
     }
 }

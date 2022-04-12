@@ -28,6 +28,8 @@ namespace Homo.AuthApi
                     .HasDefaultValueSql("0");
                 entity.Property(b => b.SendOverPlanNotificationCount)
                     .HasDefaultValueSql("0");
+                entity.Property(b => b.IsEarlyBird)
+                    .HasDefaultValueSql("0");
 
             });
 

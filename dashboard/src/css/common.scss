@@ -1,5 +1,5 @@
-@import 'overwrite.scss';
 @import 'bootstrap/scss/bootstrap.scss';
+@import 'overwrite.scss';
 @import 'zindex.scss';
 
 /* Common */
@@ -38,10 +38,6 @@ h5,
     @include media-breakpoint-down(lg) {
         font-size: $small-font-size-for-small-screen;
     }
-}
-
-.content {
-    padding-top: $top-attr-height;
 }
 
 /* purgecss start ignore */

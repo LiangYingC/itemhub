@@ -1,18 +1,13 @@
 @import '../../css/overwrite.scss';
 @import '../../css/zindex.scss';
+@import '../../css/variables.scss';
 
 $header-height: 50px;
-$logo-height: 81px;
+$logo-height: 92px;
 $user-height: 94px;
 
 .header {
-    height: $top-attr-height;
-
-    .open {
-        @include media-breakpoint-down(lg) {
-            width: 100%;
-            position: fixed;
-        }
+    &.open {
         .nav {
             max-width: 18em;
             transition: 0.3s ease-in-out;
@@ -21,16 +16,14 @@ $user-height: 94px;
             z-index: $nav-z-index;
         }
         .space {
-            @include media-breakpoint-down(lg) {
-                width: 100vw;
-                height: 100vh;
-                top: 0;
-                left: 0;
-                z-index: $nav-space-z-index;
-                background: rgba(0, 0, 0, 0.65);
-            }
+            width: 100vw;
+            height: 100vh;
+            top: 0;
+            left: 0;
+            z-index: $nav-space-z-index;
+            background: $black-opacity25;
         }
-        + .topAttr {
+        .topAttr {
             .hamburger {
                 display: none;
             }
@@ -38,20 +31,12 @@ $user-height: 94px;
     }
 
     .nav {
-        width: 18em;
+        width: $nav-w;
         max-width: 0;
         height: 100vh;
         top: 0;
         left: 0;
-        // height: $header-height;
-        // align-items: center;
-        // display: flex;
-        // justify-content: space-between;
         background: $grey-800;
-
-        // @include media-breakpoint-down(lg) {
-        //     font-size: $small-font-size-for-small-screen;
-        // }
         transition: 0.3s ease-in-out;
         transform: translateX(0);
         overflow: hidden;
@@ -95,9 +80,12 @@ $user-height: 94px;
         }
     }
 
+    .menu {
+        height: $header-h;
+    }
+
     .topAttr {
-        padding-bottom: 1.5em;
-        height: $top-attr-height;
+        height: $header-h;
     }
 
     .hamburger {

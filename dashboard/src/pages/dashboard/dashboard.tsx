@@ -10,8 +10,8 @@ const Dashboard = () => {
                 <Header />
                 <div className={styles.content + ' position-relative'}>
                     <Outlet />
+                    <Footer />
                 </div>
-                <Footer />
             </div>
         </div>
     );

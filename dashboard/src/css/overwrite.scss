@@ -90,6 +90,7 @@ $theme-colors: (
     'black-opacity-04': rgba($black, 0.04),
     'black-opacity-25': rgba($black, 0.25),
     'black-opacity-45': rgba($black, 0.45),
+    'black-opacity-65': rgba($black, 0.65),
     'black-opacity-85': rgba($black, 0.85),
     'primary-100': $primary-100,
     'primary-200': $primary-200,
@@ -111,25 +112,6 @@ $theme-colors: (
     'purple': $purple,
     'green': $green,
 );
-
-$font-sizes: (
-    1: $h1-font-size,
-    2: $h2-font-size,
-    3: $h3-font-size,
-    4: $h4-font-size,
-    5: $h5-font-size,
-    6: 14px,
-);
-
-$text-opacity: (
-    25: 0.25,
-    45: 0.45,
-    50: 0.5,
-    75: 0.75,
-    100: 1,
-);
-
-$top-attr-height: 90px;
 
 @import 'bootstrap/scss/_utilities.scss';
 
@@ -156,12 +138,6 @@ $utilities: map-merge(
             property: 'opacity',
             class: 'opacity',
             values: $opacity,
-        ),
-        'font-size': (
-            // rfs: true,
-            property: font-size,
-            class: 'fs',
-            values: $font-sizes,
         ),
     )
 );
@@ -224,5 +200,3 @@ $utilities: map-merge(
         }
     }
 }
-
-// @import 'bootstrap';

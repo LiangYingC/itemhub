@@ -1,6 +1,6 @@
 import styles from './triggers.module.scss';
 import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { RESPONSE_STATUS } from '@/constants/api';
 import { useQuery } from '@/hooks/query.hook';
 import { useAppSelector } from '@/hooks/redux.hook';
@@ -41,6 +41,7 @@ const filterTriggers = ({
 };
 
 const Triggers = () => {
+    const navigate = useNavigate();
     const query = useQuery();
     const limit = Number(query.get('limit') || 5);
     const page = Number(query.get('page') || 1);
@@ -201,6 +202,13 @@ const Triggers = () => {
                 {isDeletingTriggers
                     ? 'Deleting Triggers'
                     : 'Delete Selected Trigger'}
+            </button>
+            <button
+                onClick={() =>
+                    navigate('../triggers/create', { replace: false })
+                }
+            >
+                Create Trigger
             </button>
             <div className={styles.triggers} data-testid="triggers">
                 {isGettingTriggers || triggers === null ? (

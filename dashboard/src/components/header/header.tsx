@@ -1,19 +1,12 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './header.module.scss';
 
 const Header = () => {
-    const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-
-    const toggleSwitch = () => {
-        setIsMenuOpen(isMenuOpen === true ? false : true);
-    };
-
+    // 如果展開 menu 的話，要在 styles.header 同一層 加 open 的 class
+    // styles.hamburger , styles.space 點擊要可以關閉 menu
     return (
         <div
-            className={`${styles.header} position-relative w-100 bg-white ${
-                isMenuOpen === true ? styles.open : ''
-            }`}
+            className={`${styles.header} ${styles.open} position-relative bg-white flex-shrink-0`}
             data-testid="Header"
         >
             <div className={`${styles.menu} d-flex align-items-start`}>
@@ -21,7 +14,6 @@ const Header = () => {
                     className={
                         styles.space + ' position-absolute bg-black-opacity-65'
                     }
-                    onClick={toggleSwitch}
                 />
                 <div
                     className={styles.nav + ' flex-shrink-0 position-relative'}
@@ -46,7 +38,6 @@ const Header = () => {
 
                             <div
                                 role="button"
-                                onClick={toggleSwitch}
                                 className={styles.hamburger + ' p-2'}
                             >
                                 <div className="bg-white w-100 rounded-pill" />
@@ -102,51 +93,6 @@ const Header = () => {
                     <div className="position-absolute bottom-0 end-0 w-100">
                         <div className={styles.user + ' text-white p-3'}>
                             <div className="p-3">UserName</div>
-                        </div>
-                    </div>
-                </div>
-                <div
-                    className={
-                        styles.topAttr +
-                        ' w-100 d-flex align-items-center bg-white p-4'
-                    }
-                >
-                    <div
-                        onClick={toggleSwitch}
-                        role="button"
-                        className={styles.hamburger + ' p-2'}
-                    >
-                        <div className="bg-black bg-opacity-85 w-100 rounded-pill" />
-                        <div className="bg-black bg-opacity-85 w-100 rounded-pill" />
-                        <div className="bg-black bg-opacity-85 w-100 rounded-pill" />
-                    </div>
-                    <div className="flex-fill">
-                        <div className="d-flex align-items-center justify-content-between">
-                            <h3 className="mb-0 bg-black-opacity-85">
-                                頁面標題
-                            </h3>
-                            <div className="d-flex">
-                                <a
-                                    href=""
-                                    className="d-flex align-items-center btn bg-light border border-secondary rounded-pill px-3 py-2"
-                                >
-                                    <img
-                                        className="icon pe-2"
-                                        src="src/assets/images/icon-refresh.svg"
-                                    />
-                                    <div className="lh-1 py-1">重新整理</div>
-                                </a>
-                                <a
-                                    href=""
-                                    className="d-flex align-items-center btn bg-primary text-white border border--primary rounded-pill ms-3  px-3 py-2"
-                                >
-                                    <img
-                                        className="icon pe-2"
-                                        src="src/assets/images/icon-plus.svg"
-                                    />
-                                    <div className="lh-1 py-1">新增裝置</div>
-                                </a>
-                            </div>
                         </div>
                     </div>
                 </div>

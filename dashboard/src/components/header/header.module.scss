@@ -23,11 +23,6 @@ $user-height: 94px;
             z-index: $nav-space-z-index;
             background: $black-opacity25;
         }
-        .topAttr {
-            .hamburger {
-                display: none;
-            }
-        }
     }
 
     .nav {
@@ -78,14 +73,6 @@ $user-height: 94px;
                 height: $header-height;
             }
         }
-    }
-
-    .menu {
-        height: $header-h;
-    }
-
-    .topAttr {
-        height: $header-h;
     }
 
     .hamburger {

@@ -2,21 +2,7 @@
 @import '../../css/variables.scss';
 
 .dashboard {
-    height: 100vh;
-    .header {
-        &.open {
-            + content {
-                padding-left: $nav-w;
-            }
-        }
-    }
-
     .content {
-        height: calc(100vh - (#{$header-h}));
-        overflow: scroll;
-    }
-
-    .header + .content {
-        background: red;
+        height: 100vh;
     }
 }

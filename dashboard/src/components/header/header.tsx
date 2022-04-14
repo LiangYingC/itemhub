@@ -1,44 +1,45 @@
 import { Link } from 'react-router-dom';
-import styles from './header.module.scss';
+import { useAppSelector, useAppDispatch } from '@/hooks/redux.hook';
+import { menuActions, selectMenu } from '@/redux/reducers/menu.reducer';
 
 const Header = () => {
-    // 如果展開 menu 的話，要在 styles.header 同一層 加 open 的 class
-    // styles.hamburger , styles.space 點擊要可以關閉 menu
+    const isOpen = useAppSelector(selectMenu).menu.isOpen;
+    const dispatch = useAppDispatch();
+
+    const closeMenu = () => {
+        dispatch(menuActions.close());
+    };
+
     return (
         <div
-            className={`${styles.header} ${styles.open} position-relative bg-white flex-shrink-0`}
+            className={`${
+                isOpen ? 'open' : ''
+            } position-relative bg-white flex-shrink-0 header`}
             data-testid="Header"
         >
-            <div className={`${styles.menu} d-flex align-items-start`}>
-                <div
-                    className={
-                        styles.space + ' position-absolute bg-black-opacity-65'
-                    }
-                />
-                <div
-                    className={styles.nav + ' flex-shrink-0 position-relative'}
-                >
+            <div className="menu d-flex align-items-start">
+                <div className="space position-absolute bg-black-opacity-65" />
+                <div className="nav flex-shrink-0 position-relative">
                     <div className="py-4 px-3">
                         <div className="d-flex justify-content-between align-items-center mt-2 px-3">
                             <a
                                 href="/"
-                                className={
-                                    styles.logo + ' d-flex align-items-center'
-                                }
+                                className="logo d-flex align-items-center"
                             >
                                 <img
                                     className="icon"
                                     src="src/assets/images/logo.svg"
                                 />
                                 <img
-                                    className={styles.text + ' ms-3 logo-text'}
+                                    className="text ms-3 logo-text"
                                     src="src/assets/images/logo-wording.svg"
                                 />
                             </a>
 
                             <div
                                 role="button"
-                                className={styles.hamburger + ' p-2'}
+                                className="hamburger p-2"
+                                onClick={closeMenu}
                             >
                                 <div className="bg-white w-100 rounded-pill" />
                                 <div className="bg-white w-100 rounded-pill" />
@@ -46,7 +47,7 @@ const Header = () => {
                             </div>
                         </div>
                     </div>
-                    <div className={styles.item + ' px-3 '}>
+                    <div className="item px-3 ">
                         <div className="py-2">
                             <Link
                                 to="/dashboard/"
@@ -91,7 +92,7 @@ const Header = () => {
                         </div>
                     </div>
                     <div className="position-absolute bottom-0 end-0 w-100">
-                        <div className={styles.user + ' text-white p-3'}>
+                        <div className="user text-white p-3">
                             <div className="p-3">UserName</div>
                         </div>
                     </div>

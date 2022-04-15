@@ -1,4 +1,3 @@
-import styles from './device.module.scss';
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
@@ -65,7 +64,7 @@ const Device = () => {
 
     return (
         // UI 結構等設計稿後再重構調整
-        <div className={styles.device} data-testid="device">
+        <div className="device" data-testid="device">
             <PageTitle title={`裝置 - ${deviceName}`} />
             {isLoading || device === null ? (
                 <div>Loading</div>

@@ -1,5 +1,4 @@
 import { useUpdateDeviceSwitchPinApi } from '@/hooks/apis/devices.hook';
-import styles from './pin.module.scss';
 import { useEffect, useState, useRef } from 'react';
 import { useUpdateDevicePinNameApi } from '@/hooks/apis/devices.hook';
 import { useDebounce } from '@/hooks/debounce.hook';
@@ -56,7 +55,7 @@ const Pin = (props: { pinItem: PinItem; isEditMode: boolean }) => {
     }, [value, isSwitch]);
 
     return (
-        <div className={`${styles.pin} d-flex align-items-center`}>
+        <div className="pin d-flex align-items-center">
             <div className="name me-2">
                 {isEditMode ? (
                     <div>

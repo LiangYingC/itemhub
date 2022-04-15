@@ -1,7 +1,5 @@
-import styles from './not-found.module.scss';
-
 const NotFound = () => (
-    <div className={styles.NotFound} data-testid="NotFound">
+    <div className="not-found" data-testid="NotFound">
         NotFound Component
     </div>
 );

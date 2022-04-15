@@ -1,4 +1,3 @@
-import styles from './oauth-client.module.scss';
 import { useEffect, useState } from 'react';
 import { useAppSelector } from '@/hooks/redux.hook';
 import {
@@ -13,6 +12,7 @@ import {
     useDeleteOauthClients,
 } from '@/hooks/apis/oauth-clients.hook';
 import { RESPONSE_STATUS } from '@/constants/api';
+import PageTitle from '@/components/page-title/page-title';
 
 interface OauthClientLocationState {
     secret: string;
@@ -90,11 +90,12 @@ const OauthClient = () => {
     }, [navigate, createOAuthClientResponse]);
 
     return (
-        <div className={styles.OauthClient} data-testid="oauth-client">
+        <div className="oauth-client" data-testid="oauth-client">
+            <PageTitle title={`oAuth Client - ${oauthClient.clientId}`} />
             {isGetting ? (
                 <div>Loading</div>
             ) : (
-                <div>
+                <div className="p-4">
                     <div>{oauthClient?.id}</div>
                     <input
                         type="text"
@@ -126,15 +127,21 @@ const OauthClient = () => {
                                 disabled
                             />
                             <button
+                                className="btn rounded-pill bg-white mx-2"
                                 disabled={isDeleting}
                                 onClick={deleteMultipleApi}
                             >
                                 {isDeleting ? 'Deleting' : 'Delete'}
                             </button>
-                            <button disabled={isUpdating} onClick={updateApi}>
+                            <button
+                                className="btn rounded-pill bg-white mx-2"
+                                disabled={isUpdating}
+                                onClick={updateApi}
+                            >
                                 {isUpdating ? 'Updating' : 'Update'}
                             </button>
                             <button
+                                className="btn rounded-pill bg-white mx-2"
                                 disabled={isRevoking}
                                 onClick={revokeSecretApi}
                             >

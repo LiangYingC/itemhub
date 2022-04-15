@@ -1,8 +1,6 @@
-import styles from './footer.module.scss';
-
 const Footer = () => (
     <div
-        className={styles.Footer + ' d-flex justify-content-between p-5'}
+        className="footer d-flex justify-content-between p-5"
         data-testid="Footer"
     >
         <div className="flex-fill">

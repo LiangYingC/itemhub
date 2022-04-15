@@ -1,9 +1,9 @@
-import styles from './trigger.module.scss';
 import { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useAppSelector } from '@/hooks/redux.hook';
 import { useGetTriggerApi } from '@/hooks/apis/triggers.hook';
 import { selectTriggers } from '@/redux/reducers/triggers.reducer';
+import PageTitle from '@/components/page-title/page-title';
 
 const Trigger = () => {
     const { id } = useParams();
@@ -20,7 +20,8 @@ const Trigger = () => {
     }, []);
 
     return (
-        <div className={styles.trigger} data-testid="trigger">
+        <div className="trigger" data-testid="trigger">
+            <PageTitle title={`觸發 - `} /> {/* Todo: Trigger 加上 Name Field*/}
             {isGettingTrigger || trigger === null ? (
                 <div>Loading</div>
             ) : (

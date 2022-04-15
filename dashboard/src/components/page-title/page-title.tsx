@@ -25,7 +25,7 @@ const PageTitle = (props: { title: string }) => {
                 </div>
                 <div className="flex-fill">
                     <div className="d-flex align-items-center justify-content-between">
-                        <h3 className="mb-0 bg-black-opacity-85">{title}</h3>
+                        <h3 className="mb-0">{title}</h3>
                         <div className="d-flex">
                             {/* <a
                                 href=""

@@ -1,4 +1,3 @@
-import styles from './devices.module.scss';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@/hooks/query.hook';
@@ -25,7 +24,7 @@ const Devices = () => {
 
     return (
         // UI 結構等設計稿後再重構調整
-        <div className={`${styles.devices} `} data-testid="Devices">
+        <div className="devices" data-testid="Devices">
             <PageTitle title="裝置列表" />
             {isLoading || devices === null ? (
                 <div>Loading</div>

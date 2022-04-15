@@ -1,4 +1,3 @@
-import 'bootstrap/scss/bootstrap.scss';
 import './app.scss';
 import { Outlet } from 'react-router-dom';
 import { CookieHelpers } from './helpers/cookie.helper';
@@ -27,7 +26,7 @@ const App = () => {
         <div className="dashboard" data-testid="Dashboard">
             <div className="d-flex">
                 <Header />
-                <div className="content position-relative container-fluid overflow-scroll px-0 ">
+                <div className="content position-relative container-fluid overflow-scroll px-0 bg-grey-150">
                     <Outlet />
                     <Footer />
                 </div>

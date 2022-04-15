@@ -1,4 +1,3 @@
-@import 'bootstrap/scss/bootstrap.scss';
 @import 'overwrite.scss';
 @import 'zindex.scss';
 
@@ -31,7 +30,7 @@ h5,
 .h4,
 .h5 {
     font-weight: 600;
-    color: rgba(0, 0, 0, map-get($opacity, 85));
+    color: rgba(0, 0, 0, map-get($opacity, 65));
 }
 
 .text-sm {

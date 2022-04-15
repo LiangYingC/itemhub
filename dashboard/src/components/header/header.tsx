@@ -20,7 +20,7 @@ const Header = () => {
         <div
             className={`${
                 isOpen ? 'open' : ''
-            } position-relative bg-white flex-shrink-0 header`}
+            } position-relative flex-shrink-0 header`}
             data-testid="Header"
         >
             <div className="menu d-flex align-items-start">

@@ -130,7 +130,7 @@ const Device = () => {
                 </div>
             )}
             <div>
-                <Link to="../devices">Back to device list</Link>
+                <Link to="../dashboard/devices">Back to device list</Link>
             </div>
         </div>
     );

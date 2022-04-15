@@ -21,18 +21,18 @@ const Header = () => {
                 <div className="space position-absolute bg-black-opacity-65 d-md-none" />
                 <div className="head-nav flex-shrink-0 position-relative">
                     <div className="py-4 px-3">
-                        <div className="d-flex justify-content-between align-items-center mt-1 px-3">
+                        <div className="d-flex justify-content-between align-items-center px-3">
                             <a
                                 href="/"
                                 className="logo d-flex align-items-center"
                             >
                                 <img
                                     className="icon"
-                                    src="src/assets/images/logo.svg"
+                                    src="/src/assets/images/logo.svg"
                                 />
                                 <img
                                     className="text ms-3 logo-text"
-                                    src="src/assets/images/logo-wording.svg"
+                                    src="/src/assets/images/logo-wording.svg"
                                 />
                             </a>
 
@@ -55,7 +55,7 @@ const Header = () => {
                             >
                                 <img
                                     className=""
-                                    src="src/assets/images/icon-dashboard.svg"
+                                    src="/src/assets/images/icon-dashboard.svg"
                                 />
                                 <span className="lh-1 ps-2">Dashboard</span>
                             </Link>
@@ -65,7 +65,7 @@ const Header = () => {
                             >
                                 <img
                                     className=""
-                                    src="src/assets/images/icon-trigger.svg"
+                                    src="/src/assets/images/icon-trigger.svg"
                                 />
                                 <span className="lh-1 ps-2">Trigger</span>
                             </Link>
@@ -75,7 +75,7 @@ const Header = () => {
                             >
                                 <img
                                     className=""
-                                    src="src/assets/images/icon-oauthClient.svg"
+                                    src="/src/assets/images/icon-oauthClient.svg"
                                 />
                                 <span className="lh-1 ps-2">oAuthClient</span>
                             </Link>
@@ -85,7 +85,7 @@ const Header = () => {
                             >
                                 <img
                                     className=""
-                                    src="src/assets/images/icon-device.svg"
+                                    src="/src/assets/images/icon-device.svg"
                                 />
                                 <span className="lh-1 ps-2">Device</span>
                             </Link>

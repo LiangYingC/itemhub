@@ -33,7 +33,7 @@ const PageTitle = (props: { title: string }) => {
                             >
                                 <img
                                     className="icon pe-2"
-                                    src="src/assets/images/icon-refresh.svg"
+                                    src="/src/assets/images/icon-refresh.svg"
                                 />
                                 <div className="lh-1 py-1">重新整理</div>
                             </a>
@@ -43,7 +43,7 @@ const PageTitle = (props: { title: string }) => {
                             >
                                 <img
                                     className="icon pe-2"
-                                    src="src/assets/images/icon-plus.svg"
+                                    src="/src/assets/images/icon-plus.svg"
                                 />
                                 <div className="lh-1 py-1">新增裝置</div>
                             </a> */}

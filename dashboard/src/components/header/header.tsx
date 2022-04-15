@@ -51,13 +51,13 @@ const Header = () => {
                         <div className="py-2">
                             <Link
                                 to="/dashboard/"
-                                className="d-flex align-items-center text-white p-3 rounded-2 d-none" //目前沒有功能先隱藏起來
+                                className="d-flex align-items-center text-white p-3 rounded-2"
                             >
                                 <img
                                     className=""
                                     src="/src/assets/images/icon-dashboard.svg"
                                 />
-                                <span className="lh-1 ps-2">監控面板</span>
+                                <span className="lh-1 ps-2">監控中心</span>
                             </Link>
                             <Link
                                 to="/dashboard/devices"

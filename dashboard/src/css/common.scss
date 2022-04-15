@@ -138,4 +138,15 @@ a.btn {
     }
 }
 
+.hamburger {
+    width: 2.5em;
+    margin-top: -6px;
+
+    > div {
+        border: none;
+        height: 2.5px;
+        margin-top: 6px;
+    }
+}
+
 /* purgecss end ignore */

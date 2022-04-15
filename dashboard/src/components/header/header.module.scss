@@ -8,7 +8,7 @@ $user-height: 94px;
 
 .header {
     &.open {
-        .nav {
+        .head-nav {
             max-width: 18em;
             transition: 0.3s ease-in-out;
             transform: translateX(0);
@@ -25,7 +25,7 @@ $user-height: 94px;
         }
     }
 
-    .nav {
+    .head-nav {
         width: $nav-w;
         max-width: 0;
         height: 100vh;
@@ -72,17 +72,6 @@ $user-height: 94px;
             .float-header {
                 height: $header-height;
             }
-        }
-    }
-
-    .hamburger {
-        width: 2.5em;
-        margin-top: -6px;
-
-        > div {
-            border: none;
-            height: 2.5px;
-            margin-top: 6px;
         }
     }
 }

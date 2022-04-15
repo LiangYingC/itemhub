@@ -10,6 +10,7 @@ import { useAppSelector } from '@/hooks/redux.hook';
 import { selectDevices } from '@/redux/reducers/devices.reducer';
 import Pins from '@/components/pins/pins';
 import { RESPONSE_STATUS } from '@/constants/api';
+import PageTitle from '@/components/page-title/page-title';
 
 const Device = () => {
     const { id } = useParams();
@@ -65,6 +66,7 @@ const Device = () => {
     return (
         // UI 結構等設計稿後再重構調整
         <div className={styles.device} data-testid="device">
+            <PageTitle title={`裝置 - ${deviceName}`} />
             {isLoading || device === null ? (
                 <div>Loading</div>
             ) : (

@@ -6,6 +6,7 @@ import { useAppSelector } from '@/hooks/redux.hook';
 import { useGetDevicesApi } from '@/hooks/apis/devices.hook';
 import { selectDevices } from '@/redux/reducers/devices.reducer';
 import Pins from '@/components/pins/pins';
+import PageTitle from '@/components/page-title/page-title';
 
 const Devices = () => {
     const query = useQuery();
@@ -25,6 +26,7 @@ const Devices = () => {
     return (
         // UI 結構等設計稿後再重構調整
         <div className={`${styles.devices} `} data-testid="Devices">
+            <PageTitle title="裝置列表" />
             {isLoading || devices === null ? (
                 <div>Loading</div>
             ) : (

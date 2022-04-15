@@ -18,10 +18,10 @@ const Header = () => {
             data-testid="Header"
         >
             <div className="menu d-flex align-items-start">
-                <div className="space position-absolute bg-black-opacity-65" />
-                <div className="nav flex-shrink-0 position-relative">
+                <div className="space position-absolute bg-black-opacity-65 d-md-none" />
+                <div className="head-nav flex-shrink-0 position-relative">
                     <div className="py-4 px-3">
-                        <div className="d-flex justify-content-between align-items-center mt-2 px-3">
+                        <div className="d-flex justify-content-between align-items-center mt-1 px-3">
                             <a
                                 href="/"
                                 className="logo d-flex align-items-center"

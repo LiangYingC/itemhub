@@ -18,10 +18,10 @@ const Header = () => {
             data-testid="Header"
         >
             <div className="menu d-flex align-items-start">
-                <div className="space position-absolute bg-black-opacity-65 d-md-none" />
+                <div className="space position-absolute bg-black bg-opacity-65 d-md-none" />
                 <div className="head-nav flex-shrink-0 position-relative">
-                    <div className="py-4 px-3">
-                        <div className="d-flex justify-content-between align-items-center px-3">
+                    <div className="overflow-hidden logo-block py-4 px-3">
+                        <div className="d-flex justify-content-between align-items-center px-3 ">
                             <Link
                                 to="/dashboard/"
                                 className="logo d-flex align-items-center"
@@ -31,7 +31,7 @@ const Header = () => {
                                     src="/src/assets/images/logo.svg"
                                 />
                                 <img
-                                    className="text ms-3 logo-text"
+                                    className="text ms-25 logo-text"
                                     src="/src/assets/images/logo-wording.svg"
                                 />
                             </Link>
@@ -51,49 +51,49 @@ const Header = () => {
                         <div className="py-2">
                             <Link
                                 to="/dashboard/"
-                                className="d-flex align-items-center text-white p-3 rounded-2"
+                                className="d-flex align-items-center text-white text-opacity-85 text-decoration-none p-3"
                             >
                                 <img
                                     className=""
                                     src="/src/assets/images/icon-dashboard.svg"
                                 />
-                                <span className="lh-1 ps-2">監控中心</span>
+                                <span className="lh-1 ps-25">監控中心</span>
                             </Link>
                             <Link
                                 to="/dashboard/devices"
-                                className="d-flex align-items-center text-white p-3"
+                                className="d-flex align-items-center text-white text-opacity-85 text-decoration-none p-3"
                             >
                                 <img
                                     className=""
                                     src="/src/assets/images/icon-device.svg"
                                 />
-                                <span className="lh-1 ps-2">裝置</span>
+                                <span className="lh-1 ps-25">裝置</span>
                             </Link>
 
                             <Link
                                 to="/dashboard/triggers"
-                                className="d-flex align-items-center text-white p-3"
+                                className="d-flex align-items-center text-white text-opacity-85 text-decoration-none p-3"
                             >
                                 <img
                                     className=""
                                     src="/src/assets/images/icon-trigger.svg"
                                 />
-                                <span className="lh-1 ps-2">觸發</span>
+                                <span className="lh-1 ps-25">觸發</span>
                             </Link>
                             <Link
                                 to="/dashboard/oauth-clients"
-                                className="d-flex align-items-center text-white p-3"
+                                className="d-flex align-items-center text-white text-opacity-85 text-decoration-none p-3"
                             >
                                 <img
                                     className=""
                                     src="/src/assets/images/icon-oauthClient.svg"
                                 />
-                                <span className="lh-1 ps-2">oAuthClient</span>
+                                <span className="lh-1 ps-25">oAuthClient</span>
                             </Link>
                         </div>
                     </div>
                     <div className="position-absolute bottom-0 end-0 w-100">
-                        <div className="user text-white p-3">
+                        <div className="user text-white text-opacity-85 p-3">
                             <div className="p-3">UserName</div>
                         </div>
                     </div>

@@ -9,7 +9,7 @@ $user-height: 94px;
 .header {
     &.open {
         .head-nav {
-            max-width: 18em;
+            max-width: $nav-w;
             transition: 0.3s ease-in-out;
             transform: translateX(0);
             overflow: hidden;
@@ -21,12 +21,13 @@ $user-height: 94px;
             top: 0;
             left: 0;
             z-index: $nav-space-z-index;
-            background: $black-opacity25;
         }
+    }
+    .logo-block {
+        width: $nav-w;
     }
 
     .head-nav {
-        width: $nav-w;
         max-width: 0;
         height: 100vh;
         top: 0;
@@ -38,6 +39,7 @@ $user-height: 94px;
         z-index: $nav-z-index;
 
         .item {
+            width: $nav-w;
             height: calc(100vh - $logo-height - $user-height);
             overflow: scroll;
 
@@ -62,16 +64,6 @@ $user-height: 94px;
 
         .user {
             border-top: 1px solid $white-opacity-15;
-        }
-
-        .mobile-nav {
-            backdrop-filter: blur(24px) contrast(0.6);
-            -webkit-backdrop-filter: blur(24px) contrast(0.6);
-            background-color: rgba($dark, 0.75);
-
-            .float-header {
-                height: $header-height;
-            }
         }
     }
 }

@@ -8,6 +8,7 @@ using Microsoft.Extensions.Options;
 
 using Homo.Core.Constants;
 using Homo.Core.Helpers;
+using Homo.Api;
 
 namespace Homo.AuthApi
 {
@@ -37,6 +38,7 @@ namespace Homo.AuthApi
         }
 
         [Route("register-for-early-bird")]
+        [SwaggerUiInvisibility]
         [AuthorizeFactory(AUTH_TYPE.SIGN_UP)]
         [HttpPost]
         public ActionResult<dynamic> registerForEarlyBird([FromBody] DTOs.SignUp dto, DTOs.JwtExtraPayload extraPayload)
@@ -68,7 +70,8 @@ namespace Homo.AuthApi
                 LineSub = user.LineSub,
                 Profile = user.Profile,
                 PseudonymousPhone = pseudoPhone,
-                PseudonymousAddress = user.PseudonymousAddress
+                PseudonymousAddress = user.PseudonymousAddress,
+                IsOverSubscriptionPlan = user.IsOverSubscriptionPlan
             };
 
             List<ViewRelationOfGroupAndUser> permissions = RelationOfGroupAndUserDataservice.GetRelationByUserId(_dbContext, extraPayload.Id);

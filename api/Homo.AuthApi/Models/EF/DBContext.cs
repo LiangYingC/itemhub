@@ -24,6 +24,13 @@ namespace Homo.AuthApi
             {
                 entity.HasIndex(p => new { p.Email }).IsUnique();
                 entity.HasIndex(p => new { p.HashPhone });
+                entity.Property(b => b.IsOverSubscriptionPlan)
+                    .HasDefaultValueSql("0");
+                entity.Property(b => b.SendOverPlanNotificationCount)
+                    .HasDefaultValueSql("0");
+                entity.Property(b => b.IsEarlyBird)
+                    .HasDefaultValueSql("0");
+
             });
 
             modelBuilder.Entity<VerifyCode>(entity =>

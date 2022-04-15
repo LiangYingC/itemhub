@@ -34,14 +34,11 @@
         border: 1px solid rgba($black, 0.25);
         border-radius: 0.25rem;
         height: 3rem;
+        padding: 0rem 1rem;
 
         &:focus {
             background-color: transparent;
             border-color: #30a7df;
-        }
-
-        iframe {
-            padding: 0rem 1rem;
         }
     }
 }

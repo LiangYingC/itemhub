@@ -66,7 +66,7 @@ namespace Homo.AuthApi
             public string Password { get; set; }
         }
 
-        public class SendResetPasswordLink
+        public class SendResetPasswordMail
         {
             [Required]
             [MaxLength(64)]

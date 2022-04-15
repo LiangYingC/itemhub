@@ -61,6 +61,7 @@ $primary-300: #9de8ff;
 $primary-200: #d3f5ff;
 $primary-100: #e9faff;
 $green: #14ffca;
+$warn: #f39c06;
 
 $grey-800: #13151f;
 $grey-700: #1e202b;
@@ -106,6 +107,7 @@ $theme-colors: (
     'grey-800': $grey-800,
     'purple': $purple,
     'green': $green,
+    'warn': $warn,
 );
 
 @import 'bootstrap/scss/_utilities.scss';

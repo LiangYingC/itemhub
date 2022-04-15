@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
-import pinsReducer from './reducers/pins.reducer';
+import universalReducer from './reducers/universal.reducer';
 import devicesReducer from './reducers/devices.reducer';
 import oauthClientsReducer from './reducers/oauth-clients.reducer';
 import triggersReducer from './reducers/triggers.reducer';
+import pinsReducer from './reducers/pins.reducer';
 
 const store = configureStore({
     reducer: {
+        universal: universalReducer,
         devices: devicesReducer,
         oauthClients: oauthClientsReducer,
         triggers: triggersReducer,

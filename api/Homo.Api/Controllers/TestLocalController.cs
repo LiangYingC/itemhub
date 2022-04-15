@@ -4,6 +4,7 @@ using Homo.Core.Constants;
 namespace Homo.Api
 {
     [Route("v1/localization")]
+    [SwaggerUiInvisibility]
     public class TestLocalController
     {
         private CommonLocalizer _commonLocalizer;

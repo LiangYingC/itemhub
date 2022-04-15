@@ -69,9 +69,12 @@ h5,
     right: 100px;
     z-index: 10000;
     padding-bottom: 20px;
-    @media only screen and (max-width: 992) {
-        top: auto;
-        bottom: 20px;
+    @include media-breakpoint-down(md) {
+        right: 20px;
+    }
+    @include media-breakpoint-down(sm) {
+        right: auto;
+        width: 100%;
     }
 }
 
@@ -90,6 +93,11 @@ h5,
     padding-left: 36px;
     padding-top: 55px;
     border: 1px solid #2c2c2c;
+
+    @include media-breakpoint-down(sm) {
+        margin: 0 auto;
+        width: calc(100% - 20px);
+    }
 }
 
 .toaster-item.show {

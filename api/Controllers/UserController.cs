@@ -2,10 +2,12 @@
 using Homo.AuthApi;
 using Homo.Core.Constants;
 using Homo.Core.Helpers;
+using Homo.Api;
 
 namespace Homo.IotApi
 {
     [Route("v1/users")]
+    [SwaggerUiInvisibility]
     public class UserController : ControllerBase
     {
         private readonly DBContext _dbContext;

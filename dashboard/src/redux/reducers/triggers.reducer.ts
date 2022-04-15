@@ -47,6 +47,19 @@ export const triggersSlice = createSlice({
                 triggers,
             };
         },
+        addTrigger: (state, action: PayloadAction<TriggerItem>) => {
+            let triggers = state.triggers;
+            const newTrigger = action.payload;
+
+            if (triggers === null) {
+                triggers = [];
+            }
+
+            return {
+                ...state,
+                oauthClients: [newTrigger, ...triggers],
+            };
+        },
         updateTrigger: (state, action: PayloadAction<Partial<TriggerItem>>) => {
             const triggers = state.triggers;
             const newTrigger = action.payload;

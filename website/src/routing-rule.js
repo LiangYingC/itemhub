@@ -1,6 +1,7 @@
 import { APP_CONFIG } from './config.js';
 // TODO :「隱私權政策」內容寫完後，可以打開，並加上 RoutingRule 相關設定
 // import { AboutController } from './controllers/about.controller.js';
+import { AgreementsController } from './controllers/agreements.controller.js';
 import { OauthController } from './controllers/oauth.controller.js';
 import { CheckoutController } from './controllers/checkout.controller.js';
 import { CooperationController } from './controllers/cooperation.controller.js';
@@ -103,14 +104,17 @@ export const RoutingRule = [{
                     return {
                         id: null,
                         name: '',
-                        email: ''
+                        email: '',
+                        isOverSubscriptionPlan: false
                     };
                 }
+
                 const extra = window.jwt_decode(args.token).extra;
                 return {
                     id: extra.Id,
                     name: `${extra.LastName || ''}${extra.FirstName || ''}`,
-                    email: extra.Email
+                    email: extra.Email,
+                    isOverSubscriptionPlan: extra.IsOverSubscriptionPlan
                 };
             }
         }, {
@@ -202,6 +206,10 @@ export const RoutingRule = [{
                     }
                 }]
 
+            }, {
+                path: 'agreements/',
+                controller: AgreementsController,
+                html: '/template/agreements.html'
             }]
         }]
     }]

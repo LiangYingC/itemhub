@@ -247,6 +247,9 @@ namespace IotApi.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<long?>("DeviceId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("HashClientSecrets")
                         .IsRequired()
                         .HasMaxLength(4096)
@@ -263,6 +266,8 @@ namespace IotApi.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ClientId");
+
+                    b.HasIndex("DeviceId");
 
                     b.HasIndex("OwnerId");
 
@@ -397,6 +402,31 @@ namespace IotApi.Migrations
                     b.HasIndex("TransactionId");
 
                     b.ToTable("Subscription");
+                });
+
+            modelBuilder.Entity("Homo.IotApi.SystemConfig", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("varchar(64)");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("varchar(64)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Key");
+
+                    b.HasIndex("Value");
+
+                    b.ToTable("SystemConfig");
                 });
 
             modelBuilder.Entity("Homo.IotApi.ThirdPartyPaymentFlow", b =>

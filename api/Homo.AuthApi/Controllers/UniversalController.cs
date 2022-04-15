@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
+using Homo.Api;
 
 namespace Homo.AuthApi
 {
     [Route("v1/universal")]
+    [SwaggerUiInvisibility]
     public class UniversalController : ControllerBase
     {
 

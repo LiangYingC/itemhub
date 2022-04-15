@@ -8,6 +8,7 @@ using Microsoft.Extensions.Options;
 namespace Homo.AuthApi
 {
     [Route("v1/me")]
+    [SwaggerUiInvisibility]
     [AuthorizeFactory]
     public class MeUpdateInfoController : ControllerBase
     {

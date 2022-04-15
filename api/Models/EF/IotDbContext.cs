@@ -33,6 +33,7 @@ namespace Homo.IotApi
         public virtual DbSet<Transaction> Transaction { get; set; }
         public virtual DbSet<ThirdPartyPaymentFlow> ThirdPartyPaymentFlow { get; set; }
         public virtual DbSet<DeviceActivityLog> DeviceActivityLog { get; set; }
+        public virtual DbSet<SystemConfig> SystemConfig { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -47,6 +48,7 @@ namespace Homo.IotApi
                 entity.HasIndex(p => new { p.OwnerId });
                 entity.HasIndex(p => new { p.OwnerId, p.ClientId, p.DeletedAt }).IsUnique();
                 entity.HasIndex(p => new { p.ClientId, p.DeletedAt }).IsUnique();
+                entity.HasIndex(p => new { p.DeviceId });
             });
 
             modelBuilder.Entity<Device>(entity =>
@@ -129,6 +131,12 @@ namespace Homo.IotApi
                 entity.HasIndex(p => new { p.CreatedAt });
                 entity.HasIndex(p => new { p.OwnerId });
                 entity.HasIndex(p => new { p.DeviceId });
+            });
+
+            modelBuilder.Entity<SystemConfig>(entity =>
+            {
+                entity.HasIndex(p => new { p.Key });
+                entity.HasIndex(p => new { p.Value });
             });
 
             OnModelCreatingPartial(modelBuilder);

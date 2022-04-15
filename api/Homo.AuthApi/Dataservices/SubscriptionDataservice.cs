@@ -45,7 +45,7 @@ namespace Homo.IotApi
             return dbContext.Subscription
                 .Where(x =>
                     x.DeletedAt == null
-                    && x.StopNextSubscribed
+                    && !x.StopNextSubscribed
                     && x.EndAt > filterStartAt // 當前時間減一個月確定前一期是否有資料
                     && !dbContext.Subscription.Any(y => nextStartAt >= y.StartAt && nextStartAt <= y.EndAt) // 同時沒有當期的資料
                 )

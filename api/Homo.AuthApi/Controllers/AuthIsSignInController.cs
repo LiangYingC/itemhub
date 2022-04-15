@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Homo.Api;
 
 namespace Homo.AuthApi
 {
@@ -17,6 +18,7 @@ namespace Homo.AuthApi
         }
 
         [Route("is-sign-in")]
+        [SwaggerUiInvisibility]
         [HttpPost]
         public dynamic isSignIn()
         {

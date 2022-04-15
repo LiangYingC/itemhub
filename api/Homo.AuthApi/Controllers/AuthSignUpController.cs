@@ -8,10 +8,12 @@ using Microsoft.Extensions.Options;
 
 using Homo.Core.Constants;
 using Homo.Core.Helpers;
+using Homo.Api;
 
 namespace Homo.AuthApi
 {
     [Route("v1/auth")]
+    [SwaggerUiInvisibility]
     [Homo.Api.Validate]
     public class AuthSignUpController : ControllerBase
     {
@@ -125,7 +127,8 @@ namespace Homo.AuthApi
                 LineSub = newUser.LineSub,
                 Profile = newUser.Profile,
                 PseudonymousPhone = newUser.PseudonymousPhone,
-                PseudonymousAddress = newUser.PseudonymousAddress
+                PseudonymousAddress = newUser.PseudonymousAddress,
+                IsOverSubscriptionPlan = newUser.IsOverSubscriptionPlan
             };
 
             List<ViewRelationOfGroupAndUser> permissions = RelationOfGroupAndUserDataservice.GetRelationByUserId(_dbContext, newUser.Id);

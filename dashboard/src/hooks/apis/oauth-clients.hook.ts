@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 import { useAppDispatch } from '@/hooks/redux.hook';
 import { useFetchApi } from '@/hooks/apis/fetch.hook';
 import { oauthClientsActions } from '@/redux/reducers/oauth-clients.reducer';
+import { ApiHelpers } from '@/helpers/api.helper';
 import {
     API_URL,
     END_POINT,
@@ -33,7 +34,14 @@ export const useGetOauthClients = ({
         [dispatch]
     );
 
-    const apiPath = `${API_URL}${END_POINT.OAUTH_CLIENTS}?page=${page}&limit=${limit}`;
+    const apiPath = ApiHelpers.AppendQueryStrings({
+        basicPath: `${API_URL}${END_POINT.OAUTH_CLIENTS}`,
+        queryStrings: {
+            page,
+            limit,
+            isDeviceClient: false,
+        },
+    });
 
     return useFetchApi<PaginationOauthClientType>({
         apiPath,

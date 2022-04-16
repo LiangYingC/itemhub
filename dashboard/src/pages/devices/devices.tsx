@@ -6,6 +6,7 @@ import { useGetDevicesApi } from '@/hooks/apis/devices.hook';
 import { selectDevices } from '@/redux/reducers/devices.reducer';
 import Pins from '@/components/pins/pins';
 import PageTitle from '@/components/page-title/page-title';
+import moment from 'moment';
 
 const Devices = () => {
     const query = useQuery();
@@ -26,33 +27,90 @@ const Devices = () => {
         // UI 結構等設計稿後再重構調整
         <div className="devices" data-testid="Devices">
             <PageTitle title="裝置列表" />
-            {isLoading || devices === null ? (
-                <div>Loading</div>
-            ) : (
-                devices.map(({ id, name, createdAt, online }) => (
-                    <div
-                        className="mb-3 border w-50"
-                        key={id}
-                        title={`建立時間: ${createdAt}`}
-                    >
-                        <div className="d-flex">
-                            <div className="me-3 h2">{name}</div>
-                            <div className="me-3">
-                                {online ? '在線' : '離線'}
-                            </div>
-                            <Link
-                                className="me-3"
-                                to={`/dashboard/devices/${id}`}
-                            >
-                                編輯
-                            </Link>
+            <div className="card mx-4 p-45">
+                <div className="filter" />
+                {isLoading || devices === null ? (
+                    <div>Loading</div>
+                ) : (
+                    <>
+                        <div className="row bg-black-opacity-04 text-black-opacity-45 h6 py-25 mb-0">
+                            <div className="col-3">裝置名稱 / ID</div>
+                            <div className="col-1">狀態</div>
+                            <div className="col-2">建立時間</div>
+                            <div className="col-3">Pins Data</div>
+                            <div className="col-3">操作</div>
                         </div>
-
-                        <Pins deviceId={Number(id)} isEditMode={false} />
-                    </div>
-                ))
-            )}
-            <button onClick={getDevicesApi}>refresh device list</button>
+                        {devices.map(
+                            ({ id, deviceId, name, createdAt, online }) => (
+                                <div
+                                    className="row py-4"
+                                    key={id}
+                                    title={`建立時間: ${createdAt}`}
+                                >
+                                    <div className="col-3">
+                                        <h5 className="mb-0">{name}</h5>
+                                        <h6 className="mb-0 text-black text-opacity-45">
+                                            {deviceId}
+                                        </h6>
+                                    </div>
+                                    <div className="col-1">
+                                        <div
+                                            className={`rounded-pill tag text-center py-1 d-flex align-items-center justify-content-center ${
+                                                online
+                                                    ? 'bg-green bg-opacity-10 text-green'
+                                                    : 'bg-black bg-opacity-5 text-black text-opacity-45'
+                                            }`}
+                                        >
+                                            <div
+                                                className={`dot rounded-circle d-block me-2 ${
+                                                    online
+                                                        ? 'bg-green'
+                                                        : 'bg-black bg-opacity-45'
+                                                }`}
+                                            />
+                                            {online ? '上線' : '離線'}
+                                        </div>
+                                    </div>
+                                    <div className="col-2">
+                                        {moment(createdAt).format(
+                                            'YYYY-MM-DD HH:mm'
+                                        )}
+                                    </div>
+                                    <div className="col-3">
+                                        <Pins
+                                            deviceId={Number(id)}
+                                            isEditMode={false}
+                                        />
+                                    </div>
+                                    <div className="col-3 d-flex align-item-center justify-content-start">
+                                        <Link
+                                            className="me-4"
+                                            to={`/dashboard/devices/${id}`}
+                                        >
+                                            <img
+                                                className="icon"
+                                                src="/src/assets/images/pencil.svg"
+                                            />
+                                        </Link>
+                                        <div className="me-4" role="button">
+                                            <img
+                                                className="icon"
+                                                src="/src/assets/images/cloud.svg"
+                                            />
+                                        </div>
+                                        <div className="me-4" role="button">
+                                            <img
+                                                className="icon"
+                                                src="/src/assets/images/trash.svg"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            )
+                        )}
+                    </>
+                )}
+            </div>
         </div>
     );
 };

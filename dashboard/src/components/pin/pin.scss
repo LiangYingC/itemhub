@@ -1,2 +1,23 @@
+@import '../../css/overwrite.scss';
+
 .pin {
+    $button-size: 15px;
+    .toggle-button {
+        width: $button-size * 2;
+        height: $button-size;
+        outline: 2px solid rgba($black, 0.25);
+
+        .button-head {
+            transition: transform 0.2s ease-in-out;
+            width: $button-size;
+            height: $button-size;
+        }
+
+        &.active {
+            outline-color: $green;
+            .button-head {
+                transform: translateX(calc(50% + (#{$button-size} / 2)));
+            }
+        }
+    }
 }

@@ -10,6 +10,8 @@ const PageTitle = (props: {
     secondaryButtonWording?: string;
     primaryButtonCallback?: () => void;
     secondaryButtonCallback?: () => void;
+    primaryButtonIcon?: string;
+    primaryButtonClassName?: string;
 }) => {
     const {
         title,
@@ -19,6 +21,8 @@ const PageTitle = (props: {
         primaryButtonWording,
         secondaryButtonCallback,
         secondaryButtonWording,
+        primaryButtonIcon,
+        primaryButtonClassName,
     } = props;
     const isOpen = useAppSelector(selectMenu).menu.isOpen;
     const dispatch = useAppDispatch();
@@ -47,11 +51,16 @@ const PageTitle = (props: {
                                 onClick={primaryButtonCallback}
                                 className={`${
                                     primaryButtonVisible ? '' : 'd-none'
-                                } d-flex align-items-center btn bg-light border border-secondary rounded-pill px-3 py-2`}
+                                } ${
+                                    primaryButtonClassName || 'bg-light'
+                                } d-flex align-items-center btn border border-secondary rounded-pill px-3 py-2`}
                             >
                                 <img
                                     className="icon pe-2"
-                                    src="/src/assets/images/icon-refresh.svg"
+                                    src={
+                                        primaryButtonIcon ||
+                                        '/src/assets/images/icon-refresh.svg'
+                                    }
                                 />
                                 <div className="lh-1 py-1">
                                     {primaryButtonWording}

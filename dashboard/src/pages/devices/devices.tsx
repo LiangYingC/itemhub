@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useQuery } from '@/hooks/query.hook';
 import { useAppSelector } from '@/hooks/redux.hook';
 import { useGetDevicesApi } from '@/hooks/apis/devices.hook';
@@ -16,6 +16,7 @@ const Devices = () => {
     const page = Number(query.get('page') || 1);
     const limit = Number(query.get('limit') || 20);
     const devices = useAppSelector(selectDevices);
+    const navigate = useNavigate();
 
     const { isLoading, getDevicesApi } = useGetDevicesApi({
         page,
@@ -26,10 +27,26 @@ const Devices = () => {
         getDevicesApi();
     }, []);
 
+    const refresh = () => {
+        getDevicesApi();
+    };
+
+    const jumpToCreatePage = () => {
+        navigate('create');
+    };
+
     return (
         // UI 結構等設計稿後再重構調整
         <div className="devices" data-testid="Devices">
-            <PageTitle title="裝置列表" />
+            <PageTitle
+                title="裝置列表"
+                primaryButtonVisible
+                secondaryButtonVisible
+                primaryButtonWording="重新整理"
+                primaryButtonCallback={refresh}
+                secondaryButtonWording="新增裝置"
+                secondaryButtonCallback={jumpToCreatePage}
+            />
             <div className="bg-white shadow-sm mx-3 mx-sm-0 mx-xl-45 mt-4 mt-sm-0 p-3 p-sm-45 rounded-8">
                 <div className="d-flex filter">
                     <input

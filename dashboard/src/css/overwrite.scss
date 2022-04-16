@@ -177,6 +177,11 @@ $utilities: map-merge(
             class: 'rounded',
             values: $rounded,
         ),
+        'border-color': (
+            property: border-color,
+            class: border,
+            values: map-merge($theme-colors, ()),
+        ),
     )
 );
 

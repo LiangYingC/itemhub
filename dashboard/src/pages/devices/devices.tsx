@@ -7,6 +7,9 @@ import { selectDevices } from '@/redux/reducers/devices.reducer';
 import Pins from '@/components/pins/pins';
 import PageTitle from '@/components/page-title/page-title';
 import moment from 'moment';
+import pencilIcon from '@/assets/images/pencil.svg';
+import cloudIcon from '@/assets/images/cloud.svg';
+import trashIcon from '@/assets/images/trash.svg';
 
 const Devices = () => {
     const query = useQuery();
@@ -89,19 +92,19 @@ const Devices = () => {
                                         >
                                             <img
                                                 className="icon"
-                                                src="/src/assets/images/pencil.svg"
+                                                src={pencilIcon}
                                             />
                                         </Link>
                                         <div className="me-4" role="button">
                                             <img
                                                 className="icon"
-                                                src="/src/assets/images/cloud.svg"
+                                                src={cloudIcon}
                                             />
                                         </div>
                                         <div className="me-4" role="button">
                                             <img
                                                 className="icon"
-                                                src="/src/assets/images/trash.svg"
+                                                src={trashIcon}
                                             />
                                         </div>
                                     </div>

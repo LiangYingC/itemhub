@@ -1,21 +1,9 @@
-import styles from './dashboard.module.scss';
-import { Link, Outlet } from 'react-router-dom';
-import Header from '@/components/header/header';
-import Footer from '@/components/footer/footer';
+import PageTitle from '@/components/page-title/page-title';
 
 const Dashboard = () => {
     return (
-        <div className={`${styles.dashboard}`} data-testid="Dashboard">
-            <div>
-                <Header />
-                <nav className="mx-3">
-                    <Link to="/dashboard/devices">Devices</Link> |{' '}
-                    <Link to="/dashboard/triggers">Triggers</Link> |{' '}
-                    <Link to="/dashboard/oauth-clients">oAuth Clients</Link>
-                </nav>
-                <Outlet />
-                <Footer />
-            </div>
+        <div className="dashboard" data-testid="Dashboard">
+            <PageTitle title="監控中心" />
         </div>
     );
 };

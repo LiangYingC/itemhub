@@ -1,4 +1,3 @@
-import styles from './pagination.module.scss';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -16,7 +15,7 @@ const Pagination = (props: { rowNum: number; limit: number; page: number }) => {
     }, [rowNum, limit]);
 
     return (
-        <div className={styles.pagination} data-testid="pagination">
+        <div className="pagination" data-testid="pagination">
             {pages.map((pageNumber) =>
                 pageNumber === page ? (
                     <span key={pageNumber} className="p-2">

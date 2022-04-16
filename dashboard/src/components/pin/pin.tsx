@@ -17,6 +17,7 @@ const Pin = (props: { pinItem: PinItem; isEditMode: boolean }) => {
     } = pinItem;
     const [value, setValue] = useState(valueFromPorps);
     const [name, setName] = useState(nameFromProps);
+    const [isInitialized, setIsInitialized] = useState(false);
     const isNameChangedRef = useRef(false);
     const isSwitch = mode === 1;
 
@@ -49,11 +50,15 @@ const Pin = (props: { pinItem: PinItem; isEditMode: boolean }) => {
     };
 
     useEffect(() => {
-        if (value && !isSwitch) {
+        if (!isInitialized || value === undefined || !isSwitch) {
             return;
         }
         updateDeviceSwitchPinApi();
     }, [value, isSwitch]);
+
+    useEffect(() => {
+        setIsInitialized(true);
+    }, []);
 
     return (
         <div

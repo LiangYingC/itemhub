@@ -53,8 +53,6 @@ export const useFetchApi = <T>({
                 location.href = `${
                     import.meta.env.VITE_WEBSITE_URL
                 }/auth/two-factor-auth/`;
-            } else {
-                alert(errorKey);
             }
 
             // TODO: or just use error data to show on error section.

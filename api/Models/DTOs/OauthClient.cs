@@ -10,6 +10,8 @@ namespace Homo.IotApi
             [Required]
             [MaxLength(128)]
             public string ClientId { get; set; }
+
+            public long? DeviceId { get; set; }
         }
     }
 }

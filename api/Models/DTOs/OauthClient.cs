@@ -7,7 +7,6 @@ namespace Homo.IotApi
     {
         public partial class OauthClient : DTOs
         {
-            [Required]
             [MaxLength(128)]
             public string ClientId { get; set; }
 

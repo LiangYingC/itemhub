@@ -25,7 +25,7 @@ namespace Homo.IotApi
             return new
             {
                 oauthClients = records,
-                rowNum = OauthClientDataservice.GetRowNum(_dbContext, ownerId)
+                rowNum = OauthClientDataservice.GetRowNum(_dbContext, ownerId, isDeviceClient, null)
             };
         }
 
@@ -33,11 +33,25 @@ namespace Homo.IotApi
         public ActionResult<dynamic> create([FromBody] DTOs.OauthClient dto, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
             long ownerId = extraPayload.Id;
+            if (dto.ClientId == null || dto.ClientId == "")
+            {
+                dto.ClientId = CryptographicHelper.GetSpecificLengthRandomString(64, true);
+            }
             OauthClient client = OauthClientDataservice.GetOneByClientId(_dbContext, dto.ClientId);
             if (client != null)
             {
                 throw new CustomException(ERROR_CODE.DUPLICATE_OAUTH_CLIENT_ID, System.Net.HttpStatusCode.BadRequest);
             }
+
+            if (dto.DeviceId != null)
+            {
+                OauthClient clientFromDeviceId = OauthClientDataservice.GetOneByDeviceId(_dbContext, extraPayload.Id, dto.DeviceId.GetValueOrDefault());
+                if (clientFromDeviceId != null)
+                {
+                    throw new CustomException(ERROR_CODE.DUPLICATE_OAUTH_CLIENT_ID, System.Net.HttpStatusCode.BadRequest);
+                }
+            }
+
 
             string clientSecret = CryptographicHelper.GetSpecificLengthRandomString(64, true, false);
             string salt = CryptographicHelper.GetSpecificLengthRandomString(128, false, false);

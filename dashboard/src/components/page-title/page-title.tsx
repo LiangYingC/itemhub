@@ -1,6 +1,7 @@
-// import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hook';
 import { menuActions, selectMenu } from '@/redux/reducers/menu.reducer';
+import refreshIcon from '/src/assets/images/icon-refresh.svg';
+import plusIcon from '/src/assets/images/icon-plus.svg';
 
 const PageTitle = (props: {
     title: string;
@@ -12,6 +13,7 @@ const PageTitle = (props: {
     secondaryButtonCallback?: () => void;
     primaryButtonIcon?: string;
     primaryButtonClassName?: string;
+    secondaryButtonIcon?: string;
 }) => {
     const {
         title,
@@ -23,6 +25,7 @@ const PageTitle = (props: {
         secondaryButtonWording,
         primaryButtonIcon,
         primaryButtonClassName,
+        secondaryButtonIcon,
     } = props;
     const isOpen = useAppSelector(selectMenu).menu.isOpen;
     const dispatch = useAppDispatch();
@@ -57,10 +60,7 @@ const PageTitle = (props: {
                             >
                                 <img
                                     className="icon pe-2"
-                                    src={
-                                        primaryButtonIcon ||
-                                        '/src/assets/images/icon-refresh.svg'
-                                    }
+                                    src={primaryButtonIcon || refreshIcon}
                                 />
                                 <div className="lh-1 py-1">
                                     {primaryButtonWording}
@@ -74,7 +74,7 @@ const PageTitle = (props: {
                             >
                                 <img
                                     className="icon pe-2"
-                                    src="/src/assets/images/icon-plus.svg"
+                                    src={secondaryButtonIcon || plusIcon}
                                 />
                                 <div className="lh-1 py-1">
                                     {secondaryButtonWording}

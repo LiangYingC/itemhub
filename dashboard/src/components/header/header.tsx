@@ -1,6 +1,12 @@
 import { Link } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '@/hooks/redux.hook';
 import { menuActions, selectMenu } from '@/redux/reducers/menu.reducer';
+import triggerIcon from '@/assets/images/trigger.svg';
+import dashboardIcon from '@/assets/images/dashboard.svg';
+import deviceIcon from '@/assets/images/device.svg';
+import oAuthClientIcon from '@/assets/images/oauth-client.svg';
+import logoIcon from '@/assets/images/logo.svg';
+import logoWordingIcon from '@/assets/images/logo-wording.svg';
 
 const Header = () => {
     const isOpen = useAppSelector(selectMenu).menu.isOpen;
@@ -26,13 +32,10 @@ const Header = () => {
                                 to="/dashboard/"
                                 className="logo d-flex align-items-center"
                             >
-                                <img
-                                    className="icon"
-                                    src="/src/assets/images/logo.svg"
-                                />
+                                <img className="icon" src={logoIcon} />
                                 <img
                                     className="text ms-25 logo-text"
-                                    src="/src/assets/images/logo-wording.svg"
+                                    src={logoWordingIcon}
                                 />
                             </Link>
 
@@ -53,20 +56,14 @@ const Header = () => {
                                 to="/dashboard/"
                                 className="d-flex align-items-center text-white text-opacity-85 text-decoration-none p-3"
                             >
-                                <img
-                                    className=""
-                                    src="/src/assets/images/icon-dashboard.svg"
-                                />
+                                <img className="" src={dashboardIcon} />
                                 <span className="lh-1 ps-25">監控中心</span>
                             </Link>
                             <Link
                                 to="/dashboard/devices"
                                 className="d-flex align-items-center text-white text-opacity-85 text-decoration-none p-3"
                             >
-                                <img
-                                    className=""
-                                    src="/src/assets/images/icon-device.svg"
-                                />
+                                <img className="" src={deviceIcon} />
                                 <span className="lh-1 ps-25">裝置</span>
                             </Link>
 
@@ -74,20 +71,14 @@ const Header = () => {
                                 to="/dashboard/triggers"
                                 className="d-flex align-items-center text-white text-opacity-85 text-decoration-none p-3"
                             >
-                                <img
-                                    className=""
-                                    src="/src/assets/images/icon-trigger.svg"
-                                />
+                                <img className="" src={triggerIcon} />
                                 <span className="lh-1 ps-25">觸發</span>
                             </Link>
                             <Link
                                 to="/dashboard/oauth-clients"
                                 className="d-flex align-items-center text-white text-opacity-85 text-decoration-none p-3"
                             >
-                                <img
-                                    className=""
-                                    src="/src/assets/images/icon-oauthClient.svg"
-                                />
+                                <img className="" src={oAuthClientIcon} />
                                 <span className="lh-1 ps-25">oAuthClient</span>
                             </Link>
                         </div>

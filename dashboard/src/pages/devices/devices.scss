@@ -1,7 +1,15 @@
+@import '../../css/overwrite.scss';
+
 .devices {
     $status-dot-size: 6px;
+    .filter {
+        max-width: 480px;
+        button {
+            margin-left: -2px;
+        }
+    }
     .tag {
-        max-width: 90px;
+        max-width: 62px;
     }
     .dot {
         width: $status-dot-size;

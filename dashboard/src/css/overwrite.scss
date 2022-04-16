@@ -40,6 +40,7 @@ $opacity: (
     25: 0.25,
     10: 0.1,
     5: 0.05,
+    2: 0.02,
     0: 0,
 );
 
@@ -71,14 +72,23 @@ $grey-400: #666a7f;
 $grey-300: #8a90ad;
 $grey-200: #dbdbdb;
 $grey-150: #e5e5e5;
-$grey-100: #e5eaff;
+$grey-100: #f8f9fa;
+
 $white-opacity-15: rgba(white, 0.15);
+$black-opacity-15: rgba(black, 0.15);
+$black-opacity-9: rgba(black, 0.09);
+
+$input-placeholder-color: $black-opacity-15;
 
 $bg-blue2green: linear-gradient(135deg, #0048ff 0%, #14ffca 100%);
 $enable-negative-margins: true;
 
+$shadow: 0px 4px 8px rgba(0, 0, 0, 0.08);
+
 $theme-colors: (
     'black': black,
+    'black-opacity-15': $black-opacity-15,
+    'black-opacity-9': $black-opacity-9,
     'white': white,
     'primary': $primary,
     'light-blue': $light-blue,
@@ -120,6 +130,19 @@ $utilities-bg-colors: map-loop($utilities-bg, rgba-css-var, '$key', 'bg');
 $utilities-text: map-merge($utilities-colors, ($theme-colors-rgb));
 $utilities-text-colors: map-loop($utilities-text, rgba-css-var, '$key', 'text');
 
+$enable-negative-margins: true;
+
+$rounded: (
+    null: $border-radius,
+    0: 0,
+    1: $border-radius-sm,
+    2: $border-radius,
+    3: $border-radius-lg,
+    8: 8px,
+    circle: 50%,
+    pill: $border-radius-pill,
+);
+
 $utilities: map-merge(
     $utilities,
     (
@@ -148,6 +171,11 @@ $utilities: map-merge(
             css-var: true,
             class: 'bg-opacity',
             values: $opacity,
+        ),
+        'rounded': (
+            property: 'border-radius',
+            class: 'rounded',
+            values: $rounded,
         ),
     )
 );

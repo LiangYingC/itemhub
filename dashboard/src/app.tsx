@@ -26,7 +26,7 @@ const App = () => {
         <div className="dashboard" data-testid="Dashboard">
             <div className="d-flex">
                 <Header />
-                <div className="content position-relative container-fluid overflow-scroll px-0 bg-grey-150">
+                <div className="position-relative container-fluid overflow-scroll px-0 bg-grey-100 content">
                     <Outlet />
                     <Footer />
                 </div>

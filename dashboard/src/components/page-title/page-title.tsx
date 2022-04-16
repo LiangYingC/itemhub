@@ -13,7 +13,7 @@ const PageTitle = (props: { title: string }) => {
 
     return (
         <div className="page-title" data-testid="page-title">
-            <div className="w-100 d-flex align-items-center bg-white p-4">
+            <div className="w-100 d-flex align-items-center p-4">
                 <div
                     role="button"
                     className={`hamburger p-2 ${isOpen ? 'd-none' : ''}`}
@@ -29,7 +29,7 @@ const PageTitle = (props: { title: string }) => {
                         <div className="d-flex">
                             {/* <a
                                 href=""
-                                className="d-flex align-items-center btn bg-light border border-secondary rounded-pill px-3 py-2"
+                                className="d-flex align-items-center btn bg-black bg-opacity-10 text-black text-opacity-65 border border-secondary rounded-pill px-3 py-2"
                             >
                                 <img
                                     className="icon pe-2"
@@ -39,7 +39,7 @@ const PageTitle = (props: { title: string }) => {
                             </a>
                             <a
                                 href=""
-                                className="d-flex align-items-center btn bg-primary text-white border border--primary rounded-pill ms-3  px-3 py-2"
+                                className="d-flex align-items-center btn bg-primary-500 shadow-sm text-white border border-primary rounded-pill ms-3  px-3 py-2"
                             >
                                 <img
                                     className="icon pe-2"

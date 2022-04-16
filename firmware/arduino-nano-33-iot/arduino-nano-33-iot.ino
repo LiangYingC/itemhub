@@ -64,7 +64,7 @@ DHT dht(DHTPIN, DHTTYPE);
 void setup()
 {
     pins.push_back(ItemhubPin(D0, "D0", SWITCH));
-    pins.push_back(ItemhubPin(DHTPIN, "D2", SENSOR));
+    // pins.push_back(ItemhubPin(DHTPIN, "D2", SENSOR));
     dht.begin();
 
     connect();
@@ -164,7 +164,7 @@ void setupRemoteDeviceId()
         deviceId += temp;
     }
 
-    std::string byDeviceIdEndPoint = "/api/v1/me/devices/by-device-id/";
+    std::string byDeviceIdEndPoint = "/api/v1/my/devices/by-device-id/";
     byDeviceIdEndPoint.append(deviceId.c_str());
 
     client.beginRequest();
@@ -185,7 +185,7 @@ void setupRemoteDeviceId()
         registerDeviceBody.append(deviceId.c_str());
         registerDeviceBody.append("\"}");
         client.beginRequest();
-        client.post("/api/v1/me/devices");
+        client.post("/api/v1/my/devices");
         client.sendHeader("Content-Type", "application/json");
         client.sendHeader("Content-Length", registerDeviceBody.size());
         client.sendHeader(tokenHeader.c_str());
@@ -205,7 +205,7 @@ void setupRemoteDeviceId()
 
 void online()
 {
-    std::string deviceOnlineEndpoint = "/api/v1/me/devices/";
+    std::string deviceOnlineEndpoint = "/api/v1/my/devices/";
     deviceOnlineEndpoint.append(remoteDeviceId);
     deviceOnlineEndpoint.append("/online");
 
@@ -223,7 +223,7 @@ void online()
 void checkSwitchState()
 {
     Serial.println("Check switch state");
-    std::string deviceStateEndpoint = "/api/v1/me/devices/";
+    std::string deviceStateEndpoint = "/api/v1/my/devices/";
     deviceStateEndpoint.append(remoteDeviceId);
     deviceStateEndpoint.append("/switches");
 
@@ -282,7 +282,7 @@ void checkSwitchState()
         }
         if (isExists == false)
         {
-            std::string endpoint = "/api/v1/me/devices/";
+            std::string endpoint = "/api/v1/my/devices/";
             endpoint.append(remoteDeviceId);
             endpoint.append("/switches");
 
@@ -315,7 +315,7 @@ void checkSwitchState()
 
 void sendSensor()
 {
-    std::string devicePinDataEndpoint = "/api/v1/me/devices/";
+    std::string devicePinDataEndpoint = "/api/v1/my/devices/";
     devicePinDataEndpoint.append(remoteDeviceId);
 
     for (int i = 0; i < pins.size(); i++)

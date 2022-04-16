@@ -2,8 +2,24 @@
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hook';
 import { menuActions, selectMenu } from '@/redux/reducers/menu.reducer';
 
-const PageTitle = (props: { title: string }) => {
-    const { title } = props;
+const PageTitle = (props: {
+    title: string;
+    primaryButtonVisible?: boolean;
+    secondaryButtonVisible?: boolean;
+    primaryButtonWording?: string;
+    secondaryButtonWording?: string;
+    primaryButtonCallback?: () => void;
+    secondaryButtonCallback?: () => void;
+}) => {
+    const {
+        title,
+        primaryButtonVisible,
+        secondaryButtonVisible,
+        primaryButtonCallback,
+        primaryButtonWording,
+        secondaryButtonCallback,
+        secondaryButtonWording,
+    } = props;
     const isOpen = useAppSelector(selectMenu).menu.isOpen;
     const dispatch = useAppDispatch();
 
@@ -27,26 +43,34 @@ const PageTitle = (props: { title: string }) => {
                     <div className="d-flex align-items-center justify-content-between">
                         <h3 className="mb-0">{title}</h3>
                         <div className="d-flex">
-                            {/* <a
-                                href=""
-                                className="d-flex align-items-center btn bg-light border border-secondary rounded-pill px-3 py-2"
+                            <button
+                                onClick={primaryButtonCallback}
+                                className={`${
+                                    primaryButtonVisible ? '' : 'd-none'
+                                } d-flex align-items-center btn bg-light border border-secondary rounded-pill px-3 py-2`}
                             >
                                 <img
                                     className="icon pe-2"
                                     src="/src/assets/images/icon-refresh.svg"
                                 />
-                                <div className="lh-1 py-1">重新整理</div>
-                            </a>
-                            <a
-                                href=""
-                                className="d-flex align-items-center btn bg-primary text-white border border--primary rounded-pill ms-3  px-3 py-2"
+                                <div className="lh-1 py-1">
+                                    {primaryButtonWording}
+                                </div>
+                            </button>
+                            <button
+                                onClick={secondaryButtonCallback}
+                                className={`${
+                                    secondaryButtonVisible ? '' : 'd-none'
+                                } d-flex align-items-center btn bg-primary text-white border border--primary rounded-pill ms-3  px-3 py-2`}
                             >
                                 <img
                                     className="icon pe-2"
                                     src="/src/assets/images/icon-plus.svg"
                                 />
-                                <div className="lh-1 py-1">新增裝置</div>
-                            </a> */}
+                                <div className="lh-1 py-1">
+                                    {secondaryButtonWording}
+                                </div>
+                            </button>
                         </div>
                     </div>
                 </div>

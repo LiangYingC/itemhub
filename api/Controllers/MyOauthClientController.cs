@@ -42,12 +42,13 @@ namespace Homo.IotApi
             string clientSecret = CryptographicHelper.GetSpecificLengthRandomString(64, true, false);
             string salt = CryptographicHelper.GetSpecificLengthRandomString(128, false, false);
             string hashClientSecrets = CryptographicHelper.GenerateSaltedHash(clientSecret, salt);
-            OauthClient rewRecord = OauthClientDataservice.Create(_dbContext, ownerId, dto, hashClientSecrets, salt);
+            OauthClient newRecord = OauthClientDataservice.Create(_dbContext, ownerId, dto, hashClientSecrets, salt);
             return new
             {
-                Id = rewRecord.Id,
-                OwnerId = rewRecord.OwnerId,
-                ClientId = rewRecord.ClientId,
+                Id = newRecord.Id,
+                OwnerId = newRecord.OwnerId,
+                ClientId = newRecord.ClientId,
+                DeviceId = newRecord.DeviceId,
                 ClientSecrets = clientSecret
             };
         }
@@ -70,7 +71,13 @@ namespace Homo.IotApi
             {
                 throw new CustomException(Homo.AuthApi.ERROR_CODE.DATA_NOT_FOUND, System.Net.HttpStatusCode.NotFound);
             }
-            return record;
+            return new
+            {
+                Id = record.Id,
+                OwnerId = record.OwnerId,
+                ClientId = record.ClientId,
+                DeviceId = record.DeviceId
+            }; ;
         }
 
         [HttpPatch]
@@ -114,7 +121,13 @@ namespace Homo.IotApi
             {
                 throw new CustomException(Homo.AuthApi.ERROR_CODE.DATA_NOT_FOUND, System.Net.HttpStatusCode.NotFound);
             }
-            return record;
+            return new
+            {
+                Id = record.Id,
+                OwnerId = record.OwnerId,
+                ClientId = record.ClientId,
+                DeviceId = record.DeviceId,
+            };
         }
 
     }

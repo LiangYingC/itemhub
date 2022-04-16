@@ -1,3 +1,4 @@
+#include <string>
 #include <WiFiClientSecure.h>
 #include <ArduinoJson.h>
 #include <ArduinoUniqueID.h>
@@ -5,16 +6,31 @@
 class ItemhubUtilities
 {
 public:
-    static char *Auth(char *host, char *cert)
+    static std::string Online(WiFiClientSecure &client, std::string &host, std::string &remoteDeviceId, std::string &token)
     {
-        String postBody = "{\"email\":\"miterfrants@gmail.com\",\"password\":\"@Testing123123\"}";
-        char *resp = Send(host, cert, "POST", "/api/v1/auth/sign-in-with-email", (char *)postBody.c_str(), "");
+        std::string deviceOnlineEndpoint = "/api/v1/me/devices/";
+        deviceOnlineEndpoint.append(remoteDeviceId);
+        deviceOnlineEndpoint.append("/online");
+        Serial.println("Update State Http Status Start");
+        std::string emptyString = "";
+        std::string resp = ItemhubUtilities::Send(client, host, "POST", deviceOnlineEndpoint, emptyString, token);
+        Serial.println("testing 3");
+        Serial.println(resp.c_str());
+        Serial.println("testing 4");
+        // std::string status = ItemhubUtilities::Test(resp, "status");
+    }
+    static std::string Auth(WiFiClientSecure &client, std::string &host)
+    {
+        std::string postBody = "{\"clientId\":\"miterfrants@gmail.com\",\"clientSecret\":\"@Testing123123\"}";
+        std::string authEndpoint = "/api/v1/oauth/exchange-token-for-device";
+        std::string emptyToken = "";
+        std::string resp = Send(client, host, "POST", authEndpoint, postBody, emptyToken);
         JsonObject respObj = GetResponseBody(resp);
-        const char *token = respObj["token"].as<const char *>();
-        return (char *)token;
+        std::string token = respObj["token"].as<std::string>();
+        return token;
     }
 
-    static long GetRemoteDeviceId(char *host, char *cert, char *token)
+    static std::string GetRemoteDeviceId(WiFiClientSecure &client, std::string &host, std::string &token)
     {
         String deviceId;
         for (size_t i = 0; i < UniqueIDsize; i++)
@@ -25,66 +41,41 @@ public:
 
         std::string deviceIdEndPoint = "/api/v1/me/devices/by-device-id/";
         deviceIdEndPoint.append(deviceId.c_str());
-        Serial.print("token: ");
-        Serial.println(token);
-        char *resp = Send(host, cert, "GET", (char *)deviceIdEndPoint.c_str(), "", token);
+        std::string emptyBody = "";
+        std::string resp = Send(client, host, "GET", deviceIdEndPoint, emptyBody, token);
         int checkDeviceExistsResponseStatus = GetHttpStatus(resp);
-        Serial.println();
-        Serial.print("Get Device Id Status: ");
-        Serial.println(checkDeviceExistsResponseStatus);
 
         if (checkDeviceExistsResponseStatus == 404)
         {
-            Serial.println("Register new device");
             std::string registerDeviceBody = "{\"deviceId\":\"";
             registerDeviceBody.append(deviceId.c_str());
             registerDeviceBody.append("\",\"name\":\"");
             registerDeviceBody.append(deviceId.c_str());
             registerDeviceBody.append("\"}");
-            resp = Send(host, cert, "POST", "/api/v1/me/devices", (char *)registerDeviceBody.c_str(), token);
+            std::string endPoint = "/api/v1/me/devices";
+            resp = Send(client, host, "POST", endPoint, registerDeviceBody, token);
         }
 
         JsonObject respObj = GetResponseBody(resp);
-        long remoteDeviceId = respObj["id"].as<long>();
-        return remoteDeviceId;
+        return respObj["id"].as<std::string>();
     }
 
-    static char *Send(char *host, char *cert, char *method, char *path, char *postBody, char *token)
+    static std::string Send(WiFiClientSecure &client, std::string &host, char *method, std::string &path, std::string &postBody, std::string &token)
     {
         unsigned char buff[256];
         bool respFlag = false;
         int port = 443;
+        Serial.println("test -1");
         std::string result = "";
-        WiFiClientSecure client;
 
-        // setup Root CA pem.
-        X509List x509cert(cert);
-        client.setTrustAnchors(&x509cert);
-
-        // connect HTTPS server.
-        if (!client.connect(host, port))
-        {
-            Serial.println("Connection failed");
-            return "";
-        }
-
-        int postBodyLength = strlen(postBody);
+        int postBodyLength = postBody.length();
 
         if (method == "GET")
         {
-            Serial.print("token: ");
-            Serial.println(token);
-            String test = String(method) + " " + path + " HTTP/1.1\r\n" +
-                          "Host: " + host + "\r\n" +
-                          "Content-Type: application/json\r\n" +
-                          "Authorization: Bearer " + token + "\r\n" +
-                          "Connection: close\r\n\r\n";
-            Serial.println(test);
-
-            client.print(String(method) + " " + path + " HTTP/1.1\r\n" +
-                         "Host: " + host + "\r\n" +
+            client.print(String(method) + " " + path.c_str() + " HTTP/1.1\r\n" +
+                         "Host: " + host.c_str() + "\r\n" +
                          "Content-Type: application/json\r\n" +
-                         "Authorization: Bearer " + token + "\r\n" +
+                         "Authorization: Bearer " + token.c_str() + "\r\n" +
                          "Connection: close\r\n\r\n");
             while (client.connected())
             {
@@ -94,45 +85,46 @@ public:
         }
         else
         {
-            int len = sprintf((char *)buff, "%s %s HTTP/1.1\r\nHost: %s\r\nContent-Type: application/json\r\nAuthorization: Bearer %s\r\nContent-Length: %d\r\n\r\n%s", method, path, host, token, postBodyLength, postBody);
+            Serial.println("test 0");
+            int len = sprintf((char *)buff, "%s %s HTTP/1.1\r\nHost: %s\r\nContent-Type: application/json\r\nAuthorization: Bearer %s\r\nContent-Length: %d\r\n\r\n%s", method, path.c_str(), host.c_str(), token.c_str(), postBodyLength, postBody.c_str());
+            Serial.println("test 1");
             client.write(buff, len);
-            delay(1200);
-            while (client.available())
+            Serial.println("test 2");
+            while (client.connected() && client.available())
             {
                 char c = client.read();
                 result += c;
             }
         }
-
-        return (char *)result.c_str();
+        Serial.println("Send end");
+        return result;
     }
 
-    static int GetHttpStatus(char *resp)
+    static int GetHttpStatus(std::string &resp)
     {
-        std::string respStrOfGetDevice(resp);
-        size_t startOfHttpMeta = respStrOfGetDevice.find("HTTP/1.1");
+        size_t startOfHttpMeta = resp.find("HTTP/1.1");
         if (startOfHttpMeta != std::string::npos)
         {
-            std::string httpStatus = respStrOfGetDevice.substr(startOfHttpMeta + 9, 3);
+            std::string httpStatus = resp.substr(startOfHttpMeta + 9, 3);
             return std::stoi(httpStatus);
         }
         return 500;
     }
 
-    static JsonObject GetResponseBody(char *resp)
+    static JsonObject GetResponseBody(std::string &resp)
     {
         StaticJsonDocument<1024> jsonBuffer;
-        std::string respStr(resp);
-        size_t endOfHeader = respStr.find("\r\n\r\n");
-        size_t startOfContentLength = respStr.find("\r\n", endOfHeader + 1);
 
-        size_t startOfJsonObject = respStr.find("{", endOfHeader);
-        std::string rawContentLength = respStr.substr(startOfContentLength, startOfJsonObject - startOfContentLength - 1);
+        size_t endOfHeader = resp.find("\r\n\r\n");
+        size_t startOfContentLength = resp.find("\r\n", endOfHeader + 1);
+
+        size_t startOfJsonObject = resp.find("{", endOfHeader);
+        std::string rawContentLength = resp.substr(startOfContentLength, startOfJsonObject - startOfContentLength - 1);
         unsigned int contentLength = std::stoul(rawContentLength, nullptr, 16);
         if (startOfJsonObject != std::string::npos)
         {
-            std::string header = respStr.substr(0, endOfHeader);
-            std::string body = respStr.substr(startOfJsonObject, contentLength);
+            std::string header = resp.substr(0, endOfHeader);
+            std::string body = resp.substr(startOfJsonObject, contentLength);
             Serial.println(body.c_str());
             DeserializationError error = deserializeJson(jsonBuffer, body.c_str());
             if (error)

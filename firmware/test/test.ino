@@ -13,10 +13,12 @@
 
 const char *ssid = STASSID;
 const char *password = STAPSK;
-const char *host = "itemhub.io";
+std::string host = "itemhub.io";
 const uint16_t port = 443;
-long remoteDeviceId = -1;
-char *token;
+std::string remoteDeviceId;
+std::string token;
+std::string empty = "";
+WiFiClientSecure client;
 
 void setup()
 {
@@ -53,21 +55,28 @@ void setup()
   Serial.print("Current time: ");
   Serial.print(asctime(&timeinfo));
 
-  char *resp = ItemhubUtilities::Send((char *)host, LET_ENCRYPT_CA_PEM, "GET", "/api/v1/test", "", "");
-  JsonObject json = ItemhubUtilities::GetResponseBody(resp);
-  const char *project = json["project"].as<const char *>();
-  Serial.print("project: ");
-  Serial.println(project);
+  // setup Root CA pem.
+  X509List x509cert(CA_PEM);
+  client.setTrustAnchors(&x509cert);
+  // connect HTTPS server.
+  if (!client.connect(host.c_str(), port))
+  {
+    Serial.println("Connection failed");
+  }
+  int port = 443;
+  client.connect(host.c_str(), 443);
 
-  token = ItemhubUtilities::Auth((char *)host, LET_ENCRYPT_CA_PEM);
+  token = ItemhubUtilities::Auth(client, host);
   Serial.print("token: ");
-  Serial.println(token);
+  Serial.println(token.c_str());
 
-  remoteDeviceId = ItemhubUtilities::GetRemoteDeviceId((char *)host, LET_ENCRYPT_CA_PEM, token);
+  remoteDeviceId = ItemhubUtilities::GetRemoteDeviceId(client, host, token);
   Serial.print("remote device id: ");
-  Serial.println(remoteDeviceId);
+  Serial.println(remoteDeviceId.c_str());
 }
 
 void loop()
 {
+  ItemhubUtilities::Online(client, host, remoteDeviceId, token);
+  delay(2000);
 }

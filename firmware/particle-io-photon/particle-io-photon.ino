@@ -10,6 +10,17 @@
 #define SWITCH "SWITCH"
 #define SENSOR "SENSOR"
 
+#define ERROR_THEN_RECONNECT(resp)                      \
+    if (resp.length() == 0)                             \
+    {                                                   \
+        client.stop();                                  \
+        client.close();                                 \
+        client.init(caPem.c_str(), caPem.length() + 1); \
+        char *api = (char *)apiEndpoint.c_str();        \
+        client.connect(api, 443);                       \
+        return;                                         \
+    }
+
 DHT dht(DHTPIN, DHTTYPE);
 TlsTcpClient client;
 std::string caPem = CA_PEM;
@@ -76,6 +87,22 @@ void loop()
         previousDeviceStateTimestamp = currentDeviceStateTimestamp;
         online();
     }
+
+    // itemhub switch
+    currentSwitchTimestamp = millis();
+    if (currentSwitchTimestamp - previousSwitchTimestamp > intervalSwitch)
+    {
+        previousSwitchTimestamp = currentSwitchTimestamp;
+        checkSwitchState();
+    }
+
+    // itemhub sensor
+    currentSensorTimestamp = millis();
+    if (currentSensorTimestamp - previousSensorTimestamp > intervalSensor)
+    {
+        previousSensorTimestamp = currentSensorTimestamp;
+        sendSensor();
+    }
 }
 
 void auth()
@@ -111,44 +138,126 @@ void online()
     std::string deviceOnlineEndpoint = "/api/v1/me/devices/";
     deviceOnlineEndpoint.append(remoteDeviceId);
     deviceOnlineEndpoint.append("/online");
+    Serial.println("Update State Http Status Start");
+    std::string resp = ItemhubUtilities::Send(client, apiEndpoint, caPem, POST, deviceOnlineEndpoint, emptyString, token);
+    Serial.print("resp length:");
+    Serial.println(resp.length());
+    ERROR_THEN_RECONNECT(resp);
+    Serial.println(resp.c_str());
+    std::string status = ItemhubUtilities::Extract(resp, "status");
+    Serial.println(status.c_str());
+    Serial.println("Update State Http Status End");
+    Serial.println("========================================");
+}
 
-    std::string resp;
-    bool respFlag = false;
+void checkSwitchState()
+{
+    Serial.println("Check switch state");
+    std::string deviceStateEndpoint = "/api/v1/me/devices/";
+    deviceStateEndpoint.append(remoteDeviceId);
+    deviceStateEndpoint.append("/switches");
 
-    int postBodyLength = emptyString.length();
-    // Send request to HTTPS web server.
-    int len = sprintf((char *)buff, "%s %s HTTP/1.1\r\nHost: %s\r\nContent-Type: application/json\r\nAuthorization: Bearer %s\r\nContent-Length: %d\r\n\r\n%s", POST.c_str(), deviceOnlineEndpoint.c_str(), apiEndpoint.c_str(), token.c_str(), postBodyLength, emptyString.c_str());
-    client.write(buff, len);
-    // GET HTTPS response.
-    memset(buff, 0, sizeof(buff));
-    while (1)
+    std::string resp = ItemhubUtilities::Send(client, apiEndpoint, caPem, GET, deviceStateEndpoint, emptyString, token);
+    ERROR_THEN_RECONNECT(resp);
+    resp.insert(0, "{\"data\":");
+    resp.append("}");
+    json_t const *jsonData = json_create((char *)resp.c_str(), pool, MAX_FIELDS);
+    if (jsonData == NULL)
     {
-        memset(buff, 0, sizeof(buff));
-        int ret = client.read(buff, sizeof(buff) - 1);
-        if (ret == MBEDTLS_ERR_SSL_WANT_READ)
+        return;
+    }
+    json_t const *data = json_getProperty(jsonData, "data");
+    json_t const *item;
+    for (int i = 0; i < pins.size(); i++)
+    {
+        if (pins[i].mode == SENSOR)
         {
-            if (respFlag == true)
-            {
-                respFlag = false;
-                break;
-            }
-            delay(100);
             continue;
         }
-        else if (ret <= 0)
+
+        bool isExists = false;
+
+        for (item = json_getChild(data); item != 0; item = json_getSibling(item))
         {
-            break;
+            if (JSON_OBJ != json_getType(item))
+            {
+                continue;
+            }
+
+            char const *pin = json_getPropertyValue(item, "pin");
+            char const *value = json_getPropertyValue(item, "value");
+            if (!pin)
+            {
+                continue;
+            }
+
+            String stringValue = String(value);
+            int intValue = stringValue.toInt();
+
+            if (pins[i].pinString == pin && intValue == 0)
+            {
+                isExists = true;
+                digitalWrite(pins[i].pin, LOW);
+            }
+            else if (pins[i].pinString == pin && intValue == 1)
+            {
+                isExists = true;
+                digitalWrite(pins[i].pin, HIGH);
+            }
         }
-        else if (ret > 0)
+        if (isExists == false)
         {
-            respFlag = true;
-            // char tempReuslt[sizeof(buff) + 1];
-            // memcpy(tempReuslt, buff, sizeof(buff) + 1);
-            // resp += (char *)buff;
+            std::string endpoint = "/api/v1/me/devices/";
+            endpoint.append(remoteDeviceId);
+            endpoint.append("/switches");
+
+            std::string postBody = "{\"pin\":\"";
+            postBody.append(pins[i].pinString);
+            postBody.append("\",\"");
+            postBody.append("mode\":");
+            postBody.append("1,");
+            postBody.append("\"value\":");
+            postBody.append("0,");
+            postBody.append("\"online\":");
+            postBody.append("true");
+            postBody.append("}");
+
+            std::string respOfRegisterPin = ItemhubUtilities::Send(client, apiEndpoint, caPem, POST, endpoint, postBody, token);
+            ERROR_THEN_RECONNECT(resp);
+            Serial.print("register new pin: ");
+            Serial.println(respOfRegisterPin.c_str());
         }
     }
+}
 
-    // std::string status = ItemhubUtilities::Extract(resp, "status");
-    // Serial.println(status.c_str());
-    Serial.println("Update State Http Status ");
+void sendSensor()
+{
+    std::string devicePinDataEndpoint = "/api/v1/me/devices/";
+    devicePinDataEndpoint.append(remoteDeviceId);
+
+    for (int i = 0; i < pins.size(); i++)
+    {
+        std::string mode = pins[i].mode;
+        if (mode == SENSOR)
+        {
+            std::string endpoint(devicePinDataEndpoint);
+            endpoint.append("/sensors/");
+            endpoint.append(pins[i].pinString);
+            std::string postBody = "{\"value\":";
+            float h = dht.readHumidity();
+            float t = dht.readTemperature();
+            Serial.print("temperature: ");
+            Serial.println(t);
+            Serial.print("humidity: ");
+            Serial.println(h);
+            std::string humidity = std::to_string(h);
+            postBody.append(humidity);
+            postBody.append("}");
+
+            std::string respOfRegisterPin = ItemhubUtilities::Send(client, apiEndpoint, caPem, POST, endpoint, postBody, token);
+
+            Serial.print("Sensor: ");
+            Serial.println(respOfRegisterPin.c_str());
+        }
+    }
 }

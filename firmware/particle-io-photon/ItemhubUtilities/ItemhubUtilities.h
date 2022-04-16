@@ -39,7 +39,7 @@ public:
     static std::string Send(TlsTcpClient &client, std::string &apiEndpoint, std::string &caPem, std::string &method, std::string &path, std::string &postBody, std::string &token)
     {
         std::string resp;
-        unsigned char buff[256];
+        unsigned char buff[512];
         bool respFlag = false;
 
         int postBodyLength = postBody.length();
@@ -69,15 +69,16 @@ public:
             else if (ret > 0)
             {
                 respFlag = true;
-                char tempReuslt[sizeof(buff) + 1];
-                memcpy(tempReuslt, buff, sizeof(buff) + 1);
+                char tempReuslt[sizeof(buff)];
+                memcpy(tempReuslt, buff, sizeof(buff));
                 resp.append(tempReuslt);
             }
         }
+        Serial.println("send end");
         return resp;
     }
 
-    static int GetHttpStatus(std::string resp)
+    static int GetHttpStatus(std::string &resp)
     {
         size_t startOfHttpMeta = resp.find("HTTP/1.1");
         if (startOfHttpMeta != std::string::npos)
@@ -90,13 +91,25 @@ public:
 
     static std::string Extract(std::string &resp, const char *type)
     {
-        size_t endOfHeader = resp.find("\r\n\r\n");
-        size_t startOfContentLength = resp.find("\r\n", endOfHeader + 1);
-        size_t startOfJsonObject = resp.find("{", endOfHeader);
+        int startOfHead = resp.find("HTTP");
+        int endOfHeader = resp.find("\r\n\r\n", startOfHead + 1);
+        int startOfContentLength = resp.find("\r\n", endOfHeader + 1);
+        int startOfJsonObject = resp.find("{", endOfHeader);
+        Serial.print("endOfHeader: ");
+        Serial.println(endOfHeader);
+
+        Serial.print("startOfContentLength: ");
+        Serial.println(startOfContentLength);
+
+        Serial.print("startOfJsonObject: ");
+        Serial.println(startOfJsonObject);
+
         std::string failed = "FAILED";
         std::string rawContentLength = resp.substr(startOfContentLength, startOfJsonObject - startOfContentLength - 1);
+
         unsigned int contentLength = std::stoul(rawContentLength, nullptr, 16);
-        if (startOfJsonObject != std::string::npos)
+
+        if (startOfJsonObject != -1)
         {
             std::string header = resp.substr(0, endOfHeader);
             std::string body = resp.substr(startOfJsonObject, contentLength);

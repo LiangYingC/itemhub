@@ -177,6 +177,7 @@ export const useDeleteOauthClients = (ids: number[]) => {
     return useFetchApi<ResponseOK>({
         apiPath,
         method: HTTP_METHOD.DELETE,
+        payload: ids,
         initialData: null,
         callbackFunc: dispatchRefresh,
     });

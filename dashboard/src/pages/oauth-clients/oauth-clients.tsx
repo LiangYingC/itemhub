@@ -185,9 +185,9 @@ const OauthClients = () => {
                         ))}
                     </>
                 )}
-
-                <div>Page: {page}</div>
-                <Pagination rowNum={rowNum} page={page} limit={limit} />
+                <div className="d-flex justify-content-end w-100 mt-5">
+                    <Pagination rowNum={rowNum} page={page} limit={limit} />
+                </div>
             </div>
         </div>
     );

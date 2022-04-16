@@ -90,8 +90,8 @@ const Pin = (props: { pinItem: PinItem; isEditMode: boolean }) => {
                         className={`${
                             value === 1
                                 ? 'bg-green active'
-                                : 'bg-black-opacity-25'
-                        } d-flex align-items-center toggle-button d-flex rounded-pill bg-gray-100`}
+                                : 'bg-black bg-opacity-25'
+                        } d-flex align-items-center toggle-button d-flex rounded-pill`}
                     >
                         <div className="button-head bg-white rounded-circle" />
                     </div>

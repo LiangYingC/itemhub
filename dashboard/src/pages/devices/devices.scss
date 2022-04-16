@@ -1,5 +1,8 @@
 .devices {
     $status-dot-size: 6px;
+    .tag {
+        max-width: 90px;
+    }
     .dot {
         width: $status-dot-size;
         height: $status-dot-size;

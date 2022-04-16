@@ -49,23 +49,23 @@ const Devices = () => {
                                 >
                                     <div className="col-3">
                                         <h5 className="mb-0">{name}</h5>
-                                        <h6 className="mb-0 text-black-opacity-45">
+                                        <h6 className="mb-0 text-black text-opacity-45">
                                             {deviceId}
                                         </h6>
                                     </div>
                                     <div className="col-1">
                                         <div
-                                            className={`rounded-pill text-center py-1 d-flex align-items-center justify-content-center ${
+                                            className={`rounded-pill tag text-center py-1 d-flex align-items-center justify-content-center ${
                                                 online
-                                                    ? 'bg-green-12 text-green'
-                                                    : 'bg-black-opacity-04 text-black-opacity-45'
+                                                    ? 'bg-green bg-opacity-10 text-green'
+                                                    : 'bg-black bg-opacity-5 text-black text-opacity-45'
                                             }`}
                                         >
                                             <div
-                                                className={`dot rounded-circle d-block me-1 ${
+                                                className={`dot rounded-circle d-block me-2 ${
                                                     online
                                                         ? 'bg-green'
-                                                        : 'bg-black-opacity-45'
+                                                        : 'bg-black bg-opacity-45'
                                                 }`}
                                             />
                                             {online ? '上線' : '離線'}

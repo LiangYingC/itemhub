@@ -1,4 +1,3 @@
-import styles from './oauth-clients.module.scss';
 import { useEffect, useState } from 'react';
 import { useQuery } from '@/hooks/query.hook';
 import { Link } from 'react-router-dom';
@@ -10,6 +9,7 @@ import {
 import { selectOauthClients } from '@/redux/reducers/oauth-clients.reducer';
 import Pagination from '@/components/pagination/pagination';
 import { RESPONSE_STATUS } from '@/constants/api';
+import PageTitle from '@/components/page-title/page-title';
 
 const OauthClients = () => {
     const query = useQuery();
@@ -59,7 +59,8 @@ const OauthClients = () => {
     };
 
     return (
-        <div className={styles.OauthClients} data-testid="oauth-clients">
+        <div className="oauth-clients" data-testid="oauth-clients">
+            <PageTitle title="oAuth Client 列表" />
             <div>
                 <button
                     onClick={deleteMultipleApi}

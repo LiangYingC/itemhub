@@ -1,0 +1,69 @@
+@import '../../css/overwrite.scss';
+@import '../../css/zindex.scss';
+@import '../../css/variables.scss';
+
+$header-height: 50px;
+$logo-height: 92px;
+$user-height: 94px;
+
+.header {
+    &.open {
+        .head-nav {
+            max-width: $nav-w;
+            transition: 0.3s ease-in-out;
+            transform: translateX(0);
+            overflow: hidden;
+            z-index: $nav-z-index;
+        }
+        .space {
+            width: 100vw;
+            height: 100vh;
+            top: 0;
+            left: 0;
+            z-index: $nav-space-z-index;
+        }
+    }
+    .logo-block {
+        width: $nav-w;
+    }
+
+    .head-nav {
+        max-width: 0;
+        height: 100vh;
+        top: 0;
+        left: 0;
+        background: $grey-800;
+        transition: 0.3s ease-in-out;
+        transform: translateX(0);
+        overflow: hidden;
+        z-index: $nav-z-index;
+
+        .item {
+            width: $nav-w;
+            height: calc(100vh - $logo-height - $user-height);
+            overflow: scroll;
+
+            .selected {
+                background: $primary-800;
+            }
+        }
+
+        .logo {
+            height: 25px;
+            object-fit: cover;
+
+            img {
+                width: 100%;
+                height: 100%;
+            }
+
+            .text {
+                height: 20px;
+            }
+        }
+
+        .user {
+            border-top: 1px solid $white-opacity-15;
+        }
+    }
+}

@@ -1,4 +1,3 @@
-import styles from './pins.module.scss';
 import { useEffect } from 'react';
 import { useGetDevicePinsApi } from '@/hooks/apis/devices.hook';
 import Pin from '@/components/pin/pin';
@@ -15,7 +14,7 @@ const Pins = (props: { deviceId: number; isEditMode: boolean }) => {
 
     return (
         // UI 結構等設計稿後再重構調整
-        <div className={styles.pins} data-testid="Pins">
+        <div className="pins" data-testid="Pins">
             {isLoading || devicePins === null ? (
                 <div>Loading</div>
             ) : (

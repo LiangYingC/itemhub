@@ -50,9 +50,26 @@ export const useGetDevicesApi = ({
     });
 
     return {
-        isLoading,
-        error,
+        isGetingDevices: isLoading,
+        getDevicesError: error,
         getDevicesApi: fetchApi,
+    };
+};
+
+export const useGetAllDevicesApi = () => {
+    const apiPath = `${API_URL}${END_POINT.All_DEVICES}`;
+
+    const { isLoading, data, error, fetchApi } = useFetchApi<DeviceItem[]>({
+        apiPath,
+        method: HTTP_METHOD.GET,
+        initialData: null,
+    });
+
+    return {
+        isGetingAllDevices: isLoading,
+        getAllDevicesError: error,
+        allDevices: data || [],
+        getAllDevicesApi: fetchApi,
     };
 };
 

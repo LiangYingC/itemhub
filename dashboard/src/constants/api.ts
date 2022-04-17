@@ -4,6 +4,7 @@ export const END_POINT = {
     TRIGGER_OPERATORS: 'universal/trigger-operators',
     SIGN_WITH_EMAIL: 'auth/sign-in-with-email',
     IS_SIGNED: 'auth/is-sign-in',
+    All_DEVICES: 'my/devices/all',
     DEVICES: 'my/devices',
     DEVICE: 'my/devices/:id',
     DEVICE_PINS: 'my/devices/:id/pins',

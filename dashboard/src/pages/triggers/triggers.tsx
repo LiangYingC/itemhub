@@ -219,15 +219,18 @@ const Triggers = () => {
                     <h1>No Triggers</h1>
                 ) : (
                     filteredTriggers.map(
-                        ({
-                            id,
-                            ownerId,
-                            sourceDevice,
-                            sourcePin,
-                            destinationDevice,
-                            destinationPin,
-                        }) => (
-                            <label key={id} className="mt-2 mb-2">
+                        (
+                            {
+                                id,
+                                ownerId,
+                                sourceDevice,
+                                sourcePin,
+                                destinationDevice,
+                                destinationPin,
+                            },
+                            index
+                        ) => (
+                            <label key={`${id}-${index}`} className="mt-2 mb-2">
                                 <input
                                     type="checkbox"
                                     onChange={updateSelectedIds}

@@ -89,6 +89,40 @@ public:
         return 500;
     }
 
+    static std::string ExtractBody(std::string &resp, bool isArray)
+    {
+        int startOfHead = resp.find("HTTP");
+        int endOfHeader = resp.find("\r\n\r\n", startOfHead + 1);
+        int startOfContentLength = resp.find("\r\n", endOfHeader + 1);
+        std::string prefix = "{";
+        if (isArray)
+        {
+            prefix = "[";
+        }
+        int startOfJsonObject = resp.find(prefix, endOfHeader);
+        Serial.print("endOfHeader: ");
+        Serial.println(endOfHeader);
+
+        Serial.print("startOfContentLength: ");
+        Serial.println(startOfContentLength);
+
+        Serial.print("startOfJsonObject: ");
+        Serial.println(startOfJsonObject);
+
+        std::string failed = "FAILED";
+        std::string rawContentLength = resp.substr(startOfContentLength, startOfJsonObject - startOfContentLength - 1);
+
+        unsigned int contentLength = std::stoul(rawContentLength, nullptr, 16);
+
+        if (startOfJsonObject != -1)
+        {
+            std::string header = resp.substr(0, endOfHeader);
+            std::string body = resp.substr(startOfJsonObject, contentLength);
+            return body;
+        }
+        return "failed";
+    }
+
     static std::string Extract(std::string &resp, const char *type)
     {
         int startOfHead = resp.find("HTTP");

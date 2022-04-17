@@ -59,6 +59,7 @@ void setup()
     Serial.begin(9600);
     dht.begin();
     pins.push_back(ItemhubPin(D0, "D0", SWITCH));
+    pins.push_back(ItemhubPin(D1, "D1", SENSOR));
 
     // setup Root CA pem.
     client.init(caPem.c_str(), caPem.length() + 1);
@@ -114,7 +115,7 @@ void auth()
 void setupRemoteDeviceId()
 {
     String deviceId = System.deviceID();
-    std::string byDeviceIdEndPoint = "/api/v1/me/devices/by-device-id/";
+    std::string byDeviceIdEndPoint = "/api/v1/my/devices/by-device-id/";
     byDeviceIdEndPoint.append(deviceId);
     std::string respOfGetDevice = ItemhubUtilities::Send(client, apiEndpoint, caPem, GET, byDeviceIdEndPoint, emptyString, token);
     int status = ItemhubUtilities::GetHttpStatus(respOfGetDevice);
@@ -125,8 +126,7 @@ void setupRemoteDeviceId()
         std::string postBodyOfRegisterDevice("{\"deviceId\": \"\", \"name\": \"\"}");
         postBodyOfRegisterDevice.replace(14, 0, deviceId);
         postBodyOfRegisterDevice.replace(26 + deviceId.length(), 0, deviceId);
-        Serial.println(postBodyOfRegisterDevice.c_str());
-        std::string deviceApiEndpoint = "/api/v1/me/devices";
+        std::string deviceApiEndpoint = "/api/v1/my/devices";
         respOfGetDevice = ItemhubUtilities::Send(client, apiEndpoint, caPem, POST, deviceApiEndpoint, postBodyOfRegisterDevice, token);
     }
     // assign remoteDeviceId
@@ -135,33 +135,27 @@ void setupRemoteDeviceId()
 
 void online()
 {
-    std::string deviceOnlineEndpoint = "/api/v1/me/devices/";
+    std::string deviceOnlineEndpoint = "/api/v1/my/devices/";
     deviceOnlineEndpoint.append(remoteDeviceId);
     deviceOnlineEndpoint.append("/online");
-    Serial.println("Update State Http Status Start");
     std::string resp = ItemhubUtilities::Send(client, apiEndpoint, caPem, POST, deviceOnlineEndpoint, emptyString, token);
-    Serial.print("resp length:");
-    Serial.println(resp.length());
     ERROR_THEN_RECONNECT(resp);
-    Serial.println(resp.c_str());
     std::string status = ItemhubUtilities::Extract(resp, "status");
-    Serial.println(status.c_str());
-    Serial.println("Update State Http Status End");
-    Serial.println("========================================");
 }
 
 void checkSwitchState()
 {
     Serial.println("Check switch state");
-    std::string deviceStateEndpoint = "/api/v1/me/devices/";
+    std::string deviceStateEndpoint = "/api/v1/my/devices/";
     deviceStateEndpoint.append(remoteDeviceId);
     deviceStateEndpoint.append("/switches");
 
     std::string resp = ItemhubUtilities::Send(client, apiEndpoint, caPem, GET, deviceStateEndpoint, emptyString, token);
     ERROR_THEN_RECONNECT(resp);
-    resp.insert(0, "{\"data\":");
-    resp.append("}");
-    json_t const *jsonData = json_create((char *)resp.c_str(), pool, MAX_FIELDS);
+    std::string body = ItemhubUtilities::ExtractBody(resp, true);
+    body.insert(0, "{\"data\":");
+    body.append("}");
+    json_t const *jsonData = json_create((char *)body.c_str(), pool, MAX_FIELDS);
     if (jsonData == NULL)
     {
         return;
@@ -205,34 +199,12 @@ void checkSwitchState()
                 digitalWrite(pins[i].pin, HIGH);
             }
         }
-        if (isExists == false)
-        {
-            std::string endpoint = "/api/v1/me/devices/";
-            endpoint.append(remoteDeviceId);
-            endpoint.append("/switches");
-
-            std::string postBody = "{\"pin\":\"";
-            postBody.append(pins[i].pinString);
-            postBody.append("\",\"");
-            postBody.append("mode\":");
-            postBody.append("1,");
-            postBody.append("\"value\":");
-            postBody.append("0,");
-            postBody.append("\"online\":");
-            postBody.append("true");
-            postBody.append("}");
-
-            std::string respOfRegisterPin = ItemhubUtilities::Send(client, apiEndpoint, caPem, POST, endpoint, postBody, token);
-            ERROR_THEN_RECONNECT(resp);
-            Serial.print("register new pin: ");
-            Serial.println(respOfRegisterPin.c_str());
-        }
     }
 }
 
 void sendSensor()
 {
-    std::string devicePinDataEndpoint = "/api/v1/me/devices/";
+    std::string devicePinDataEndpoint = "/api/v1/my/devices/";
     devicePinDataEndpoint.append(remoteDeviceId);
 
     for (int i = 0; i < pins.size(); i++)

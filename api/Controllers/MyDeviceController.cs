@@ -27,14 +27,14 @@ namespace Homo.IotApi
         }
 
         [HttpGet]
-        public ActionResult<dynamic> getList([FromQuery] int limit, [FromQuery] int page, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
+        public ActionResult<dynamic> getList([FromQuery] int limit, [FromQuery] int page, [FromQuery] string name, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
             long ownerId = extraPayload.Id;
-            List<Device> records = DeviceDataservice.GetList(_dbContext, ownerId, page, limit);
+            List<Device> records = DeviceDataservice.GetList(_dbContext, ownerId, page, limit, name);
             return new
             {
                 devices = records,
-                rowNum = DeviceDataservice.GetRowNum(_dbContext, ownerId)
+                rowNum = DeviceDataservice.GetRowNum(_dbContext, ownerId, name)
             };
         }
 

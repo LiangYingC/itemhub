@@ -21,9 +21,11 @@ interface GetDevicesResponseData {
 export const useGetDevicesApi = ({
     page,
     limit,
+    name,
 }: {
     page: number;
     limit: number;
+    name: string;
 }) => {
     const dispatch = useAppDispatch();
     const dispatchRefreshDevices = useCallback(
@@ -39,6 +41,7 @@ export const useGetDevicesApi = ({
         queryStrings: {
             page,
             limit,
+            name,
         },
     });
 

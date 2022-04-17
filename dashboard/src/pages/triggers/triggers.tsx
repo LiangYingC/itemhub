@@ -159,7 +159,7 @@ const Triggers = () => {
         <>
             <div>
                 <label>
-                    SourceDeviceName:
+                    來源裝置名稱:
                     <select
                         value={sourceDeviceNameFilter}
                         onChange={(e) => {
@@ -177,7 +177,7 @@ const Triggers = () => {
                     </select>
                 </label>
                 <label>
-                    DestinationDeviceName:
+                    目標裝置名稱:
                     <select
                         value={destinationDeviceNameFilter}
                         onChange={(e) => {
@@ -234,17 +234,15 @@ const Triggers = () => {
                                 <div>Id: {id}</div>
                                 <div>OwnerId: {ownerId}</div>
                                 <div>
-                                    Source Device Name:{' '}
+                                    來源裝置名稱:{' '}
                                     {sourceDevice?.name || 'No Data'}
                                 </div>
-                                <div>Source Device Pin: {sourcePin}</div>
+                                <div>來源裝置 Pin: {sourcePin}</div>
                                 <div>
-                                    Destination Device Name:{' '}
+                                    目標裝置名稱:{' '}
                                     {destinationDevice?.name || 'No Data'}
                                 </div>
-                                <div>
-                                    Destination Device Pin: {destinationPin}
-                                </div>
+                                <div>目標裝置 Pin: {destinationPin}</div>
                                 <Link to={`../triggers/${id}`}>
                                     Go to id:{id} trigger
                                 </Link>

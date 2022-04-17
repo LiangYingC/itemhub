@@ -37,7 +37,7 @@ const AutocompletedSearch = ({
         setIsShowSuggestions(false);
     };
 
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             updateCurrentValue(filteredSuggestions[activeSuggestionIndex]);
             setActiveSuggestionIndex(0);
@@ -69,7 +69,7 @@ const AutocompletedSearch = ({
                 value={currentValue}
                 onFocus={handleChangeValue}
                 onChange={handleChangeValue}
-                onKeyDown={handleKeyDown}
+                onKeyUp={handleKeyUp}
             />
             {isShowSuggestions ? (
                 filteredSuggestions.length > 0 ? (

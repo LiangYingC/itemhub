@@ -36,7 +36,7 @@ const PageTitle = (props: {
 
     return (
         <div className="page-title" data-testid="page-title">
-            <div className="w-100 d-flex align-items-center p-4">
+            <div className="w-100 d-flex align-items-center p-45">
                 <div
                     role="button"
                     className={`d-none hamburger p-2 ${
@@ -58,7 +58,7 @@ const PageTitle = (props: {
                                     primaryButtonVisible ? '' : 'd-none'
                                 } ${
                                     primaryButtonClassName || 'bg-light'
-                                } d-flex align-items-center btn bg-black bg-opacity-10 text-black text-opacity-65 border border-black border-opacity-10 rounded-pill px-3 py-2`}
+                                } d-flex align-items-center btn rounded-pill px-3 py-2`}
                             >
                                 <img
                                     className="icon pe-2"

@@ -39,7 +39,9 @@ const PageTitle = (props: {
             <div className="w-100 d-flex align-items-center p-4">
                 <div
                     role="button"
-                    className={`hamburger p-2 ${isOpen ? 'd-none' : ''}`}
+                    className={`d-none hamburger p-2 ${
+                        isOpen ? 'd-none' : 'd-md-block'
+                    }`}
                     onClick={openMenu}
                 >
                     <div className="bg-black bg-opacity-85 w-100 rounded-pill" />
@@ -56,7 +58,7 @@ const PageTitle = (props: {
                                     primaryButtonVisible ? '' : 'd-none'
                                 } ${
                                     primaryButtonClassName || 'bg-light'
-                                } d-flex align-items-center btn bg-black bg-opacity-10 text-black text-opacity-65 border border-black-opacity-9 rounded-pill px-3 py-2`}
+                                } d-flex align-items-center btn bg-black bg-opacity-10 text-black text-opacity-65 border border-black border-opacity-10 rounded-pill px-3 py-2`}
                             >
                                 <img
                                     className="icon pe-2"

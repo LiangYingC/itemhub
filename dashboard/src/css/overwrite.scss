@@ -38,9 +38,9 @@ $opacity: (
     45: 0.45,
     35: 0.35,
     25: 0.25,
+    15: 0.15,
     10: 0.1,
     5: 0.05,
-    2: 0.02,
     0: 0,
 );
 
@@ -87,8 +87,6 @@ $shadow: 0px 4px 8px rgba(0, 0, 0, 0.08);
 
 $theme-colors: (
     'black': black,
-    'black-opacity-15': $black-opacity-15,
-    'black-opacity-9': $black-opacity-9,
     'white': white,
     'primary': $primary,
     'light-blue': $light-blue,
@@ -130,7 +128,14 @@ $utilities-bg-colors: map-loop($utilities-bg, rgba-css-var, '$key', 'bg');
 $utilities-text: map-merge($utilities-colors, ($theme-colors-rgb));
 $utilities-text-colors: map-loop($utilities-text, rgba-css-var, '$key', 'text');
 
-$enable-negative-margins: true;
+$utilities-border: map-merge($utilities-colors, ($theme-colors-rgb));
+$utilities-border-colors: map-loop(
+    $utilities-border,
+    rgba-css-var,
+    '$key',
+    'border'
+);
+$--bs-bg-opacity: 0;
 
 $rounded: (
     null: $border-radius,
@@ -147,7 +152,7 @@ $utilities: map-merge(
     $utilities,
     (
         'color': (
-            property: color,
+            property: 'color',
             class: 'text',
             local-vars: (
                 'text-opacity': 1,
@@ -178,9 +183,17 @@ $utilities: map-merge(
             values: $rounded,
         ),
         'border-color': (
-            property: border-color,
-            class: border,
-            values: map-merge($theme-colors, ()),
+            property: 'border-color',
+            class: 'border',
+            local-vars: (
+                'border-opacity': 1,
+            ),
+            values: map-merge($utilities-border-colors, ()),
+        ),
+        'border-opacity': (
+            css-var: true,
+            class: 'border-opacity',
+            values: $opacity,
         ),
     )
 );

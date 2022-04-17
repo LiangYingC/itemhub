@@ -80,7 +80,7 @@ const Pin = (props: { pinItem: PinItem; isEditMode: boolean }) => {
                         </div>
                     </div>
                 ) : (
-                    <div className="text-black text-opacity-65 me-2">
+                    <div className="text-black text-opacity-65 me-2 mb-2">
                         {' '}
                         {name || pin}
                     </div>
@@ -94,7 +94,7 @@ const Pin = (props: { pinItem: PinItem; isEditMode: boolean }) => {
                             value === 1
                                 ? 'bg-green active'
                                 : 'bg-black bg-opacity-25'
-                        } d-flex align-items-center toggle-button d-flex rounded-pill`}
+                        } d-flex align-items-center toggle-button d-flex rounded-pill mb-2`}
                     >
                         <div className="button-head bg-white rounded-circle" />
                     </div>

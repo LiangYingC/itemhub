@@ -24,7 +24,7 @@ const App = () => {
     }
     return token ? (
         <div className="dashboard" data-testid="Dashboard">
-            <div className="d-flex">
+            <div className="d-md-flex">
                 <Header />
                 <div className="position-relative container-fluid overflow-scroll px-0 bg-grey-100 content">
                     <Outlet />

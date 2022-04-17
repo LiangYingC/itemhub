@@ -22,7 +22,7 @@ const Devices = () => {
     let shouldBeTwiceEnter = false;
     let enterCount = 0;
 
-    const { isLoading, getDevicesApi } = useGetDevicesApi({
+    const { isGetingDevices, getDevicesApi } = useGetDevicesApi({
         page,
         limit,
         name: deviceName,
@@ -64,7 +64,6 @@ const Devices = () => {
     };
 
     return (
-        // UI 結構等設計稿後再重構調整
         <div className="devices" data-testid="Devices">
             <PageTitle
                 title="裝置列表"
@@ -94,7 +93,7 @@ const Devices = () => {
                         <img src={searchIcon} alt="icon-search" />
                     </button>
                 </div>
-                {isLoading || devices === null ? (
+                {isGetingDevices || devices === null ? (
                     <div>Loading</div>
                 ) : (
                     <>

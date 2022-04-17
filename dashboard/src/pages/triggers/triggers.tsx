@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { RESPONSE_STATUS } from '@/constants/api';
 import { useQuery } from '@/hooks/query.hook';
 import { useAppSelector } from '@/hooks/redux.hook';
@@ -41,6 +41,7 @@ const filterTriggers = ({
 };
 
 const Triggers = () => {
+    const navigate = useNavigate();
     const query = useQuery();
     const limit = Number(query.get('limit') || 5);
     const page = Number(query.get('page') || 1);
@@ -159,7 +160,7 @@ const Triggers = () => {
             <PageTitle title="觸發列表" />
             <div>
                 <label>
-                    SourceDeviceName:
+                    來源裝置名稱:
                     <select
                         value={sourceDeviceNameFilter}
                         onChange={(e) => {
@@ -177,7 +178,7 @@ const Triggers = () => {
                     </select>
                 </label>
                 <label>
-                    DestinationDeviceName:
+                    目標裝置名稱:
                     <select
                         value={destinationDeviceNameFilter}
                         onChange={(e) => {
@@ -203,6 +204,14 @@ const Triggers = () => {
                     ? 'Deleting Triggers'
                     : 'Delete Selected Trigger'}
             </button>
+            <button
+                onClick={() =>
+                    navigate('../dashboard/triggers/create', { replace: false })
+                }
+            >
+                Create Trigger
+            </button>
+            ;
             <div className="triggers" data-testid="triggers">
                 {isGettingTriggers || triggers === null ? (
                     <h1>Loading</h1>
@@ -210,15 +219,18 @@ const Triggers = () => {
                     <h1>No Triggers</h1>
                 ) : (
                     filteredTriggers.map(
-                        ({
-                            id,
-                            ownerId,
-                            sourceDevice,
-                            sourcePin,
-                            destinationDevice,
-                            destinationPin,
-                        }) => (
-                            <label key={id} className="mt-2 mb-2">
+                        (
+                            {
+                                id,
+                                ownerId,
+                                sourceDevice,
+                                sourcePin,
+                                destinationDevice,
+                                destinationPin,
+                            },
+                            index
+                        ) => (
+                            <label key={`${id}-${index}`} className="mt-2 mb-2">
                                 <input
                                     type="checkbox"
                                     onChange={updateSelectedIds}
@@ -227,18 +239,16 @@ const Triggers = () => {
                                 <div>Id: {id}</div>
                                 <div>OwnerId: {ownerId}</div>
                                 <div>
-                                    Source Device Name:{' '}
+                                    來源裝置名稱:{' '}
                                     {sourceDevice?.name || 'No Data'}
                                 </div>
-                                <div>Source Device Pin: {sourcePin}</div>
+                                <div>來源裝置 Pin: {sourcePin}</div>
                                 <div>
-                                    Destination Device Name:{' '}
+                                    目標裝置名稱:{' '}
                                     {destinationDevice?.name || 'No Data'}
                                 </div>
-                                <div>
-                                    Destination Device Pin: {destinationPin}
-                                </div>
-                                <Link to={`../triggers/${id}`}>
+                                <div>目標裝置 Pin: {destinationPin}</div>
+                                <Link to={`../dashboard/triggers/${id}`}>
                                     Go to id:{id} trigger
                                 </Link>
                             </label>

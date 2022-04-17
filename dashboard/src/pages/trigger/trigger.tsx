@@ -98,6 +98,7 @@ const Trigger = () => {
         updatedData: editedTriggerData,
     });
 
+    // TODO: 可改用 pagination api，用 name query 去讓 sever 就篩選好我們要的 options，不用在 client 端 filter
     const { allDevices, getAllDevicesApi } = useGetAllDevicesApi();
     useEffect(() => {
         getAllDevicesApi();

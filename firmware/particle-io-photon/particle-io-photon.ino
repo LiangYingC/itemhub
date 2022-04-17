@@ -227,7 +227,7 @@ void sendSensor()
             postBody.append("}");
 
             std::string respOfRegisterPin = ItemhubUtilities::Send(client, apiEndpoint, caPem, POST, endpoint, postBody, token);
-
+            ERROR_THEN_RECONNECT(respOfRegisterPin);
             Serial.print("Sensor: ");
             Serial.println(respOfRegisterPin.c_str());
         }

@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import useClickOutsideElement from '@/hooks/clickOutsideElement.hook';
 
 const AutocompletedSearch = ({
     currentValue,
@@ -36,7 +37,7 @@ const AutocompletedSearch = ({
         setIsShowSuggestions(false);
     };
 
-    const handleKeyDown = (e: React.KeyboardEvent) => {
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             updateCurrentValue(filteredSuggestions[activeSuggestionIndex]);
             setActiveSuggestionIndex(0);
@@ -52,8 +53,17 @@ const AutocompletedSearch = ({
         }
     };
 
+    const autocompletedSearchRef = useRef<HTMLDivElement>(null);
+    const handleClickOuside = () => {
+        setIsShowSuggestions(false);
+    };
+    useClickOutsideElement({
+        elementRef: autocompletedSearchRef,
+        handleClick: handleClickOuside,
+    });
+
     return (
-        <div>
+        <div ref={autocompletedSearchRef}>
             <input
                 className="form-control"
                 value={currentValue}

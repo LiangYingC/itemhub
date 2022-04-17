@@ -206,7 +206,7 @@ const Triggers = () => {
             </button>
             <button
                 onClick={() =>
-                    navigate('../triggers/create', { replace: false })
+                    navigate('../dashboard/triggers/create', { replace: false })
                 }
             >
                 Create Trigger
@@ -245,7 +245,7 @@ const Triggers = () => {
                                     {destinationDevice?.name || 'No Data'}
                                 </div>
                                 <div>目標裝置 Pin: {destinationPin}</div>
-                                <Link to={`../triggers/${id}`}>
+                                <Link to={`../dashboard/triggers/${id}`}>
                                     Go to id:{id} trigger
                                 </Link>
                             </label>

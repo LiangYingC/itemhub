@@ -28,12 +28,10 @@ const DeviceAndPinInputs = ({
     const [deviceName, setDeviceName] = useState(initialDeviceName);
 
     const currentDeviceId =
-        allDevices.filter(({ name }) => deviceName === name)[0]?.id || null;
+        allDevices.filter(({ name }) => deviceName === name)[0]?.id || 0;
 
     useEffect(() => {
-        if (currentDeviceId) {
-            updateDeviceId(currentDeviceId);
-        }
+        updateDeviceId(currentDeviceId);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentDeviceId]);
 

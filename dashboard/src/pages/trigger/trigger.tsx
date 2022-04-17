@@ -48,6 +48,8 @@ const Trigger = () => {
     } = useGetDevicePinsApi({
         id: editedTriggerData.sourceDeviceId,
     });
+    const sourceDeviecePinsOptions =
+        editedTriggerData.sourceDeviceId === 0 ? [] : saurceDeviecePins || [];
     useEffect(() => {
         if (editedTriggerData.sourceDeviceId) {
             getSourceDevicePinsApi();
@@ -60,6 +62,10 @@ const Trigger = () => {
     } = useGetDevicePinsApi({
         id: editedTriggerData.destinationDeviceId,
     });
+    const destinationDeviecePinsOptions =
+        editedTriggerData.destinationDeviceId === 0
+            ? []
+            : destinationDeviecePins || [];
     useEffect(() => {
         if (editedTriggerData.destinationDeviceId) {
             getDestinationDevicePinsApi();
@@ -125,7 +131,7 @@ const Trigger = () => {
                             deviceNameLabel="來源裝置名稱"
                             pinLabel="來源裝置 PIN"
                             pinValue={editedTriggerData.sourcePin}
-                            pinOptions={saurceDeviecePins || []}
+                            pinOptions={sourceDeviecePinsOptions}
                             updatePin={(newPin) =>
                                 setEditedTriggerData((prev) => {
                                     return {
@@ -155,7 +161,7 @@ const Trigger = () => {
                             deviceNameLabel="目標裝置名稱"
                             pinLabel="目標裝置 PIN"
                             pinValue={editedTriggerData.destinationPin}
-                            pinOptions={destinationDeviecePins || []}
+                            pinOptions={destinationDeviecePinsOptions}
                             updatePin={(newPin) =>
                                 setEditedTriggerData((prev) => {
                                     return {

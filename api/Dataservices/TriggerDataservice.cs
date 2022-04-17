@@ -111,7 +111,6 @@ namespace Homo.IotApi
             {
                 DeletedAt = DateTime.Now
             });
-            dbContext.SaveChanges();
         }
 
         public static void Update(IotDbContext dbContext, long ownerId, long id, DTOs.Trigger dto)

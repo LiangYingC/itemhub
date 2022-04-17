@@ -66,7 +66,6 @@ namespace Homo.IotApi
                 {
                     IsOverSubscriptionPlan = true
                 });
-                dbContext.SaveChanges();
                 throw new CustomException(ERROR_CODE.TOO_MANY_REQUEST, System.Net.HttpStatusCode.Forbidden);
             }
         }

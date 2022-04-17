@@ -30,5 +30,6 @@
     "DUPLICATE_OAUTH_CLIENT_ID": "這個 oAuth Client Id 已經有人使用過了, 請重新輸入",
     "NO_SUBSCRIPTION": "目前沒有訂閱紀錄",
     "DUPLICATE_EMAIL": "重複的 Email",
-    "TOO_MANY_REQUEST": "送 Request 頻率太高, 已經超越你所訂閱的方案"
+    "TOO_MANY_REQUEST": "送 Request 頻率太高, 已經超越你所訂閱的方案",
+    "DEVICE_OAUTH_CLIENT_EXISTS": "你新增的 Client 已經存在, 請先將裝置的 Client 刪除再重新新增"
 }

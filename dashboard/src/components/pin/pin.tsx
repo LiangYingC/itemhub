@@ -1,9 +1,9 @@
 import { useUpdateDeviceSwitchPinApi } from '@/hooks/apis/devices.hook';
-import styles from './pin.module.scss';
 import { useEffect, useState, useRef } from 'react';
 import { useUpdateDevicePinNameApi } from '@/hooks/apis/devices.hook';
 import { useDebounce } from '@/hooks/debounce.hook';
 import { PinItem } from '@/types/devices.type';
+import moment from 'moment';
 
 const Pin = (props: { pinItem: PinItem; isEditMode: boolean }) => {
     const { isEditMode, pinItem } = props;
@@ -56,7 +56,11 @@ const Pin = (props: { pinItem: PinItem; isEditMode: boolean }) => {
     }, [value, isSwitch]);
 
     return (
-        <div className={`${styles.pin} d-flex align-items-center`}>
+        <div
+            className="pin d-flex flex-wrap align-items-center mb-2"
+            role={isSwitch ? 'button' : ''}
+            onClick={isSwitch ? toggleSwitch : () => {}}
+        >
             <div className="name me-2">
                 {isEditMode ? (
                     <div>
@@ -82,23 +86,24 @@ const Pin = (props: { pinItem: PinItem; isEditMode: boolean }) => {
 
             {isSwitch ? (
                 <div className="state d-flex align-items-center">
-                    開關:
-                    <div>{value === 1 ? '開' : '關'}</div>
-                    {isEditMode ? (
-                        <button
-                            className="btn border ms-3"
-                            onClick={toggleSwitch}
-                            disabled={isChanging}
-                        >
-                            切換
-                        </button>
-                    ) : null}
+                    <div
+                        className={`${
+                            value === 1
+                                ? 'bg-green active'
+                                : 'bg-black bg-opacity-25'
+                        } d-flex align-items-center toggle-button d-flex rounded-pill`}
+                    >
+                        <div className="button-head bg-white rounded-circle" />
+                    </div>
                 </div>
             ) : (
-                <div>
-                    感測器: {value}
-                    <span>(最後收到資料的時間 {createdAt})</span>
-                </div>
+                <>
+                    <div>: {value}</div>
+                    <div className="h6 mb-0 text-black-opacity-45 w-100">
+                        最後回傳時間:
+                        {` ${moment(createdAt).format('YYYY-MM-DD HH:mm')}`}
+                    </div>
+                </>
             )}
         </div>
     );

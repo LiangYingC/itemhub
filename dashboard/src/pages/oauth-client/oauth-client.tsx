@@ -1,4 +1,3 @@
-import styles from './oauth-client.module.scss';
 import { useEffect, useState } from 'react';
 import { useAppSelector } from '@/hooks/redux.hook';
 import {
@@ -13,6 +12,7 @@ import {
     useDeleteOauthClients,
 } from '@/hooks/apis/oauth-clients.hook';
 import { RESPONSE_STATUS } from '@/constants/api';
+import PageTitle from '@/components/page-title/page-title';
 
 interface OauthClientLocationState {
     secret: string;
@@ -74,78 +74,90 @@ const OauthClient = () => {
 
     useEffect(() => {
         if (deleteOAuthClientResponse?.status === RESPONSE_STATUS.OK) {
-            navigate('../oauth-clients', { replace: true });
+            navigate('/dashboard/oauth-clients', { replace: true });
         }
     }, [navigate, deleteOAuthClientResponse]);
 
     useEffect(() => {
         if (createOAuthClientResponse && !isNaN(createOAuthClientResponse.id)) {
-            navigate(`../oauth-clients/${createOAuthClientResponse?.id}`, {
-                replace: false,
-                state: {
-                    secret: createOAuthClientResponse.clientSecrets,
-                },
-            });
+            navigate(
+                `/dashboard/oauth-clients/${createOAuthClientResponse?.id}`,
+                {
+                    replace: false,
+                    state: {
+                        secret: createOAuthClientResponse.clientSecrets,
+                    },
+                }
+            );
         }
     }, [navigate, createOAuthClientResponse]);
 
     return (
-        <div className={styles.OauthClient} data-testid="oauth-client">
-            {isGetting ? (
-                <div>Loading</div>
-            ) : (
-                <div>
-                    <div>{oauthClient?.id}</div>
-                    <input
-                        type="text"
-                        className="form-control"
-                        value={clientId}
-                        onChange={(e) => setClientId(e.target.value)}
-                    />
-                    {isCreateMode ? (
-                        <div>
-                            <button
-                                disabled={
-                                    !clientId || clientId === '' || isCreating
-                                }
-                                onClick={createApi}
-                            >
-                                Create
-                            </button>
-                        </div>
-                    ) : (
-                        <div>
-                            <input
-                                type="text"
-                                className="form-control"
-                                placeholder="****************************"
-                                value={
-                                    revokeSecretResponse?.secret ||
-                                    (state as OauthClientLocationState)?.secret
-                                }
-                                disabled
-                            />
-                            <button
-                                disabled={isDeleting}
-                                onClick={deleteMultipleApi}
-                            >
-                                {isDeleting ? 'Deleting' : 'Delete'}
-                            </button>
-                            <button disabled={isUpdating} onClick={updateApi}>
-                                {isUpdating ? 'Updating' : 'Update'}
-                            </button>
-                            <button
-                                disabled={isRevoking}
-                                onClick={revokeSecretApi}
-                            >
-                                {isRevoking
-                                    ? 'Revoking'
-                                    : 'Revoke Client Secret'}
-                            </button>
-                        </div>
-                    )}
-                </div>
-            )}
+        <div className="oauth-client" data-testid="oauth-client">
+            <PageTitle title={`oAuth Client - ${clientId}`} />
+            <div className="card mx-4 p-45">
+                {isGetting ? (
+                    <div>Loading</div>
+                ) : (
+                    <div className="p-4">
+                        <div>{oauthClient?.id}</div>
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={clientId}
+                            placeholder="如果不填寫 clientId 系統會自動會幫你隨機產生"
+                            onChange={(e) => setClientId(e.target.value)}
+                        />
+                        {isCreateMode ? (
+                            <div>
+                                <button
+                                    disabled={isCreating}
+                                    onClick={createApi}
+                                >
+                                    Create
+                                </button>
+                            </div>
+                        ) : (
+                            <div>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    placeholder="****************************"
+                                    value={
+                                        revokeSecretResponse?.secret ||
+                                        (state as OauthClientLocationState)
+                                            ?.secret
+                                    }
+                                    disabled
+                                />
+                                <button
+                                    className="btn rounded-pill bg-white mx-2"
+                                    disabled={isDeleting}
+                                    onClick={deleteMultipleApi}
+                                >
+                                    {isDeleting ? 'Deleting' : 'Delete'}
+                                </button>
+                                <button
+                                    className="btn rounded-pill bg-white mx-2"
+                                    disabled={isUpdating}
+                                    onClick={updateApi}
+                                >
+                                    {isUpdating ? 'Updating' : 'Update'}
+                                </button>
+                                <button
+                                    className="btn rounded-pill bg-white mx-2"
+                                    disabled={isRevoking}
+                                    onClick={revokeSecretApi}
+                                >
+                                    {isRevoking
+                                        ? 'Revoking'
+                                        : 'Revoke Client Secret'}
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                )}
+            </div>
         </div>
     );
 };

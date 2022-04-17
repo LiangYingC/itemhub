@@ -11,6 +11,7 @@ import { useGetAllDevicesApi } from '@/hooks/apis/devices.hook';
 import { selectTriggers } from '@/redux/reducers/triggers.reducer';
 import { selectUniversal } from '@/redux/reducers/universal.reducer';
 import DeviceAndPinInputs from '@/components/Inputs/deviceAndPinInput/deviceAndPinInput';
+import PageTitle from '@/components/page-title/page-title';
 
 const Trigger = () => {
     const { id: idFromUrl } = useParams();
@@ -76,7 +77,8 @@ const Trigger = () => {
     }, []);
 
     return (
-        <div className={styles.trigger} data-testid="trigger">
+        <div className="trigger" data-testid="trigger">
+            <PageTitle title={`觸發 - `} /> {/* Todo: Trigger 加上 Name Field*/}
             {isGettingTrigger || trigger === null ? (
                 <div>Loading</div>
             ) : (

@@ -1,4 +1,3 @@
-import styles from './device.module.scss';
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
@@ -10,19 +9,31 @@ import { useAppSelector } from '@/hooks/redux.hook';
 import { selectDevices } from '@/redux/reducers/devices.reducer';
 import Pins from '@/components/pins/pins';
 import { RESPONSE_STATUS } from '@/constants/api';
+import PageTitle from '@/components/page-title/page-title';
+import { useGetOauthClientByDeviceId } from '@/hooks/apis/oauth-clients.hook';
+import { selectOauthClients } from '@/redux/reducers/oauth-clients.reducer';
 
 const Device = () => {
     const { id } = useParams();
     const numId = Number(id);
     const devices = useAppSelector(selectDevices);
+    const oAuthClients = useAppSelector(selectOauthClients).oauthClients;
     const navigate = useNavigate();
     const device = devices?.filter((device) => device.id === numId)[0] || null;
+    const oAuthClient =
+        oAuthClients?.filter((client) => client.deviceId === device?.id)[0] ||
+        null;
 
     const [deviceName, setDeviceName] = useState<string>('');
 
     const { isLoading, getDeviceApi } = useGetDeviceApi({
         id: numId,
     });
+
+    const {
+        isLoading: isOauthClientLoading,
+        fetchApi: getOauthClientByDeviceId,
+    } = useGetOauthClientByDeviceId(device ? device.id : 0);
 
     const { updateDeviceApi, isLoading: isUpdating } = useUpdateDeviceApi({
         id: numId,
@@ -53,6 +64,15 @@ const Device = () => {
     }, []);
 
     useEffect(() => {
+        if (device === null) {
+            return;
+        }
+        if (oAuthClient === null) {
+            getOauthClientByDeviceId();
+        }
+    }, [device]);
+
+    useEffect(() => {
         setDeviceName(device ? device.name : '');
     }, [device]);
 
@@ -64,7 +84,8 @@ const Device = () => {
 
     return (
         // UI 結構等設計稿後再重構調整
-        <div className={styles.device} data-testid="device">
+        <div className="device" data-testid="device">
+            <PageTitle title={`裝置 - ${deviceName}`} />
             {isLoading || device === null ? (
                 <div>Loading</div>
             ) : (
@@ -128,8 +149,28 @@ const Device = () => {
                     </div>
                 </div>
             )}
+
+            {isOauthClientLoading ? (
+                <div>Loading</div>
+            ) : (
+                <>
+                    <div>
+                        <label>ClientId: </label>
+                        <input
+                            className="form-control"
+                            value={oAuthClient?.clientId}
+                        />
+                    </div>
+                    <div>
+                        <label>Secret: </label>
+                        <div className="form-control">
+                            {oAuthClient?.clientSecrets || '*****'}
+                        </div>
+                    </div>
+                </>
+            )}
             <div>
-                <Link to="../devices">Back to device list</Link>
+                <Link to="../dashboard/devices">Back to device list</Link>
             </div>
         </div>
     );

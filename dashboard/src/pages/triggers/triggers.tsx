@@ -1,4 +1,3 @@
-import styles from './triggers.module.scss';
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { RESPONSE_STATUS } from '@/constants/api';
@@ -12,6 +11,7 @@ import { selectTriggers } from '@/redux/reducers/triggers.reducer';
 import { ArrayHelpers } from '@/helpers/array.helper';
 import { TriggerItem } from '@/types/triggers.type';
 import Pagination from '@/components/pagination/pagination';
+import PageTitle from '@/components/page-title/page-title';
 
 const filterTriggers = ({
     triggers,
@@ -157,6 +157,7 @@ const Triggers = () => {
 
     return (
         <>
+            <PageTitle title="觸發列表" />
             <div>
                 <label>
                     來源裝置名稱:
@@ -210,7 +211,8 @@ const Triggers = () => {
             >
                 Create Trigger
             </button>
-            <div className={styles.triggers} data-testid="triggers">
+            ;
+            <div className="triggers" data-testid="triggers">
                 {isGettingTriggers || triggers === null ? (
                     <h1>Loading</h1>
                 ) : filteredTriggers.length === 0 ? (

@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom';
-import './index.css';
+import './index.scss';
 import App from './app';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Dashboard from './pages/dashboard/dashboard';
@@ -25,24 +25,29 @@ ReactDOM.render(
                     </Provider>
                 }
             >
-                <Route path="dashboard" element={<Dashboard />}>
-                    <Route path="devices" element={<Devices />} />
-                    <Route path="devices/:id" element={<Device />} />
-                    <Route
-                        path="devices/:id/:pin"
-                        element={<DevicePinData />}
-                    />
-                    <Route path="triggers" element={<Triggers />} />
-                    <Route path="triggers/create" element={<Trigger />} />
-                    <Route path="triggers/:id" element={<Trigger />} />
-                    <Route path="oauth-clients" element={<OauthClients />} />
-                    <Route
-                        path="oauth-clients/create"
-                        element={<OauthClient />}
-                    />
-                    <Route path="oauth-clients/:id" element={<OauthClient />} />
-                </Route>
-                <Route path="/404" element={<NotFound />} />
+                <Route path="dashboard" element={<Dashboard />} />
+                <Route path="dashboard/devices" element={<Devices />} />
+                <Route path="dashboard/devices/:id" element={<Device />} />
+                <Route
+                    path="dashboard/devices/:id/:pin"
+                    element={<DevicePinData />}
+                />
+                <Route path="dashboard/triggers" element={<Triggers />} />
+                <Route path="dashboard/triggers/create" element={<Trigger />} />
+                <Route path="dashboard/triggers/:id" element={<Trigger />} />
+                <Route
+                    path="dashboard/oauth-clients"
+                    element={<OauthClients />}
+                />
+                <Route
+                    path="dashboard/oauth-clients/create"
+                    element={<OauthClient />}
+                />
+                <Route
+                    path="dashboard/oauth-clients/:id"
+                    element={<OauthClient />}
+                />
+                <Route path="dashboard/404" element={<NotFound />} />
             </Route>
         </Routes>
     </BrowserRouter>,

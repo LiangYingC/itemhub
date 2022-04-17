@@ -36,10 +36,12 @@ const PageTitle = (props: {
 
     return (
         <div className="page-title" data-testid="page-title">
-            <div className="w-100 d-flex align-items-center bg-white p-4">
+            <div className="w-100 d-flex align-items-center p-4">
                 <div
                     role="button"
-                    className={`hamburger p-2 ${isOpen ? 'd-none' : ''}`}
+                    className={`d-none hamburger p-2 ${
+                        isOpen ? 'd-none' : 'd-md-block'
+                    }`}
                     onClick={openMenu}
                 >
                     <div className="bg-black bg-opacity-85 w-100 rounded-pill" />
@@ -56,13 +58,13 @@ const PageTitle = (props: {
                                     primaryButtonVisible ? '' : 'd-none'
                                 } ${
                                     primaryButtonClassName || 'bg-light'
-                                } d-flex align-items-center btn border border-secondary rounded-pill px-3 py-2`}
+                                } d-flex align-items-center btn bg-black bg-opacity-10 text-black text-opacity-65 border border-black border-opacity-10 rounded-pill px-3 py-2`}
                             >
                                 <img
                                     className="icon pe-2"
                                     src={primaryButtonIcon || refreshIcon}
                                 />
-                                <div className="lh-1 py-1">
+                                <div className="lh-1 py-1 fw-bold">
                                     {primaryButtonWording}
                                 </div>
                             </button>
@@ -70,13 +72,13 @@ const PageTitle = (props: {
                                 onClick={secondaryButtonCallback}
                                 className={`${
                                     secondaryButtonVisible ? '' : 'd-none'
-                                } d-flex align-items-center btn bg-primary text-white border border--primary rounded-pill ms-3  px-3 py-2`}
+                                } d-flex align-items-center btn bg-light-blue text-white border border-light-blue rounded-pill ms-3  px-3 py-2`}
                             >
                                 <img
                                     className="icon pe-2"
                                     src={secondaryButtonIcon || plusIcon}
                                 />
-                                <div className="lh-1 py-1">
+                                <div className="lh-1 py-1 fw-bold">
                                     {secondaryButtonWording}
                                 </div>
                             </button>

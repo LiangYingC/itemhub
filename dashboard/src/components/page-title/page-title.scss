@@ -1,2 +1,12 @@
+@import '../../css/overwrite.scss';
+
 .page-title {
+    @include media-breakpoint-down(xl) {
+        background: #fff;
+        box-shadow: $shadow;
+    }
+    @include media-breakpoint-down(md) {
+        background: transparent;
+        box-shadow: none;
+    }
 }

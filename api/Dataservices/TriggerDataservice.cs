@@ -75,7 +75,10 @@ namespace Homo.IotApi
 
         public static Trigger GetOne(IotDbContext dbContext, long ownerId, long? id, long? sourceDeviceId, string sourcePin, long? destinationDeviceId, string destinationPin)
         {
-            return dbContext.Trigger.FirstOrDefault(x =>
+            return dbContext.Trigger
+                .Include(x => x.SourceDevice)
+                .Include(x => x.DestinationDevice)
+                .FirstOrDefault(x =>
                 x.DeletedAt == null
                 && x.OwnerId == ownerId
                 && (id == null || x.Id == id)

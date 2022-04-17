@@ -64,13 +64,23 @@ const DeviceAndPinInputs = ({
                         updatePin(newSourcePin);
                     }}
                 >
-                    {pinOptions.map(({ name, pin }, index) => {
-                        return (
-                            <option key={`${name}-${index}`} value={pin}>
-                                {name}
-                            </option>
-                        );
-                    })}
+                    {pinOptions.length > 0 ? (
+                        <>
+                            {pinValue === '' && <option>請選擇 Pin</option>}
+                            {pinOptions.map(({ name, pin }, index) => {
+                                return (
+                                    <option
+                                        key={`${name}-${index}`}
+                                        value={pin}
+                                    >
+                                        {name}
+                                    </option>
+                                );
+                            })}
+                        </>
+                    ) : (
+                        <option>無任何 Pin 資料，請重新選擇裝置</option>
+                    )}
                 </select>
             </div>
         </>

@@ -19,7 +19,7 @@
         height: $status-dot-size;
     }
     .devices-list {
-        .row:hover {
+        > .row:hover {
             background: rgba($light-blue, 0.04);
         }
     }

@@ -70,6 +70,7 @@ const Devices = () => {
                 primaryButtonVisible
                 secondaryButtonVisible
                 primaryButtonWording="重新整理"
+                primaryButtonClassName="bg-black bg-opacity-10 text-black text-opacity-65 border border-black border-opacity-10"
                 primaryButtonCallback={refresh}
                 secondaryButtonWording="新增裝置"
                 secondaryButtonCallback={jumpToCreatePage}
@@ -104,8 +105,8 @@ const Devices = () => {
                                 <div className="row bg-black bg-opacity-5 text-black text-opacity-45 border-bottom border-black border-opacity-10 h6 py-25 px-3 m-0">
                                     <div className="col-3">裝置名稱 / ID</div>
                                     <div className="col-2">狀態</div>
-                                    <div className="col-3">建立時間</div>
-                                    <div className="col-2">Pins Data</div>
+                                    <div className="col-2">建立時間</div>
+                                    <div className="col-3">Pins Data</div>
                                     <div className="col-2">操作</div>
                                 </div>
                             </div>
@@ -163,7 +164,7 @@ const Devices = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="col-12 col-sm-3 row text-black text-opacity-65 h6 mb-0 mx-0 px-0 px-sm-25">
+                                            <div className="col-12 col-sm-2 row text-black text-opacity-65 h6 mb-0 mx-0 px-0 px-sm-25">
                                                 <div className="d-sm-none col-4 bg-black bg-opacity-5 text-black text-opacity-45 p-3">
                                                     建立時間
                                                 </div>
@@ -173,7 +174,7 @@ const Devices = () => {
                                                     )}
                                                 </div>
                                             </div>
-                                            <div className="col-12 col-sm-2 row mx-0 px-0 px-sm-25">
+                                            <div className="col-12 col-sm-3 row mx-0 px-0 px-sm-25">
                                                 <div className="d-sm-none col-4 bg-black bg-opacity-5 text-black text-opacity-45 p-3">
                                                     Pins Data
                                                 </div>

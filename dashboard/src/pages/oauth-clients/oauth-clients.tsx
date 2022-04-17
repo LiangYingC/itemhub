@@ -16,7 +16,7 @@ import trashIcon from '@/assets/images/trash.svg';
 
 const OauthClients = () => {
     const query = useQuery();
-    const limit = Number(query.get('limit') || 5);
+    const limit = Number(query.get('limit') || 20);
     const page = Number(query.get('page') || 1);
 
     const { oauthClients, rowNum } = useAppSelector(selectOauthClients);

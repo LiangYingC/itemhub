@@ -1,26 +1,35 @@
 import styles from './trigger.module.scss';
 import { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useAppSelector } from '@/hooks/redux.hook';
 import {
     useGetTriggerApi,
+    useCreateTriggerApi,
     useUpdateTriggerApi,
 } from '@/hooks/apis/triggers.hook';
 import { useGetDevicePinsApi } from '@/hooks/apis/devices.hook';
 import { useGetAllDevicesApi } from '@/hooks/apis/devices.hook';
 import { selectTriggers } from '@/redux/reducers/triggers.reducer';
 import { selectUniversal } from '@/redux/reducers/universal.reducer';
+import { TriggerItem } from '@/types/triggers.type';
 import DeviceAndPinInputs from '@/components/Inputs/deviceAndPinInput/deviceAndPinInput';
 import PageTitle from '@/components/page-title/page-title';
 
 const Trigger = () => {
     const { id: idFromUrl } = useParams();
-    const id = Number(idFromUrl);
+    const id = idFromUrl ? parseInt(idFromUrl) : null;
+    const isCreateMode = id === null;
+    const createLocationState = useLocation().state as {
+        trigger: TriggerItem;
+    } | null;
 
     const { triggers } = useAppSelector(selectTriggers);
     const { triggerOperators } = useAppSelector(selectUniversal);
 
-    const trigger = triggers?.filter((trigger) => trigger.id === id)[0] || null;
+    const trigger =
+        triggers?.filter((trigger) => trigger.id === id)[0] ||
+        createLocationState?.trigger ||
+        null;
 
     const [editedTriggerData, setEditedTriggerData] = useState({
         sourceDeviceId: trigger?.sourceDeviceId || 0,
@@ -33,13 +42,11 @@ const Trigger = () => {
         operator: trigger?.operator || 0,
     });
 
-    console.log({ editedTriggerData });
-
     const {
         devicePins: saurceDeviecePins,
         getDevicePinsApi: getSourceDevicePinsApi,
     } = useGetDevicePinsApi({
-        id: Number(editedTriggerData.sourceDeviceId),
+        id: editedTriggerData.sourceDeviceId,
     });
     useEffect(() => {
         if (editedTriggerData.sourceDeviceId) {
@@ -51,7 +58,7 @@ const Trigger = () => {
         devicePins: destinationDeviecePins,
         getDevicePinsApi: getDestinationDevicePinsApi,
     } = useGetDevicePinsApi({
-        id: Number(editedTriggerData.destinationDeviceId),
+        id: editedTriggerData.destinationDeviceId,
     });
     useEffect(() => {
         if (editedTriggerData.destinationDeviceId) {
@@ -66,6 +73,20 @@ const Trigger = () => {
         }
     }, [trigger, getTriggerApi]);
 
+    const navigate = useNavigate();
+    const { isCreatingTrigger, createTriggerResponse, createTriggerApi } =
+        useCreateTriggerApi(editedTriggerData);
+    useEffect(() => {
+        if (createTriggerResponse && createTriggerResponse.id) {
+            navigate(`/dashboard/triggers/${createTriggerResponse.id}`, {
+                replace: false,
+                state: {
+                    trigger: createTriggerResponse,
+                },
+            });
+        }
+    }, [navigate, createTriggerResponse]);
+
     const { isUpdatingTrigger, updateTriggerApi } = useUpdateTriggerApi({
         trigerId: trigger?.id || 0,
         updatedData: editedTriggerData,
@@ -79,22 +100,26 @@ const Trigger = () => {
     return (
         <div className="trigger" data-testid="trigger">
             <PageTitle title={`觸發 - `} /> {/* Todo: Trigger 加上 Name Field*/}
-            {isGettingTrigger || trigger === null ? (
+            {isGettingTrigger ? (
                 <div>Loading</div>
             ) : (
                 <>
                     <div className="mb-4">
-                        <div className="form-group mt-3">
-                            <label>建立時間</label>
-                            <input
-                                className="form-control"
-                                disabled
-                                defaultValue={trigger.createdAt}
-                            />
-                        </div>
+                        {!isCreateMode && (
+                            <div className="form-group mt-3">
+                                <label>建立時間</label>
+                                <input
+                                    className="form-control"
+                                    disabled
+                                    defaultValue={trigger?.createdAt || ''}
+                                />
+                            </div>
+                        )}
                         <DeviceAndPinInputs
                             allDevices={allDevices}
-                            initialDeviceName={trigger.sourceDevice?.name || ''}
+                            initialDeviceName={
+                                trigger?.sourceDevice?.name || ''
+                            }
                             deviceIdLable="來源裝置 ID"
                             deviceIdValue={editedTriggerData.sourceDeviceId}
                             deviceNameLabel="來源裝置名稱"
@@ -121,7 +146,7 @@ const Trigger = () => {
                         <DeviceAndPinInputs
                             allDevices={allDevices}
                             initialDeviceName={
-                                trigger.destinationDevice?.name || ''
+                                trigger?.destinationDevice?.name || ''
                             }
                             deviceIdLable="目標裝置 ID"
                             deviceIdValue={
@@ -156,7 +181,7 @@ const Trigger = () => {
                                     setEditedTriggerData((prev) => {
                                         return {
                                             ...prev,
-                                            operator: Number(e.target.value),
+                                            operator: parseInt(e.target.value),
                                         };
                                     });
                                 }}
@@ -182,7 +207,7 @@ const Trigger = () => {
                                     setEditedTriggerData((prev) => {
                                         return {
                                             ...prev,
-                                            sourceThreshold: Number(
+                                            sourceThreshold: parseInt(
                                                 e.target.value
                                             ),
                                         };
@@ -190,15 +215,25 @@ const Trigger = () => {
                                 }
                             />
                         </div>
-                        <button
-                            className="btn border mt-3"
-                            onClick={updateTriggerApi}
-                            disabled={isUpdatingTrigger}
-                        >
-                            {isUpdatingTrigger ? '更新中' : '更新'}
-                        </button>
+                        {isCreateMode ? (
+                            <button
+                                className="btn border mt-3"
+                                onClick={createTriggerApi}
+                                disabled={isCreatingTrigger}
+                            >
+                                {isCreatingTrigger ? '新增中' : '新增'}
+                            </button>
+                        ) : (
+                            <button
+                                className="btn border mt-3"
+                                onClick={updateTriggerApi}
+                                disabled={isUpdatingTrigger}
+                            >
+                                {isUpdatingTrigger ? '更新中' : '更新'}
+                            </button>
+                        )}
                     </div>
-                    <Link to="../triggers">Back to triggers</Link>
+                    <Link to="../dashboard/triggers">回到觸發裝置列表頁</Link>
                 </>
             )}
         </div>

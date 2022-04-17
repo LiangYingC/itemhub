@@ -10,6 +10,7 @@ import moment from 'moment';
 import pencilIcon from '@/assets/images/pencil.svg';
 import cloudIcon from '@/assets/images/cloud.svg';
 import trashIcon from '@/assets/images/trash.svg';
+import searchIcon from '@/assets/images/icon-search.svg';
 
 const Devices = () => {
     const query = useQuery();
@@ -90,10 +91,7 @@ const Devices = () => {
                         type="button"
                         onClick={search}
                     >
-                        <img
-                            src="/src/assets/images/icon-search.svg"
-                            alt="icon-search"
-                        />
+                        <img src={searchIcon} alt="icon-search" />
                     </button>
                 </div>
                 {isLoading || devices === null ? (

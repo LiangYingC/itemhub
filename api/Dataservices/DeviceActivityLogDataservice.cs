@@ -34,7 +34,7 @@ namespace Homo.IotApi
                     x.CreatedAt <= endAt
                     && (lastId == null || x.Id < lastId)
                 )
-                .OrderBy(x => x.Id)
+                .OrderByDescending(x => x.Id)
                 .Skip((page - 1) * limit)
                 .Take(limit)
                 .ToList();

@@ -17,6 +17,7 @@ const Pin = (props: { pinItem: PinItem; isEditMode: boolean }) => {
     } = pinItem;
     const [value, setValue] = useState(valueFromPorps);
     const [name, setName] = useState(nameFromProps);
+    const [isInitialized, setIsInitialized] = useState(false);
     const isNameChangedRef = useRef(false);
     const isSwitch = mode === 1;
 
@@ -49,11 +50,15 @@ const Pin = (props: { pinItem: PinItem; isEditMode: boolean }) => {
     };
 
     useEffect(() => {
-        if (value && !isSwitch) {
+        if (!isInitialized || value === undefined || !isSwitch) {
             return;
         }
         updateDeviceSwitchPinApi();
     }, [value, isSwitch]);
+
+    useEffect(() => {
+        setIsInitialized(true);
+    }, []);
 
     return (
         <div
@@ -61,11 +66,11 @@ const Pin = (props: { pinItem: PinItem; isEditMode: boolean }) => {
             role={isSwitch ? 'button' : ''}
             onClick={isSwitch ? toggleSwitch : () => {}}
         >
-            <div className="name me-2">
+            <div className="name">
                 {isEditMode ? (
                     <div>
                         <input
-                            className="form-control me-2"
+                            className="form-control"
                             title={pin}
                             placeholder={pin}
                             value={name || ''}
@@ -88,7 +93,7 @@ const Pin = (props: { pinItem: PinItem; isEditMode: boolean }) => {
             </div>
 
             {isSwitch ? (
-                <div className="state d-flex align-items-center">
+                <div className="state d-flex align-items-center ms-2">
                     <div
                         className={`${
                             value === 1
@@ -101,9 +106,11 @@ const Pin = (props: { pinItem: PinItem; isEditMode: boolean }) => {
                 </div>
             ) : (
                 <>
-                    <div>: {value}</div>
-                    <div className="h6 mb-0 text-black text-black-opacity-45 w-100">
-                        最後回傳時間:
+                    <div className="text-black text-opacity-65 mb-2">
+                        : {value}
+                    </div>
+                    <div className="h6 mb-0 text-black text-opacity-45 fw-normal w-100">
+                        最後回傳時間
                         {` ${moment(createdAt).format('YYYY-MM-DD HH:mm')}`}
                     </div>
                 </>

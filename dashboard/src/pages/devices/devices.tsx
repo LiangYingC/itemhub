@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useQuery } from '@/hooks/query.hook';
 import { useAppSelector } from '@/hooks/redux.hook';
@@ -10,17 +10,22 @@ import moment from 'moment';
 import pencilIcon from '@/assets/images/pencil.svg';
 import cloudIcon from '@/assets/images/cloud.svg';
 import trashIcon from '@/assets/images/trash.svg';
+import searchIcon from '@/assets/images/icon-search.svg';
 
 const Devices = () => {
     const query = useQuery();
     const page = Number(query.get('page') || 1);
     const limit = Number(query.get('limit') || 20);
+    const [deviceName, setDeviceName] = useState(query.get('deviceName') || '');
     const devices = useAppSelector(selectDevices);
     const navigate = useNavigate();
+    let shouldBeTwiceEnter = false;
+    let enterCount = 0;
 
-    const { isLoading, getDevicesApi } = useGetDevicesApi({
+    const { isGetingDevices, getDevicesApi } = useGetDevicesApi({
         page,
         limit,
+        name: deviceName,
     });
 
     useEffect(() => {
@@ -35,14 +40,37 @@ const Devices = () => {
         navigate('create');
     };
 
+    const searchInputKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.nativeEvent.isComposing) {
+            shouldBeTwiceEnter = true;
+        }
+
+        if (event.code === 'Enter') {
+            enterCount += 1;
+        }
+
+        if (
+            (enterCount >= 2 && shouldBeTwiceEnter) ||
+            (enterCount == 1 && !shouldBeTwiceEnter)
+        ) {
+            shouldBeTwiceEnter = false;
+            enterCount = 0;
+            getDevicesApi();
+        }
+    };
+
+    const search = () => {
+        getDevicesApi();
+    };
+
     return (
-        // UI 結構等設計稿後再重構調整
         <div className="devices" data-testid="Devices">
             <PageTitle
                 title="裝置列表"
                 primaryButtonVisible
                 secondaryButtonVisible
                 primaryButtonWording="重新整理"
+                primaryButtonClassName="bg-black bg-opacity-10 text-black text-opacity-65 border border-black border-opacity-10"
                 primaryButtonCallback={refresh}
                 secondaryButtonWording="新增裝置"
                 secondaryButtonCallback={jumpToCreatePage}
@@ -53,18 +81,19 @@ const Devices = () => {
                         placeholder="搜尋裝置"
                         className="form-control border border-black border-opacity-15 rounded-start "
                         type="text"
+                        value={deviceName}
+                        onChange={(e) => setDeviceName(e.target.value)}
+                        onKeyUp={searchInputKeyUp}
                     />
                     <button
                         className="position-absolute top-0 end-0 btn border-0 rounded-end"
                         type="button"
+                        onClick={search}
                     >
-                        <img
-                            src="/src/assets/images/icon-search.svg"
-                            alt="icon-search"
-                        />
+                        <img src={searchIcon} alt="icon-search" />
                     </button>
                 </div>
-                {isLoading || devices === null ? (
+                {isGetingDevices || devices === null ? (
                     <div>Loading</div>
                 ) : (
                     <>
@@ -73,8 +102,8 @@ const Devices = () => {
                                 <div className="row bg-black bg-opacity-5 text-black text-opacity-45 border-bottom border-black border-opacity-10 h6 py-25 px-3 m-0">
                                     <div className="col-3">裝置名稱 / ID</div>
                                     <div className="col-2">狀態</div>
-                                    <div className="col-3">建立時間</div>
-                                    <div className="col-2">Pins Data</div>
+                                    <div className="col-2">建立時間</div>
+                                    <div className="col-3">Pins Data</div>
                                     <div className="col-2">操作</div>
                                 </div>
                             </div>
@@ -132,7 +161,7 @@ const Devices = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="col-12 col-sm-3 row text-black text-opacity-65 h6 mb-0 mx-0 px-0 px-sm-25">
+                                            <div className="col-12 col-sm-2 row text-black text-opacity-65 h6 mb-0 mx-0 px-0 px-sm-25">
                                                 <div className="d-sm-none col-4 bg-black bg-opacity-5 text-black text-opacity-45 p-3">
                                                     建立時間
                                                 </div>
@@ -142,7 +171,7 @@ const Devices = () => {
                                                     )}
                                                 </div>
                                             </div>
-                                            <div className="col-12 col-sm-2 row mx-0 px-0 px-sm-25">
+                                            <div className="col-12 col-sm-3 row mx-0 px-0 px-sm-25">
                                                 <div className="d-sm-none col-4 bg-black bg-opacity-5 text-black text-opacity-45 p-3">
                                                     Pins Data
                                                 </div>

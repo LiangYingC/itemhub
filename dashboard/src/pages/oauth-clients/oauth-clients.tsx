@@ -16,7 +16,7 @@ import trashIcon from '@/assets/images/trash.svg';
 
 const OauthClients = () => {
     const query = useQuery();
-    const limit = Number(query.get('limit') || 5);
+    const limit = Number(query.get('limit') || 20);
     const page = Number(query.get('page') || 1);
 
     const { oauthClients, rowNum } = useAppSelector(selectOauthClients);
@@ -27,7 +27,7 @@ const OauthClients = () => {
     const [
         pageTitlePrimaryButtonClassName,
         setPageTitlePrimaryButtonClassName,
-    ] = useState('bg-danger text-white disabled');
+    ] = useState('bg-danger text-white border border-danger disabled');
 
     const { isLoading, fetchApi } = useGetOauthClients({
         page,
@@ -83,7 +83,8 @@ const OauthClients = () => {
                 );
                 newSelectedIds.splice(index, 1);
             }
-            let pageTitlePrimaryButtonClassName = 'bg-danger text-white';
+            let pageTitlePrimaryButtonClassName =
+                'bg-danger border border-danger text-white';
             if (newSelectedIds.length === 0) {
                 pageTitlePrimaryButtonClassName += ' disabled';
             }

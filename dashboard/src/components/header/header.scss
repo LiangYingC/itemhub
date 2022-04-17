@@ -51,7 +51,7 @@ $user-height: 94px;
         transform: translateX(0);
         overflow: hidden;
         z-index: $nav-z-index;
-        @include media-breakpoint-down(lg) {
+        @include media-breakpoint-down(md) {
             position: absolute !important;
         }
 

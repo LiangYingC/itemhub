@@ -13,6 +13,7 @@ const useClickOutsideElement = ({
     handleClick: () => void;
 }) => {
     const handleClickOutside = debounce((e) => {
+        e.preventDefault();
         const element = elementRef.current;
         if (element && !element.contains(e.target) && handleClick) {
             handleClick();
@@ -22,8 +23,10 @@ const useClickOutsideElement = ({
     useEffect(() => {
         if (handleClickOutside) {
             document.addEventListener('mousedown', handleClickOutside);
+            document.addEventListener('touchend', handleClickOutside);
             return () => {
                 document.removeEventListener('mousedown', handleClickOutside);
+                document.removeEventListener('touchend', handleClickOutside);
             };
         }
     }, [handleClickOutside]);

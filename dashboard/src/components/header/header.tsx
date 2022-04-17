@@ -16,6 +16,10 @@ const Header = () => {
         dispatch(menuActions.close());
     };
 
+    const openMenu = () => {
+        dispatch(menuActions.open());
+    };
+
     return (
         <div
             className={`${
@@ -23,18 +27,60 @@ const Header = () => {
             } position-relative flex-shrink-0 header`}
             data-testid="Header"
         >
+            <div>
+                <div className="d-md-none bg-grey-800 py-4 px-3">
+                    <div className="d-flex justify-content-between align-items-center px-3 ">
+                        <Link
+                            to="/dashboard/"
+                            className="logo d-flex align-items-center"
+                        >
+                            <img className="icon w-100 h-100" src={logoIcon} />
+                            <img
+                                className="ms-25 logo-text"
+                                src={logoWordingIcon}
+                            />
+                        </Link>
+
+                        <div
+                            role="button"
+                            className="hamburger p-2"
+                            onClick={openMenu}
+                        >
+                            <div className="bg-white w-100 rounded-pill" />
+                            <div className="bg-white w-100 rounded-pill" />
+                            <div className="bg-white w-100 rounded-pill" />
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div className="menu d-flex align-items-start">
-                <div className="space position-absolute bg-black bg-opacity-65 d-md-none" />
-                <div className="head-nav flex-shrink-0 position-relative">
-                    <div className="overflow-hidden logo-block py-4 px-3">
+                <div
+                    className="space position-absolute bg-black bg-opacity-65 d-md-none"
+                    onClick={closeMenu}
+                />
+                <div className="head-nav flex-shrink-0 position-relative bg-grey-800">
+                    <div className="d-flex d-md-none justify-content-end m-3 close">
+                        <div
+                            role="button"
+                            className="position-relative p-2 icon"
+                            onClick={closeMenu}
+                        >
+                            <div className="border border-white border-1 w-100 position-absolute top-50 start-0 rounded-pill" />
+                            <div className="border border-white border-1 w-100 position-absolute top-50 end-0 rounded-pill" />
+                        </div>
+                    </div>
+                    <div className="d-none d-md-block overflow-hidden logo-block py-4 px-3">
                         <div className="d-flex justify-content-between align-items-center px-3 ">
                             <Link
                                 to="/dashboard/"
                                 className="logo d-flex align-items-center"
                             >
-                                <img className="icon" src={logoIcon} />
                                 <img
-                                    className="text ms-25 logo-text"
+                                    className="w-100 h-100 icon"
+                                    src={logoIcon}
+                                />
+                                <img
+                                    className="ms-25 logo-text"
                                     src={logoWordingIcon}
                                 />
                             </Link>
@@ -50,7 +96,7 @@ const Header = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="item px-3 ">
+                    <div className="item px-3">
                         <div className="py-2">
                             <Link
                                 to="/dashboard/"
@@ -84,7 +130,7 @@ const Header = () => {
                         </div>
                     </div>
                     <div className="position-absolute bottom-0 end-0 w-100">
-                        <div className="user text-white text-opacity-85 p-3">
+                        <div className="border-top border-white border-opacity-15 text-white text-opacity-85 p-3">
                             <div className="p-3">UserName</div>
                         </div>
                     </div>

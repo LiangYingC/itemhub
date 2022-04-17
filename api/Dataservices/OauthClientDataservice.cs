@@ -22,22 +22,26 @@ namespace Homo.IotApi
                 .ToList();
         }
 
-        public static List<OauthClient> GetAll(IotDbContext dbContext, long ownerId)
+        public static List<OauthClient> GetAll(IotDbContext dbContext, long ownerId, bool isDeviceClient, long? deviceId)
         {
             return dbContext.OauthClient
                 .Where(x =>
                     x.DeletedAt == null
                     && x.OwnerId == ownerId
+                    && (isDeviceClient == false && x.DeviceId == null)
+                    && (deviceId == null && x.DeviceId == deviceId)
                 )
                 .OrderByDescending(x => x.Id)
                 .ToList();
         }
-        public static int GetRowNum(IotDbContext dbContext, long ownerId)
+        public static int GetRowNum(IotDbContext dbContext, long ownerId, bool isDeviceClient, long? deviceId)
         {
             return dbContext.OauthClient
                 .Where(x =>
                     x.DeletedAt == null
                     && x.OwnerId == ownerId
+                    && (isDeviceClient == false && x.DeviceId == null)
+                    && (deviceId == null && x.DeviceId == deviceId)
                 )
                 .Count();
         }

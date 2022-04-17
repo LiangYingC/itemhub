@@ -34,9 +34,9 @@ const Header = () => {
                             to="/dashboard/"
                             className="logo d-flex align-items-center"
                         >
-                            <img className="icon" src={logoIcon} />
+                            <img className="icon w-100 h-100" src={logoIcon} />
                             <img
-                                className="text ms-25 logo-text"
+                                className="ms-25 logo-text"
                                 src={logoWordingIcon}
                             />
                         </Link>
@@ -75,9 +75,12 @@ const Header = () => {
                                 to="/dashboard/"
                                 className="logo d-flex align-items-center"
                             >
-                                <img className="icon" src={logoIcon} />
                                 <img
-                                    className="text ms-25 logo-text"
+                                    className="w-100 h-100 icon"
+                                    src={logoIcon}
+                                />
+                                <img
+                                    className="ms-25 logo-text"
                                     src={logoWordingIcon}
                                 />
                             </Link>
@@ -127,7 +130,7 @@ const Header = () => {
                         </div>
                     </div>
                     <div className="position-absolute bottom-0 end-0 w-100">
-                        <div className="user text-white text-opacity-85 p-3">
+                        <div className="border-top border-white border-opacity-15 text-white text-opacity-85 p-3">
                             <div className="p-3">UserName</div>
                         </div>
                     </div>

@@ -24,6 +24,7 @@ const OauthClients = () => {
     const [selectedIds, setSelectedIds] = useState(Array<number>());
     const [shouldBeDeleteId, setShouldBeDeleteId] = useState(0);
     const [refreshFlag, setRefreshFlag] = useState(false);
+    const [isSelectAll, setIsSelectAll] = useState(false);
     const [
         pageTitlePrimaryButtonClassName,
         setPageTitlePrimaryButtonClassName,
@@ -72,6 +73,14 @@ const OauthClients = () => {
         }
     }, [shouldBeDeleteId]);
 
+    useEffect(() => {
+        if (selectedIds.length === oauthClients?.length) {
+            setIsSelectAll(true);
+        } else {
+            setIsSelectAll(false);
+        }
+    }, [selectedIds, oauthClients]);
+
     const check = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedIds((previous) => {
             const newSelectedIds = [...previous];
@@ -89,7 +98,6 @@ const OauthClients = () => {
                 pageTitlePrimaryButtonClassName += ' disabled';
             }
             setPageTitlePrimaryButtonClassName(pageTitlePrimaryButtonClassName);
-
             return newSelectedIds;
         });
     };
@@ -99,7 +107,11 @@ const OauthClients = () => {
     };
 
     const checkAllOrNot = () => {
-        console.log('checkAllOrNot');
+        if (selectedIds.length === oauthClients?.length) {
+            setSelectedIds([]);
+        } else {
+            setSelectedIds((oauthClients || []).map((item) => item.id));
+        }
     };
 
     const deleteOne = (id: number) => {
@@ -137,16 +149,17 @@ const OauthClients = () => {
                 ) : (
                     <>
                         <div className="row bg-black bg-opacity-5 text-black text-opacity-45 h6 py-25 mb-0">
-                            <div
-                                role="button"
-                                className="col-10"
-                                onClick={checkAllOrNot}
-                            >
+                            <label role="button" className="col-10">
                                 <div className="d-flex align-items-center">
-                                    <input type="checkbox" className="me-3" />
+                                    <input
+                                        type="checkbox"
+                                        className="me-3"
+                                        onChange={checkAllOrNot}
+                                        checked={isSelectAll}
+                                    />
                                     oAuthClient Id
                                 </div>
-                            </div>
+                            </label>
                             <div className="col-2">操作</div>
                         </div>
                         {oauthClients.map(({ id, clientId }) => (
@@ -160,6 +173,7 @@ const OauthClients = () => {
                                         onChange={check}
                                         value={id}
                                         className="me-3"
+                                        checked={selectedIds.includes(id)}
                                     />
                                     {clientId}
                                 </label>

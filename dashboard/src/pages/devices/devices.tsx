@@ -13,7 +13,7 @@ const Devices = () => {
     const limit = Number(query.get('limit') || 20);
     const devices = useAppSelector(selectDevices);
 
-    const { isLoading, getDevicesApi } = useGetDevicesApi({
+    const { isGetingDevices, getDevicesApi } = useGetDevicesApi({
         page,
         limit,
     });
@@ -25,7 +25,7 @@ const Devices = () => {
     return (
         // UI 結構等設計稿後再重構調整
         <div className={`${styles.devices} `} data-testid="Devices">
-            {isLoading || devices === null ? (
+            {isGetingDevices || devices === null ? (
                 <div>Loading</div>
             ) : (
                 devices.map(({ id, name, createdAt, online }) => (

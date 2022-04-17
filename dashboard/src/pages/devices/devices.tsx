@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useQuery } from '@/hooks/query.hook';
 import { useAppSelector } from '@/hooks/redux.hook';
@@ -15,12 +15,16 @@ const Devices = () => {
     const query = useQuery();
     const page = Number(query.get('page') || 1);
     const limit = Number(query.get('limit') || 20);
+    const [deviceName, setDeviceName] = useState(query.get('deviceName') || '');
     const devices = useAppSelector(selectDevices);
     const navigate = useNavigate();
+    let shouldBeTwiceEnter = false;
+    let enterCount = 0;
 
     const { isLoading, getDevicesApi } = useGetDevicesApi({
         page,
         limit,
+        name: deviceName,
     });
 
     useEffect(() => {
@@ -33,6 +37,26 @@ const Devices = () => {
 
     const jumpToCreatePage = () => {
         navigate('create');
+    };
+
+    const searchInputKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.nativeEvent.isComposing) {
+            shouldBeTwiceEnter = true;
+        }
+
+        if (event.code === 'Enter') {
+            enterCount += 1;
+        }
+
+        if ((enterCount >= 2 && shouldBeTwiceEnter) || enterCount == 1) {
+            shouldBeTwiceEnter = false;
+            enterCount = 0;
+            getDevicesApi();
+        }
+    };
+
+    const search = () => {
+        getDevicesApi();
     };
 
     return (
@@ -53,10 +77,14 @@ const Devices = () => {
                         placeholder="搜尋裝置"
                         className="form-control border border-black border-opacity-15 rounded-start "
                         type="text"
+                        value={deviceName}
+                        onChange={(e) => setDeviceName(e.target.value)}
+                        onKeyUp={searchInputKeyUp}
                     />
                     <button
                         className="position-absolute top-0 end-0 btn border-0 rounded-end"
                         type="button"
+                        onClick={search}
                     >
                         <img
                             src="/src/assets/images/icon-search.svg"

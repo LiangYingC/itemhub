@@ -7,12 +7,13 @@ namespace Homo.IotApi
 {
     public class DeviceDataservice
     {
-        public static List<Device> GetList(IotDbContext dbContext, long ownerId, int page, int limit)
+        public static List<Device> GetList(IotDbContext dbContext, long ownerId, int page, int limit, string name)
         {
             return dbContext.Device
                 .Where(x =>
                     x.DeletedAt == null
                     && x.OwnerId == ownerId
+                    && (name == null || x.Name.Contains(name))
                 )
                 .OrderByDescending(x => x.Id)
                 .Skip(limit * (page - 1))
@@ -43,12 +44,13 @@ namespace Homo.IotApi
                 .ToList();
         }
 
-        public static int GetRowNum(IotDbContext dbContext, long ownerId)
+        public static int GetRowNum(IotDbContext dbContext, long ownerId, string name)
         {
             return dbContext.Device
                 .Where(x =>
                     x.DeletedAt == null
                     && x.OwnerId == ownerId
+                    && (name == null || x.Name.Contains(name))
                 )
                 .Count();
         }

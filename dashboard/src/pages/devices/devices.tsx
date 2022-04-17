@@ -48,7 +48,10 @@ const Devices = () => {
             enterCount += 1;
         }
 
-        if ((enterCount >= 2 && shouldBeTwiceEnter) || enterCount == 1) {
+        if (
+            (enterCount >= 2 && shouldBeTwiceEnter) ||
+            (enterCount == 1 && !shouldBeTwiceEnter)
+        ) {
             shouldBeTwiceEnter = false;
             enterCount = 0;
             getDevicesApi();

@@ -13,13 +13,15 @@ import trashIcon from '@/assets/images/trash.svg';
 import searchIcon from '@/assets/images/icon-search.svg';
 import plusIcon from '@/assets/images/icon-plus.svg';
 import emptyImage from '@/assets/images/empty-image.svg';
+import Pagination from '@/components/pagination/pagination';
 
 const Devices = () => {
     const query = useQuery();
     const page = Number(query.get('page') || 1);
-    const limit = Number(query.get('limit') || 20);
+    const limit = Number(query.get('limit') || 10);
     const [deviceName, setDeviceName] = useState(query.get('deviceName') || '');
-    const devices = useAppSelector(selectDevices);
+    const devices = useAppSelector(selectDevices).devices;
+    const rowNum = useAppSelector(selectDevices).rowNum;
     const navigate = useNavigate();
     let shouldBeTwiceEnter = false;
     let enterCount = 0;
@@ -32,7 +34,7 @@ const Devices = () => {
 
     useEffect(() => {
         getDevicesApi();
-    }, []);
+    }, [page]);
 
     const refresh = () => {
         getDevicesApi();
@@ -255,6 +257,17 @@ const Devices = () => {
                                     )}
                                 </div>
                             </div>
+                        </div>
+                        <div
+                            className={`${
+                                devices.length > 0 ? 'd-block' : 'd-none'
+                            } d-flex justify-content-end w-100 mt-5`}
+                        >
+                            <Pagination
+                                rowNum={rowNum}
+                                page={page}
+                                limit={limit}
+                            />
                         </div>
                     </>
                 )}

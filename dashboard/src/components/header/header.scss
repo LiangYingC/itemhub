@@ -7,6 +7,14 @@ $logo-height: 92px;
 $user-height: 94px;
 
 .header {
+    position: relative;
+    @include media-breakpoint-down(md) {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: $mobile-header-z-index;
+    }
     &.open {
         .head-nav {
             max-width: $nav-w;
@@ -51,8 +59,9 @@ $user-height: 94px;
         transform: translateX(0);
         overflow: hidden;
         z-index: $nav-z-index;
+        position: relative;
         @include media-breakpoint-down(md) {
-            position: absolute !important;
+            position: absolute;
         }
 
         .item {

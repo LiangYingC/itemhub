@@ -33,15 +33,14 @@ namespace Homo.IotApi
         }
 
         [HttpGet]
-        public async Task<dynamic> get([FromRoute] long id, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
+        public ActionResult<dynamic> get([FromRoute] long id, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
             long ownerId = extraPayload.Id;
             Transaction result = TransactionDataservice.GetOne(_dbContext, ownerId, id);
             if (result.Status == TRANSACTION_STATUS.PAID)
             {
                 // 發信給管理員
-                System.Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject("send email to admin", Newtonsoft.Json.Formatting.Indented));
-                await MailHelper.Send(MailProvider.SEND_GRID, new MailTemplate()
+                MailHelper.Send(MailProvider.SEND_GRID, new MailTemplate()
                 {
                     Subject = _commonLocalizer.Get("get new premium user"),
                     Content = _commonLocalizer.Get("premium user id", null, new Dictionary<string, string>() {

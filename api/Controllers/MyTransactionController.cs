@@ -37,9 +37,10 @@ namespace Homo.IotApi
         {
             long ownerId = extraPayload.Id;
             Transaction result = TransactionDataservice.GetOne(_dbContext, ownerId, id);
+            // tappay 回傳確認付款成功後，發信給管理員
+            // 主要是其中一個管理員看到有付費會員會覺得開心，想要自爽用的
             if (result.Status == TRANSACTION_STATUS.PAID)
             {
-                // 發信給管理員
                 MailHelper.Send(MailProvider.SEND_GRID, new MailTemplate()
                 {
                     Subject = _commonLocalizer.Get("get new premium user"),

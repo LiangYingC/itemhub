@@ -42,7 +42,6 @@ namespace Homo.IotApi
             var transaction = TransactionDataservice.GetOneByExternalId(_dbContext, dto.rec_trade_id);
             if (dto.status == 0)
             {
-                System.Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject("**", Newtonsoft.Json.Formatting.Indented));
                 // 發信給管理員
                 MailHelper.Send(MailProvider.SEND_GRID, new MailTemplate()
                 {
@@ -51,8 +50,6 @@ namespace Homo.IotApi
                     { "amount", $"{dto.amount}" }
                 })
                 }, _systemEmail, _adminEmail, _sendGridApiKey);
-                System.Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(dto.amount, Newtonsoft.Json.Formatting.Indented));
-                System.Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject("**", Newtonsoft.Json.Formatting.Indented));
 
                 transaction.Status = TRANSACTION_STATUS.PAID;
             }

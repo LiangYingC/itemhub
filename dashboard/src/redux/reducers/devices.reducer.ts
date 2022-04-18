@@ -2,32 +2,40 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '@/redux/store';
 import { DeviceItem } from '@/types/devices.type';
 
+type DeviceState = {
+    devices: DeviceItem[] | null;
+    rowNum: number;
+};
+
+const initialState: DeviceState = {
+    devices: null,
+    rowNum: 0,
+};
+
 export const devicesSlice = createSlice({
     name: 'devices',
-    initialState: null as DeviceItem[] | null,
+    initialState: initialState,
     reducers: {
-        refreshDevices: (state, action: PayloadAction<DeviceItem[]>) => {
-            const newDevices = action.payload;
-            return newDevices;
-        },
-        refreshDevice: (state, action: PayloadAction<DeviceItem>) => {
-            const devices = state;
-            const newDeviceData = action.payload;
-
-            if (devices === null) {
-                return [newDeviceData];
-            }
-
-            const targetIndex = devices.findIndex(
-                (device) => device.id === newDeviceData.id
-            );
-            devices[targetIndex] = {
-                ...newDeviceData,
+        refresh: (state, action: PayloadAction<DeviceState>) => {
+            return {
+                ...action.payload,
             };
-            return devices;
         },
-        updateDevice: (state, action: PayloadAction<Partial<DeviceItem>>) => {
-            const devices = state;
+        append: (state, action: PayloadAction<DeviceItem>) => {
+            const deviceInState = state.devices?.find(
+                (item) => item.id === action.payload.id
+            );
+            const devices = state.devices;
+            if (!deviceInState) {
+                (devices || []).push(action.payload);
+            }
+            return {
+                ...state,
+                devices,
+            };
+        },
+        update: (state, action: PayloadAction<Partial<DeviceItem>>) => {
+            const devices = state.devices;
             const newDeviceData = action.payload;
 
             if (devices === null) {
@@ -42,16 +50,24 @@ export const devicesSlice = createSlice({
                 ...newDeviceData,
             };
 
-            return devices;
+            return {
+                ...state,
+                devices,
+            };
         },
-        deleteDevice: (state, action: PayloadAction<Partial<DeviceItem>>) => {
-            const devices = state;
+        delete: (state, action: PayloadAction<Partial<DeviceItem>>) => {
+            const devices = state.devices;
 
             if (devices === null) {
                 throw new Error('Can not updateDevice when devices is null.');
             }
 
-            return devices.filter((item) => item.id === action.payload.id);
+            return {
+                ...state,
+                devices: devices.filter(
+                    (item) => item.id !== action.payload.id
+                ),
+            };
         },
     },
 });

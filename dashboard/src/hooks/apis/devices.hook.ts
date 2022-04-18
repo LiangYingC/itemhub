@@ -31,7 +31,7 @@ export const useGetDevicesApi = ({
     const dispatchRefreshDevices = useCallback(
         (data: GetDevicesResponseData) => {
             if (data) {
-                dispatch(devicesActions.refreshDevices(data.devices));
+                dispatch(devicesActions.refresh(data));
             }
         },
         [dispatch]
@@ -78,9 +78,9 @@ export const useGetAllDevicesApi = () => {
 
 export const useGetDeviceApi = ({ id }: { id: number }) => {
     const dispatch = useAppDispatch();
-    const dispatchRefreshDevice = useCallback(
+    const dispatchAppendDevice = useCallback(
         (data: DeviceItem) => {
-            dispatch(devicesActions.refreshDevice(data));
+            dispatch(devicesActions.append(data));
         },
         [dispatch]
     );
@@ -92,7 +92,7 @@ export const useGetDeviceApi = ({ id }: { id: number }) => {
         apiPath,
         method: HTTP_METHOD.GET,
         initialData: null,
-        callbackFunc: dispatchRefreshDevice,
+        callbackFunc: dispatchAppendDevice,
     });
 
     return {
@@ -110,10 +110,10 @@ export const useUpdateDeviceApi = ({
     editedData: Partial<DeviceItem>;
 }) => {
     const dispatch = useAppDispatch();
-    const dispatchRefreshDevices = useCallback(
+    const dispatchUpdate = useCallback(
         (data: ResponseOK) => {
             if (data.status === RESPONSE_STATUS.OK) {
-                dispatch(devicesActions.updateDevice({ ...editedData, id }));
+                dispatch(devicesActions.update({ ...editedData, id }));
             }
         },
         [editedData, id, dispatch]
@@ -127,7 +127,7 @@ export const useUpdateDeviceApi = ({
         method: HTTP_METHOD.PATCH,
         payload: editedData,
         initialData: null,
-        callbackFunc: dispatchRefreshDevices,
+        callbackFunc: dispatchUpdate,
     });
 
     return {
@@ -142,7 +142,7 @@ export const useDeleteDeviceApi = ({ id }: { id: number }) => {
     const dispatchDeleteDeivce = useCallback(
         (data: ResponseOK) => {
             if (data.status === RESPONSE_STATUS.OK) {
-                dispatch(devicesActions.deleteDevice({ id }));
+                dispatch(devicesActions.delete({ id }));
             }
         },
         [id, dispatch]

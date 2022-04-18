@@ -8,5 +8,5 @@
     "early bird register": "早鳥用戶綁定",
     "early bird register link": "綁定連結 {link}",
     "get new premium user": "Itemhub 有新的付費會員",
-    "premium user id": "付費會員為 {userId}"
+    "premium amount": "會員已付費: {amount}"
 }

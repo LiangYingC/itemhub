@@ -17,8 +17,8 @@ const AutocompletedSearch = ({
     );
     const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(0);
 
-    const inputRef = useRef(document.createElement('input'));
-    const wrapperRef = useRef(document.createElement('div'));
+    const inputRef = useRef<HTMLInputElement>(null);
+    const wrapperRef = useRef<HTMLDivElement>(null);
 
     const handleChangeValue = (currentValue: string) => {
         const newFilteredOptions = allSuggestions.filter(
@@ -37,7 +37,9 @@ const AutocompletedSearch = ({
     const handleClickSuggestion = (e: React.MouseEvent<HTMLElement>) => {
         const target = e.target as HTMLElement;
         const currentValue = target.innerText;
-        inputRef.current.value = currentValue;
+        if (inputRef.current) {
+            inputRef.current.value = currentValue;
+        }
         updateCurrentValue(currentValue);
         setActiveSuggestionIndex(0);
         setFilteredSuggestions([]);
@@ -47,7 +49,9 @@ const AutocompletedSearch = ({
     const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             const currentValue = filteredSuggestions[activeSuggestionIndex];
-            inputRef.current.value = currentValue;
+            if (inputRef.current) {
+                inputRef.current.value = currentValue;
+            }
             updateCurrentValue(currentValue);
             setActiveSuggestionIndex(0);
             setIsShowSuggestions(false);
@@ -77,10 +81,10 @@ const AutocompletedSearch = ({
                 ref={inputRef}
                 defaultValue={currentValue}
                 onFocus={() =>
-                    handleChangeValueWithDebounce(inputRef.current.value)
+                    handleChangeValueWithDebounce(inputRef.current?.value || '')
                 }
                 onChange={() =>
-                    handleChangeValueWithDebounce(inputRef.current.value)
+                    handleChangeValueWithDebounce(inputRef.current?.value || '')
                 }
                 onKeyUp={handleKeyUp}
             />

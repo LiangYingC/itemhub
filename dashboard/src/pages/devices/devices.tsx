@@ -10,8 +10,8 @@ import moment from 'moment';
 import pencilIcon from '@/assets/images/pencil.svg';
 import cloudIcon from '@/assets/images/cloud.svg';
 import trashIcon from '@/assets/images/trash.svg';
-import searchIcon from '@/assets/images/icon-search.svg';
 import Pagination from '@/components/pagination/pagination';
+import SearchInput from '@/components/Inputs/search-input/search-input';
 
 const Devices = () => {
     const query = useQuery();
@@ -21,8 +21,6 @@ const Devices = () => {
     const devices = useAppSelector(selectDevices).devices;
     const rowNum = useAppSelector(selectDevices).rowNum;
     const navigate = useNavigate();
-    let shouldBeTwiceEnter = false;
-    let enterCount = 0;
 
     const { isGetingDevices, getDevicesApi } = useGetDevicesApi({
         page,
@@ -42,29 +40,6 @@ const Devices = () => {
         navigate('create');
     };
 
-    const searchInputKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.nativeEvent.isComposing) {
-            shouldBeTwiceEnter = true;
-        }
-
-        if (event.code === 'Enter') {
-            enterCount += 1;
-        }
-
-        if (
-            (enterCount >= 2 && shouldBeTwiceEnter) ||
-            (enterCount == 1 && !shouldBeTwiceEnter)
-        ) {
-            shouldBeTwiceEnter = false;
-            enterCount = 0;
-            getDevicesApi();
-        }
-    };
-
-    const search = () => {
-        getDevicesApi();
-    };
-
     return (
         <div className="devices" data-testid="Devices">
             <PageTitle
@@ -78,23 +53,11 @@ const Devices = () => {
                 secondaryButtonCallback={jumpToCreatePage}
             />
             <div className="bg-white shadow-sm mx-3 mx-sm-0 mx-xl-45 mt-4 mt-sm-0 p-3 p-sm-45 rounded-8">
-                <div className="position-relative filter">
-                    <input
-                        placeholder="搜尋裝置"
-                        className="form-control border border-black border-opacity-15 rounded-start "
-                        type="text"
-                        value={deviceName}
-                        onChange={(e) => setDeviceName(e.target.value)}
-                        onKeyUp={searchInputKeyUp}
-                    />
-                    <button
-                        className="position-absolute top-0 end-0 btn border-0 rounded-end"
-                        type="button"
-                        onClick={search}
-                    >
-                        <img src={searchIcon} alt="icon-search" />
-                    </button>
-                </div>
+                <SearchInput
+                    placeholder="搜尋裝置"
+                    updateValue={(value) => setDeviceName(value)}
+                    onSearch={getDevicesApi}
+                />
                 {isGetingDevices || devices === null ? (
                     <div>Loading</div>
                 ) : (

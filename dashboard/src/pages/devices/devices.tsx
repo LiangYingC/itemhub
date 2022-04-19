@@ -20,8 +20,11 @@ const Devices = () => {
     const page = Number(query.get('page') || 1);
     const limit = Number(query.get('limit') || 10);
     const [deviceName, setDeviceName] = useState(query.get('deviceName') || '');
-    const devices = useAppSelector(selectDevices).devices;
-    const rowNum = useAppSelector(selectDevices).rowNum;
+    const devicesState = useAppSelector(selectDevices);
+    const devices = devicesState.devices;
+    const rowNum = devicesState.rowNum;
+    const countOfAllDevices = devicesState.countOfAllDevices;
+
     const navigate = useNavigate();
     let shouldBeTwiceEnter = false;
     let enterCount = 0;
@@ -80,32 +83,30 @@ const Devices = () => {
                 secondaryButtonCallback={jumpToCreatePage}
             />
             <div className="bg-white shadow-sm mx-3 mx-sm-0 mx-xl-45 mt-4 mt-sm-0 p-3 p-sm-45 rounded-8">
+                <div
+                    className={`${
+                        countOfAllDevices === 0 ? 'd-block' : 'd-none'
+                    } p-6 text-center`}
+                >
+                    <img src={emptyImage} alt="" />
+                    <div className="mt-2">
+                        尚未建立任何裝置，點擊按鈕開始新增吧！
+                    </div>
+                    <button
+                        onClick={jumpToCreatePage}
+                        className="d-flex align-items-center btn bg-light-blue text-white border border-light-blue rounded-pill mx-auto mt-3 px-3 py-2"
+                    >
+                        <img className="icon pe-2" src={plusIcon} />
+                        <div className="lh-1 py-1 fw-bold">新增裝置</div>
+                    </button>
+                </div>
                 {isGetingDevices || devices === null ? (
                     <div>Loading</div>
                 ) : (
                     <>
                         <div
                             className={`${
-                                devices.length === 0 ? 'd-block' : 'd-none'
-                            } p-6 text-center`}
-                        >
-                            <img src={emptyImage} alt="" />
-                            <div className="mt-2">
-                                尚未建立任何裝置，點擊按鈕開始新增吧！
-                            </div>
-                            <button
-                                onClick={jumpToCreatePage}
-                                className="d-flex align-items-center btn bg-light-blue text-white border border-light-blue rounded-pill mx-auto mt-3 px-3 py-2"
-                            >
-                                <img className="icon pe-2" src={plusIcon} />
-                                <div className="lh-1 py-1 fw-bold">
-                                    新增裝置
-                                </div>
-                            </button>
-                        </div>
-                        <div
-                            className={`${
-                                devices.length > 0 ? 'd-block' : 'd-none'
+                                countOfAllDevices > 0 ? 'd-block' : 'd-none'
                             }`}
                         >
                             <div className="position-relative filter">

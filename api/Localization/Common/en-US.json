@@ -6,5 +6,7 @@
     "reset link": "Reset Password Link: {link}",
     "sms template": "Verify Code: {code}",
     "early bird register": "Early bird register",
-    "early bird register link": "early bird register link {link}"
+    "early bird register link": "early bird register link {link}",
+    "get new premium user": "Itemhub has a new premium user.",
+    "premium amount": "The premium is pay {amount}"
 }

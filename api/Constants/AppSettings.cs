@@ -32,6 +32,7 @@ namespace Homo.IotApi
         public string LocalizationResourcesPath { get; set; }
         public int JwtExpirationMonth { get; set; }
         public string SystemEmail { get; set; }
+        public string AdminEmail { get; set; }
         public string WebsiteUrl { get; set; }
         public string ApiUrl { get; set; }
         public string FbAppId { get; set; }

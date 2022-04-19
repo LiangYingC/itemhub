@@ -36,7 +36,7 @@ const App = () => {
         <div className="dashboard" data-testid="Dashboard">
             <div className="d-md-flex">
                 <Header />
-                <div className="position-relative container-fluid overflow-scroll px-0 bg-grey-100 content">
+                <div className="position-relative container-fluid px-0 bg-grey-100 content">
                     <Outlet />
                     <Footer />
                 </div>

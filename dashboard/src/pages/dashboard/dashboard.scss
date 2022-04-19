@@ -3,6 +3,8 @@
 
 .dashboard {
     .content {
-        height: 100vh;
+        @include media-breakpoint-down(md) {
+            padding-top: $mobile-header-h;
+        }
     }
 }

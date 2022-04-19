@@ -27,21 +27,6 @@ $user-height: 94px;
         width: $nav-w;
     }
 
-    .close {
-        .icon {
-            width: 2.5em;
-            height: 2.5em;
-            > div {
-                &:first-child {
-                    transform: rotate(45deg);
-                }
-                &:last-child {
-                    transform: rotate(-45deg);
-                }
-            }
-        }
-    }
-
     .head-nav {
         max-width: 0;
         height: 100vh;

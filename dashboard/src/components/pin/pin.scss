@@ -5,7 +5,7 @@
     .toggle-button {
         width: $button-size * 2;
         height: $button-size;
-        outline: 2px solid rgba($black, 0.25);
+        box-shadow: 0 0 0 2px rgba($black, 0.25);
 
         .button-head {
             transition: transform 0.2s ease-in-out;
@@ -14,7 +14,7 @@
         }
 
         &.active {
-            outline-color: $green;
+            box-shadow: 0 0 0 2px $green;
             .button-head {
                 transform: translateX(calc(50% + (#{$button-size} / 2)));
             }

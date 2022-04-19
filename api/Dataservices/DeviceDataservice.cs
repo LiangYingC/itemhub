@@ -7,6 +7,10 @@ namespace Homo.IotApi
 {
     public class DeviceDataservice
     {
+        public static void OfflineMultiple(IotDbContext dbContext, List<long> ids)
+        {
+            dbContext.Device.Where(x => ids.Contains(x.Id)).UpdateFromQuery(x => new Device { Online = false });
+        }
         public static List<Device> GetList(IotDbContext dbContext, long ownerId, int page, int limit, string name)
         {
             return dbContext.Device
@@ -126,7 +130,6 @@ namespace Homo.IotApi
             {
                 Online = online
             });
-            dbContext.SaveChanges();
         }
     }
 }

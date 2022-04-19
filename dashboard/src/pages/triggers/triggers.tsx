@@ -143,12 +143,12 @@ const Triggers = () => {
     const { isDeletingTriggers, deleteTriggersApi, deleteTriggersResponse } =
         useDeleteTriggersApi(selectedIds);
 
-    const updateSelectedIds = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const updateSelectedIds = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedIds((previous) => {
-            const id = event.target.value;
+            const id = e.target.value;
             const newSelectedIds = [...previous];
 
-            if (event.target.checked) {
+            if (e.target.checked) {
                 newSelectedIds.push(Number(id));
             } else {
                 const index = newSelectedIds.findIndex(
@@ -156,13 +156,15 @@ const Triggers = () => {
                 );
                 newSelectedIds.splice(index, 1);
             }
-
             return newSelectedIds;
         });
     };
 
     const confirmToDeleteTriggers = () => {
-        if (prompt('請再次輸入 delete，藉此執行刪除') === 'delete') {
+        if (
+            prompt('請再次輸入 delete，藉此執行刪除') === 'delete' &&
+            !isDeletingTriggers
+        ) {
             deleteTriggersApi();
         } else {
             alert('輸入錯誤，請再次嘗試');
@@ -182,6 +184,20 @@ const Triggers = () => {
         }
     }, [deleteTriggersResponse, getTriggersApi]);
 
+    const [
+        pageTitlePrimaryButtonClassName,
+        setPageTitlePrimaryButtonClassName,
+    ] = useState('bg-danger text-white border border-danger disabled');
+
+    useEffect(() => {
+        let pageTitlePrimaryButtonClassName =
+            'bg-danger border border-danger text-white';
+        if (selectedIds.length === 0) {
+            pageTitlePrimaryButtonClassName += ' disabled';
+        }
+        setPageTitlePrimaryButtonClassName(pageTitlePrimaryButtonClassName);
+    }, [selectedIds]);
+
     return (
         <div className="triggers" data-testid="triggers">
             <PageTitle
@@ -190,7 +206,7 @@ const Triggers = () => {
                 primaryButtonWording="刪除選取"
                 primaryButtonCallback={confirmToDeleteTriggers}
                 primaryButtonIcon={lightTrashIcon}
-                primaryButtonClassName="bg-danger text-white border border-danger disabled"
+                primaryButtonClassName={pageTitlePrimaryButtonClassName}
                 secondaryButtonVisible
                 secondaryButtonWording="新增觸發器"
                 secondaryButtonCallback={jumpToCreatePage}

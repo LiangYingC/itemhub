@@ -15,7 +15,6 @@ namespace Homo.IotApi
     {
         private readonly IotDbContext _dbContext;
         private readonly string _dbConnectionString;
-
         public MyTransactionController(IotDbContext dbContext, IOptions<AppSettings> appSettings)
         {
             _dbContext = dbContext;
@@ -25,7 +24,7 @@ namespace Homo.IotApi
         public ActionResult<dynamic> get([FromRoute] long id, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
             long ownerId = extraPayload.Id;
-            return TransactionDataservice.GetOne(_dbContext, ownerId, id); ;
+            return TransactionDataservice.GetOne(_dbContext, ownerId, id);
         }
 
     }

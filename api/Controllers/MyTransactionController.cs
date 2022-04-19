@@ -25,9 +25,7 @@ namespace Homo.IotApi
         public ActionResult<dynamic> get([FromRoute] long id, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
             long ownerId = extraPayload.Id;
-            Transaction result = TransactionDataservice.GetOne(_dbContext, ownerId, id);
-
-            return result;
+            return TransactionDataservice.GetOne(_dbContext, ownerId, id); ;
         }
 
     }

@@ -23,9 +23,7 @@ const Header = () => {
 
     return (
         <div
-            className={`${
-                isOpen ? 'open' : ''
-            } position-relative flex-shrink-0 header`}
+            className={`${isOpen ? 'open' : ''} flex-shrink-0 header`}
             data-testid="Header"
         >
             <div>
@@ -54,7 +52,7 @@ const Header = () => {
                     </div>
                 </div>
             </div>
-            <div className="menu d-flex align-items-start">
+            <div className="menu d-flex align-items-start sticky-md-top">
                 <div
                     className="space position-absolute bg-black bg-opacity-65 d-md-none"
                     onClick={closeMenu}

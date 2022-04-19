@@ -8,10 +8,15 @@ import {
     useDeleteTriggersApi,
 } from '@/hooks/apis/triggers.hook';
 import { selectTriggers } from '@/redux/reducers/triggers.reducer';
+import { selectUniversal } from '@/redux/reducers/universal.reducer';
 import { ArrayHelpers } from '@/helpers/array.helper';
 import { TriggerItem } from '@/types/triggers.type';
 import Pagination from '@/components/pagination/pagination';
 import PageTitle from '@/components/page-title/page-title';
+import SearchInput from '@/components/Inputs/search-input/search-input';
+import lightTrashIcon from '@/assets/images/light-trash.svg';
+import pencilIcon from '@/assets/images/pencil.svg';
+import trashIcon from '@/assets/images/trash.svg';
 
 const filterTriggers = ({
     triggers,
@@ -45,6 +50,11 @@ const Triggers = () => {
     const query = useQuery();
     const limit = Number(query.get('limit') || 5);
     const page = Number(query.get('page') || 1);
+
+    const [triggerName, setTriggerName] = useState(
+        query.get('deviceName') || ''
+    );
+    const { triggerOperators } = useAppSelector(selectUniversal);
 
     const sourceDeviceNameOptionsRef = useRef<string[]>([]);
     const destinationDeviceNameOptionsRef = useRef<string[]>([]);
@@ -105,6 +115,9 @@ const Triggers = () => {
         destinationDeviceNameFilter,
     });
 
+    /**
+     *  TODO: Get triggers api 之後會實作 search trigger name 功能，實作後這邊要多傳 triggerName 進去篩選
+     * */
     const { isGettingTriggers, getTriggersApi } = useGetTriggersApi({
         page,
         limit,
@@ -117,6 +130,16 @@ const Triggers = () => {
     }, [getTriggersApi]);
 
     const [selectedIds, setSelectedIds] = useState(Array<number>());
+
+    const isSelectAll = selectedIds.length === filteredTriggers.length;
+    const toggleSelectAll = () => {
+        if (selectedIds.length === filteredTriggers.length) {
+            setSelectedIds([]);
+        } else {
+            setSelectedIds(filteredTriggers.map(({ id }) => id));
+        }
+    };
+
     const { isDeletingTriggers, deleteTriggersApi, deleteTriggersResponse } =
         useDeleteTriggersApi(selectedIds);
 
@@ -146,6 +169,10 @@ const Triggers = () => {
         }
     };
 
+    const jumpToCreatePage = () => {
+        navigate('create');
+    };
+
     useEffect(() => {
         if (
             deleteTriggersResponse &&
@@ -156,109 +183,174 @@ const Triggers = () => {
     }, [deleteTriggersResponse, getTriggersApi]);
 
     return (
-        <>
-            <PageTitle title="觸發列表" />
-            <div>
-                <label>
-                    來源裝置名稱:
-                    <select
-                        value={sourceDeviceNameFilter}
-                        onChange={(e) => {
-                            setSourceDeviceNameFilter(e.target.value);
-                        }}
-                    >
-                        {sourceDeviceNameOptions.map((name, index) => {
-                            const value = name === 'All' ? '' : name;
-                            return (
-                                <option key={`${name}-${index}`} value={value}>
-                                    {name}
-                                </option>
-                            );
-                        })}
-                    </select>
-                </label>
-                <label>
-                    目標裝置名稱:
-                    <select
-                        value={destinationDeviceNameFilter}
-                        onChange={(e) => {
-                            setDestinationDeviceNameFilter(e.target.value);
-                        }}
-                    >
-                        {destinationDeviceNameOptions.map((name, index) => {
-                            const value = name === 'All' ? '' : name;
-                            return (
-                                <option key={`${name}-${index}`} value={value}>
-                                    {name}
-                                </option>
-                            );
-                        })}
-                    </select>
-                </label>
-            </div>
-            <button
-                onClick={confirmToDeleteTriggers}
-                disabled={isDeletingTriggers || selectedIds.length <= 0}
-            >
-                {isDeletingTriggers
-                    ? 'Deleting Triggers'
-                    : 'Delete Selected Trigger'}
-            </button>
-            <button
-                onClick={() =>
-                    navigate('../dashboard/triggers/create', { replace: false })
-                }
-            >
-                Create Trigger
-            </button>
-            ;
-            <div className="triggers" data-testid="triggers">
-                {isGettingTriggers || triggers === null ? (
-                    <h1>Loading</h1>
-                ) : filteredTriggers.length === 0 ? (
-                    <h1>No Triggers</h1>
-                ) : (
-                    filteredTriggers.map(
-                        (
-                            {
-                                id,
-                                ownerId,
-                                sourceDevice,
-                                sourcePin,
-                                destinationDevice,
-                                destinationPin,
-                            },
-                            index
-                        ) => (
-                            <label key={`${id}-${index}`} className="mt-2 mb-2">
+        <div className="triggers" data-testid="triggers">
+            <PageTitle
+                title="觸發器列表"
+                primaryButtonVisible
+                primaryButtonWording="刪除選取"
+                primaryButtonCallback={confirmToDeleteTriggers}
+                primaryButtonIcon={lightTrashIcon}
+                primaryButtonClassName="bg-danger text-white border border-danger disabled"
+                secondaryButtonVisible
+                secondaryButtonWording="新增觸發器"
+                secondaryButtonCallback={jumpToCreatePage}
+            />
+            <div className="bg-white shadow-sm mx-3 mx-sm-0 mx-xl-45 mt-4 mt-sm-0 p-3 p-sm-45 rounded-8">
+                <div className="d-flex align-items-center">
+                    <SearchInput
+                        placeholder="搜尋觸發器"
+                        updateValue={(value) => setTriggerName(value)}
+                        onSearch={getTriggersApi}
+                    />
+                    {/* TODO: 來源裝置、目標裝置的 filter，接著要等設計稿改動再調整，應該會改成 autocompeleted input search，現在先不動 */}
+                    <label className="ms-3">
+                        來源裝置名稱:
+                        <select
+                            value={sourceDeviceNameFilter}
+                            onChange={(e) => {
+                                setSourceDeviceNameFilter(e.target.value);
+                            }}
+                        >
+                            {sourceDeviceNameOptions.map((name, index) => {
+                                const value = name === 'All' ? '' : name;
+                                return (
+                                    <option
+                                        key={`${name}-${index}`}
+                                        value={value}
+                                    >
+                                        {name}
+                                    </option>
+                                );
+                            })}
+                        </select>
+                    </label>
+                    <label className="ms-3">
+                        目標裝置名稱:
+                        <select
+                            value={destinationDeviceNameFilter}
+                            onChange={(e) => {
+                                setDestinationDeviceNameFilter(e.target.value);
+                            }}
+                        >
+                            {destinationDeviceNameOptions.map((name, index) => {
+                                const value = name === 'All' ? '' : name;
+                                return (
+                                    <option
+                                        key={`${name}-${index}`}
+                                        value={value}
+                                    >
+                                        {name}
+                                    </option>
+                                );
+                            })}
+                        </select>
+                    </label>
+                </div>
+                <div className="mt-3 mt-sm-45">
+                    <div className="row bg-black bg-opacity-5 text-black text-opacity-45 h6 py-25 mb-0">
+                        <label role="button" className="col-2">
+                            <div className="d-flex align-items-center">
                                 <input
                                     type="checkbox"
-                                    onChange={updateSelectedIds}
-                                    value={id}
+                                    className="me-3"
+                                    checked={isSelectAll}
+                                    onChange={toggleSelectAll}
                                 />
-                                <div>Id: {id}</div>
-                                <div>OwnerId: {ownerId}</div>
-                                <div>
-                                    來源裝置名稱:{' '}
-                                    {sourceDevice?.name || 'No Data'}
-                                </div>
-                                <div>來源裝置 Pin: {sourcePin}</div>
-                                <div>
-                                    目標裝置名稱:{' '}
-                                    {destinationDevice?.name || 'No Data'}
-                                </div>
-                                <div>目標裝置 Pin: {destinationPin}</div>
-                                <Link to={`../dashboard/triggers/${id}`}>
-                                    Go to id:{id} trigger
-                                </Link>
-                            </label>
-                        )
-                    )
-                )}
-                <div>Page: {page}</div>
-                <Pagination page={page} rowNum={rowNum} limit={limit} />
+                                觸發器名稱
+                            </div>
+                        </label>
+                        <div className="col-2">來源裝置</div>
+                        <div className="col-1">來源 Pin</div>
+                        <div className="col-2">條件</div>
+                        <div className="col-2">目標裝置</div>
+                        <div className="col-1">目標 Pin</div>
+                        <div className="col-2">操作</div>
+                    </div>
+                    <div className="triggers" data-testid="triggers">
+                        {isGettingTriggers || triggers === null ? (
+                            <h1>Loading</h1>
+                        ) : filteredTriggers.length === 0 ? (
+                            <h1>No Triggers</h1>
+                        ) : (
+                            filteredTriggers.map(
+                                (
+                                    {
+                                        id,
+                                        sourceDevice,
+                                        sourcePin,
+                                        destinationDevice,
+                                        destinationPin,
+                                        operator,
+                                        sourceThreshold,
+                                    },
+                                    index
+                                ) => (
+                                    <div
+                                        key={`${id}-${index}`}
+                                        className="row py-4 border-1 border-bottom text-black text-opacity-65"
+                                    >
+                                        <label className="col-2">
+                                            <input
+                                                className="me-3"
+                                                type="checkbox"
+                                                onChange={updateSelectedIds}
+                                                value={id}
+                                                checked={selectedIds.includes(
+                                                    id
+                                                )}
+                                            />
+                                            {id} TODO: 未來有 Trigger Name
+                                            資料時，將 id 改為 name
+                                        </label>
+                                        <div className="col-2">
+                                            {sourceDevice?.name}
+                                        </div>
+                                        <div className="col-1">{sourcePin}</div>
+                                        <div className="col-2 d-flex">
+                                            <span className="pe-1">
+                                                {
+                                                    triggerOperators[operator]
+                                                        .label
+                                                }
+                                            </span>
+                                            <span>{sourceThreshold}</span>
+                                        </div>
+                                        <div className="col-2">
+                                            {destinationDevice?.name}
+                                        </div>
+                                        <div className="col-1">
+                                            {destinationPin}
+                                        </div>
+                                        <div className="col-2">
+                                            <div className="d-flex justify-content-start">
+                                                <Link
+                                                    className="me-4"
+                                                    to={`/dashboard/triggers/${id}`}
+                                                >
+                                                    <img src={pencilIcon} />
+                                                </Link>
+                                                <button
+                                                    className="btn bg-transparent p-0"
+                                                    onClick={() => {
+                                                        // TODO: 實作 delete on trigger api
+                                                    }}
+                                                    disabled={false}
+                                                >
+                                                    <img src={trashIcon} />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )
+                            )
+                        )}
+                    </div>
+                    <div className="d-flex justify-content-end w-100 mt-5">
+                        <Pagination rowNum={rowNum} page={page} limit={limit} />
+                    </div>
+                </div>
             </div>
-        </>
+        </div>
     );
 };
 

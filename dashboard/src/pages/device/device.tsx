@@ -16,10 +16,12 @@ import { selectOauthClients } from '@/redux/reducers/oauth-clients.reducer';
 const Device = () => {
     const { id } = useParams();
     const numId = Number(id);
-    const devices = useAppSelector(selectDevices);
+    const devices = useAppSelector(selectDevices).devices;
     const oAuthClients = useAppSelector(selectOauthClients).oauthClients;
     const navigate = useNavigate();
-    const device = devices?.filter((device) => device.id === numId)[0] || null;
+    const device =
+        (devices || []).filter((device) => device.id === numId)[0] || null;
+
     const oAuthClient =
         oAuthClients?.filter((client) => client.deviceId === device?.id)[0] ||
         null;

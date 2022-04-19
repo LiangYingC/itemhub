@@ -7,6 +7,7 @@ import deviceIcon from '@/assets/images/device.svg';
 import oAuthClientIcon from '@/assets/images/oauth-client.svg';
 import logoIcon from '@/assets/images/logo.svg';
 import logoWordingIcon from '@/assets/images/logo-wording.svg';
+import closeIcon from '@/assets/images/icon-close.svg';
 
 const Header = () => {
     const isOpen = useAppSelector(selectMenu).menu.isOpen;
@@ -56,15 +57,14 @@ const Header = () => {
                     className="space position-absolute bg-black bg-opacity-65 d-md-none"
                     onClick={closeMenu}
                 />
-                <div className="head-nav flex-shrink-0 bg-grey-800">
-                    <div className="d-flex d-md-none justify-content-end m-3 close">
+                <div className="head-nav flex-shrink-0 position-relative bg-grey-800">
+                    <div className="d-flex d-md-none justify-content-end m-3">
                         <div
                             role="button"
                             className="position-relative p-2 icon"
                             onClick={closeMenu}
                         >
-                            <div className="border border-white border-1 w-100 position-absolute top-50 start-0 rounded-pill" />
-                            <div className="border border-white border-1 w-100 position-absolute top-50 end-0 rounded-pill" />
+                            <img src={closeIcon} alt="close" />
                         </div>
                     </div>
                     <div className="d-none d-md-block overflow-hidden logo-block py-4 px-3">

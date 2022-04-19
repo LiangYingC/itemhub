@@ -18,6 +18,7 @@ const AutocompletedSearch = ({
     const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(0);
 
     const inputRef = useRef(document.createElement('input'));
+    const wrapperRef = useRef(document.createElement('div'));
 
     const handleChangeValue = (currentValue: string) => {
         const newFilteredOptions = allSuggestions.filter(
@@ -61,17 +62,16 @@ const AutocompletedSearch = ({
         }
     };
 
-    const autocompletedSearchRef = useRef<HTMLDivElement>(null);
     const handleClickOuside = () => {
         setIsShowSuggestions(false);
     };
     useClickOutsideElement({
-        elementRef: autocompletedSearchRef,
+        elementRef: wrapperRef,
         handleClick: handleClickOuside,
     });
 
     return (
-        <div ref={autocompletedSearchRef}>
+        <div ref={wrapperRef}>
             <input
                 className="form-control"
                 ref={inputRef}

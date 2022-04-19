@@ -83,21 +83,21 @@ const Devices = () => {
                 secondaryButtonCallback={jumpToCreatePage}
             />
             <div className="bg-white shadow-sm mx-3 mx-sm-0 mx-xl-45 mt-4 mt-sm-0 p-3 p-sm-45 rounded-8">
-                <div
-                    className={`${
-                        countOfAllDevices === 0 ? 'd-block' : 'd-none'
-                    } p-6 text-center`}
-                >
-                    <img src={emptyImage} alt="" />
-                    <div className="mt-2">
-                        尚未建立任何裝置，點擊按鈕開始新增吧！
-                    </div>
+                <div className="position-relative filter">
+                    <input
+                        placeholder="搜尋裝置"
+                        className="form-control border border-black border-opacity-15 rounded-start "
+                        type="text"
+                        value={deviceName}
+                        onChange={(e) => setDeviceName(e.target.value)}
+                        onKeyUp={searchInputKeyUp}
+                    />
                     <button
-                        onClick={jumpToCreatePage}
-                        className="d-flex align-items-center btn bg-light-blue text-white border border-light-blue rounded-pill mx-auto mt-3 px-3 py-2"
+                        className="position-absolute top-0 end-0 btn border-0 rounded-end"
+                        type="button"
+                        onClick={search}
                     >
-                        <img className="icon pe-2" src={plusIcon} />
-                        <div className="lh-1 py-1 fw-bold">新增裝置</div>
+                        <img src={searchIcon} alt="icon-search" />
                     </button>
                 </div>
                 {isGetingDevices || devices === null ? (
@@ -106,28 +106,28 @@ const Devices = () => {
                     <>
                         <div
                             className={`${
+                                countOfAllDevices === 0 ? 'd-block' : 'd-none'
+                            } p-6 text-center`}
+                        >
+                            <img src={emptyImage} alt="" />
+                            <div className="mt-2">
+                                尚未建立任何裝置，點擊按鈕開始新增吧！
+                            </div>
+                            <button
+                                onClick={jumpToCreatePage}
+                                className="d-flex align-items-center btn bg-light-blue text-white border border-light-blue rounded-pill mx-auto mt-3 px-3 py-2"
+                            >
+                                <img className="icon pe-2" src={plusIcon} />
+                                <div className="lh-1 py-1 fw-bold">
+                                    新增裝置
+                                </div>
+                            </button>
+                        </div>
+                        <div
+                            className={`${
                                 countOfAllDevices > 0 ? 'd-block' : 'd-none'
                             }`}
                         >
-                            <div className="position-relative filter">
-                                <input
-                                    placeholder="搜尋裝置"
-                                    className="form-control border border-black border-opacity-15 rounded-start "
-                                    type="text"
-                                    value={deviceName}
-                                    onChange={(e) =>
-                                        setDeviceName(e.target.value)
-                                    }
-                                    onKeyUp={searchInputKeyUp}
-                                />
-                                <button
-                                    className="position-absolute top-0 end-0 btn border-0 rounded-end"
-                                    type="button"
-                                    onClick={search}
-                                >
-                                    <img src={searchIcon} alt="icon-search" />
-                                </button>
-                            </div>
                             <div className="mt-3 mt-sm-45">
                                 <div className="d-none d-sm-block">
                                     <div className="row bg-black bg-opacity-5 text-black text-opacity-45 border-bottom border-black border-opacity-10 h6 py-25 px-3 m-0">

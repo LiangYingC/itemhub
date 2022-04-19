@@ -1,4 +1,3 @@
-import styles from './trigger.module.scss';
 import { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useAppSelector } from '@/hooks/redux.hook';

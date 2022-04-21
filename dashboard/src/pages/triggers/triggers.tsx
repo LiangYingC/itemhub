@@ -272,7 +272,7 @@ const Triggers = () => {
                                     checked={isSelectAll}
                                     onChange={toggleSelectAll}
                                 />
-                                觸發器名稱
+                                <span>觸發器名稱</span>
                             </div>
                         </label>
                         <div className="col-2">來源裝置</div>
@@ -305,7 +305,7 @@ const Triggers = () => {
                                         key={`${id}-${index}`}
                                         className="row py-4 border-1 border-bottom text-black text-opacity-65"
                                     >
-                                        <label className="col-2">
+                                        <label className="col-2 d-flex align-items-center">
                                             <input
                                                 className="me-3"
                                                 type="checkbox"
@@ -315,8 +315,10 @@ const Triggers = () => {
                                                     id
                                                 )}
                                             />
-                                            {id} TODO: 未來有 Trigger Name
-                                            資料時，將 id 改為 name
+                                            <span>
+                                                {id} TODO: 未來有 Trigger Name
+                                                資料時，將 id 改為 name
+                                            </span>
                                         </label>
                                         <div className="col-2">
                                             {sourceDevice?.name}

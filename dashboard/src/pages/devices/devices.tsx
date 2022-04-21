@@ -44,7 +44,7 @@ const Devices = () => {
 
     useEffect(() => {
         getDevicesApi();
-    }, [getDevicesApi]);
+    }, [page, limit]);
 
     const refresh = () => {
         getDevicesApi();
@@ -89,8 +89,12 @@ const Devices = () => {
                 secondaryButtonWording="新增裝置"
                 secondaryButtonCallback={jumpToCreatePage}
             />
-            <div className="bg-white shadow-sm mx-3 mx-sm-0 mx-xl-45 mt-4 mt-sm-0 p-3 p-sm-45 rounded-8">
-                <div className="position-relative filter">
+            <div className="card mx-3 mx-sm-0 mx-xl-45 mt-3 mt-sm-0 p-3 p-sm-45">
+                <div
+                    className={`position-relative filter ${
+                        hasDevicesRef.current ? '' : 'd-none'
+                    }`}
+                >
                     <input
                         placeholder="搜尋裝置"
                         className="form-control border border-black border-opacity-15 rounded-start "
@@ -118,7 +122,7 @@ const Devices = () => {
                         >
                             <img src={emptyImage} alt="" />
                             <div className="mt-2">
-                                尚未建立任何裝置，點擊按鈕開始新增吧！
+                                尚未建立任何裝置, 點擊按鈕開始新增吧！
                             </div>
                             <button
                                 onClick={jumpToCreatePage}

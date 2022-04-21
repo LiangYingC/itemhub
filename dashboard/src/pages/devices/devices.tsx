@@ -141,7 +141,7 @@ const Devices = () => {
                         >
                             <div className="mt-3 mt-sm-45">
                                 <div className="d-none d-sm-block">
-                                    <div className="row bg-black bg-opacity-5 text-black text-opacity-45 border-bottom border-black border-opacity-10 h6 py-25 px-3 m-0">
+                                    <div className="row bg-black bg-opacity-5 text-black text-opacity-45 h6 py-25 px-3 m-0">
                                         <div className="col-3">
                                             裝置名稱 / ID
                                         </div>

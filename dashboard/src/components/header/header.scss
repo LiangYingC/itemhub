@@ -17,18 +17,6 @@ $user-height: 94px;
             overflow: hidden;
             z-index: $nav-z-index;
         }
-
-        .top-nav {
-            z-index: $nav-z-index;
-        }
-
-        .space {
-            width: 100vw;
-            height: 100vh;
-            top: 0;
-            left: 0;
-            z-index: $nav-space-z-index;
-        }
     }
 
     .logo-block {
@@ -73,8 +61,27 @@ $user-height: 94px;
         width: 100%;
         z-index: $mobile-header-z-index;
 
+        .top-nav {
+            z-index: $nav-z-index;
+        }
+
         .head-nav {
+            display: none;
             position: absolute;
+        }
+
+        .space {
+            width: 100vw;
+            height: 100vh;
+            top: 0;
+            left: 0;
+            z-index: $nav-space-z-index;
+        }
+
+        &.open {
+            .head-nav {
+                display: block;
+            }
         }
     }
 }

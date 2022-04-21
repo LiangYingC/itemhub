@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useQuery } from '@/hooks/query.hook';
 import { useAppSelector } from '@/hooks/redux.hook';
@@ -19,11 +19,12 @@ const Devices = () => {
     const query = useQuery();
     const page = Number(query.get('page') || 1);
     const limit = Number(query.get('limit') || 10);
+
     const [deviceName, setDeviceName] = useState(query.get('deviceName') || '');
     const devicesState = useAppSelector(selectDevices);
+    const hasDevicesRef = useRef(false);
     const devices = devicesState.devices;
     const rowNum = devicesState.rowNum;
-    const countOfAllDevices = devicesState.countOfAllDevices;
 
     const navigate = useNavigate();
     let shouldBeTwiceEnter = false;
@@ -36,8 +37,14 @@ const Devices = () => {
     });
 
     useEffect(() => {
+        if (devices && devices.length > 0) {
+            hasDevicesRef.current = true;
+        }
+    }, [devices]);
+
+    useEffect(() => {
         getDevicesApi();
-    }, [page]);
+    }, [getDevicesApi]);
 
     const refresh = () => {
         getDevicesApi();
@@ -106,7 +113,7 @@ const Devices = () => {
                     <>
                         <div
                             className={`${
-                                countOfAllDevices === 0 ? 'd-block' : 'd-none'
+                                hasDevicesRef.current ? 'd-none' : 'd-block'
                             } p-6 text-center`}
                         >
                             <img src={emptyImage} alt="" />
@@ -125,7 +132,7 @@ const Devices = () => {
                         </div>
                         <div
                             className={`${
-                                countOfAllDevices > 0 ? 'd-block' : 'd-none'
+                                hasDevicesRef.current ? 'd-block' : 'd-none'
                             }`}
                         >
                             <div className="mt-3 mt-sm-45">

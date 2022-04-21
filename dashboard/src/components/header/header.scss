@@ -8,6 +8,7 @@ $user-height: 94px;
 
 .header {
     position: relative;
+
     &.open {
         .head-nav {
             max-width: $nav-w;
@@ -16,6 +17,11 @@ $user-height: 94px;
             overflow: hidden;
             z-index: $nav-z-index;
         }
+
+        .top-nav {
+            z-index: $nav-z-index;
+        }
+
         .space {
             width: 100vw;
             height: 100vh;
@@ -24,6 +30,7 @@ $user-height: 94px;
             z-index: $nav-space-z-index;
         }
     }
+
     .logo-block {
         width: $nav-w;
     }
@@ -58,12 +65,14 @@ $user-height: 94px;
             height: 20px;
         }
     }
+
     @include media-breakpoint-down(md) {
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         z-index: $mobile-header-z-index;
+
         .head-nav {
             position: absolute;
         }

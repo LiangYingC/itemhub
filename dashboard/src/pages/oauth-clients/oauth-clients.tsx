@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useQuery } from '@/hooks/query.hook';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppSelector } from '@/hooks/redux.hook';
@@ -13,18 +13,22 @@ import PageTitle from '@/components/page-title/page-title';
 import pencilIcon from '@/assets/images/pencil.svg';
 import lightTrashIcon from '@/assets/images/light-trash.svg';
 import trashIcon from '@/assets/images/trash.svg';
+import plusIcon from '@/assets/images/icon-plus.svg';
+import emptyImage from '@/assets/images/empty-image.svg';
 
 const OauthClients = () => {
     const query = useQuery();
     const limit = Number(query.get('limit') || 20);
     const page = Number(query.get('page') || 1);
 
-    const { oauthClients, rowNum } = useAppSelector(selectOauthClients);
+    const { oauthClients, rowNum, countOfAllClient } =
+        useAppSelector(selectOauthClients);
 
     const [selectedIds, setSelectedIds] = useState(Array<number>());
     const [shouldBeDeleteId, setShouldBeDeleteId] = useState(0);
     const [refreshFlag, setRefreshFlag] = useState(false);
     const [isSelectAll, setIsSelectAll] = useState(false);
+    const hasOauthClientsRef = useRef(false);
     const [
         pageTitlePrimaryButtonClassName,
         setPageTitlePrimaryButtonClassName,
@@ -48,6 +52,12 @@ const OauthClients = () => {
     } = useDeleteOauthClients([shouldBeDeleteId]);
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (oauthClients && oauthClients.length > 0) {
+            hasOauthClientsRef.current = true;
+        }
+    }, [oauthClients]);
 
     useEffect(() => {
         fetchApi();
@@ -133,7 +143,7 @@ const OauthClients = () => {
     return (
         <div className="oauth-clients" data-testid="oauth-clients">
             <PageTitle
-                title="oAuth Client 列表"
+                title="oAuthClient 列表"
                 primaryButtonVisible
                 primaryButtonWording="刪除選取"
                 primaryButtonCallback={deleteMultiple}
@@ -143,61 +153,94 @@ const OauthClients = () => {
                 secondaryButtonWording="新增 oAuthClient"
                 secondaryButtonCallback={jumpToCreatePage}
             />
-            <div className="card mx-4 p-45">
+            <div className="card mt-3 mx-4 p-45">
                 {isLoading || oauthClients === null ? (
                     <div>Loading</div>
                 ) : (
                     <>
-                        <div className="row bg-black bg-opacity-5 text-black text-opacity-45 h6 py-25 mb-0">
-                            <label role="button" className="col-10">
-                                <div className="d-flex align-items-center">
-                                    <input
-                                        type="checkbox"
-                                        className="me-3"
-                                        onChange={checkAllOrNot}
-                                        checked={isSelectAll}
-                                    />
-                                    oAuthClient Id
-                                </div>
-                            </label>
-                            <div className="col-2">操作</div>
-                        </div>
-                        {oauthClients.map(({ id, clientId }) => (
-                            <div
-                                key={id}
-                                className="row py-4 border-1 border-bottom text-black text-opacity-65"
+                        <div
+                            className={`${
+                                hasOauthClientsRef.current
+                                    ? 'd-none'
+                                    : 'd-block'
+                            } p-6 text-center`}
+                        >
+                            <img src={emptyImage} alt="" />
+                            <div className="mt-2">
+                                尚未建立任何 oAuthClient，點擊按鈕開始新增吧！
+                            </div>
+                            <button
+                                onClick={jumpToCreatePage}
+                                className="d-flex align-items-center btn bg-light-blue text-white border border-light-blue rounded-pill mx-auto mt-3 px-3 py-2"
                             >
-                                <label className="col-10">
-                                    <input
-                                        type="checkbox"
-                                        onChange={check}
-                                        value={id}
-                                        className="me-3"
-                                        checked={selectedIds.includes(id)}
-                                    />
-                                    {clientId}
+                                <img className="icon pe-2" src={plusIcon} />
+                                <div className="lh-1 py-1 fw-bold">
+                                    新增 oAuthClient
+                                </div>
+                            </button>
+                        </div>
+                        <div
+                            className={`${
+                                hasOauthClientsRef.current
+                                    ? 'd-block'
+                                    : 'd-none'
+                            }`}
+                        >
+                            <div className="row bg-black bg-opacity-5 text-black text-opacity-45 h6 py-25 mb-0">
+                                <label
+                                    role="button"
+                                    className="col-8 col-sm-10"
+                                >
+                                    <div className="d-flex align-items-center">
+                                        <input
+                                            type="checkbox"
+                                            className="me-3"
+                                            onChange={checkAllOrNot}
+                                            checked={isSelectAll}
+                                        />
+                                        oAuthClient Id
+                                    </div>
                                 </label>
-                                <div className="col-2">
-                                    <div className="d-flex justify-content-start">
-                                        <Link
-                                            to={`/dashboard/oauth-clients/${id}`}
-                                            className="me-4"
-                                        >
-                                            <img src={pencilIcon} />
-                                        </Link>
-                                        <button
-                                            onClick={() => {
-                                                deleteOne(id);
-                                            }}
-                                            disabled={isDeletingOne}
-                                            className="btn bg-transparent p-0"
-                                        >
-                                            <img src={trashIcon} />
-                                        </button>
+                                <div className="col-4 col-sm-2">操作</div>
+                            </div>
+
+                            {oauthClients.map(({ id, clientId }) => (
+                                <div
+                                    key={id}
+                                    className="row py-4 border-1 border-bottom text-black text-opacity-65"
+                                >
+                                    <label className="col-8 col-sm-10">
+                                        <input
+                                            type="checkbox"
+                                            onChange={check}
+                                            value={id}
+                                            className="me-3"
+                                            checked={selectedIds.includes(id)}
+                                        />
+                                        {clientId}
+                                    </label>
+                                    <div className="col-4 col-sm-2">
+                                        <div className="d-flex justify-content-start">
+                                            <Link
+                                                to={`/dashboard/oauth-clients/${id}`}
+                                                className="me-4"
+                                            >
+                                                <img src={pencilIcon} />
+                                            </Link>
+                                            <button
+                                                onClick={() => {
+                                                    deleteOne(id);
+                                                }}
+                                                disabled={isDeletingOne}
+                                                className="btn bg-transparent p-0"
+                                            >
+                                                <img src={trashIcon} />
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
+                            ))}
+                        </div>
                     </>
                 )}
                 <div className="d-flex justify-content-end w-100 mt-5">

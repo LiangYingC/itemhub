@@ -137,23 +137,23 @@ export const useUpdateDeviceApi = ({
     };
 };
 
-export const useDeleteDeviceApi = ({ id }: { id: number }) => {
+export const useDeleteDevicesApi = (ids: number[]) => {
     const dispatch = useAppDispatch();
     const dispatchDeleteDeivce = useCallback(
         (data: ResponseOK) => {
             if (data.status === RESPONSE_STATUS.OK) {
-                dispatch(devicesActions.delete({ id }));
+                dispatch(devicesActions.deleteMultiple({ ids }));
             }
         },
-        [id, dispatch]
+        [ids, dispatch]
     );
 
-    let apiPath = `${API_URL}${END_POINT.DEVICE}`;
-    apiPath = apiPath.replace(':id', id.toString());
+    const apiPath = `${API_URL}${END_POINT.DEVICES}`;
 
     const { isLoading, error, fetchApi, data } = useFetchApi<ResponseOK>({
         apiPath,
         method: HTTP_METHOD.DELETE,
+        payload: ids,
         initialData: null,
         callbackFunc: dispatchDeleteDeivce,
     });
@@ -161,7 +161,7 @@ export const useDeleteDeviceApi = ({ id }: { id: number }) => {
     return {
         isLoading,
         error,
-        deleteDeviceApi: fetchApi,
+        fetchApi,
         data,
     };
 };

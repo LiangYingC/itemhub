@@ -53,18 +53,21 @@ export const devicesSlice = createSlice({
                 devices,
             };
         },
-        delete: (state, action: PayloadAction<Partial<DeviceItem>>) => {
+        deleteMultiple: (state, action: PayloadAction<{ ids: number[] }>) => {
             const devices = state.devices;
+            const deletePayload = action.payload;
 
             if (devices === null) {
                 throw new Error('Can not updateDevice when devices is null.');
             }
 
+            const newList = devices.filter(
+                (item) => deletePayload.ids.indexOf(item.id) === -1
+            );
+
             return {
                 ...state,
-                devices: devices.filter(
-                    (item) => item.id !== action.payload.id
-                ),
+                oauthClients: newList,
             };
         },
     },

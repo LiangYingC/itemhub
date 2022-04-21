@@ -44,7 +44,7 @@ const Devices = () => {
 
     useEffect(() => {
         getDevicesApi();
-    }, [page, limit]);
+    }, [page]);
 
     const refresh = () => {
         getDevicesApi();

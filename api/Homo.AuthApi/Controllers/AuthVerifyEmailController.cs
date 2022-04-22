@@ -9,6 +9,8 @@ using Microsoft.Extensions.Options;
 using Homo.Core.Constants;
 using Homo.Core.Helpers;
 using Homo.Api;
+using api.Constants;
+using api.Helpers;
 
 namespace Homo.AuthApi
 {
@@ -21,7 +23,7 @@ namespace Homo.AuthApi
         private readonly DBContext _dbContext;
         private readonly string _verifyPhoneJwtKey;
         private readonly string _envName;
-        private readonly string _sendGridAPIKey;
+        private readonly string _sendGridApiKey;
         private readonly string _systemEmail;
         private readonly string _websiteUrl;
         private readonly string _fbAppId;
@@ -30,6 +32,7 @@ namespace Homo.AuthApi
         private readonly string _fbClientSecret;
         private readonly string _googleClientSecret;
         private readonly string _lineClientSecret;
+        private readonly string _adminEmail;
         private readonly bool _authByCookie; public AuthVerifyEmailController(DBContext dbContext, IOptions<AppSettings> appSettings, Microsoft.AspNetCore.Hosting.IWebHostEnvironment env, Homo.Api.CommonLocalizer commonLocalizer)
         {
             Secrets secrets = (Secrets)appSettings.Value.Secrets;
@@ -38,7 +41,7 @@ namespace Homo.AuthApi
             _verifyPhoneJwtKey = secrets.VerifyPhoneJwtKey;
             _dbContext = dbContext;
             _envName = env.EnvironmentName;
-            _sendGridAPIKey = secrets.SendGridApiKey;
+            _sendGridApiKey = secrets.SendGridApiKey;
             _systemEmail = common.SystemEmail;
             _websiteUrl = common.WebsiteUrl;
             _fbAppId = common.FbAppId;
@@ -47,7 +50,7 @@ namespace Homo.AuthApi
             _fbClientSecret = secrets.FbClientSecret;
             _googleClientSecret = secrets.GoogleClientSecret;
             _lineClientSecret = secrets.LineClientSecret;
-
+            _adminEmail = common.AdminEmail;
         }
 
 
@@ -88,14 +91,22 @@ namespace Homo.AuthApi
                 Ip = ip
             });
 
+            MailTemplate template = MailTemplateHelper.Get(MAIL_TEMPLATE.VERIFY_EMAIL);
+            template = MailTemplateHelper.ReplaceVariable(template, new
+            {
+                websiteUrl = _websiteUrl,
+                adminEmail = _adminEmail,
+                code = code,
+                mailContentVerifyDescription = _commonLocalizer.Get("mailContentVerifyDescription"),
+                mailContentVerifyEmailTitle = _commonLocalizer.Get("mailContentVerifyEmailTitle"),
+                mailContentSystemAutoSendEmail = _commonLocalizer.Get("mailContentSystemAutoSendEmail")
+            });
+
             await MailHelper.Send(MailProvider.SEND_GRID, new MailTemplate()
             {
-                Subject = _commonLocalizer.Get("verify email"),
-                Content = _commonLocalizer.Get("verify link", null, new Dictionary<string, string>() {
-                    { "link", $"{_websiteUrl}/auth/sign-up/verify-email/" },
-                    { "code", code }
-                })
-            }, _systemEmail, dto.Email, _sendGridAPIKey);
+                Subject = _commonLocalizer.Get(template.Subject),
+                Content = template.Content
+            }, _systemEmail, dto.Email, _sendGridApiKey);
             return new { status = CUSTOM_RESPONSE.OK };
         }
 
@@ -110,13 +121,27 @@ namespace Homo.AuthApi
             }
             string token = JWTHelper.GenerateToken(_verifyPhoneJwtKey, 60 * 24 * 7, new { Id = user.Id, Email = user.Email, IsEarlyBird = true }, null);
 
+            DateTime expirationTime = DateTime.Now.ToUniversalTime().AddMinutes(60 * 24 * 7);
+            MailTemplate template = MailTemplateHelper.Get(MAIL_TEMPLATE.EARLY_BIRD_REGISTER);
+            template = MailTemplateHelper.ReplaceVariable(template, new
+            {
+                websiteUrl = _websiteUrl,
+                adminEmail = _adminEmail,
+                link = $"{_websiteUrl}/auth/sign-up/?verifyPhoneToken={token}",
+                hello = _commonLocalizer.Get("hello"),
+                limitDate = expirationTime,
+                mailContentEarlyBirdRegisterDescription = _commonLocalizer.Get("mailContentEarlyBirdRegisterDescription"),
+                mailContentEarlyBirdRegisterDescription2 = _commonLocalizer.Get("mailContentEarlyBirdRegisterDescription2"),
+                mailContentEarlyBirdRegisterBtn = _commonLocalizer.Get("mailContentEarlyBirdRegisterBtn"),
+                mailContentSystemAutoSendEmail = _commonLocalizer.Get("mailContentSystemAutoSendEmail")
+            });
+
             await MailHelper.Send(MailProvider.SEND_GRID, new MailTemplate()
             {
-                Subject = _commonLocalizer.Get("early bird register"),
-                Content = _commonLocalizer.Get("early bird register link", null, new Dictionary<string, string>() {
-                    { "link", $"{_websiteUrl}/auth/sign-up/?verifyPhoneToken={token}" }
-                })
-            }, _systemEmail, user.Email, _sendGridAPIKey);
+                Subject = _commonLocalizer.Get(template.Subject),
+                Content = template.Content
+            }, _systemEmail, user.Email, _sendGridApiKey);
+
             return new { status = CUSTOM_RESPONSE.OK };
         }
 

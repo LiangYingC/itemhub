@@ -7,6 +7,7 @@ using SendGrid.Helpers.Mail;
 using Amazon;
 using Amazon.SimpleEmailV2;
 using Amazon.SimpleEmailV2.Model;
+using api.Helpers;
 
 namespace Homo.AuthApi
 {
@@ -88,9 +89,4 @@ namespace Homo.AuthApi
         }
     }
 
-    public class MailTemplate
-    {
-        public string Subject { get; set; }
-        public string Content { get; set; }
-    }
 }

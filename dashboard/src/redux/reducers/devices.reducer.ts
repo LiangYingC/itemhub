@@ -17,9 +17,7 @@ export const devicesSlice = createSlice({
     initialState: initialState,
     reducers: {
         refresh: (state, action: PayloadAction<DeviceState>) => {
-            return {
-                ...action.payload,
-            };
+            return action.payload;
         },
         append: (state, action: PayloadAction<DeviceItem>) => {
             const deviceInState = state.devices?.find(
@@ -55,18 +53,21 @@ export const devicesSlice = createSlice({
                 devices,
             };
         },
-        delete: (state, action: PayloadAction<Partial<DeviceItem>>) => {
+        deleteMultiple: (state, action: PayloadAction<{ ids: number[] }>) => {
             const devices = state.devices;
+            const deletePayload = action.payload;
 
             if (devices === null) {
                 throw new Error('Can not updateDevice when devices is null.');
             }
 
+            const newList = devices.filter(
+                (item) => deletePayload.ids.indexOf(item.id) === -1
+            );
+
             return {
                 ...state,
-                devices: devices.filter(
-                    (item) => item.id !== action.payload.id
-                ),
+                oauthClients: newList,
             };
         },
     },

@@ -97,7 +97,7 @@ namespace Homo.IotApi
                         btn = "mailContentOverPlanBtn";
                     }
 
-                    MailTemplate template = MailTemplateHelper.Get(MAIL_TEMPLATE.RESET_PASSWORD);
+                    MailTemplate template = MailTemplateHelper.Get(MAIL_TEMPLATE.OVER_SUBSCRIPTION);
                     template = MailTemplateHelper.ReplaceVariable(template, new
                     {
                         websiteUrl = _websiteUrl,

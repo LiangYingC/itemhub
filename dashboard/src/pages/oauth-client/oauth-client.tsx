@@ -112,7 +112,7 @@ const OauthClient = () => {
                 titleClickCallback={backToList}
                 titleBackIconVisible
                 title={`oAuthClient 詳細內容`}
-                primaryButtonVisible
+                primaryButtonVisible={!isCreateMode}
                 primaryButtonWording="刪除選取"
                 primaryButtonCallback={deleteClient}
                 primaryButtonIcon={lightTrashIcon}

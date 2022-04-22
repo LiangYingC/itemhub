@@ -21,8 +21,7 @@ const OauthClients = () => {
     const limit = Number(query.get('limit') || 20);
     const page = Number(query.get('page') || 1);
 
-    const { oauthClients, rowNum, countOfAllClient } =
-        useAppSelector(selectOauthClients);
+    const { oauthClients, rowNum } = useAppSelector(selectOauthClients);
 
     const [selectedIds, setSelectedIds] = useState(Array<number>());
     const [shouldBeDeleteId, setShouldBeDeleteId] = useState(0);

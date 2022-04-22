@@ -155,13 +155,15 @@ const OauthClient = () => {
                                     disabled
                                 />
                             </div>
-                            <div className="text-warn mt-3">
-                                <div className="bg-warn rounded-circle text-white me-1 d-inline-block">
+                            <div className="text-warn mt-3 d-flex">
+                                <div className="bg-warn rounded-circle text-white me-2 flex-shrink-0 mt-1">
                                     !
                                 </div>
-                                請立即記下 Client Secret, 為確保安全性,
-                                伺服器端部會儲存 Secret 明碼, 如果忘記明碼,
-                                只能重新產生 Secret
+                                <div>
+                                    請立即記下 Client Secret, 為確保安全性,
+                                    伺服器端部會儲存 Secret 明碼, 如果忘記明碼,
+                                    只能重新產生 Secret
+                                </div>
                             </div>
                             <div className="d-flex justify-content-end mt-3">
                                 <button

@@ -70,17 +70,17 @@ $user-height: 94px;
             position: absolute;
         }
 
-        .space {
-            width: 100vw;
-            height: 100vh;
-            top: 0;
-            left: 0;
-            z-index: $nav-space-z-index;
-        }
-
         &.open {
             .head-nav {
                 display: block;
+            }
+
+            .space {
+                width: 100vw;
+                height: 100vh;
+                top: 0;
+                left: 0;
+                z-index: $nav-space-z-index;
             }
         }
     }

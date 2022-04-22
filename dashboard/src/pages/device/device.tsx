@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
-    useDeleteDeviceApi,
+    useDeleteDevicesApi,
     useGetDeviceApi,
     useUpdateDeviceApi,
 } from '@/hooks/apis/devices.hook';
@@ -46,16 +46,14 @@ const Device = () => {
     });
 
     const {
-        deleteDeviceApi,
+        fetchApi: deleteMultipleApi,
         isLoading: isDeleting,
         data: deleteDeviceResponse,
-    } = useDeleteDeviceApi({
-        id: numId,
-    });
+    } = useDeleteDevicesApi([numId]);
 
     const deleteDevice = () => {
         if (prompt('請再次輸入 delete 確認要刪除') === 'delete') {
-            deleteDeviceApi();
+            deleteMultipleApi();
         }
     };
 

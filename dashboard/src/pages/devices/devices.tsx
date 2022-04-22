@@ -14,6 +14,8 @@ import searchIcon from '@/assets/images/icon-search.svg';
 import plusIcon from '@/assets/images/icon-plus.svg';
 import emptyImage from '@/assets/images/empty-image.svg';
 import Pagination from '@/components/pagination/pagination';
+import { useDeleteDevicesApi } from '../../hooks/apis/devices.hook';
+import { RESPONSE_STATUS } from '@/constants/api';
 
 const Devices = () => {
     const query = useQuery();
@@ -21,6 +23,8 @@ const Devices = () => {
     const limit = Number(query.get('limit') || 10);
 
     const [deviceName, setDeviceName] = useState(query.get('deviceName') || '');
+    const [shouldBeDeleteId, setShouldBeDeleteId] = useState(0);
+    const [refreshFlag, setRefreshFlag] = useState(false);
     const devicesState = useAppSelector(selectDevices);
     const hasDevicesRef = useRef(false);
     const devices = devicesState.devices;
@@ -36,6 +40,12 @@ const Devices = () => {
         name: deviceName,
     });
 
+    const {
+        isLoading: isDeleting,
+        fetchApi: deleteMultipleApi,
+        data: responseOfDelete,
+    } = useDeleteDevicesApi([shouldBeDeleteId]);
+
     useEffect(() => {
         if (devices && devices.length > 0) {
             hasDevicesRef.current = true;
@@ -44,7 +54,19 @@ const Devices = () => {
 
     useEffect(() => {
         getDevicesApi();
-    }, [page]);
+    }, [page, refreshFlag]);
+
+    useEffect(() => {
+        if (shouldBeDeleteId) {
+            deleteMultipleApi();
+        }
+    }, [shouldBeDeleteId]);
+
+    useEffect(() => {
+        if (responseOfDelete?.status === RESPONSE_STATUS.OK) {
+            setRefreshFlag(!refreshFlag);
+        }
+    }, [responseOfDelete]);
 
     const refresh = () => {
         getDevicesApi();
@@ -75,6 +97,15 @@ const Devices = () => {
 
     const search = () => {
         getDevicesApi();
+    };
+
+    const deleteOne = (id: number) => {
+        if (prompt('請輸入 delete') !== 'delete') {
+            return;
+        }
+        setShouldBeDeleteId(() => {
+            return id;
+        });
     };
 
     return (
@@ -256,6 +287,9 @@ const Devices = () => {
                                                         <div
                                                             className="me-4 mb-3"
                                                             role="button"
+                                                            onClick={() => {
+                                                                deleteOne(id);
+                                                            }}
                                                         >
                                                             <img
                                                                 className="icon"

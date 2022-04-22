@@ -27,7 +27,7 @@ const Header = () => {
             data-testid="Header"
         >
             <div>
-                <div className="d-md-none bg-grey-800 py-4 px-3">
+                <div className="d-md-none bg-grey-800 py-4 px-3 top-nav position-relative">
                     <div className="d-flex justify-content-between align-items-center px-3 ">
                         <Link
                             to="/dashboard/"

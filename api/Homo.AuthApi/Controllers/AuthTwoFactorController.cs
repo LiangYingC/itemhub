@@ -4,6 +4,8 @@ using Microsoft.Extensions.Options;
 using Homo.Core.Constants;
 using Homo.Core.Helpers;
 using Homo.Api;
+using api.Constants;
+using api.Helpers;
 
 namespace Homo.AuthApi
 {
@@ -13,23 +15,29 @@ namespace Homo.AuthApi
     public class AuthTwoFactorController : ControllerBase
     {
 
+        private readonly Homo.Api.CommonLocalizer _commonLocalizer;
         private readonly DBContext _dbContext;
         private readonly string _jwtKey;
         private readonly string _dashboardJwtKey;
         private readonly string _systemEmail;
         private readonly string _sendGridApiKey;
+        private readonly string _websiteUrl;
+        private readonly string _adminEmail;
 
         public AuthTwoFactorController(
             DBContext dbContext
-            , IOptions<Homo.AuthApi.AppSettings> appSettings
+            , IOptions<Homo.AuthApi.AppSettings> appSettings, Homo.Api.CommonLocalizer commonLocalizer
         )
         {
+            _commonLocalizer = commonLocalizer;
             Secrets secrets = (Secrets)appSettings.Value.Secrets;
             _jwtKey = secrets.JwtKey;
             _dashboardJwtKey = secrets.DashboardJwtKey;
             _dbContext = dbContext;
             _systemEmail = appSettings.Value.Common.SystemEmail;
             _sendGridApiKey = secrets.SendGridApiKey;
+            _websiteUrl = appSettings.Value.Common.WebsiteUrl;
+            _adminEmail = appSettings.Value.Common.AdminEmail;
         }
 
         [Route("send-two-factor-auth-mail")]
@@ -52,11 +60,22 @@ namespace Homo.AuthApi
                 Expiration = System.DateTime.Now.AddMinutes(5)
             });
 
+            MailTemplate template = MailTemplateHelper.Get(MAIL_TEMPLATE.TWO_FACTOR_AUTH);
+            template = MailTemplateHelper.ReplaceVariable(template, new
+            {
+                websiteUrl = _websiteUrl,
+                adminEmail = _adminEmail,
+                code = verifyCode,
+                hello = _commonLocalizer.Get("hello"),
+                mailContentTwoFactorAuthTitle = _commonLocalizer.Get("mailContentTwoFactorAuthTitle"),
+                mailContentSystemAutoSendEmail = _commonLocalizer.Get("mailContentSystemAutoSendEmail")
+            });
+
             await MailHelper.Send(MailProvider.SEND_GRID, new MailTemplate()
             {
-                Subject = "Itemhub - 兩階段驗證信",
-                Content = $"驗證碼為: {verifyCode}"
-            }, _systemEmail, user.Email, _sendGridApiKey); // 未來如果人多的時候就直接用 amazon ses 
+                Subject = _commonLocalizer.Get(template.Subject),
+                Content = template.Content
+            }, _systemEmail, user.Email, _sendGridApiKey);// 未來如果人多的時候就直接用 amazon ses 
 
             return new { status = CUSTOM_RESPONSE.OK };
         }

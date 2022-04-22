@@ -38,5 +38,6 @@ namespace Homo.AuthApi
         public bool AuthByCookie { get; set; }
         public string Pkcs1PublicKeyPath { get; set; }
         public string SmsClientUrl { get; set; }
+        public string AdminEmail { get; set; }
     }
 }

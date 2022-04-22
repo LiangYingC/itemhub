@@ -165,7 +165,7 @@ const OauthClient = () => {
                                     只能重新產生 Secret
                                 </div>
                             </div>
-                            <div className="d-flex justify-content-end mt-3">
+                            <div className="d-flex justify-content-end mt-5">
                                 <button
                                     className="btn rounded-pill bg-black bg-opacity-5 border-black border-opacity-10 px-3 py-2"
                                     onClick={backToList}

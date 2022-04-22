@@ -5,11 +5,13 @@ import { OauthClient } from '@/types/oauth-clients.type';
 type OauthClientState = {
     oauthClients: OauthClient[] | null;
     rowNum: number;
+    countOfAllClient: number;
 };
 
 const initialState: OauthClientState = {
     oauthClients: null,
     rowNum: 0,
+    countOfAllClient: 0,
 };
 
 export const oauthClientsSlice = createSlice({
@@ -17,7 +19,11 @@ export const oauthClientsSlice = createSlice({
     initialState,
     reducers: {
         refresh: (state, action: PayloadAction<OauthClientState>) => {
-            const newState = action.payload;
+            const newState = {
+                ...action.payload,
+                countOfAllClient: action.payload.rowNum,
+            };
+
             return newState;
         },
         refreshOne: (state, action: PayloadAction<OauthClient>) => {
@@ -74,6 +80,7 @@ export const oauthClientsSlice = createSlice({
 
             return {
                 ...state,
+                countOfAllClient: state.countOfAllClient + 1,
                 oauthClients: [newOne, ...list],
             };
         },
@@ -91,6 +98,8 @@ export const oauthClientsSlice = createSlice({
 
             return {
                 ...state,
+                countOfAllClient:
+                    state.countOfAllClient - deletePayload.ids.length,
                 oauthClients: newList,
             };
         },

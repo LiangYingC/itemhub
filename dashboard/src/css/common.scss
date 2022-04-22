@@ -33,6 +33,11 @@ h5,
     color: rgba(0, 0, 0, map-get($opacity, 65));
 }
 
+input::placeholder {
+    color: $grey-200 !important;
+    font-size: $font-size-base;
+}
+
 .text-sm {
     @include media-breakpoint-down(lg) {
         font-size: $small-font-size-for-small-screen;

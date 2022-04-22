@@ -53,6 +53,7 @@ $dark: #161c2e; // deprecated
 $blue: #0048ff; // deprecated
 $danger: #ff4747;
 $purple: #d415a1;
+$warn: #f49d00;
 $primary-900: #1f305a;
 $primary-800: #163c9d;
 $primary-700: #1679c0;
@@ -88,6 +89,7 @@ $shadow: 0px 4px 8px rgba(0, 0, 0, 0.08);
 $theme-colors: (
     'black': black,
     'white': white,
+    'warn': $warn,
     'primary': $primary,
     'light-blue': $light-blue,
     'dark-blue': $dark-blue,

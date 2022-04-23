@@ -5,25 +5,32 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Homo.AuthApi;
 using System.Collections.Generic;
+using api.Constants;
+using api.Helpers;
+using Homo.Api;
 
 namespace Homo.IotApi
 {
     public class SendOverPlanNotificationCronJobService : CronJobService
     {
+        private readonly CommonLocalizer _commonLocalizer;
         private readonly string _envName;
         private readonly string _dbc;
-        private readonly string _systemMail;
+        private readonly string _systemEmail;
         private readonly string _sendGridApiKey;
         private readonly string _websiteUrl;
+        private readonly string _adminEmail;
 
-        public SendOverPlanNotificationCronJobService(IScheduleConfig<SendOverPlanNotificationCronJobService> config, IServiceProvider serviceProvider, Microsoft.AspNetCore.Hosting.IWebHostEnvironment env, IOptions<AppSettings> appSettings)
+        public SendOverPlanNotificationCronJobService(IScheduleConfig<SendOverPlanNotificationCronJobService> config, IServiceProvider serviceProvider, Microsoft.AspNetCore.Hosting.IWebHostEnvironment env, IOptions<AppSettings> appSettings, Homo.Api.CommonLocalizer commonLocalizer)
             : base(config.CronExpression, config.TimeZoneInfo, serviceProvider)
         {
+            _commonLocalizer = commonLocalizer;
             _envName = env.EnvironmentName;
             _dbc = appSettings.Value.Secrets.DBConnectionString;
-            _systemMail = appSettings.Value.Common.SystemEmail;
+            _systemEmail = appSettings.Value.Common.SystemEmail;
             _sendGridApiKey = appSettings.Value.Secrets.SendGridApiKey;
             _websiteUrl = appSettings.Value.Common.WebsiteUrl;
+            _adminEmail = appSettings.Value.Common.AdminEmail;
         }
 
         public override Task StartAsync(CancellationToken cancellationToken)
@@ -75,21 +82,38 @@ namespace Homo.IotApi
                         nextSubscription = subscription.PricingPlan + 1;
                     }
                     string content = "";
+                    string link = "";
+                    string btn = "";
                     if (nextSubscription > pricingPlans.Count - 1)
                     {
-                        content = $"你所用量已經超過了最高的方案, 如果需要保存所有資料請與我們聯繫, 我們將提供更進階的方案 itemhub.tw@gmail.com";
+                        content = "mailContentOverTopPlanDescription";
+                        link = "mailto:itemhub.tw@gmail.com";
+                        btn = "mailContentOverTopPlanBtn";
                     }
                     else
                     {
-                        content = $"升級訂閱方案 {_websiteUrl}/checkout/?pricingPlan={nextSubscription}";
+                        content = "mailContentOverPlanDescription";
+                        link = $"{_websiteUrl}/checkout/?pricingPlan={nextSubscription}";
+                        btn = "mailContentOverPlanBtn";
                     }
+
+                    MailTemplate template = MailTemplateHelper.Get(MAIL_TEMPLATE.OVER_SUBSCRIPTION);
+                    template = MailTemplateHelper.ReplaceVariable(template, new
+                    {
+                        websiteUrl = _websiteUrl,
+                        adminEmail = _adminEmail,
+                        link = link,
+                        hello = _commonLocalizer.Get("hello"),
+                        mailContentDescription = _commonLocalizer.Get(content),
+                        mailContentBtn = _commonLocalizer.Get(btn),
+                        mailContentSystemAutoSendEmail = _commonLocalizer.Get("mailContentSystemAutoSendEmail")
+                    });
 
                     MailHelper.Send(MailProvider.SEND_GRID, new MailTemplate()
                     {
-                        Subject = "Itemhub - 超過訂閱方案",
-                        Content = content
-                    }, _systemMail, user.Email,
-                    _sendGridApiKey);
+                        Subject = _commonLocalizer.Get(template.Subject),
+                        Content = template.Content
+                    }, _systemEmail, user.Email, _sendGridApiKey);
 
                     user.SendOverPlanNotificationCount += 1;
                     user.SendOverPlanNotificationAt = DateTime.Now;

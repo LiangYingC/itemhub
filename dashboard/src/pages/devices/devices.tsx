@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useQuery } from '@/hooks/query.hook';
 import { useAppSelector } from '@/hooks/redux.hook';
@@ -14,16 +14,21 @@ import plusIcon from '@/assets/images/icon-plus.svg';
 import emptyImage from '@/assets/images/empty-image.svg';
 import Pagination from '@/components/pagination/pagination';
 import SearchInput from '@/components/Inputs/search-input/search-input';
+import { useDeleteDevicesApi } from '@/hooks/apis/devices.hook';
+import { RESPONSE_STATUS } from '@/constants/api';
 
 const Devices = () => {
     const query = useQuery();
     const page = Number(query.get('page') || 1);
     const limit = Number(query.get('limit') || 10);
+
     const [deviceName, setDeviceName] = useState(query.get('deviceName') || '');
+    const [shouldBeDeleteId, setShouldBeDeleteId] = useState(0);
+    const [refreshFlag, setRefreshFlag] = useState(false);
     const devicesState = useAppSelector(selectDevices);
+    const hasDevicesRef = useRef(false);
     const devices = devicesState.devices;
     const rowNum = devicesState.rowNum;
-    const countOfAllDevices = devicesState.countOfAllDevices;
 
     const navigate = useNavigate();
 
@@ -33,9 +38,33 @@ const Devices = () => {
         name: deviceName,
     });
 
+    const {
+        isLoading: isDeleting,
+        fetchApi: deleteMultipleApi,
+        data: responseOfDelete,
+    } = useDeleteDevicesApi([shouldBeDeleteId]);
+
+    useEffect(() => {
+        if (devices && devices.length > 0) {
+            hasDevicesRef.current = true;
+        }
+    }, [devices]);
+
     useEffect(() => {
         getDevicesApi();
-    }, [page]);
+    }, [page, refreshFlag]);
+
+    useEffect(() => {
+        if (shouldBeDeleteId) {
+            deleteMultipleApi();
+        }
+    }, [shouldBeDeleteId]);
+
+    useEffect(() => {
+        if (responseOfDelete?.status === RESPONSE_STATUS.OK) {
+            setRefreshFlag(!refreshFlag);
+        }
+    }, [responseOfDelete]);
 
     const refresh = () => {
         getDevicesApi();
@@ -43,6 +72,15 @@ const Devices = () => {
 
     const jumpToCreatePage = () => {
         navigate('create');
+    };
+
+    const deleteOne = (id: number) => {
+        if (prompt('請輸入 delete') !== 'delete') {
+            return;
+        }
+        setShouldBeDeleteId(() => {
+            return id;
+        });
     };
 
     return (
@@ -69,12 +107,12 @@ const Devices = () => {
                     <>
                         <div
                             className={`${
-                                countOfAllDevices === 0 ? 'd-block' : 'd-none'
+                                hasDevicesRef.current ? 'd-none' : 'd-block'
                             } p-6 text-center`}
                         >
                             <img src={emptyImage} alt="" />
                             <div className="mt-2">
-                                尚未建立任何裝置，點擊按鈕開始新增吧！
+                                尚未建立任何裝置, 點擊按鈕開始新增吧！
                             </div>
                             <button
                                 onClick={jumpToCreatePage}
@@ -88,12 +126,12 @@ const Devices = () => {
                         </div>
                         <div
                             className={`${
-                                countOfAllDevices > 0 ? 'd-block' : 'd-none'
+                                hasDevicesRef.current ? 'd-block' : 'd-none'
                             }`}
                         >
                             <div className="mt-3 mt-sm-45">
                                 <div className="d-none d-sm-block">
-                                    <div className="row bg-black bg-opacity-5 text-black text-opacity-45 border-bottom border-black border-opacity-10 h6 py-25 px-3 m-0">
+                                    <div className="row bg-black bg-opacity-5 text-black text-opacity-45 h6 py-25 px-3 m-0">
                                         <div className="col-3">
                                             裝置名稱 / ID
                                         </div>
@@ -208,6 +246,9 @@ const Devices = () => {
                                                         <div
                                                             className="me-4 mb-3"
                                                             role="button"
+                                                            onClick={() => {
+                                                                deleteOne(id);
+                                                            }}
                                                         >
                                                             <img
                                                                 className="icon"

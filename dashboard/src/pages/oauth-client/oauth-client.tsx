@@ -13,6 +13,8 @@ import {
 } from '@/hooks/apis/oauth-clients.hook';
 import { RESPONSE_STATUS } from '@/constants/api';
 import PageTitle from '@/components/page-title/page-title';
+import refreshIcon from '/src/assets/images/refresh.svg';
+import lightTrashIcon from '@/assets/images/light-trash.svg';
 
 interface OauthClientLocationState {
     secret: string;
@@ -50,7 +52,7 @@ const OauthClient = () => {
     } = useRevokeSecretOauthClient(Number(id));
 
     const {
-        fetchApi: deleteMultipleApi,
+        fetchApi: deleteApi,
         isLoading: isDeleting,
         data: deleteOAuthClientResponse,
     } = useDeleteOauthClients([Number(id)]);
@@ -92,37 +94,59 @@ const OauthClient = () => {
         }
     }, [navigate, createOAuthClientResponse]);
 
+    const backToList = () => {
+        navigate('/dashboard/oauth-clients');
+    };
+
+    const deleteClient = () => {
+        if (prompt('確認刪除 oAuthClient? 請輸入 delete') !== 'delete') {
+            alert('輸入錯誤');
+            return;
+        }
+        deleteApi();
+    };
+
     return (
         <div className="oauth-client" data-testid="oauth-client">
-            <PageTitle title={`oAuth Client - ${clientId}`} />
-            <div className="card mx-4 p-45">
-                {isGetting ? (
-                    <div>Loading</div>
-                ) : (
-                    <div className="p-4">
-                        <div>{oauthClient?.id}</div>
-                        <input
-                            type="text"
-                            className="form-control"
-                            value={clientId}
-                            placeholder="如果不填寫 clientId 系統會自動會幫你隨機產生"
-                            onChange={(e) => setClientId(e.target.value)}
-                        />
-                        {isCreateMode ? (
-                            <div>
-                                <button
-                                    disabled={isCreating}
-                                    onClick={createApi}
-                                >
-                                    Create
-                                </button>
-                            </div>
-                        ) : (
-                            <div>
+            <PageTitle
+                titleClickCallback={backToList}
+                titleBackIconVisible
+                title={`oAuthClient 詳細內容`}
+                primaryButtonVisible={!isCreateMode}
+                primaryButtonWording="刪除選取"
+                primaryButtonCallback={deleteClient}
+                primaryButtonIcon={lightTrashIcon}
+                primaryButtonClassName="bg-danger text-white border border-danger"
+            />
+            <div className="mt-3">
+                <div className="card mx-4 p-45">
+                    {isGetting ? (
+                        <div>Loading</div>
+                    ) : (
+                        <div className="p-4">
+                            <div className="mb-4">
+                                <label className="mb-2">Client Id</label>
                                 <input
                                     type="text"
                                     className="form-control"
-                                    placeholder="****************************"
+                                    value={clientId}
+                                    placeholder="如果不填寫 clientId 系統會自動會幫你隨機產生"
+                                    onChange={(e) =>
+                                        setClientId(e.target.value)
+                                    }
+                                    disabled={!isCreateMode}
+                                />
+                            </div>
+                            <div>
+                                <label className="mb-2">Client Secret</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    placeholder={
+                                        isCreateMode
+                                            ? ''
+                                            : '****************************'
+                                    }
                                     value={
                                         revokeSecretResponse?.secret ||
                                         (state as OauthClientLocationState)
@@ -130,33 +154,53 @@ const OauthClient = () => {
                                     }
                                     disabled
                                 />
-                                <button
-                                    className="btn rounded-pill bg-white mx-2"
-                                    disabled={isDeleting}
-                                    onClick={deleteMultipleApi}
-                                >
-                                    {isDeleting ? 'Deleting' : 'Delete'}
-                                </button>
-                                <button
-                                    className="btn rounded-pill bg-white mx-2"
-                                    disabled={isUpdating}
-                                    onClick={updateApi}
-                                >
-                                    {isUpdating ? 'Updating' : 'Update'}
-                                </button>
-                                <button
-                                    className="btn rounded-pill bg-white mx-2"
-                                    disabled={isRevoking}
-                                    onClick={revokeSecretApi}
-                                >
-                                    {isRevoking
-                                        ? 'Revoking'
-                                        : 'Revoke Client Secret'}
-                                </button>
                             </div>
-                        )}
-                    </div>
-                )}
+                            <div className="text-warn mt-3 d-flex">
+                                <div className="bg-warn rounded-circle text-white me-2 flex-shrink-0 mt-1">
+                                    !
+                                </div>
+                                <div>
+                                    請立即記下 Client Secret, 為確保安全性,
+                                    伺服器端部會儲存 Secret 明碼, 如果忘記明碼,
+                                    只能重新產生 Secret
+                                </div>
+                            </div>
+                            <div className="d-flex justify-content-end mt-5">
+                                <button
+                                    className="btn rounded-pill bg-black bg-opacity-5 border-black border-opacity-10 px-3 py-2"
+                                    onClick={backToList}
+                                >
+                                    返回
+                                </button>
+                                {isCreateMode ? (
+                                    <button
+                                        className="btn rounded-pill bg-primary-500 text-white ms-3 px-3 py-2"
+                                        disabled={isCreating}
+                                        onClick={createApi}
+                                    >
+                                        確定新增
+                                    </button>
+                                ) : (
+                                    <div>
+                                        <button
+                                            className="btn rounded-pill bg-primary-500 text-white px-3 py-2 ms-3"
+                                            disabled={isRevoking}
+                                            onClick={revokeSecretApi}
+                                        >
+                                            <img
+                                                className="me-2"
+                                                src={refreshIcon}
+                                            />
+                                            {isRevoking
+                                                ? 'Revoking'
+                                                : 'Revoke Client Secret'}
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );

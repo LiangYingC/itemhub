@@ -17,7 +17,10 @@ export const oauthClientsSlice = createSlice({
     initialState,
     reducers: {
         refresh: (state, action: PayloadAction<OauthClientState>) => {
-            const newState = action.payload;
+            const newState = {
+                ...action.payload,
+            };
+
             return newState;
         },
         refreshOne: (state, action: PayloadAction<OauthClient>) => {

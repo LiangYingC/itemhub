@@ -10,10 +10,9 @@ import moment from 'moment';
 import pencilIcon from '@/assets/images/pencil.svg';
 import cloudIcon from '@/assets/images/cloud.svg';
 import trashIcon from '@/assets/images/trash.svg';
-import plusIcon from '@/assets/images/icon-plus.svg';
-import emptyImage from '@/assets/images/empty-image.svg';
 import Pagination from '@/components/pagination/pagination';
 import SearchInput from '@/components/Inputs/search-input/search-input';
+import EmptyDataToCreateItem from '@/components/empty-data-to-create-item/empty-data-to-create-item';
 import { useDeleteDevicesApi } from '@/hooks/apis/devices.hook';
 import { RESPONSE_STATUS } from '@/constants/api';
 
@@ -105,30 +104,9 @@ const Devices = () => {
                     <div>Loading</div>
                 ) : (
                     <>
-                        <div
-                            className={`${
-                                hasDevicesRef.current ? 'd-none' : 'd-block'
-                            } p-6 text-center`}
-                        >
-                            <img src={emptyImage} alt="" />
-                            <div className="mt-2">
-                                尚未建立任何裝置, 點擊按鈕開始新增吧！
-                            </div>
-                            <button
-                                onClick={jumpToCreatePage}
-                                className="d-flex align-items-center btn bg-light-blue text-white border border-light-blue rounded-pill mx-auto mt-3 px-3 py-2"
-                            >
-                                <img className="icon pe-2" src={plusIcon} />
-                                <div className="lh-1 py-1 fw-bold">
-                                    新增裝置
-                                </div>
-                            </button>
-                        </div>
-                        <div
-                            className={`${
-                                hasDevicesRef.current ? 'd-block' : 'd-none'
-                            }`}
-                        >
+                        {!hasDevicesRef.current ? (
+                            <EmptyDataToCreateItem itemName="裝置" />
+                        ) : (
                             <div className="mt-3 mt-sm-45">
                                 <div className="d-none d-sm-block">
                                     <div className="row bg-black bg-opacity-5 text-black text-opacity-45 h6 py-25 px-3 m-0">
@@ -261,19 +239,19 @@ const Devices = () => {
                                         )
                                     )}
                                 </div>
+                                <div
+                                    className={`${
+                                        devices.length > 0 ? 'd-flex' : 'd-none'
+                                    } justify-content-end w-100 mt-5`}
+                                >
+                                    <Pagination
+                                        rowNum={rowNum}
+                                        page={page}
+                                        limit={limit}
+                                    />
+                                </div>
                             </div>
-                        </div>
-                        <div
-                            className={`${
-                                devices.length > 0 ? 'd-block' : 'd-none'
-                            } d-flex justify-content-end w-100 mt-5`}
-                        >
-                            <Pagination
-                                rowNum={rowNum}
-                                page={page}
-                                limit={limit}
-                            />
-                        </div>
+                        )}
                     </>
                 )}
             </div>

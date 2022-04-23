@@ -14,6 +14,7 @@ import { TriggerItem } from '@/types/triggers.type';
 import Pagination from '@/components/pagination/pagination';
 import PageTitle from '@/components/page-title/page-title';
 import SearchInput from '@/components/Inputs/search-input/search-input';
+import EmptyDataToCreateItem from '@/components/empty-data-to-create-item/empty-data-to-create-item';
 import lightTrashIcon from '@/assets/images/light-trash.svg';
 import pencilIcon from '@/assets/images/pencil.svg';
 import trashIcon from '@/assets/images/trash.svg';
@@ -66,6 +67,13 @@ const Triggers = () => {
     );
 
     const { triggers, rowNum } = useAppSelector(selectTriggers);
+    const hasTriggersRef = useRef(false);
+
+    useEffect(() => {
+        if (triggers && triggers.length > 0) {
+            hasTriggersRef.current = true;
+        }
+    }, [triggers]);
 
     useEffect(() => {
         if (
@@ -262,111 +270,137 @@ const Triggers = () => {
                         </select>
                     </label>
                 </div>
-                <div className="mt-3 mt-sm-45">
-                    <div className="row bg-black bg-opacity-5 text-black text-opacity-45 h6 py-25 mb-0">
-                        <label role="button" className="col-2">
-                            <div className="d-flex align-items-center">
-                                <input
-                                    type="checkbox"
-                                    className="me-3"
-                                    checked={isSelectAll}
-                                    onChange={toggleSelectAll}
-                                />
-                                <span>觸發器名稱</span>
-                            </div>
-                        </label>
-                        <div className="col-2">來源裝置</div>
-                        <div className="col-1">來源 Pin</div>
-                        <div className="col-2">條件</div>
-                        <div className="col-2">目標裝置</div>
-                        <div className="col-1">目標 Pin</div>
-                        <div className="col-2">操作</div>
-                    </div>
-                    <div className="triggers" data-testid="triggers">
-                        {isGettingTriggers || triggers === null ? (
-                            <h1>Loading</h1>
-                        ) : filteredTriggers.length === 0 ? (
-                            <h1>No Triggers</h1>
+                {isGettingTriggers || triggers === null ? (
+                    <div>Loading</div>
+                ) : (
+                    <>
+                        {!hasTriggersRef.current ? (
+                            <EmptyDataToCreateItem itemName="觸發器" />
                         ) : (
-                            filteredTriggers.map(
-                                (
-                                    {
-                                        id,
-                                        sourceDevice,
-                                        sourcePin,
-                                        destinationDevice,
-                                        destinationPin,
-                                        operator,
-                                        sourceThreshold,
-                                    },
-                                    index
-                                ) => (
-                                    <div
-                                        key={`${id}-${index}`}
-                                        className="row py-4 border-1 border-bottom text-black text-opacity-65"
-                                    >
-                                        <label className="col-2 d-flex align-items-center">
+                            <div className="mt-3 mt-sm-45">
+                                <div className="row bg-black bg-opacity-5 text-black text-opacity-45 h6 py-25 mb-0">
+                                    <label role="button" className="col-2">
+                                        <div className="d-flex align-items-center">
                                             <input
-                                                className="me-3"
                                                 type="checkbox"
-                                                onChange={updateSelectedIds}
-                                                value={id}
-                                                checked={selectedIds.includes(
-                                                    id
-                                                )}
+                                                className="me-3"
+                                                checked={isSelectAll}
+                                                onChange={toggleSelectAll}
                                             />
-                                            <span>
-                                                {id} TODO: 未來有 Trigger Name
-                                                資料時，將 id 改為 name
-                                            </span>
-                                        </label>
-                                        <div className="col-2">
-                                            {sourceDevice?.name}
+                                            <span>觸發器名稱</span>
                                         </div>
-                                        <div className="col-1">{sourcePin}</div>
-                                        <div className="col-2 d-flex">
-                                            <span className="pe-1">
-                                                {
-                                                    triggerOperators[operator]
-                                                        .label
-                                                }
-                                            </span>
-                                            <span>{sourceThreshold}</span>
-                                        </div>
-                                        <div className="col-2">
-                                            {destinationDevice?.name}
-                                        </div>
-                                        <div className="col-1">
-                                            {destinationPin}
-                                        </div>
-                                        <div className="col-2">
-                                            <div className="d-flex justify-content-start">
-                                                <Link
-                                                    className="me-4"
-                                                    to={`/dashboard/triggers/${id}`}
-                                                >
-                                                    <img src={pencilIcon} />
-                                                </Link>
-                                                <button
-                                                    className="btn bg-transparent p-0"
-                                                    onClick={() => {
-                                                        // TODO: 實作 delete on trigger api
-                                                    }}
-                                                    disabled={false}
-                                                >
-                                                    <img src={trashIcon} />
-                                                </button>
+                                    </label>
+                                    <div className="col-2">來源裝置</div>
+                                    <div className="col-1">來源 Pin</div>
+                                    <div className="col-2">條件</div>
+                                    <div className="col-2">目標裝置</div>
+                                    <div className="col-1">目標 Pin</div>
+                                    <div className="col-2">操作</div>
+                                </div>
+                                <div>
+                                    {filteredTriggers.map(
+                                        (
+                                            {
+                                                id,
+                                                sourceDevice,
+                                                sourcePin,
+                                                destinationDevice,
+                                                destinationPin,
+                                                operator,
+                                                sourceThreshold,
+                                            },
+                                            index
+                                        ) => (
+                                            <div
+                                                key={`${id}-${index}`}
+                                                className="row py-4 border-1 border-bottom text-black text-opacity-65"
+                                            >
+                                                <label className="col-2 d-flex align-items-center">
+                                                    <input
+                                                        className="me-3"
+                                                        type="checkbox"
+                                                        onChange={
+                                                            updateSelectedIds
+                                                        }
+                                                        value={id}
+                                                        checked={selectedIds.includes(
+                                                            id
+                                                        )}
+                                                    />
+                                                    <span>
+                                                        {id} TODO: 未來有
+                                                        Trigger Name 資料時，將
+                                                        id 改為 name
+                                                    </span>
+                                                </label>
+                                                <div className="col-2">
+                                                    {sourceDevice?.name}
+                                                </div>
+                                                <div className="col-1">
+                                                    {sourcePin}
+                                                </div>
+                                                <div className="col-2 d-flex">
+                                                    <span className="pe-1">
+                                                        {
+                                                            triggerOperators[
+                                                                operator
+                                                            ].label
+                                                        }
+                                                    </span>
+                                                    <span>
+                                                        {sourceThreshold}
+                                                    </span>
+                                                </div>
+                                                <div className="col-2">
+                                                    {destinationDevice?.name}
+                                                </div>
+                                                <div className="col-1">
+                                                    {destinationPin}
+                                                </div>
+                                                <div className="col-2">
+                                                    <div className="d-flex justify-content-start">
+                                                        <Link
+                                                            className="me-4"
+                                                            to={`/dashboard/triggers/${id}`}
+                                                        >
+                                                            <img
+                                                                src={pencilIcon}
+                                                            />
+                                                        </Link>
+                                                        <button
+                                                            className="btn bg-transparent p-0"
+                                                            onClick={() => {
+                                                                // TODO: 實作 delete on trigger api
+                                                            }}
+                                                            disabled={false}
+                                                        >
+                                                            <img
+                                                                src={trashIcon}
+                                                            />
+                                                        </button>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                )
-                            )
+                                        )
+                                    )}
+                                </div>
+                                <div
+                                    className={`${
+                                        triggers.length > 0
+                                            ? 'd-flex'
+                                            : 'd-none'
+                                    } justify-content-end w-100 mt-5`}
+                                >
+                                    <Pagination
+                                        rowNum={rowNum}
+                                        page={page}
+                                        limit={limit}
+                                    />
+                                </div>
+                            </div>
                         )}
-                    </div>
-                    <div className="d-flex justify-content-end w-100 mt-5">
-                        <Pagination rowNum={rowNum} page={page} limit={limit} />
-                    </div>
-                </div>
+                    </>
+                )}
             </div>
         </div>
     );

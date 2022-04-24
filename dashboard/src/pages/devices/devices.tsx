@@ -86,16 +86,16 @@ const Devices = () => {
         <div className="devices" data-testid="devices">
             <PageTitle
                 title="裝置列表"
-                primaryButtonVisible
-                secondaryButtonVisible
+                primaryButtonVisible={hasDevicesRef.current}
                 primaryButtonWording="重新整理"
                 primaryButtonClassName="bg-black bg-opacity-10 text-black text-opacity-65 border border-black border-opacity-10"
                 primaryButtonCallback={refresh}
+                secondaryButtonVisible={hasDevicesRef.current}
                 secondaryButtonWording="新增裝置"
                 secondaryButtonCallback={jumpToCreatePage}
             />
             <div className="bg-white shadow-sm mx-3 mx-sm-0 mx-xl-45 mt-4 mt-sm-0 p-3 p-sm-45 rounded-8">
-                {hasDevicesRef.current ? (
+                {!hasDevicesRef.current ? (
                     <EmptyDataToCreateItem itemName="裝置" />
                 ) : (
                     <>

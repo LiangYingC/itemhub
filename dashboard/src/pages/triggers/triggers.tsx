@@ -210,12 +210,12 @@ const Triggers = () => {
         <div className="triggers" data-testid="triggers">
             <PageTitle
                 title="觸發列表"
-                primaryButtonVisible
+                primaryButtonVisible={hasTriggersRef.current}
                 primaryButtonWording="刪除選取"
                 primaryButtonCallback={confirmToDeleteTriggers}
                 primaryButtonIcon={lightTrashIcon}
                 primaryButtonClassName={pageTitlePrimaryButtonClassName}
-                secondaryButtonVisible
+                secondaryButtonVisible={hasTriggersRef.current}
                 secondaryButtonWording="新增觸發"
                 secondaryButtonCallback={jumpToCreatePage}
             />

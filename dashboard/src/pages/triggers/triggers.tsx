@@ -220,62 +220,74 @@ const Triggers = () => {
                 secondaryButtonCallback={jumpToCreatePage}
             />
             <div className="mx-3 mx-sm-0 mx-xl-45 mt-4 mt-sm-0 p-3 p-sm-45 bg-white shadow-sm rounded-8">
-                <div className="d-flex flex-column flex-sm-row">
-                    <SearchInput
-                        placeholder="搜尋觸發器"
-                        updateValue={(value) => setTriggerName(value)}
-                        onSearch={getTriggersApi}
-                    />
-                    {/* TODO: 來源裝置、目標裝置的 filter，接著要等設計稿改動再調整，應該會改成 autocompeleted input search，現在先不動 */}
-                    <label className="ms-3">
-                        <select
-                            value={sourceDeviceNameFilter}
-                            onChange={(e) => {
-                                setSourceDeviceNameFilter(e.target.value);
-                            }}
-                        >
-                            {sourceDeviceNameOptions.map((name, index) => {
-                                const value =
-                                    name === '來源裝置名稱' ? '' : name;
-                                return (
-                                    <option
-                                        key={`${name}-${index}`}
-                                        value={value}
-                                    >
-                                        {name}
-                                    </option>
-                                );
-                            })}
-                        </select>
-                    </label>
-                    <label className="ms-3">
-                        <select
-                            value={destinationDeviceNameFilter}
-                            onChange={(e) => {
-                                setDestinationDeviceNameFilter(e.target.value);
-                            }}
-                        >
-                            {destinationDeviceNameOptions.map((name, index) => {
-                                const value =
-                                    name === '目標裝置名稱' ? '' : name;
-                                return (
-                                    <option
-                                        key={`${name}-${index}`}
-                                        value={value}
-                                    >
-                                        {name}
-                                    </option>
-                                );
-                            })}
-                        </select>
-                    </label>
-                </div>
-                {isGettingTriggers || triggers === null ? (
-                    <div>Loading</div>
+                {!hasTriggersRef.current ? (
+                    <EmptyDataToCreateItem itemName="觸發" />
                 ) : (
                     <>
-                        {!hasTriggersRef.current ? (
-                            <EmptyDataToCreateItem itemName="觸發" />
+                        <div className="d-flex flex-column flex-sm-row">
+                            <SearchInput
+                                placeholder="搜尋觸發器"
+                                updateValue={(value) => setTriggerName(value)}
+                                onSearch={getTriggersApi}
+                            />
+                            {/* TODO: 來源裝置、目標裝置的 filter，接著要等設計稿改動再調整，應該會改成 autocompeleted input search，現在先不動 */}
+                            <label className="ms-3">
+                                <select
+                                    value={sourceDeviceNameFilter}
+                                    onChange={(e) => {
+                                        setSourceDeviceNameFilter(
+                                            e.target.value
+                                        );
+                                    }}
+                                >
+                                    {sourceDeviceNameOptions.map(
+                                        (name, index) => {
+                                            const value =
+                                                name === '來源裝置名稱'
+                                                    ? ''
+                                                    : name;
+                                            return (
+                                                <option
+                                                    key={`${name}-${index}`}
+                                                    value={value}
+                                                >
+                                                    {name}
+                                                </option>
+                                            );
+                                        }
+                                    )}
+                                </select>
+                            </label>
+                            <label className="ms-3">
+                                <select
+                                    value={destinationDeviceNameFilter}
+                                    onChange={(e) => {
+                                        setDestinationDeviceNameFilter(
+                                            e.target.value
+                                        );
+                                    }}
+                                >
+                                    {destinationDeviceNameOptions.map(
+                                        (name, index) => {
+                                            const value =
+                                                name === '目標裝置名稱'
+                                                    ? ''
+                                                    : name;
+                                            return (
+                                                <option
+                                                    key={`${name}-${index}`}
+                                                    value={value}
+                                                >
+                                                    {name}
+                                                </option>
+                                            );
+                                        }
+                                    )}
+                                </select>
+                            </label>
+                        </div>
+                        {isGettingTriggers || triggers === null ? (
+                            <div>Loading</div>
                         ) : (
                             <div className="mt-3 mt-sm-45">
                                 <div className="d-none d-sm-block">

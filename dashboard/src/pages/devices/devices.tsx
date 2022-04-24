@@ -95,17 +95,17 @@ const Devices = () => {
                 secondaryButtonCallback={jumpToCreatePage}
             />
             <div className="bg-white shadow-sm mx-3 mx-sm-0 mx-xl-45 mt-4 mt-sm-0 p-3 p-sm-45 rounded-8">
-                <SearchInput
-                    placeholder="搜尋裝置"
-                    updateValue={(value) => setDeviceName(value)}
-                    onSearch={getDevicesApi}
-                />
-                {isGetingDevices || devices === null ? (
-                    <div>Loading</div>
+                {hasDevicesRef.current ? (
+                    <EmptyDataToCreateItem itemName="裝置" />
                 ) : (
                     <>
-                        {!hasDevicesRef.current ? (
-                            <EmptyDataToCreateItem itemName="裝置" />
+                        <SearchInput
+                            placeholder="搜尋裝置"
+                            updateValue={(value) => setDeviceName(value)}
+                            onSearch={getDevicesApi}
+                        />
+                        {isGetingDevices || devices === null ? (
+                            <div>Loading</div>
                         ) : (
                             <div className="mt-3 mt-sm-45">
                                 <div className="d-none d-sm-block">

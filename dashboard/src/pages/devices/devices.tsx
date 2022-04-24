@@ -83,7 +83,7 @@ const Devices = () => {
     };
 
     return (
-        <div className="devices" data-testid="Devices">
+        <div className="devices" data-testid="devices">
             <PageTitle
                 title="裝置列表"
                 primaryButtonVisible
@@ -129,7 +129,7 @@ const Devices = () => {
                                             online,
                                         }) => (
                                             <div
-                                                className="row border-bottom border-black border-opacity-10 p-0 py-sm-4 px-sm-3 mx-0 "
+                                                className="row border-bottom border-black border-opacity-10 p-0 py-sm-4 px-sm-3 mx-0"
                                                 key={id}
                                                 title={`建立時間: ${createdAt}`}
                                             >

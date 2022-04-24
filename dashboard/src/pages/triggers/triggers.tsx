@@ -220,7 +220,7 @@ const Triggers = () => {
                 secondaryButtonCallback={jumpToCreatePage}
             />
             <div className="mx-3 mx-sm-0 mx-xl-45 mt-4 mt-sm-0 p-3 p-sm-45 bg-white shadow-sm rounded-8">
-                {!hasTriggersRef.current ? (
+                {!hasTriggersRef.current && triggers !== null ? (
                     <EmptyDataToCreateItem itemName="觸發" />
                 ) : (
                     <>

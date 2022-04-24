@@ -101,7 +101,7 @@ const Devices = () => {
                     <>
                         <SearchInput
                             placeholder="搜尋裝置"
-                            updateValue={(value) => setDeviceName(value)}
+                            onChangeValue={(value) => setDeviceName(value)}
                             onSearch={getDevicesApi}
                         />
                         {isGetingDevices || devices === null ? (

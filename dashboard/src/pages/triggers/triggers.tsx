@@ -227,7 +227,7 @@ const Triggers = () => {
                         <div className="d-flex flex-column flex-sm-row">
                             <SearchInput
                                 placeholder="搜尋觸發"
-                                updateValue={(value) => setTriggerName(value)}
+                                onChangeValue={(value) => setTriggerName(value)}
                                 onSearch={getTriggersApi}
                             />
                             {/* TODO: 來源裝置、目標裝置的 filter，接著要等設計稿改動再調整，應該會改成 autocompeleted input search，現在先不動 */}

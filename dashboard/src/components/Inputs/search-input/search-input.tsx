@@ -4,12 +4,12 @@ import searchIcon from '@/assets/images/icon-search.svg';
 const SearchInput = ({
     placeholder,
     defaultValue = '',
-    updateValue,
+    onChangeValue,
     onSearch,
 }: {
     placeholder: string;
     defaultValue?: string;
-    updateValue: (value: string) => void;
+    onChangeValue: (value: string) => void;
     onSearch: () => void;
 }) => {
     const inputRef = useRef<HTMLInputElement>(null);
@@ -43,7 +43,7 @@ const SearchInput = ({
                 ref={inputRef}
                 placeholder={placeholder}
                 defaultValue={defaultValue}
-                onChange={() => updateValue(inputRef.current?.value || '')}
+                onChange={() => onChangeValue(inputRef.current?.value || '')}
                 onKeyUp={searchInputKeyUp}
             />
             <button

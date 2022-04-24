@@ -209,14 +209,14 @@ const Triggers = () => {
     return (
         <div className="triggers" data-testid="triggers">
             <PageTitle
-                title="觸發器列表"
+                title="觸發列表"
                 primaryButtonVisible
                 primaryButtonWording="刪除選取"
                 primaryButtonCallback={confirmToDeleteTriggers}
                 primaryButtonIcon={lightTrashIcon}
                 primaryButtonClassName={pageTitlePrimaryButtonClassName}
                 secondaryButtonVisible
-                secondaryButtonWording="新增觸發器"
+                secondaryButtonWording="新增觸發"
                 secondaryButtonCallback={jumpToCreatePage}
             />
             <div className="mx-3 mx-sm-0 mx-xl-45 mt-4 mt-sm-0 p-3 p-sm-45 bg-white shadow-sm rounded-8">
@@ -226,7 +226,7 @@ const Triggers = () => {
                     <>
                         <div className="d-flex flex-column flex-sm-row">
                             <SearchInput
-                                placeholder="搜尋觸發器"
+                                placeholder="搜尋觸發"
                                 updateValue={(value) => setTriggerName(value)}
                                 onSearch={getTriggersApi}
                             />

@@ -1,3 +1,9 @@
+@import '../../css/overwrite.scss';
+
 .triggers {
-    
+    .triggers-list {
+      >.row:hover {
+        background: rgba($light-blue, 0.04);
+      }
+    }
 }

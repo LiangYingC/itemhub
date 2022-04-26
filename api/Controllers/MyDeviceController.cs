@@ -1,11 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Builder;
-using System.Threading.Tasks;
-using System.Threading;
 using System;
-using Microsoft.EntityFrameworkCore;
 using Homo.Api;
 using Homo.Core.Constants;
 

@@ -3,14 +3,16 @@ using System;
 using Homo.IotApi;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IotApi.Migrations
 {
     [DbContext(typeof(IotDbContext))]
-    partial class IotDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220426033705_AddFirmwareBundleLog")]
+    partial class AddFirmwareBundleLog
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,9 +41,6 @@ namespace IotApi.Migrations
                     b.Property<string>("Info")
                         .HasColumnType("longtext");
 
-                    b.Property<int?>("Microcontroller")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(64)
@@ -59,8 +58,6 @@ namespace IotApi.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DeviceId");
-
-                    b.HasIndex("Microcontroller");
 
                     b.HasIndex("Name");
 
@@ -255,12 +252,6 @@ namespace IotApi.Migrations
                     b.Property<long>("DeviceId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("Filename")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("Microcontroller")
-                        .HasColumnType("int");
-
                     b.Property<long>("OwnerId")
                         .HasColumnType("bigint");
 
@@ -271,9 +262,6 @@ namespace IotApi.Migrations
                     b.HasIndex("DeviceId");
 
                     b.HasIndex("OwnerId");
-
-                    b.HasIndex("BundleId", "DeletedAt")
-                        .IsUnique();
 
                     b.ToTable("FirmwareBundleLog");
                 });

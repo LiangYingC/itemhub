@@ -80,8 +80,6 @@ $input-placeholder-color: rgba(black, 0.15);
 $bg-blue2green: linear-gradient(135deg, #0048ff 0%, #14ffca 100%);
 $enable-negative-margins: true;
 
-$shadow: 0px 4px 8px rgba(0, 0, 0, 0.08);
-
 $theme-colors: (
     'black': black,
     'white': white,
@@ -116,11 +114,11 @@ $theme-colors: (
     'green-12': rgba($green, 0.12),
 );
 
+// card
 $card-border-width: 0;
 $card-border-radius: $border-radius;
 
 // button
-
 $btn-line-height: 1rem;
 $btn-padding-y: 0.85rem;
 $btn-padding-x: 1rem;
@@ -133,7 +131,7 @@ $theme-button-hover-colors: (
     'secondary': rgba(black, 0.09),
     'danger': #e84141,
 );
-// ;
+
 $theme-button-active-colors: (
     'primary': $primary-700,
     'secondary': $light-green,
@@ -156,14 +154,10 @@ $theme-button-hover-font-colors: (
     'danger': white,
 );
 
+// border-radius
 $border-radius-sm: 0.25rem;
 $border-radius: 0.5rem;
 $border-radius-lg: 0.75rem;
-
-$box-shadow-sm: 0px 2px 2px rgba(0, 0, 0, 0.08);
-$box-shadow-md: 0px 4px 8px rgba(0, 0, 0, 0.08);
-$box-shadow-lg: 0px 4px 12px rgba(0, 0, 0, 0.08);
-$box-shadow-xl: 0px 4px 20px rgba(0, 0, 0, 0.12);
 
 $rounded: (
     null: $border-radius,
@@ -176,6 +170,11 @@ $rounded: (
     pill: $border-radius-pill,
 );
 
+// shadow
+$box-shadow-sm: 0px 2px 2px rgba(0, 0, 0, 0.08);
+$box-shadow-md: 0px 4px 8px rgba(0, 0, 0, 0.08);
+$box-shadow-lg: 0px 4px 12px rgba(0, 0, 0, 0.08);
+$box-shadow-xl: 0px 4px 20px rgba(0, 0, 0, 0.12);
 $shadows: (
     null: $box-shadow,
     sm: $box-shadow-sm,
@@ -260,6 +259,8 @@ $utilities: map-merge(
 );
 
 @import 'bootstrap/scss/bootstrap.scss';
+
+// button
 
 .btn {
     display: flex;

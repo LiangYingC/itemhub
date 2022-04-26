@@ -212,20 +212,13 @@ const Devices = () => {
                                                     </div>
                                                     <div className="col-8 col-sm-12 p-3 p-sm-0">
                                                         <div
-                                                            className={`rounded-pill tag text-center py-1 d-flex align-items-center justify-content-center ${
+                                                            className={`tag ${
                                                                 online
-                                                                    ? 'bg-green bg-opacity-10 text-green'
-                                                                    : 'bg-black bg-opacity-5 text-black text-opacity-45 fw-normal'
+                                                                    ? 'tag-green'
+                                                                    : 'tag-grey'
                                                             }`}
                                                         >
-                                                            <div
-                                                                className={`dot rounded-circle d-block me-2 ${
-                                                                    online
-                                                                        ? 'bg-green'
-                                                                        : 'bg-black bg-opacity-45'
-                                                                }`}
-                                                            />
-                                                            <div className="h6 mb-0">
+                                                            <div>
                                                                 {online
                                                                     ? '上線'
                                                                     : '離線'}

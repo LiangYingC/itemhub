@@ -1,7 +1,6 @@
 @import '../../css/overwrite.scss';
 
 .devices {
-    $status-dot-size: 6px;
     .filter {
         max-width: 480px;
         @include media-breakpoint-down(md) {
@@ -11,13 +10,7 @@
             margin-left: -2px;
         }
     }
-    .tag {
-        width: 62px;
-    }
-    .dot {
-        width: $status-dot-size;
-        height: $status-dot-size;
-    }
+
     .devices-list {
         > .row:hover {
             background: rgba($primary, 0.04);

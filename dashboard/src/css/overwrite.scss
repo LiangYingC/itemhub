@@ -44,8 +44,8 @@ $opacity: (
     0: 0,
 );
 
-$primary: #6bdcff; // deprecated
-$light-blue: #4ac5ff; // deprecated
+$primary: #4ac5ff; // deprecated
+$secondary: rgba(black, 0.04);
 $deep-dark-blue: #0c152d; // deprecated
 $dark-blue: #141b5e; // deprecated
 $darkest-blue: #161c2e; // deprecated
@@ -64,22 +64,18 @@ $primary-300: #9de8ff;
 $primary-200: #d3f5ff;
 $primary-100: #e9faff;
 $green: #2ebf2e;
-
+$light-green: #e5f2f7;
 $grey-800: #13151f;
 $grey-700: #1e202b;
 $grey-600: #282b39;
 $grey-500: #404350;
 $grey-400: #666a7f;
 $grey-300: #8a90ad;
-$grey-200: #dbdbdb;
+$grey-200: #dcdff0;
 $grey-150: #e5e5e5;
 $grey-100: #f8f9fa;
 
-$white-opacity-15: rgba(white, 0.15);
-$black-opacity-15: rgba(black, 0.15);
-$black-opacity-9: rgba(black, 0.09);
-
-$input-placeholder-color: $black-opacity-15;
+$input-placeholder-color: rgba(black, 0.15);
 
 $bg-blue2green: linear-gradient(135deg, #0048ff 0%, #14ffca 100%);
 $enable-negative-margins: true;
@@ -91,7 +87,7 @@ $theme-colors: (
     'white': white,
     'warn': $warn,
     'primary': $primary,
-    'light-blue': $light-blue,
+    'secondary': rgba(black, 0.04),
     'dark-blue': $dark-blue,
     'dark': $dark,
     'blue': $blue,
@@ -118,6 +114,43 @@ $theme-colors: (
     'purple': $purple,
     'green': $green,
     'green-12': rgba($green, 0.12),
+);
+
+// button
+
+$btn-line-height: 1rem;
+$btn-padding-y: 0.85rem;
+$btn-padding-x: 1rem;
+$btn-box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
+$btn-font-weight: $font-weight-bold;
+$btn-line-height: 1rem;
+
+$theme-button-hover-colors: (
+    'primary': $primary-600,
+    'secondary': rgba(black, 0.09),
+    'danger': #e84141,
+);
+// ;
+$theme-button-active-colors: (
+    'primary': $primary-700,
+    'secondary': $light-green,
+    'danger': #fe5858,
+);
+
+$theme-button-font-colors: (
+    'primary': white,
+    'secondary': rgba(0, 0, 0, 0.65),
+    'danger': white,
+);
+
+$theme-button-border-colors: (
+    'secondary': rgba(0, 0, 0, 0.09),
+);
+
+$theme-button-hover-font-colors: (
+    'primary': white,
+    'secondary': rgba(0, 0, 0, 0.85),
+    'danger': white,
 );
 
 @import 'bootstrap/scss/_utilities.scss';
@@ -200,63 +233,65 @@ $utilities: map-merge(
     )
 );
 
-.btn-primary {
-    background: white;
-    color: $primary-800;
-    outline: none;
-    border: none;
-    font-weight: 600;
+@import 'bootstrap/scss/bootstrap.scss';
 
-    &:hover {
-        background: $primary-100;
-        color: $blue;
-    }
+.btn {
+    display: flex;
+    align-items: center;
+    color: #fff;
+    border-radius: 50rem;
+    box-shadow: $btn-box-shadow;
 
-    &:active {
-        background: $primary-200;
-        color: $blue;
+    .icon {
+        padding-right: 0.5rem;
     }
 
     &:disabled {
         background: $grey-200;
-        opacity: 1;
-        color: rgba($black, 0.25);
+        color: rgba(black, 0.25);
     }
+}
 
-    &.btn-md {
-        font-size: $h4-font-size;
-        @include media-breakpoint-down(lg) {
-            font-size: $h4-font-size-for-small-screen;
+@each $color, $value in $theme-button-font-colors {
+    .btn-#{$color} {
+        color: $value;
+
+        &:active,
+        &:focus {
+            box-shadow: $btn-box-shadow;
+            color: $value;
+            outline: none;
+        }
+
+        &.disabled {
+            background: $grey-200;
+            border-color: $grey-200;
+            color: rgba(black, 0.25);
         }
     }
 }
 
-.form-control,
-.itemhub-form-control {
-    background: rgba(0, 0, 0, 0.25);
-    padding: 1rem 1.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: rgba(255, 255, 255, 0.85);
-
-    &:focus {
-        color: rgba(255, 255, 255, 0.85);
-        background-color: transparent;
-        border-color: #30a7df;
-        box-shadow: none;
-    }
-
-    &.invalid {
-        border-color: $danger;
-        color: rgba(white, map-get($opacity, 50));
-    }
-
-    &:disabled {
-        background: rgba(255, 255, 255, 0.09);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        &::placeholder {
-            color: rgba(255, 255, 255, 0.15);
-        }
+@each $color, $value in $theme-button-hover-font-colors {
+    .btn-#{$color}:hover {
+        color: $value;
     }
 }
 
-@import 'bootstrap/scss/bootstrap.scss';
+@each $color, $value in $theme-button-border-colors {
+    .btn-#{$color} {
+        border-color: $value;
+    }
+}
+
+@each $color, $value in $theme-button-hover-colors {
+    .btn-#{$color}:hover {
+        background: $value;
+    }
+}
+
+@each $color, $value in $theme-button-active-colors {
+    .btn-#{$color}:active,
+    .btn-#{$color}:focus {
+        background: $value;
+    }
+}

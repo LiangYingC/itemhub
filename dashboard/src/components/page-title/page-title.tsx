@@ -43,7 +43,7 @@ const PageTitle = (props: {
 
     return (
         <div className="page-title" data-testid="page-title">
-            <div className="w-100 d-flex align-items-center px-45 pt-4">
+            <div className="w-100 d-flex align-items-center px-45 pt-4 mb-45">
                 <div
                     role="button"
                     className={`d-none hamburger p-2 me-3 ${
@@ -56,7 +56,7 @@ const PageTitle = (props: {
                     <div className="bg-black bg-opacity-85 w-100 rounded-pill" />
                 </div>
                 <div className="flex-fill">
-                    <div className="d-flex align-items-center justify-content-between flex-wrap mb-45">
+                    <div className="d-flex align-items-center justify-content-between flex-wrap">
                         <h3
                             role={titleClickCallback ? 'button' : ''}
                             onClick={titleClickCallback}

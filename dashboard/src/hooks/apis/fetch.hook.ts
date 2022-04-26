@@ -21,6 +21,7 @@ export const useFetchApi = <T>({
     const [data, setData] = useState<T | null>(initialData);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<FetchErrorResultData | null>(null);
+    const [httpStatus, setHttpStatus] = useState<number | null>(null);
 
     const fetchApi = useCallback(async () => {
         try {
@@ -31,6 +32,7 @@ export const useFetchApi = <T>({
                 method,
                 payload,
             });
+            setHttpStatus(result.httpStatus);
             const data = result.data;
 
             if (callbackFunc) {
@@ -67,5 +69,6 @@ export const useFetchApi = <T>({
         error,
         data,
         fetchApi,
+        httpStatus,
     };
 };

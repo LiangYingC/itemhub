@@ -156,10 +156,6 @@ namespace Homo.AuthApi
             {
                 throw new CustomException(ERROR_CODE.DUPLICATE_EMAIL, HttpStatusCode.BadRequest);
             }
-            if (isEarlyBird)
-            {
-                isEarlyBird = user.IsEarlyBird;
-            }
 
             VerifyCode record = VerifyCodeDataservice.GetOneUnUsedByEmail(_dbContext, dto.Email, dto.Code);
             if (record == null)

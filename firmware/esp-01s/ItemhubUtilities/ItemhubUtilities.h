@@ -50,9 +50,8 @@ public:
         std::string resp = ItemhubUtilities::Send(client, ca, host, "POST", deviceOnlineEndpoint, emptyString, token);
         return resp;
     }
-    static std::string Auth(WiFiClientSecure &client, X509List &ca, std::string &host)
+    static std::string Auth(WiFiClientSecure &client, X509List &ca, std::string &host, std::string &postBody)
     {
-        std::string postBody = "{\"clientId\":\"miterfrants@gmail.com\",\"clientSecret\":\"@Testing123123\"}";
         std::string authEndpoint = "/api/v1/oauth/exchange-token-for-device";
         std::string emptyToken = "";
         std::string resp = Send(client, ca, host, "POST", authEndpoint, postBody, emptyToken);

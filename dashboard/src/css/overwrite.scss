@@ -121,7 +121,7 @@ $theme-colors: (
 $btn-line-height: 1rem;
 $btn-padding-y: 0.85rem;
 $btn-padding-x: 1rem;
-$btn-box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
+$btn-box-shadow: $box-shadow-lg;
 $btn-font-weight: $font-weight-bold;
 $btn-line-height: 1rem;
 
@@ -153,6 +153,35 @@ $theme-button-hover-font-colors: (
     'danger': white,
 );
 
+$border-radius-sm: 0.25rem;
+$border-radius: 0.5rem;
+$border-radius-lg: 0.75rem;
+
+$box-shadow-sm: 0px 2px 2px rgba(0, 0, 0, 0.08);
+$box-shadow-md: 0px 4px 8px rgba(0, 0, 0, 0.08);
+$box-shadow-lg: 0px 4px 12px rgba(0, 0, 0, 0.08);
+$box-shadow-xl: 0px 4px 20px rgba(0, 0, 0, 0.12);
+
+$rounded: (
+    null: $border-radius,
+    0: 0,
+    1: $border-radius-sm,
+    2: $border-radius,
+    3: $border-radius-lg,
+    8: 8px,
+    circle: 50%,
+    pill: $border-radius-pill,
+);
+
+$shadows: (
+    null: $box-shadow,
+    sm: $box-shadow-sm,
+    md: $box-shadow-md,
+    lg: $box-shadow-lg,
+    xl: $box-shadow-xl,
+    none: none,
+);
+
 @import 'bootstrap/scss/_utilities.scss';
 
 $theme-colors-rgb: map-loop($theme-colors, to-rgb, '$value');
@@ -171,21 +200,6 @@ $utilities-border-colors: map-loop(
     'border'
 );
 $--bs-bg-opacity: 0;
-
-$border-radius-sm: 0.25rem;
-$border-radius: 0.5rem;
-$border-radius-lg: 0.75rem;
-
-$rounded: (
-    null: $border-radius,
-    0: 0,
-    1: $border-radius-sm,
-    2: $border-radius,
-    3: $border-radius-lg,
-    8: 8px,
-    circle: 50%,
-    pill: $border-radius-pill,
-);
 
 $utilities: map-merge(
     $utilities,
@@ -233,6 +247,11 @@ $utilities: map-merge(
             css-var: true,
             class: 'border-opacity',
             values: $opacity,
+        ),
+        'shadow': (
+            property: 'box-shadow',
+            class: 'shadow',
+            values: $shadows,
         ),
     )
 );

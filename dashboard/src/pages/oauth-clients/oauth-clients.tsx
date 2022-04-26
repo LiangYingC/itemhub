@@ -153,7 +153,7 @@ const OauthClients = () => {
                 secondaryButtonWording="刪除選取"
                 secondaryButtonCallback={deleteMultiple}
             />
-            <div className="card mt-3 mx-4 p-45">
+            <div className="card">
                 {isLoading || oauthClients === null ? (
                     <div>Loading</div>
                 ) : (

@@ -119,7 +119,7 @@ const Devices = () => {
                 secondaryButtonWording="重新整理"
                 secondaryButtonCallback={refresh}
             />
-            <div className="card mx-3 mx-sm-0 mx-xl-45 mt-3 mt-sm-0 p-3 p-sm-45">
+            <div className="card">
                 <div
                     className={`position-relative filter ${
                         hasDevicesRef.current ? '' : 'd-none'

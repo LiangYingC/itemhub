@@ -119,94 +119,89 @@ const OauthClient = () => {
                 primaryButtonIcon={lightTrashIcon}
                 primaryButtonClassName="btn btn-danger"
             />
-            <div className="mt-3">
-                <div className="card mx-4 p-45">
-                    {isGetting ? (
-                        <div>Loading</div>
-                    ) : (
-                        <div className="p-4">
-                            <div className="mb-4">
-                                <label className="mb-2">Client Id</label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    value={clientId}
-                                    placeholder="如果不填寫 clientId 系統會自動會幫你隨機產生"
-                                    onChange={(e) =>
-                                        setClientId(e.target.value)
-                                    }
-                                    disabled={!isCreateMode}
-                                />
+            <div className="card">
+                {isGetting ? (
+                    <div>Loading</div>
+                ) : (
+                    <div className="p-4">
+                        <div className="mb-4">
+                            <label className="mb-2">Client Id</label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                value={clientId}
+                                placeholder="如果不填寫 clientId 系統會自動會幫你隨機產生"
+                                onChange={(e) => setClientId(e.target.value)}
+                                disabled={!isCreateMode}
+                            />
+                        </div>
+                        <div>
+                            <label className="mb-2">Client Secret</label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                placeholder={
+                                    isCreateMode
+                                        ? ''
+                                        : '****************************'
+                                }
+                                value={
+                                    revokeSecretResponse?.secret ||
+                                    (state as OauthClientLocationState)?.secret
+                                }
+                                disabled
+                            />
+                        </div>
+                        <div className="text-warn mt-3 d-flex">
+                            <div className="bg-warn rounded-circle text-white me-2 flex-shrink-0 mt-1">
+                                !
                             </div>
                             <div>
-                                <label className="mb-2">Client Secret</label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    placeholder={
-                                        isCreateMode
-                                            ? ''
-                                            : '****************************'
-                                    }
-                                    value={
-                                        revokeSecretResponse?.secret ||
-                                        (state as OauthClientLocationState)
-                                            ?.secret
-                                    }
-                                    disabled
-                                />
-                            </div>
-                            <div className="text-warn mt-3 d-flex">
-                                <div className="bg-warn rounded-circle text-white me-2 flex-shrink-0 mt-1">
-                                    !
-                                </div>
-                                <div>
-                                    請立即記下 Client Secret, 為確保安全性,
-                                    伺服器端部會儲存 Secret 明碼, 如果忘記明碼,
-                                    只能重新產生 Secret
-                                </div>
-                            </div>
-                            <div className="d-flex justify-content-end mt-5">
-                                <button
-                                    className="btn btn-secondary"
-                                    onClick={backToList}
-                                >
-                                    返回
-                                </button>
-                                {isCreateMode ? (
-                                    <button
-                                        className="btn btn-primary ms-3"
-                                        disabled={isCreating}
-                                        onClick={createApi}
-                                    >
-                                        <img
-                                            src={plusIcon}
-                                            alt="plus"
-                                            className="icon"
-                                        />
-                                        <div>確定新增</div>
-                                    </button>
-                                ) : (
-                                    <div>
-                                        <button
-                                            className="btn btn-primary ms-3"
-                                            disabled={isRevoking}
-                                            onClick={revokeSecretApi}
-                                        >
-                                            <img
-                                                className="me-2"
-                                                src={refreshIcon}
-                                            />
-                                            {isRevoking
-                                                ? 'Revoking'
-                                                : 'Revoke Client Secret'}
-                                        </button>
-                                    </div>
-                                )}
+                                請立即記下 Client Secret, 為確保安全性,
+                                伺服器端部會儲存 Secret 明碼, 如果忘記明碼,
+                                只能重新產生 Secret
                             </div>
                         </div>
-                    )}
-                </div>
+                        <div className="d-flex justify-content-end mt-5">
+                            <button
+                                className="btn btn-secondary"
+                                onClick={backToList}
+                            >
+                                返回
+                            </button>
+                            {isCreateMode ? (
+                                <button
+                                    className="btn btn-primary ms-3"
+                                    disabled={isCreating}
+                                    onClick={createApi}
+                                >
+                                    <img
+                                        src={plusIcon}
+                                        alt="plus"
+                                        className="icon"
+                                    />
+                                    <div>確定新增</div>
+                                </button>
+                            ) : (
+                                <div>
+                                    <button
+                                        className="btn btn-primary ms-3"
+                                        disabled={isRevoking}
+                                        onClick={revokeSecretApi}
+                                    >
+                                        <img
+                                            className="me-2"
+                                            src={refreshIcon}
+                                        />
+                                        {isRevoking
+                                            ? 'Revoking'
+                                            : 'Revoke Client Secret'}
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

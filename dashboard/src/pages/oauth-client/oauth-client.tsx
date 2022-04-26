@@ -98,7 +98,7 @@ const OauthClient = () => {
             dispatch(
                 toasterActions.pushOne({
                     message: '新增 oAuthClient 成功',
-                    duration: 500,
+                    duration: 5,
                     type: ToasterTypeEnum.INFO,
                 })
             );

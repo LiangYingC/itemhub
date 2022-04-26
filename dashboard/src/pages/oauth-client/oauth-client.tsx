@@ -15,6 +15,7 @@ import { RESPONSE_STATUS } from '@/constants/api';
 import PageTitle from '@/components/page-title/page-title';
 import refreshIcon from '/src/assets/images/refresh.svg';
 import lightTrashIcon from '@/assets/images/light-trash.svg';
+import plusIcon from '/src/assets/images/icon-plus.svg';
 
 interface OauthClientLocationState {
     secret: string;
@@ -116,7 +117,7 @@ const OauthClient = () => {
                 primaryButtonWording="刪除選取"
                 primaryButtonCallback={deleteClient}
                 primaryButtonIcon={lightTrashIcon}
-                primaryButtonClassName="bg-danger text-white border border-danger"
+                primaryButtonClassName="btn btn-danger"
             />
             <div className="mt-3">
                 <div className="card mx-4 p-45">
@@ -167,23 +168,28 @@ const OauthClient = () => {
                             </div>
                             <div className="d-flex justify-content-end mt-5">
                                 <button
-                                    className="btn rounded-pill bg-black bg-opacity-5 border-black border-opacity-10 px-3 py-2"
+                                    className="btn btn-secondary"
                                     onClick={backToList}
                                 >
                                     返回
                                 </button>
                                 {isCreateMode ? (
                                     <button
-                                        className="btn rounded-pill bg-primary-500 text-white ms-3 px-3 py-2"
+                                        className="btn btn-primary ms-3"
                                         disabled={isCreating}
                                         onClick={createApi}
                                     >
-                                        確定新增
+                                        <img
+                                            src={plusIcon}
+                                            alt="plus"
+                                            className="icon"
+                                        />
+                                        <div>確定新增</div>
                                     </button>
                                 ) : (
                                     <div>
                                         <button
-                                            className="btn rounded-pill bg-primary-500 text-white px-3 py-2 ms-3"
+                                            className="btn btn-primary ms-3"
                                             disabled={isRevoking}
                                             onClick={revokeSecretApi}
                                         >

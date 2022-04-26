@@ -114,11 +114,10 @@ const Devices = () => {
                 title="裝置列表"
                 primaryButtonVisible
                 secondaryButtonVisible
-                primaryButtonWording="重新整理"
-                primaryButtonClassName="bg-black bg-opacity-10 text-black text-opacity-65 border border-black border-opacity-10"
-                primaryButtonCallback={refresh}
-                secondaryButtonWording="新增裝置"
-                secondaryButtonCallback={jumpToCreatePage}
+                primaryButtonWording="新增裝置"
+                primaryButtonCallback={jumpToCreatePage}
+                secondaryButtonWording="重新整理"
+                secondaryButtonCallback={refresh}
             />
             <div className="card mx-3 mx-sm-0 mx-xl-45 mt-3 mt-sm-0 p-3 p-sm-45">
                 <div
@@ -157,12 +156,10 @@ const Devices = () => {
                             </div>
                             <button
                                 onClick={jumpToCreatePage}
-                                className="d-flex align-items-center btn bg-light-blue text-white border border-light-blue rounded-pill mx-auto mt-3 px-3 py-2"
+                                className="btn btn-primary mx-auto mt-3"
                             >
                                 <img className="icon pe-2" src={plusIcon} />
-                                <div className="lh-1 py-1 fw-bold">
-                                    新增裝置
-                                </div>
+                                <div>新增裝置</div>
                             </button>
                         </div>
                         <div

@@ -27,8 +27,8 @@
         return;                                                             \
     }
 
-char ssid[] = "Peter Home";
-char pass[] = "tdJ2k7wbeMvw";
+char ssid[] = "{SSID}";
+char pass[] = "{WIFI_PASSWORD}";
 
 const char serverName[] = "itemhub.io";
 int port = 443;
@@ -144,7 +144,7 @@ void disconnect()
 
 void auth()
 {
-    std::string postData = "{\"clientId\":\"miterfrants@gmail.com\",\"clientSecret\":\"@Testing123123\"}";
+    std::string postData = "{\"clientId\":\"{CLIENT_ID}\",\"clientSecret\":\"{CLIENT_SECRET}\"}";
     client.post("/api/v1/oauth/exchange-token-for-device", "application/json", postData.c_str());
     std::string body = std::string(client.responseBody().c_str());
     token = ItemhubUtilities::Extract(body, "token");

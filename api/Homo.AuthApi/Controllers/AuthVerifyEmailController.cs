@@ -150,14 +150,13 @@ namespace Homo.AuthApi
         {
             User user = UserDataservice.GetOneByEmail(_dbContext, dto.Email);
 
-            // 找不到 user 的時候 isEarlyBird is null, 所以先定義變數是 false, 當 isEarlyBird == true 的時候, 在把變數取代掉
-            bool isEarlyBird = false;
+            bool isEarlyBird = user != null && user.IsEarlyBird;
 
             if (user != null && !user.IsEarlyBird)
             {
                 throw new CustomException(ERROR_CODE.DUPLICATE_EMAIL, HttpStatusCode.BadRequest);
             }
-            if (user != null && user.IsEarlyBird)
+            if (isEarlyBird)
             {
                 isEarlyBird = user.IsEarlyBird;
             }

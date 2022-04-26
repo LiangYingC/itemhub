@@ -58,13 +58,12 @@ const Devices = () => {
         useDeleteDevicesApi([shouldBeDeleteId]);
 
     const {
-        isLoading: isFirmwareBundling,
         fetchApi: bundleFirmwareApi,
+        error: errorOfBundle,
         data: responseOfBundle,
     } = useBundleFirmwareApi({ id: shouldBeBundledId });
 
     const {
-        isLoading: isFirmwareDownloading,
         fetchApi: downloadFirmwareApi,
         httpStatus: downloadFirmwareHttpStatus,
         data: responseOfDownloadFirmware,
@@ -100,11 +99,16 @@ const Devices = () => {
     }, [shouldBeBundledId]);
 
     useEffect(() => {
+        if (errorOfBundle && errorOfBundle.message) {
+            alert(errorOfBundle.message);
+            setIsFirmwarePrepare(false);
+            return;
+        }
         if (responseOfBundle?.bundleId) {
             setIsFirmwarePrepare(true);
             setDownloadBundleId(responseOfBundle.bundleId);
         }
-    }, [responseOfBundle]);
+    }, [responseOfBundle, errorOfBundle]);
 
     useEffect(() => {
         if (downloadBundleId) {
@@ -363,6 +367,7 @@ const Devices = () => {
                                                             shouldBeBundledId ===
                                                                 id ? (
                                                                 <img
+                                                                    title="正在產生 firmware project"
                                                                     className="icon"
                                                                     src={
                                                                         compassIcon

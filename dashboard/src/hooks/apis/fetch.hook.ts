@@ -26,6 +26,7 @@ export const useFetchApi = <T>({
     const fetchApi = useCallback(async () => {
         try {
             setIsLoading(true);
+            setError(null);
 
             const result = await ApiHelpers.SendRequestWithToken<T>({
                 apiPath,
@@ -58,7 +59,7 @@ export const useFetchApi = <T>({
             }
 
             // TODO: or just use error data to show on error section.
-            setError(error);
+            setError(error.data);
         } finally {
             setIsLoading(false);
         }

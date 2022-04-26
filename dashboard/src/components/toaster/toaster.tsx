@@ -2,18 +2,16 @@ import { useAppSelector } from '@/hooks/redux.hook';
 import {
     selectToaster,
     toasterActions,
-    ToasterStatus,
-    ToasterType,
+    ToasterTypeEnum,
 } from '@/redux/reducers/toaster.reducer';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { ToasterState } from '@/redux/reducers/toaster.reducer';
 import { useDispatch } from 'react-redux';
 import iconCloseSrc from '@/assets/images/light-close.svg';
 
 const Toaster = () => {
-    const toasters = useAppSelector(selectToaster).toasters;
-    const init: ToasterState[] = [];
-    const previousToastersRef = useRef(init);
+    const toasters = useAppSelector(selectToaster);
+    const previousToastersRef = useRef<ToasterState[]>([]);
     const dispatch = useDispatch();
     useEffect(() => {
         const unSetupToasters = toasters.filter(
@@ -25,9 +23,9 @@ const Toaster = () => {
 
         unSetupToasters.forEach((item) => {
             dispatch(
-                toasterActions.changeState({
+                toasterActions.changeOneState({
                     id: item.id,
-                    status: ToasterStatus.VISIBLE,
+                    isShow: true,
                 })
             );
             setTimeout(() => {
@@ -40,14 +38,14 @@ const Toaster = () => {
 
     const close = (item: ToasterState) => {
         dispatch(
-            toasterActions.changeState({
+            toasterActions.changeOneState({
                 id: item.id,
-                status: ToasterStatus.INVISIBLE,
+                isShow: true,
             })
         );
         setTimeout(() => {
             dispatch(
-                toasterActions.clear({
+                toasterActions.clearOne({
                     id: item.id,
                 })
             );
@@ -55,26 +53,21 @@ const Toaster = () => {
     };
 
     return (
-        // UI 結構等設計稿後再重構調整
-        <div className="position-fixed top-0 w-100 d-flex justify-content-center">
+        <div className="position-fixed toaster-fixed-section top-0 w-100 d-flex justify-content-center">
             <div className="toaster-container position-absolute">
                 {toasters.map((item) => (
                     <div
                         className={`${
-                            item.status === ToasterStatus.VISIBLE ? 'mt-3' : ''
+                            item.isShow ? 'mt-3' : 'mt-0'
                         } rounded-2 px-3 overflow-hidden toaster position-relative text-white d-flex justify-content-between align-items-center ${
-                            item.type === ToasterType.INFO
+                            item.type === ToasterTypeEnum.INFO
                                 ? 'bg-success'
-                                : item.type === ToasterType.WARN
+                                : item.type === ToasterTypeEnum.WARN
                                 ? 'bg-warn'
-                                : item.type === ToasterType.ERROR
+                                : item.type === ToasterTypeEnum.ERROR
                                 ? 'bg-danger'
                                 : ''
-                        } ${
-                            item.status === ToasterStatus.VISIBLE
-                                ? 'visible'
-                                : ''
-                        }`}
+                        } ${item.isShow ? 'show' : ''}`}
                         key={item.id}
                     >
                         <div className="py-2">{item.message}</div>

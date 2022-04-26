@@ -1,30 +1,28 @@
 @import '../../css/zindex.scss';
+@import '../../css/variables.scss';
 
+.toaster-fixed-section {
+    z-index: $toaster-index;
+}
 .toaster-container {
     width: 30vw;
 
     .toaster {
-        z-index: $toaster-index;
-        transition: min-height 0.2s linear, opacity 0.2s linear;
+        transition: min-height 0.2s linear, opacity 0.2s linear,
+            margin-top 0.2s linear;
         min-height: 0;
         height: 0;
         opacity: 0;
-        will-change: min-height, opacity;
+        will-change: min-height, opacity, margin-top;
 
-        &.visible {
+        &.show {
             min-height: 30px;
             height: auto;
             opacity: 1;
         }
+    }
 
-        &.error {
-            background: red;
-        }
-        &.warn {
-            background: orange;
-        }
-        &.info {
-            background: lightblue;
-        }
+    @include media-breakpoint-down(md) {
+        width: calc(100% - 20px);
     }
 }

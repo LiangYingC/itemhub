@@ -15,7 +15,10 @@ import lightTrashIcon from '@/assets/images/light-trash.svg';
 import trashIcon from '@/assets/images/trash.svg';
 import plusIcon from '@/assets/images/icon-plus.svg';
 import emptyImage from '@/assets/images/empty-image.svg';
-import { toasterActions, ToasterType } from '@/redux/reducers/toaster.reducer';
+import {
+    toasterActions,
+    ToasterTypeEnum,
+} from '@/redux/reducers/toaster.reducer';
 
 const OauthClients = () => {
     const query = useQuery();
@@ -69,10 +72,10 @@ const OauthClients = () => {
             setSelectedIds([]);
 
             dispatch(
-                toasterActions.push({
+                toasterActions.pushOne({
                     message: 'oAuthClient 已經成功刪除',
                     duration: 5,
-                    type: ToasterType.INFO,
+                    type: ToasterTypeEnum.INFO,
                 })
             );
         }
@@ -84,10 +87,10 @@ const OauthClients = () => {
             setShouldBeDeleteId(0);
 
             dispatch(
-                toasterActions.push({
+                toasterActions.pushOne({
                     message: 'oAuthClient 已經成功刪除',
                     duration: 5,
-                    type: ToasterType.INFO,
+                    type: ToasterTypeEnum.INFO,
                 })
             );
         }

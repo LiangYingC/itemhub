@@ -116,6 +116,9 @@ $theme-colors: (
     'green-12': rgba($green, 0.12),
 );
 
+$card-border-width: 0;
+$card-border-radius: $border-radius;
+
 // button
 
 $btn-line-height: 1rem;

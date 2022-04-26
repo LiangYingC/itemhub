@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useQuery } from '@/hooks/query.hook';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAppSelector } from '@/hooks/redux.hook';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux.hook';
 import {
     useDeleteOauthClients,
     useGetOauthClients,
@@ -15,6 +15,7 @@ import lightTrashIcon from '@/assets/images/light-trash.svg';
 import trashIcon from '@/assets/images/trash.svg';
 import plusIcon from '@/assets/images/icon-plus.svg';
 import emptyImage from '@/assets/images/empty-image.svg';
+import { toasterActions, ToasterType } from '@/redux/reducers/toaster.reducer';
 
 const OauthClients = () => {
     const query = useQuery();
@@ -22,7 +23,7 @@ const OauthClients = () => {
     const page = Number(query.get('page') || 1);
 
     const { oauthClients, rowNum } = useAppSelector(selectOauthClients);
-
+    const dispatch = useAppDispatch();
     const [selectedIds, setSelectedIds] = useState(Array<number>());
     const [shouldBeDeleteId, setShouldBeDeleteId] = useState(0);
     const [refreshFlag, setRefreshFlag] = useState(false);
@@ -66,6 +67,14 @@ const OauthClients = () => {
         if (responseOfDelete?.status === RESPONSE_STATUS.OK) {
             setRefreshFlag(!refreshFlag);
             setSelectedIds([]);
+
+            dispatch(
+                toasterActions.push({
+                    message: 'oAuthClient 已經成功刪除',
+                    duration: 5,
+                    type: ToasterType.INFO,
+                })
+            );
         }
     }, [responseOfDelete]);
 
@@ -73,6 +82,14 @@ const OauthClients = () => {
         if (responseOfDeleteOne?.status === RESPONSE_STATUS.OK) {
             setRefreshFlag(!refreshFlag);
             setShouldBeDeleteId(0);
+
+            dispatch(
+                toasterActions.push({
+                    message: 'oAuthClient 已經成功刪除',
+                    duration: 5,
+                    type: ToasterType.INFO,
+                })
+            );
         }
     }, [responseOfDeleteOne]);
 

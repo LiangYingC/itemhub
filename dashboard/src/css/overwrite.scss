@@ -172,6 +172,10 @@ $utilities-border-colors: map-loop(
 );
 $--bs-bg-opacity: 0;
 
+$border-radius-sm: 0.25rem;
+$border-radius: 0.5rem;
+$border-radius-lg: 0.75rem;
+
 $rounded: (
     null: $border-radius,
     0: 0,

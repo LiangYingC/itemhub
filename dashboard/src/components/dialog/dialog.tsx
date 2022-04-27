@@ -24,6 +24,7 @@ const Dialog = () => {
     } = dialog;
 
     const [isValid, setIsValid] = useState(true);
+    const [buttonAvaible, setButtonAvaible] = useState(false);
     const promptInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
@@ -54,9 +55,6 @@ const Dialog = () => {
             callback();
             setIsValid(true);
             promptInputValue = '';
-            if (promptInputRef.current) {
-                promptInputRef.current.value = '';
-            }
             close();
         } else {
             setIsValid(false);
@@ -65,6 +63,9 @@ const Dialog = () => {
 
     const close = () => {
         promptInputValue = '';
+        if (promptInputRef.current) {
+            promptInputRef.current.value = '';
+        }
         dispatch(dialogActions.close());
     };
     return (
@@ -89,10 +90,16 @@ const Dialog = () => {
                         onKeyUp={(
                             event: React.KeyboardEvent<HTMLInputElement>
                         ) => {
+                            if (event.key === 'Escape') {
+                                close();
+                            }
+                            promptInputValue = event.currentTarget.value;
+                            setButtonAvaible(
+                                promptInputValue === checkedMessage
+                            );
                             if (event.key === 'Enter') {
                                 buttonBehavior();
                             }
-                            promptInputValue = event.currentTarget.value;
                         }}
                         defaultValue={promptInputValue}
                     />
@@ -120,6 +127,7 @@ const Dialog = () => {
                     </button>
                     <button
                         className={`btn btn-danger ${buttonClassName}`}
+                        disabled={!buttonAvaible}
                         onClick={buttonBehavior}
                     >
                         確認

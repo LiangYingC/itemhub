@@ -176,8 +176,8 @@ const Triggers = () => {
     const confirmToDeleteTriggers = () => {
         dispatch(
             dialogActions.open({
-                message: '請再次輸入 DELETE 確認要刪除',
-                title: '',
+                message: '刪除後將不可復原，是否確認所選取的 Trigger ?',
+                title: '確認刪除 Trigger ?',
                 type: DialogTypeEnum.PROMPT,
                 checkedMessage: 'DELETE',
                 callback: deleteTriggersApi,

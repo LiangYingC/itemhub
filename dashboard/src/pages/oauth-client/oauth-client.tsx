@@ -122,8 +122,8 @@ const OauthClient = () => {
     const deleteClient = () => {
         dispatch(
             dialogActions.open({
-                message: '請再次輸入 DELETE 確認要刪除',
-                title: '',
+                message: '請輸入 DELETE 完成刪除',
+                title: '確認刪除 oAuthClient ?',
                 type: DialogTypeEnum.PROMPT,
                 checkedMessage: 'DELETE',
                 callback: deleteApi,

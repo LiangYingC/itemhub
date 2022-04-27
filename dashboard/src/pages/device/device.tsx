@@ -57,8 +57,8 @@ const Device = () => {
     const deleteDevice = () => {
         dispatch(
             dialogActions.open({
-                message: '請再次輸入 DELETE 確認要刪除',
-                title: '',
+                message: `刪除後將不可復原，是否確認刪除 ${deviceName} ?`,
+                title: '確認刪除裝置 ?',
                 type: DialogTypeEnum.PROMPT,
                 checkedMessage: 'DELETE',
                 callback: deleteMultipleApi,

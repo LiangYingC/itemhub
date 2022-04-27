@@ -145,8 +145,8 @@ const OauthClients = () => {
     const deleteOne = (id: number) => {
         dispatch(
             dialogActions.open({
-                message: '請再次輸入 DELETE 確認要刪除',
-                title: '',
+                title: '確認刪除 oAuthClient ?',
+                message: '請輸入 DELETE 完成刪除',
                 type: DialogTypeEnum.PROMPT,
                 checkedMessage: 'DELETE',
                 callback: () => {
@@ -162,8 +162,8 @@ const OauthClients = () => {
     const deleteMultiple = () => {
         dispatch(
             dialogActions.open({
-                message: '請再次輸入 DELETE 確認要刪除',
-                title: '',
+                title: '確認刪除 oAuthClient ?',
+                message: '請輸入 DELETE 完成刪除',
                 type: DialogTypeEnum.PROMPT,
                 checkedMessage: 'DELETE',
                 callback: () => {

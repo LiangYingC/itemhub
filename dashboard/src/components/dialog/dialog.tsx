@@ -73,11 +73,12 @@ const Dialog = () => {
                 isOpen ? '' : 'd-none'
             }`}
         >
-            <div className="card">
+            <div className="card p-4">
                 <h4 className={title ? '' : 'd-none'}>{title}</h4>
+                <hr />
                 <div className={message ? '' : 'd-none'}>{message}</div>
                 <div
-                    className={`${
+                    className={`mt-2 ${
                         type === DialogTypeEnum.PROMPT ? '' : 'd-none'
                     }`}
                 >
@@ -96,15 +97,18 @@ const Dialog = () => {
                         defaultValue={promptInputValue}
                     />
                     <div
-                        className={`invalid-message ${isValid ? 'd-none' : ''}`}
+                        className={`text-danger text-sm mt-2 invalid-message ${
+                            isValid ? 'd-none' : ''
+                        }`}
                     >
                         {promptInvalidMessage}
                     </div>
                 </div>
+                <hr />
 
                 <div className="d-flex align-items-center">
                     <button
-                        className={`btn ${
+                        className={`btn btn-secondary ${
                             type ===
                             (DialogTypeEnum.PROMPT || DialogTypeEnum.CONFIRM)
                                 ? ''
@@ -115,7 +119,7 @@ const Dialog = () => {
                         取消
                     </button>
                     <button
-                        className={`btn ${buttonClassName}`}
+                        className={`btn btn-danger ${buttonClassName}`}
                         onClick={buttonBehavior}
                     >
                         確認

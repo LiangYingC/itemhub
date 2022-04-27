@@ -33,7 +33,7 @@ namespace Homo.AuthApi
         private readonly string _googleClientSecret;
         private readonly string _lineClientSecret;
         private readonly string _adminEmail;
-        private readonly bool _authByCookie; public AuthVerifyEmailController(DBContext dbContext, IOptions<AppSettings> appSettings, Microsoft.AspNetCore.Hosting.IWebHostEnvironment env, Homo.Api.CommonLocalizer commonLocalizer)
+        public AuthVerifyEmailController(DBContext dbContext, IOptions<AppSettings> appSettings, Microsoft.AspNetCore.Hosting.IWebHostEnvironment env, Homo.Api.CommonLocalizer commonLocalizer)
         {
             Secrets secrets = (Secrets)appSettings.Value.Secrets;
             Common common = (Common)appSettings.Value.Common;

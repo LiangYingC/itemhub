@@ -20,7 +20,6 @@ namespace Homo.IotApi
     {
         private readonly Homo.Api.CommonLocalizer _commonLocalizer;
         private readonly IotDbContext _dbContext;
-        private readonly string _dbConnectionString;
         private readonly string _systemEmail;
         private readonly string _adminEmail;
         private readonly string _sendGridApiKey;

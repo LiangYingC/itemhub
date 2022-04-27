@@ -12,6 +12,8 @@ import { RESPONSE_STATUS } from '@/constants/api';
 import PageTitle from '@/components/page-title/page-title';
 import { useGetOauthClientByDeviceId } from '@/hooks/apis/oauth-clients.hook';
 import { selectOauthClients } from '@/redux/reducers/oauth-clients.reducer';
+import { useDispatch } from 'react-redux';
+import { dialogActions, DialogTypeEnum } from '@/redux/reducers/dialog.reducer';
 
 const Device = () => {
     const { id } = useParams();
@@ -19,6 +21,7 @@ const Device = () => {
     const devices = useAppSelector(selectDevices).devices;
     const oAuthClients = useAppSelector(selectOauthClients).oauthClients;
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const device =
         (devices || []).filter((device) => device.id === numId)[0] || null;
 
@@ -52,9 +55,16 @@ const Device = () => {
     } = useDeleteDevicesApi([numId]);
 
     const deleteDevice = () => {
-        if (prompt('請再次輸入 delete 確認要刪除') === 'delete') {
-            deleteMultipleApi();
-        }
+        dispatch(
+            dialogActions.open({
+                message: '請再次輸入 DELETE 確認要刪除',
+                title: '',
+                type: DialogTypeEnum.PROMPT,
+                checkedMessage: 'DELETE',
+                callback: deleteMultipleApi,
+                promptInvalidMessage: '輸入錯誤',
+            })
+        );
     };
 
     useEffect(() => {

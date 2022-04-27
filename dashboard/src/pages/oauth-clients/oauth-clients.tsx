@@ -15,6 +15,8 @@ import lightTrashIcon from '@/assets/images/light-trash.svg';
 import trashIcon from '@/assets/images/trash.svg';
 import plusIcon from '@/assets/images/icon-plus.svg';
 import emptyImage from '@/assets/images/empty-image.svg';
+import { useDispatch } from 'react-redux';
+import { dialogActions, DialogTypeEnum } from '@/redux/reducers/dialog.reducer';
 
 const OauthClients = () => {
     const query = useQuery();
@@ -22,6 +24,7 @@ const OauthClients = () => {
     const page = Number(query.get('page') || 1);
 
     const { oauthClients, rowNum } = useAppSelector(selectOauthClients);
+    const dispatch = useDispatch();
 
     const [selectedIds, setSelectedIds] = useState(Array<number>());
     const [shouldBeDeleteId, setShouldBeDeleteId] = useState(0);
@@ -124,19 +127,35 @@ const OauthClients = () => {
     };
 
     const deleteOne = (id: number) => {
-        if (prompt('請輸入 delete') !== 'delete') {
-            return;
-        }
-        setShouldBeDeleteId(() => {
-            return id;
-        });
+        dispatch(
+            dialogActions.open({
+                message: '請再次輸入 DELETE 確認要刪除',
+                title: '',
+                type: DialogTypeEnum.PROMPT,
+                checkedMessage: 'DELETE',
+                callback: () => {
+                    setShouldBeDeleteId(() => {
+                        return id;
+                    });
+                },
+                promptInvalidMessage: '輸入錯誤',
+            })
+        );
     };
 
     const deleteMultiple = () => {
-        if (prompt('請輸入 delete') !== 'delete') {
-            return;
-        }
-        deleteMultipleApi();
+        dispatch(
+            dialogActions.open({
+                message: '請再次輸入 DELETE 確認要刪除',
+                title: '',
+                type: DialogTypeEnum.PROMPT,
+                checkedMessage: 'DELETE',
+                callback: () => {
+                    deleteMultipleApi();
+                },
+                promptInvalidMessage: '輸入錯誤',
+            })
+        );
     };
 
     return (

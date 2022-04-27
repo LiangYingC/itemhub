@@ -15,6 +15,8 @@ import { RESPONSE_STATUS } from '@/constants/api';
 import PageTitle from '@/components/page-title/page-title';
 import refreshIcon from '/src/assets/images/refresh.svg';
 import lightTrashIcon from '@/assets/images/light-trash.svg';
+import { dialogActions, DialogTypeEnum } from '@/redux/reducers/dialog.reducer';
+import { useDispatch } from 'react-redux';
 
 interface OauthClientLocationState {
     secret: string;
@@ -27,6 +29,7 @@ const OauthClient = () => {
     const isCreateMode = id === null;
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const { oauthClients } = useAppSelector(selectOauthClients);
 
@@ -99,11 +102,16 @@ const OauthClient = () => {
     };
 
     const deleteClient = () => {
-        if (prompt('確認刪除 oAuthClient? 請輸入 delete') !== 'delete') {
-            alert('輸入錯誤');
-            return;
-        }
-        deleteApi();
+        dispatch(
+            dialogActions.open({
+                message: '請再次輸入 DELETE 確認要刪除',
+                title: '',
+                type: DialogTypeEnum.PROMPT,
+                checkedMessage: 'DELETE',
+                callback: deleteApi,
+                promptInvalidMessage: '輸入錯誤',
+            })
+        );
     };
 
     return (
@@ -113,7 +121,7 @@ const OauthClient = () => {
                 titleBackIconVisible
                 title={`oAuthClient 詳細內容`}
                 primaryButtonVisible={!isCreateMode}
-                primaryButtonWording="刪除選取"
+                primaryButtonWording="刪除"
                 primaryButtonCallback={deleteClient}
                 primaryButtonIcon={lightTrashIcon}
                 primaryButtonClassName="bg-danger text-white border border-danger"

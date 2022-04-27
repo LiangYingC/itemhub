@@ -5,6 +5,7 @@ import oauthClientsReducer from './reducers/oauth-clients.reducer';
 import triggersReducer from './reducers/triggers.reducer';
 import pinsReducer from './reducers/pins.reducer';
 import menuReducer from './reducers/menu.reducer';
+import dialogReducer from './reducers/dialog.reducer';
 
 const store = configureStore({
     reducer: {
@@ -14,6 +15,12 @@ const store = configureStore({
         triggers: triggersReducer,
         pins: pinsReducer,
         menu: menuReducer,
+        dialog: dialogReducer,
+    },
+    middleware: (getDefaultMiddlware) => {
+        return getDefaultMiddlware({
+            serializableCheck: false,
+        });
     },
 });
 

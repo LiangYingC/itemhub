@@ -12,6 +12,8 @@ import { ArrayHelpers } from '@/helpers/array.helper';
 import { TriggerItem } from '@/types/triggers.type';
 import Pagination from '@/components/pagination/pagination';
 import PageTitle from '@/components/page-title/page-title';
+import { dialogActions, DialogTypeEnum } from '@/redux/reducers/dialog.reducer';
+import { useDispatch } from 'react-redux';
 
 const filterTriggers = ({
     triggers,
@@ -43,11 +45,14 @@ const filterTriggers = ({
 const Triggers = () => {
     const navigate = useNavigate();
     const query = useQuery();
+    const dispatch = useDispatch();
+
     const limit = Number(query.get('limit') || 5);
     const page = Number(query.get('page') || 1);
 
     const sourceDeviceNameOptionsRef = useRef<string[]>([]);
     const destinationDeviceNameOptionsRef = useRef<string[]>([]);
+
     const sourceDeviceNameOptions = ArrayHelpers.FilterDuplicatedString(
         sourceDeviceNameOptionsRef.current
     );
@@ -139,11 +144,16 @@ const Triggers = () => {
     };
 
     const confirmToDeleteTriggers = () => {
-        if (prompt('請再次輸入 delete，藉此執行刪除') === 'delete') {
-            deleteTriggersApi();
-        } else {
-            alert('輸入錯誤，請再次嘗試');
-        }
+        dispatch(
+            dialogActions.open({
+                message: '請再次輸入 DELETE 確認要刪除',
+                title: '',
+                type: DialogTypeEnum.PROMPT,
+                checkedMessage: 'DELETE',
+                callback: deleteTriggersApi,
+                promptInvalidMessage: '輸入錯誤',
+            })
+        );
     };
 
     useEffect(() => {

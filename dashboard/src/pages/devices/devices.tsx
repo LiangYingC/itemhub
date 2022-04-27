@@ -16,6 +16,8 @@ import emptyImage from '@/assets/images/empty-image.svg';
 import Pagination from '@/components/pagination/pagination';
 import { useDeleteDevicesApi } from '../../hooks/apis/devices.hook';
 import { RESPONSE_STATUS } from '@/constants/api';
+import { dialogActions, DialogTypeEnum } from '@/redux/reducers/dialog.reducer';
+import { useDispatch } from 'react-redux';
 
 const Devices = () => {
     const query = useQuery();
@@ -26,6 +28,7 @@ const Devices = () => {
     const [shouldBeDeleteId, setShouldBeDeleteId] = useState(0);
     const [refreshFlag, setRefreshFlag] = useState(false);
     const devicesState = useAppSelector(selectDevices);
+    const dispatch = useDispatch();
     const hasDevicesRef = useRef(false);
     const devices = devicesState.devices;
     const rowNum = devicesState.rowNum;
@@ -100,12 +103,20 @@ const Devices = () => {
     };
 
     const deleteOne = (id: number) => {
-        if (prompt('請輸入 delete') !== 'delete') {
-            return;
-        }
-        setShouldBeDeleteId(() => {
-            return id;
-        });
+        dispatch(
+            dialogActions.open({
+                message: '請再次輸入 DELETE 確認要刪除',
+                title: '',
+                type: DialogTypeEnum.PROMPT,
+                checkedMessage: 'DELETE',
+                callback: () => {
+                    setShouldBeDeleteId(() => {
+                        return id;
+                    });
+                },
+                promptInvalidMessage: '輸入錯誤',
+            })
+        );
     };
 
     return (

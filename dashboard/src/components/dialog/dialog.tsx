@@ -10,6 +10,7 @@ import { useDispatch } from 'react-redux';
 const Dialog = () => {
     const dialog = useAppSelector(selectDialog);
     const dispatch = useDispatch();
+    let promptInputValue = '';
 
     const {
         type,
@@ -23,7 +24,6 @@ const Dialog = () => {
     } = dialog;
 
     const [isValid, setIsValid] = useState(true);
-    const [promptInputValue, setPromptInputValue] = useState('');
     const promptInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
@@ -35,16 +35,28 @@ const Dialog = () => {
     const buttonBehavior = () => {
         if (type === DialogTypeEnum.ALERT) {
             close();
+        } else if (type === DialogTypeEnum.CONFIRM) {
+            confirm();
         } else if (type === DialogTypeEnum.PROMPT) {
             checkMessage();
         }
+    };
+
+    const confirm = () => {
+        if (callback) {
+            callback();
+        }
+        close();
     };
 
     const checkMessage = () => {
         if (checkedMessage === promptInputValue && callback) {
             callback();
             setIsValid(true);
-            setPromptInputValue('');
+            promptInputValue = '';
+            if (promptInputRef.current) {
+                promptInputRef.current.value = '';
+            }
             close();
         } else {
             setIsValid(false);
@@ -52,17 +64,17 @@ const Dialog = () => {
     };
 
     const close = () => {
-        setPromptInputValue('');
+        promptInputValue = '';
         dispatch(dialogActions.close());
     };
     return (
         <div
-            className={`dialog position-fixed top-0 w-100 h-100 d-flex align-items-center justify-content-center ${
+            className={`dialog position-fixed top-0 w-100 h-100 d-flex align-items-center justify-content-center p-2 ${
                 isOpen ? '' : 'd-none'
             }`}
         >
             <div className="card">
-                <h2 className={title ? '' : 'd-none'}>{title}</h2>
+                <h4 className={title ? '' : 'd-none'}>{title}</h4>
                 <div className={message ? '' : 'd-none'}>{message}</div>
                 <div
                     className={`${
@@ -79,7 +91,7 @@ const Dialog = () => {
                             if (event.key === 'Enter') {
                                 buttonBehavior();
                             }
-                            setPromptInputValue(event.currentTarget.value);
+                            promptInputValue = event.currentTarget.value;
                         }}
                         defaultValue={promptInputValue}
                     />

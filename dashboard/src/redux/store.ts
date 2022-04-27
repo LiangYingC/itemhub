@@ -6,6 +6,7 @@ import triggersReducer from './reducers/triggers.reducer';
 import pinsReducer from './reducers/pins.reducer';
 import menuReducer from './reducers/menu.reducer';
 import dialogReducer from './reducers/dialog.reducer';
+import toasterReducer from './reducers/toaster.reducer';
 
 const store = configureStore({
     reducer: {
@@ -16,6 +17,7 @@ const store = configureStore({
         pins: pinsReducer,
         menu: menuReducer,
         dialog: dialogReducer,
+        toasters: toasterReducer,
     },
     middleware: (getDefaultMiddlware) => {
         return getDefaultMiddlware({

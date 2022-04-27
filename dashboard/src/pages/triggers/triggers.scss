@@ -1,4 +1,7 @@
 .triggers {
-    display: flex;
-    flex-direction: column;
+    .triggers-list {
+        > .row:hover {
+            background: rgba($light-blue, 0.04);
+        }
+    }
 }

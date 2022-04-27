@@ -16,7 +16,6 @@ namespace Homo.IotApi
     {
         private readonly IotDbContext _dbContext;
         private readonly string _systemEmail;
-        private readonly string _dbConnectionString;
         private readonly string _sendGridApiKey;
         public MySubscriptionController(IotDbContext dbContext, IOptions<AppSettings> appSettings)
         {

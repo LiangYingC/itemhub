@@ -8,6 +8,7 @@ import { COOKIE_KEY } from './constants/cookie-key';
 import Header from './components/header/header';
 import Footer from './components/footer/footer';
 import Dialog from './components/dialog/dialog';
+import Toaster from './components/toaster/toaster';
 
 const isDev = import.meta.env.VITE_ENV === 'dev';
 
@@ -43,6 +44,7 @@ const App = () => {
                 </div>
             </div>
             <Dialog />
+            <Toaster />
         </div>
     ) : (
         <>Redirect</>

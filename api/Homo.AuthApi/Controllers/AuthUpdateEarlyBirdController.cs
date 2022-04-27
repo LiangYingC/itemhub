@@ -19,7 +19,6 @@ namespace Homo.AuthApi
         private readonly DBContext _dbContext;
         private readonly string _jwtKey;
         private readonly string _dashboardJwtKey;
-        private readonly string _signUpJwtKey;
         private readonly int _jwtExpirationMonth;
         private readonly bool _authByCookie;
         private readonly string _PKCS1PublicKeyPath;

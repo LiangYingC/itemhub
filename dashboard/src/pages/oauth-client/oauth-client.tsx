@@ -17,6 +17,10 @@ import refreshIcon from '/src/assets/images/refresh.svg';
 import lightTrashIcon from '@/assets/images/light-trash.svg';
 import { dialogActions, DialogTypeEnum } from '@/redux/reducers/dialog.reducer';
 import { useDispatch } from 'react-redux';
+import {
+    toasterActions,
+    ToasterTypeEnum,
+} from '@/redux/reducers/toaster.reducer';
 
 interface OauthClientLocationState {
     secret: string;
@@ -79,12 +83,26 @@ const OauthClient = () => {
 
     useEffect(() => {
         if (deleteOAuthClientResponse?.status === RESPONSE_STATUS.OK) {
+            dispatch(
+                toasterActions.pushOne({
+                    message: 'oAuthClient 已經成功刪除',
+                    duration: 5,
+                    type: ToasterTypeEnum.INFO,
+                })
+            );
             navigate('/dashboard/oauth-clients', { replace: true });
         }
-    }, [navigate, deleteOAuthClientResponse]);
+    }, [deleteOAuthClientResponse]);
 
     useEffect(() => {
         if (createOAuthClientResponse && !isNaN(createOAuthClientResponse.id)) {
+            dispatch(
+                toasterActions.pushOne({
+                    message: '新增 oAuthClient 成功',
+                    duration: 5,
+                    type: ToasterTypeEnum.INFO,
+                })
+            );
             navigate(
                 `/dashboard/oauth-clients/${createOAuthClientResponse?.id}`,
                 {
@@ -95,7 +113,7 @@ const OauthClient = () => {
                 }
             );
         }
-    }, [navigate, createOAuthClientResponse]);
+    }, [createOAuthClientResponse]);
 
     const backToList = () => {
         navigate('/dashboard/oauth-clients');

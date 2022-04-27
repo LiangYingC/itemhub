@@ -1,6 +1,13 @@
 .dialog {
     .card {
-        width: 300px;
-        height: 200px;
+        z-index: 1;
+    }
+    &::after {
+        display: block;
+        position: absolute;
+        content: '';
+        background: rgba(black, 0.5);
+        width: 100vw;
+        height: 100vh;
     }
 }

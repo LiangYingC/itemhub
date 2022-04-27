@@ -11,7 +11,7 @@ import { useGetAllDevicesApi } from '@/hooks/apis/devices.hook';
 import { selectTriggers } from '@/redux/reducers/triggers.reducer';
 import { selectUniversal } from '@/redux/reducers/universal.reducer';
 import { TriggerItem } from '@/types/triggers.type';
-import DeviceAndPinInputs from '@/components/Inputs/deviceAndPinInput/deviceAndPinInput';
+import DeviceAndPinInputs from '@/components/input/device-and-pin-input/device-and-pin-input';
 import PageTitle from '@/components/page-title/page-title';
 
 const Trigger = () => {

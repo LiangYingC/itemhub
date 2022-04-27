@@ -88,7 +88,7 @@ namespace Homo.IotApi
                 });
             }
 
-            services.AddCronJob<TriggerLogCronJob>(c =>
+            services.AddCronJob<ClearTriggerLogCronJob>(c =>
                 {
                     c.TimeZoneInfo = TimeZoneInfo.Local;
                     c.CronExpression = @"0 0 * * *";
@@ -104,7 +104,7 @@ namespace Homo.IotApi
             services.AddCronJob<ClearExpiredDevicePinSensorDataCronJobService>(c =>
                 {
                     c.TimeZoneInfo = TimeZoneInfo.Local;
-                    c.CronExpression = @"* * * * *";
+                    c.CronExpression = @"0 0 * * *";
                 });
 
             services.AddCronJob<SendOverPlanNotificationCronJobService>(c =>

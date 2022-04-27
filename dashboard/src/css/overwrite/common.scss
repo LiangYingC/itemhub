@@ -1,7 +1,3 @@
-@import 'bootstrap/scss/_functions.scss';
-@import 'bootstrap/scss/_variables.scss';
-@import 'bootstrap/scss/_mixins.scss';
-
 $spacers: (
     0: 0,
     1: $spacer * 0.25,
@@ -120,86 +116,6 @@ $theme-colors: (
     'green-12': rgba($green, 0.12),
 );
 
-@import 'bootstrap/scss/_utilities.scss';
-
-$theme-colors-rgb: map-loop($theme-colors, to-rgb, '$value');
-
-$utilities-bg: map-merge($utilities-colors, ($theme-colors-rgb));
-$utilities-bg-colors: map-loop($utilities-bg, rgba-css-var, '$key', 'bg');
-
-$utilities-text: map-merge($utilities-colors, ($theme-colors-rgb));
-$utilities-text-colors: map-loop($utilities-text, rgba-css-var, '$key', 'text');
-
-$utilities-border: map-merge($utilities-colors, ($theme-colors-rgb));
-$utilities-border-colors: map-loop(
-    $utilities-border,
-    rgba-css-var,
-    '$key',
-    'border'
-);
-$--bs-bg-opacity: 0;
-
-$rounded: (
-    null: $border-radius,
-    0: 0,
-    1: $border-radius-sm,
-    2: $border-radius,
-    3: $border-radius-lg,
-    8: 8px,
-    circle: 50%,
-    pill: $border-radius-pill,
-);
-
-$utilities: map-merge(
-    $utilities,
-    (
-        'color': (
-            property: 'color',
-            class: 'text',
-            local-vars: (
-                'text-opacity': 1,
-            ),
-            values: map-merge($utilities-text-colors, ()),
-        ),
-        'text-opacity': (
-            css-var: true,
-            class: 'text-opacity',
-            values: $opacity,
-        ),
-        'background-color': (
-            property: 'background-color',
-            class: 'bg',
-            local-vars: (
-                'bg-opacity': 1,
-            ),
-            values: map-merge($utilities-bg-colors, ()),
-        ),
-        'bg-opacity': (
-            css-var: true,
-            class: 'bg-opacity',
-            values: $opacity,
-        ),
-        'rounded': (
-            property: 'border-radius',
-            class: 'rounded',
-            values: $rounded,
-        ),
-        'border-color': (
-            property: 'border-color',
-            class: 'border',
-            local-vars: (
-                'border-opacity': 1,
-            ),
-            values: map-merge($utilities-border-colors, ()),
-        ),
-        'border-opacity': (
-            css-var: true,
-            class: 'border-opacity',
-            values: $opacity,
-        ),
-    )
-);
-
 .btn-primary {
     background: white;
     color: $primary-800;
@@ -258,5 +174,3 @@ $utilities: map-merge(
         }
     }
 }
-
-@import 'bootstrap/scss/bootstrap.scss';

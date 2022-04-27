@@ -41,7 +41,7 @@ const PageTitle = (props: {
 
     return (
         <div className="page-title" data-testid="page-title">
-            <div className="w-100 d-flex align-items-center px-45 pt-4">
+            <div className="w-100 d-flex align-items-center px-45 pt-4 pb-sm-4">
                 <div
                     role="button"
                     className={`d-none hamburger p-2 me-3 ${

@@ -45,7 +45,8 @@ namespace Homo.IotApi
             long? currentLatestId = DevicePinSensorDataservice.DeleteExpiredDataAndGetLatestItemId(_iotDbContext, 1, 500, latestId);
             if (currentLatestId == null)
             {
-                return Task.CompletedTask;
+                var task = Task.Run(async () => new { });
+                return task;
             }
             await Task.Delay(5 * 1000);
             return recursiveDeleteDevicePinSensorData(currentLatestId);

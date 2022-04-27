@@ -15,7 +15,6 @@ namespace Homo.IotApi
     public class MyTransactionController : ControllerBase
     {
         private readonly IotDbContext _dbContext;
-        private readonly string _dbConnectionString;
         public MyTransactionController(IotDbContext dbContext, IOptions<AppSettings> appSettings)
         {
             _dbContext = dbContext;

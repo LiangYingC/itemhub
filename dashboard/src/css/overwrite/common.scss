@@ -50,6 +50,7 @@ $blue: #0048ff; // deprecated
 $danger: #ff4747;
 $purple: #d415a1;
 $warn: #f49d00;
+$success: #198754;
 $primary-900: #1f305a;
 $primary-800: #163c9d;
 $primary-700: #1679c0;
@@ -91,6 +92,7 @@ $theme-colors: (
     'dark-blue': $dark-blue,
     'dark': $dark,
     'blue': $blue,
+    'success': $success,
     'danger': $danger,
     'darkest-blue': $darkest-blue,
     'deep-dark-blue': $deep-dark-blue,

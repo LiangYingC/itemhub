@@ -1,14 +1,5 @@
 .devices {
     $status-dot-size: 6px;
-    .filter {
-        max-width: 480px;
-        @include media-breakpoint-down(md) {
-            max-width: none;
-        }
-        button {
-            margin-left: -2px;
-        }
-    }
     .tag {
         width: 62px;
     }

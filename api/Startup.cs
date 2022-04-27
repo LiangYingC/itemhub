@@ -88,7 +88,7 @@ namespace Homo.IotApi
                 });
             }
 
-            services.AddCronJob<TriggerLogCronJob>(c =>
+            services.AddCronJob<ClearTriggerLogCronJob>(c =>
                 {
                     c.TimeZoneInfo = TimeZoneInfo.Local;
                     c.CronExpression = @"0 0 * * *";

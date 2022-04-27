@@ -14,7 +14,6 @@ namespace Homo.IotApi
     public class MyDevicePinController : ControllerBase
     {
         private readonly IotDbContext _dbContext;
-        private readonly string _dbConnectionString;
         public MyDevicePinController(IotDbContext dbContext, IOptions<AppSettings> appSettings)
         {
             _dbContext = dbContext;

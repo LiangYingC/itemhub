@@ -104,7 +104,7 @@ namespace Homo.IotApi
             services.AddCronJob<ClearExpiredDevicePinSensorDataCronJobService>(c =>
                 {
                     c.TimeZoneInfo = TimeZoneInfo.Local;
-                    c.CronExpression = @"0 0 * * *";
+                    c.CronExpression = @"* * * * *";
                 });
 
             services.AddCronJob<SendOverPlanNotificationCronJobService>(c =>

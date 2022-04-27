@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '@/redux/store';
 
 export type DialogState = {
-    type: string;
+    type: DialogTypeEnum;
     title: string;
     message: string;
     isOpen: boolean;
@@ -21,7 +21,7 @@ export enum DialogTypeEnum {
 export const dialogSlice = createSlice({
     name: 'dialog',
     initialState: {
-        type: '',
+        type: DialogTypeEnum.ALERT,
         title: '',
         message: '',
         isOpen: false,
@@ -43,7 +43,7 @@ export const dialogSlice = createSlice({
             } = action.payload;
 
             return {
-                type: type || '',
+                type: type || DialogTypeEnum.ALERT,
                 title: title || '',
                 message: message || '',
                 isOpen: true,

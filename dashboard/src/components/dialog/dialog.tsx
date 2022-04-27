@@ -25,22 +25,37 @@ const Dialog = () => {
 
     const [isValid, setIsValid] = useState(true);
     const [buttonAvaible, setButtonAvaible] = useState(false);
+
     const promptInputRef = useRef<HTMLInputElement>(null);
+    const cardRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         if (isOpen && type === DialogTypeEnum.PROMPT) {
             promptInputRef.current?.focus();
+        } else if (isOpen) {
+            console.log('focus');
+            cardRef.current?.focus();
         }
+        setButtonAvaible(
+            type === DialogTypeEnum.CONFIRM || type === DialogTypeEnum.ALERT
+        );
     }, [isOpen]);
 
     const buttonBehavior = () => {
         if (type === DialogTypeEnum.ALERT) {
-            close();
+            alert();
         } else if (type === DialogTypeEnum.CONFIRM) {
             confirm();
         } else if (type === DialogTypeEnum.PROMPT) {
             checkMessage();
         }
+    };
+
+    const alert = () => {
+        if (callback) {
+            callback();
+        }
+        close();
     };
 
     const confirm = () => {
@@ -54,7 +69,6 @@ const Dialog = () => {
         if (checkedMessage === promptInputValue && callback) {
             callback();
             setIsValid(true);
-            promptInputValue = '';
             close();
         } else {
             setIsValid(false);
@@ -74,7 +88,16 @@ const Dialog = () => {
                 isOpen ? '' : 'd-none'
             }`}
         >
-            <div className="card p-4">
+            <div
+                className="card p-4"
+                tabIndex={0}
+                onKeyUp={(event: React.KeyboardEvent<HTMLDivElement>) => {
+                    if (event.key === 'Escape') {
+                        close();
+                    }
+                }}
+                ref={cardRef}
+            >
                 <h4 className={title ? '' : 'd-none'}>{title}</h4>
                 <hr />
                 <div className={message ? '' : 'd-none'}>{message}</div>
@@ -116,8 +139,10 @@ const Dialog = () => {
                 <div className="d-flex align-items-center">
                     <button
                         className={`btn btn-secondary ${
-                            type ===
-                            (DialogTypeEnum.PROMPT || DialogTypeEnum.CONFIRM)
+                            [
+                                DialogTypeEnum.PROMPT,
+                                DialogTypeEnum.CONFIRM,
+                            ].includes(type)
                                 ? ''
                                 : 'd-none'
                         }`}

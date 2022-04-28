@@ -94,7 +94,6 @@ $card-border-width: 0;
 $card-border-radius: $border-radius;
 
 // button
-
 @each $color, $value in $theme-button-font-colors {
     .btn-#{$color} {
         color: $value;

@@ -11,6 +11,7 @@ import Triggers from './pages/triggers/triggers';
 import Trigger from './pages/trigger/trigger';
 import OauthClients from './pages/oauth-clients/oauth-clients';
 import { Provider } from 'react-redux';
+import { DialogProvider } from './contexts/dialog.context';
 import store from './redux/store';
 import OauthClient from './pages/oauth-client/oauth-client';
 
@@ -21,7 +22,9 @@ ReactDOM.render(
                 path=""
                 element={
                     <Provider store={store}>
-                        <App />
+                        <DialogProvider>
+                            <App />
+                        </DialogProvider>
                     </Provider>
                 }
             >

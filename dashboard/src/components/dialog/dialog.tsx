@@ -6,10 +6,87 @@ import {
 } from '@/redux/reducers/dialog.reducer';
 import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
+import { useDialog } from '@/contexts/dialog.context';
 
 const Dialog = () => {
-    const dialog = useAppSelector(selectDialog);
-    const dispatch = useDispatch();
+    // const dialog = useAppSelector(selectDialog);
+    // const dispatch = useDispatch();
+    // let promptInputValue = '';
+
+    // const {
+    //     type,
+    //     title,
+    //     message,
+    //     checkedMessage,
+    //     buttonClassName,
+    //     callback,
+    //     promptInvalidMessage,
+    //     isOpen,
+    // } = dialog;
+
+    // const [isValid, setIsValid] = useState(true);
+    // const [buttonAvaible, setButtonAvaible] = useState(false);
+
+    // const promptInputRef = useRef<HTMLInputElement>(null);
+    // const cardRef = useRef<HTMLDivElement>(null);
+
+    // useEffect(() => {
+    //     if (isOpen && type === DialogTypeEnum.PROMPT) {
+    //         promptInputRef.current?.focus();
+    //     } else if (isOpen) {
+    //         console.log('focus');
+    //         cardRef.current?.focus();
+    //     }
+    //     setButtonAvaible(
+    //         type === DialogTypeEnum.CONFIRM || type === DialogTypeEnum.ALERT
+    //     );
+    // }, [isOpen]);
+
+    // const buttonBehavior = () => {
+    //     if (type === DialogTypeEnum.ALERT) {
+    //         alert();
+    //     } else if (type === DialogTypeEnum.CONFIRM) {
+    //         confirm();
+    //     } else if (type === DialogTypeEnum.PROMPT) {
+    //         checkMessage();
+    //     }
+    // };
+
+    // const alert = () => {
+    //     if (callback) {
+    //         callback();
+    //     }
+    //     close();
+    // };
+
+    // const confirm = () => {
+    //     if (callback) {
+    //         callback();
+    //     }
+    //     close();
+    // };
+
+    // const checkMessage = () => {
+    //     if (checkedMessage === promptInputValue && callback) {
+    //         callback();
+    //         setIsValid(true);
+    //         close();
+    //     } else {
+    //         setIsValid(false);
+    //     }
+    // };
+
+    // const close = () => {
+    //     promptInputValue = '';
+    //     if (promptInputRef.current) {
+    //         promptInputRef.current.value = '';
+    //     }
+    //     dispatch(dialogActions.close());
+    // };
+
+    /** Context Example */
+    const { dialogState, closeDialog } = useDialog();
+
     let promptInputValue = '';
 
     const {
@@ -21,7 +98,7 @@ const Dialog = () => {
         callback,
         promptInvalidMessage,
         isOpen,
-    } = dialog;
+    } = dialogState;
 
     const [isValid, setIsValid] = useState(true);
     const [buttonAvaible, setButtonAvaible] = useState(false);
@@ -33,13 +110,12 @@ const Dialog = () => {
         if (isOpen && type === DialogTypeEnum.PROMPT) {
             promptInputRef.current?.focus();
         } else if (isOpen) {
-            console.log('focus');
             cardRef.current?.focus();
         }
         setButtonAvaible(
             type === DialogTypeEnum.CONFIRM || type === DialogTypeEnum.ALERT
         );
-    }, [isOpen]);
+    }, [isOpen, type]);
 
     const buttonBehavior = () => {
         if (type === DialogTypeEnum.ALERT) {
@@ -80,8 +156,9 @@ const Dialog = () => {
         if (promptInputRef.current) {
             promptInputRef.current.value = '';
         }
-        dispatch(dialogActions.close());
+        closeDialog();
     };
+
     return (
         <div
             className={`dialog position-fixed top-0 w-100 h-100 d-flex align-items-center justify-content-center p-2 ${

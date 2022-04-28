@@ -40,7 +40,7 @@ const Toaster = () => {
         dispatch(
             toasterActions.changeOneState({
                 id: item.id,
-                isShow: true,
+                isShow: false,
             })
         );
         setTimeout(() => {

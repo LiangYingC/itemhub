@@ -156,7 +156,7 @@ namespace Homo.IotApi
 
         public override Task StopAsync(CancellationToken cancellationToken)
         {
-            Console.WriteLine("Ayto Payment is stopping.");
+            Console.WriteLine("Auto Payment is stopping.");
             return base.StopAsync(cancellationToken);
         }
     }

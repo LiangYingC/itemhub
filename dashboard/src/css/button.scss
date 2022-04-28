@@ -1,0 +1,60 @@
+@each $color, $value in $theme-button-font-colors {
+    .btn-#{$color} {
+        color: $value;
+
+        &:active,
+        &:focus {
+            box-shadow: $btn-box-shadow;
+            color: $value;
+            outline: none;
+        }
+
+        &.disabled {
+            background: $grey-200;
+            border-color: $grey-200;
+            color: rgba(black, 0.25);
+        }
+    }
+}
+
+@each $color, $value in $theme-button-hover-font-colors {
+    .btn-#{$color}:hover {
+        color: $value;
+    }
+}
+
+@each $color, $value in $theme-button-border-colors {
+    .btn-#{$color} {
+        border-color: $value;
+    }
+}
+
+@each $color, $value in $theme-button-hover-colors {
+    .btn-#{$color}:hover {
+        background: $value;
+    }
+}
+
+@each $color, $value in $theme-button-active-colors {
+    .btn-#{$color}:active,
+    .btn-#{$color}:focus {
+        box-shadow: $btn-box-shadow;
+        background: $value;
+    }
+}
+
+.btn {
+    display: flex;
+    align-items: center;
+    border-radius: 50rem;
+    box-shadow: $btn-box-shadow;
+
+    .icon {
+        padding-right: 0.5rem;
+    }
+
+    &:disabled {
+        background: $grey-200;
+        color: rgba(black, 0.25);
+    }
+}

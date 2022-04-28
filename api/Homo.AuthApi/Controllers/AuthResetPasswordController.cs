@@ -42,7 +42,6 @@ namespace Homo.AuthApi
         public async Task<dynamic> sendResetPasswordMail([FromBody] DTOs.SendResetPasswordMail dto)
         {
             User user = UserDataservice.GetOneByEmail(_dbContext, dto.Email, true);
-            bool isEarlyBird = user != null && user.HashPhone == null;
             if (user == null)
             {
                 throw new CustomException(ERROR_CODE.USER_NOT_FOUND, HttpStatusCode.NotFound);
@@ -51,7 +50,7 @@ namespace Homo.AuthApi
             {
                 throw new CustomException(ERROR_CODE.USER_BE_BLOCKED, HttpStatusCode.Forbidden);
             }
-            if (isEarlyBird)
+            if (user.IsEarlyBird)
             {
                 throw new CustomException(ERROR_CODE.LACK_PHONE, HttpStatusCode.Forbidden);
             }

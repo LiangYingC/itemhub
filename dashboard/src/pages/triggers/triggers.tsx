@@ -8,10 +8,16 @@ import {
     useDeleteTriggersApi,
 } from '@/hooks/apis/triggers.hook';
 import { selectTriggers } from '@/redux/reducers/triggers.reducer';
+import { selectUniversal } from '@/redux/reducers/universal.reducer';
 import { ArrayHelpers } from '@/helpers/array.helper';
 import { TriggerItem } from '@/types/triggers.type';
 import Pagination from '@/components/pagination/pagination';
 import PageTitle from '@/components/page-title/page-title';
+import SearchInput from '@/components/input/search-input/search-input';
+import EmptyDataToCreateItem from '@/components/empty-data-to-create-item/empty-data-to-create-item';
+import lightTrashIcon from '@/assets/images/light-trash.svg';
+import pencilIcon from '@/assets/images/pencil.svg';
+import trashIcon from '@/assets/images/trash.svg';
 
 const filterTriggers = ({
     triggers,
@@ -46,6 +52,11 @@ const Triggers = () => {
     const limit = Number(query.get('limit') || 5);
     const page = Number(query.get('page') || 1);
 
+    const [triggerName, setTriggerName] = useState(
+        query.get('deviceName') || ''
+    );
+    const { triggerOperators } = useAppSelector(selectUniversal);
+
     const sourceDeviceNameOptionsRef = useRef<string[]>([]);
     const destinationDeviceNameOptionsRef = useRef<string[]>([]);
     const sourceDeviceNameOptions = ArrayHelpers.FilterDuplicatedString(
@@ -56,6 +67,13 @@ const Triggers = () => {
     );
 
     const { triggers, rowNum } = useAppSelector(selectTriggers);
+    const hasTriggersRef = useRef(false);
+
+    useEffect(() => {
+        if (triggers && triggers.length > 0) {
+            hasTriggersRef.current = true;
+        }
+    }, [triggers]);
 
     useEffect(() => {
         if (
@@ -64,8 +82,8 @@ const Triggers = () => {
             destinationDeviceNameOptions.length === 0
         ) {
             const initialOptions = {
-                sourceDeviceNames: ['All'],
-                destinationDeviceNames: ['All'],
+                sourceDeviceNames: ['來源裝置名稱'],
+                destinationDeviceNames: ['目標裝置名稱'],
             };
 
             const options = triggers.reduce((accumOptions, currentTrigger) => {
@@ -105,6 +123,9 @@ const Triggers = () => {
         destinationDeviceNameFilter,
     });
 
+    /**
+     *  TODO: Get triggers api 之後會實作 search trigger name 功能，實作後這邊要多傳 triggerName 進去篩選
+     * */
     const { isGettingTriggers, getTriggersApi } = useGetTriggersApi({
         page,
         limit,
@@ -117,15 +138,25 @@ const Triggers = () => {
     }, [getTriggersApi]);
 
     const [selectedIds, setSelectedIds] = useState(Array<number>());
+
+    const isSelectAll = selectedIds.length === filteredTriggers.length;
+    const toggleSelectAll = () => {
+        if (selectedIds.length === filteredTriggers.length) {
+            setSelectedIds([]);
+        } else {
+            setSelectedIds(filteredTriggers.map(({ id }) => id));
+        }
+    };
+
     const { isDeletingTriggers, deleteTriggersApi, deleteTriggersResponse } =
         useDeleteTriggersApi(selectedIds);
 
-    const updateSelectedIds = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const updateSelectedIds = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedIds((previous) => {
-            const id = event.target.value;
+            const id = e.target.value;
             const newSelectedIds = [...previous];
 
-            if (event.target.checked) {
+            if (e.target.checked) {
                 newSelectedIds.push(Number(id));
             } else {
                 const index = newSelectedIds.findIndex(
@@ -133,17 +164,23 @@ const Triggers = () => {
                 );
                 newSelectedIds.splice(index, 1);
             }
-
             return newSelectedIds;
         });
     };
 
     const confirmToDeleteTriggers = () => {
-        if (prompt('請再次輸入 delete，藉此執行刪除') === 'delete') {
+        if (
+            prompt('請再次輸入 delete，藉此執行刪除') === 'delete' &&
+            !isDeletingTriggers
+        ) {
             deleteTriggersApi();
         } else {
             alert('輸入錯誤，請再次嘗試');
         }
+    };
+
+    const jumpToCreatePage = () => {
+        navigate('create');
     };
 
     useEffect(() => {
@@ -155,110 +192,270 @@ const Triggers = () => {
         }
     }, [deleteTriggersResponse, getTriggersApi]);
 
+    const [
+        pageTitleSecondaryButtonClassName,
+        setPageTitleSecondaryButtonClassName,
+    ] = useState('btn btn-danger disabled');
+
+    useEffect(() => {
+        let pageTitleSecondaryButtonClassName = 'btn btn-danger';
+        if (selectedIds.length === 0) {
+            pageTitleSecondaryButtonClassName += ' disabled';
+        }
+        setPageTitleSecondaryButtonClassName(pageTitleSecondaryButtonClassName);
+    }, [selectedIds]);
+
     return (
-        <>
-            <PageTitle title="觸發列表" />
-            <div>
-                <label>
-                    來源裝置名稱:
-                    <select
-                        value={sourceDeviceNameFilter}
-                        onChange={(e) => {
-                            setSourceDeviceNameFilter(e.target.value);
-                        }}
-                    >
-                        {sourceDeviceNameOptions.map((name, index) => {
-                            const value = name === 'All' ? '' : name;
-                            return (
-                                <option key={`${name}-${index}`} value={value}>
-                                    {name}
-                                </option>
-                            );
-                        })}
-                    </select>
-                </label>
-                <label>
-                    目標裝置名稱:
-                    <select
-                        value={destinationDeviceNameFilter}
-                        onChange={(e) => {
-                            setDestinationDeviceNameFilter(e.target.value);
-                        }}
-                    >
-                        {destinationDeviceNameOptions.map((name, index) => {
-                            const value = name === 'All' ? '' : name;
-                            return (
-                                <option key={`${name}-${index}`} value={value}>
-                                    {name}
-                                </option>
-                            );
-                        })}
-                    </select>
-                </label>
-            </div>
-            <button
-                onClick={confirmToDeleteTriggers}
-                disabled={isDeletingTriggers || selectedIds.length <= 0}
-            >
-                {isDeletingTriggers
-                    ? 'Deleting Triggers'
-                    : 'Delete Selected Trigger'}
-            </button>
-            <button
-                onClick={() =>
-                    navigate('../dashboard/triggers/create', { replace: false })
-                }
-            >
-                Create Trigger
-            </button>
-            ;
-            <div className="triggers" data-testid="triggers">
-                {isGettingTriggers || triggers === null ? (
-                    <h1>Loading</h1>
-                ) : filteredTriggers.length === 0 ? (
-                    <h1>No Triggers</h1>
+        <div className="triggers" data-testid="triggers">
+            <PageTitle
+                title="觸發列表"
+                primaryButtonVisible={hasTriggersRef.current}
+                primaryButtonWording="新增觸發"
+                primaryButtonCallback={jumpToCreatePage}
+                secondaryButtonIcon={lightTrashIcon}
+                secondaryButtonClassName={pageTitleSecondaryButtonClassName}
+                secondaryButtonVisible={hasTriggersRef.current}
+                secondaryButtonWording="刪除選取"
+                secondaryButtonCallback={confirmToDeleteTriggers}
+            />
+            <div className="card">
+                {!hasTriggersRef.current && triggers !== null ? (
+                    <EmptyDataToCreateItem itemName="觸發" />
                 ) : (
-                    filteredTriggers.map(
-                        (
-                            {
-                                id,
-                                ownerId,
-                                sourceDevice,
-                                sourcePin,
-                                destinationDevice,
-                                destinationPin,
-                            },
-                            index
-                        ) => (
-                            <label key={`${id}-${index}`} className="mt-2 mb-2">
-                                <input
-                                    type="checkbox"
-                                    onChange={updateSelectedIds}
-                                    value={id}
-                                />
-                                <div>Id: {id}</div>
-                                <div>OwnerId: {ownerId}</div>
-                                <div>
-                                    來源裝置名稱:{' '}
-                                    {sourceDevice?.name || 'No Data'}
-                                </div>
-                                <div>來源裝置 Pin: {sourcePin}</div>
-                                <div>
-                                    目標裝置名稱:{' '}
-                                    {destinationDevice?.name || 'No Data'}
-                                </div>
-                                <div>目標裝置 Pin: {destinationPin}</div>
-                                <Link to={`../dashboard/triggers/${id}`}>
-                                    Go to id:{id} trigger
-                                </Link>
+                    <>
+                        <div className="d-flex flex-column flex-sm-row">
+                            <SearchInput
+                                placeholder="搜尋觸發"
+                                onChangeValue={(value) => setTriggerName(value)}
+                                onSearch={getTriggersApi}
+                            />
+                            {/* TODO: 來源裝置、目標裝置的 filter，接著要等設計稿改動再調整，應該會改成 autocompeleted input search，現在先不動 */}
+                            <label className="ms-3">
+                                <select
+                                    value={sourceDeviceNameFilter}
+                                    onChange={(e) => {
+                                        setSourceDeviceNameFilter(
+                                            e.target.value
+                                        );
+                                    }}
+                                >
+                                    {sourceDeviceNameOptions.map(
+                                        (name, index) => {
+                                            const value =
+                                                name === '來源裝置名稱'
+                                                    ? ''
+                                                    : name;
+                                            return (
+                                                <option
+                                                    key={`${name}-${index}`}
+                                                    value={value}
+                                                >
+                                                    {name}
+                                                </option>
+                                            );
+                                        }
+                                    )}
+                                </select>
                             </label>
-                        )
-                    )
+                            <label className="ms-3">
+                                <select
+                                    value={destinationDeviceNameFilter}
+                                    onChange={(e) => {
+                                        setDestinationDeviceNameFilter(
+                                            e.target.value
+                                        );
+                                    }}
+                                >
+                                    {destinationDeviceNameOptions.map(
+                                        (name, index) => {
+                                            const value =
+                                                name === '目標裝置名稱'
+                                                    ? ''
+                                                    : name;
+                                            return (
+                                                <option
+                                                    key={`${name}-${index}`}
+                                                    value={value}
+                                                >
+                                                    {name}
+                                                </option>
+                                            );
+                                        }
+                                    )}
+                                </select>
+                            </label>
+                        </div>
+                        {isGettingTriggers || triggers === null ? (
+                            <div>Loading</div>
+                        ) : (
+                            <div className="mt-3 mt-sm-45">
+                                <div className="d-none d-sm-block">
+                                    <div className="row py-25 px-3 m-0 bg-black bg-opacity-5 h6 text-black text-opacity-45">
+                                        <label className="col-3" role="button">
+                                            <div className="d-flex align-items-center">
+                                                <input
+                                                    type="checkbox"
+                                                    className="me-3"
+                                                    checked={isSelectAll}
+                                                    onChange={toggleSelectAll}
+                                                />
+                                                <span>觸發名稱 / ID</span>
+                                            </div>
+                                        </label>
+                                        <div className="col-2">來源裝置</div>
+                                        <div className="col-1">來源 Pin</div>
+                                        <div className="col-2">條件</div>
+                                        <div className="col-2">目標裝置</div>
+                                        <div className="col-1">目標 Pin</div>
+                                        <div className="col-1">操作</div>
+                                    </div>
+                                </div>
+                                <div className="triggers-list">
+                                    {filteredTriggers.map(
+                                        (
+                                            {
+                                                id,
+                                                sourceDevice,
+                                                sourcePin,
+                                                destinationDevice,
+                                                destinationPin,
+                                                operator,
+                                                sourceThreshold,
+                                            },
+                                            index
+                                        ) => (
+                                            <div
+                                                key={`${id}-${index}`}
+                                                className="row border-bottom border-black border-opacity-10 p-0 m-0 py-sm-4 px-sm-3"
+                                            >
+                                                <div className="row col-12 col-sm-3 text-black text-opacity-65 h6 mx-0 mb-0 px-0 px-sm-25">
+                                                    <div className="d-block d-sm-none col-4 p-3 bg-black bg-opacity-5 text-black text-opacity-45">
+                                                        觸發名稱 / ID
+                                                    </div>
+                                                    <label className="col-8 col-sm-12 p-3 p-sm-0 d-flex flex-column flex-sm-row align-items-sm-center">
+                                                        <input
+                                                            className="me-3 mb-3"
+                                                            type="checkbox"
+                                                            onChange={
+                                                                updateSelectedIds
+                                                            }
+                                                            value={id}
+                                                            checked={selectedIds.includes(
+                                                                id
+                                                            )}
+                                                        />
+                                                        <div className="d-flex flex-column">
+                                                            <h5 className="mb-2 mb-sm-0 lh-base">
+                                                                TODO:
+                                                                TriggerName
+                                                                尚無資料
+                                                            </h5>
+                                                            <h6 className="mb-0 lh-base text-opacity-4">
+                                                                {id}
+                                                            </h6>
+                                                        </div>
+                                                    </label>
+                                                </div>
+                                                <div className="row col-12 col-sm-2 mx-0 mb-0 px-0 px-sm-25">
+                                                    <div className="d-block d-sm-none col-4 p-3 bg-black bg-opacity-5 text-black text-opacity-45">
+                                                        來源裝置名稱
+                                                    </div>
+                                                    <h5 className="col-8 col-sm-12 p-3 p-sm-0 lh-base">
+                                                        {sourceDevice?.name}
+                                                    </h5>
+                                                </div>
+                                                <div className="row col-12 col-sm-1 mx-0 mb-0 px-0 px-sm-25">
+                                                    <div className="d-block d-sm-none col-4 p-3 bg-black bg-opacity-5 text-black text-opacity-45">
+                                                        來源 Pin
+                                                    </div>
+                                                    <h5 className="col-8 col-sm-12 p-3 p-sm-0 lh-base">
+                                                        {sourcePin}
+                                                    </h5>
+                                                </div>
+                                                <div className="row col-12 col-sm-2 mx-0 mb-0 px-0 px-sm-25">
+                                                    <div className="d-block d-sm-none col-4 p-3 bg-black bg-opacity-5 text-black text-opacity-45">
+                                                        條件
+                                                    </div>
+                                                    <h5 className="d-flex col-8 col-sm-12 p-3 p-sm-0 lh-base">
+                                                        <span className="pe-1">
+                                                            {
+                                                                triggerOperators[
+                                                                    operator
+                                                                ]?.label
+                                                            }
+                                                        </span>
+                                                        <span>
+                                                            {sourceThreshold}
+                                                        </span>
+                                                    </h5>
+                                                </div>
+                                                <div className="row col-12 col-sm-2 mx-0 mb-0 px-0 px-sm-25">
+                                                    <div className="d-block d-sm-none col-4 p-3 bg-black bg-opacity-5 text-black text-opacity-45">
+                                                        目標裝置名稱
+                                                    </div>
+                                                    <h5 className="col-8 col-sm-12 p-3 p-sm-0 lh-base">
+                                                        {
+                                                            destinationDevice?.name
+                                                        }
+                                                    </h5>
+                                                </div>
+                                                <div className="row col-12 col-sm-1 mx-0 mb-0 px-0 px-sm-25">
+                                                    <div className="d-block d-sm-none col-4 p-3 bg-black bg-opacity-5 text-black text-opacity-45">
+                                                        目標 Pin
+                                                    </div>
+                                                    <h5 className="col-8 col-sm-12 p-3 p-sm-0 lh-base">
+                                                        {destinationPin}
+                                                    </h5>
+                                                </div>
+                                                <div className="row col-12 col-sm-1 mx-0 mb-0 px-0 px-sm-25">
+                                                    <div className="d-block d-sm-none col-4 p-3 bg-black bg-opacity-5 text-black text-opacity-45">
+                                                        操作
+                                                    </div>
+                                                    <div className="col-8 col-sm-12 p-3 p-sm-0 d-flex justify-content-start flex-wrap">
+                                                        <Link
+                                                            className="me-3 mb-3"
+                                                            to={`/dashboard/triggers/${id}`}
+                                                        >
+                                                            <img
+                                                                src={pencilIcon}
+                                                            />
+                                                        </Link>
+                                                        <button
+                                                            className="btn mb-3 p-0 bg-transparent"
+                                                            onClick={() => {
+                                                                // TODO: 實作 delete on trigger api
+                                                            }}
+                                                            disabled={false}
+                                                        >
+                                                            <img
+                                                                src={trashIcon}
+                                                            />
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )
+                                    )}
+                                </div>
+                                <div
+                                    className={`${
+                                        triggers.length > 0
+                                            ? 'd-flex'
+                                            : 'd-none'
+                                    } justify-content-end w-100 mt-5`}
+                                >
+                                    <Pagination
+                                        rowNum={rowNum}
+                                        page={page}
+                                        limit={limit}
+                                    />
+                                </div>
+                            </div>
+                        )}
+                    </>
                 )}
-                <div>Page: {page}</div>
-                <Pagination page={page} rowNum={rowNum} limit={limit} />
             </div>
-        </>
+        </div>
     );
 };
 

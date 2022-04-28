@@ -1,6 +1,23 @@
-@import './css/common.scss';
-@import './css/overwrite.scss';
+@import 'bootstrap/scss/_functions.scss';
+@import 'bootstrap/scss/_variables.scss';
+@import 'bootstrap/scss/_mixins.scss';
+@import './css/overwrite/variables.scss';
+@import 'bootstrap/scss/_utilities.scss';
+.test-b2 {
+    box-shadow: $btn-box-shadow;
+}
+// @import './css/overwrite/variables.scss';
+@import './css/overwrite/utilities.scss';
+.test-b3 {
+    box-shadow: $btn-box-shadow;
+}
+
+@import 'bootstrap/scss/bootstrap.scss';
+@import './css/variables.scss';
 @import './css/zindex.scss';
+@import './css/button.scss';
+@import './css/card.scss';
+@import './css/tag.scss';
 
 @import './pages/dashboard/dashboard.scss';
 @import './pages/devices/devices.scss';
@@ -17,3 +34,5 @@
 @import './components/pin/pin.scss';
 @import './components/pins/pins.scss';
 @import './components/page-title/page-title.scss';
+@import './components/toaster/toaster.scss';
+@import './components/input/search-input/search-input.scss';

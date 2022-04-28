@@ -1,0 +1,11 @@
+.search-input {
+  max-width: 480px;
+  
+  @include media-breakpoint-down(md) {
+    max-width: none;
+  }
+  
+  button {
+    margin-left: -2px;
+  }
+}

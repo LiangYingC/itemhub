@@ -47,7 +47,7 @@ const SearchInput = ({
                 onKeyUp={searchInputKeyUp}
             />
             <button
-                className="position-absolute top-0 end-0 btn border-0 rounded-end"
+                className="position-absolute top-0 end-0 btn d-inline-block shadow-none border-0 p-2"
                 type="button"
                 onClick={onSearch}
             >

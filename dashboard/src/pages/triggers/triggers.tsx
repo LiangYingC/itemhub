@@ -193,17 +193,16 @@ const Triggers = () => {
     }, [deleteTriggersResponse, getTriggersApi]);
 
     const [
-        pageTitlePrimaryButtonClassName,
-        setPageTitlePrimaryButtonClassName,
-    ] = useState('bg-danger text-white border border-danger disabled');
+        pageTitleSecondaryButtonClassName,
+        setPageTitleSecondaryButtonClassName,
+    ] = useState('btn btn-danger disabled');
 
     useEffect(() => {
-        let pageTitlePrimaryButtonClassName =
-            'bg-danger border border-danger text-white';
+        let pageTitleSecondaryButtonClassName = 'btn btn-danger';
         if (selectedIds.length === 0) {
-            pageTitlePrimaryButtonClassName += ' disabled';
+            pageTitleSecondaryButtonClassName += ' disabled';
         }
-        setPageTitlePrimaryButtonClassName(pageTitlePrimaryButtonClassName);
+        setPageTitleSecondaryButtonClassName(pageTitleSecondaryButtonClassName);
     }, [selectedIds]);
 
     return (
@@ -211,15 +210,15 @@ const Triggers = () => {
             <PageTitle
                 title="觸發列表"
                 primaryButtonVisible={hasTriggersRef.current}
-                primaryButtonWording="刪除選取"
-                primaryButtonCallback={confirmToDeleteTriggers}
-                primaryButtonIcon={lightTrashIcon}
-                primaryButtonClassName={pageTitlePrimaryButtonClassName}
+                primaryButtonWording="新增觸發"
+                primaryButtonCallback={jumpToCreatePage}
+                secondaryButtonIcon={lightTrashIcon}
+                secondaryButtonClassName={pageTitleSecondaryButtonClassName}
                 secondaryButtonVisible={hasTriggersRef.current}
-                secondaryButtonWording="新增觸發"
-                secondaryButtonCallback={jumpToCreatePage}
+                secondaryButtonWording="刪除選取"
+                secondaryButtonCallback={confirmToDeleteTriggers}
             />
-            <div className="mx-3 mx-sm-0 mx-xl-45 mt-4 mt-sm-0 p-3 p-sm-45 bg-white shadow-sm rounded-8">
+            <div className="card">
                 {!hasTriggersRef.current && triggers !== null ? (
                     <EmptyDataToCreateItem itemName="觸發" />
                 ) : (

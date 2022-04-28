@@ -1,0 +1,69 @@
+body,
+html {
+    padding: 0;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang TC',
+        'Microsoft JhengHei', 'Helvetica Neue', Helvetica, Arial, sans-serif,
+        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+    line-height: 1.8rem;
+    color: rgba(0, 0, 0, map-get($opacity, 65));
+    font-size: $font-size-base;
+    background: $grey-150;
+    @include media-breakpoint-down(lg) {
+        font-size: $font-size-base-for-small-screen;
+    }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5 {
+    font-weight: 600;
+    color: rgba(0, 0, 0, map-get($opacity, 65));
+}
+
+input::placeholder {
+    color: $grey-200 !important;
+    font-size: $font-size-base;
+}
+
+.text-sm {
+    @include media-breakpoint-down(lg) {
+        font-size: $small-font-size-for-small-screen;
+    }
+}
+
+a {
+    color: $primary;
+    outline: none;
+    text-decoration: none;
+
+    &:hover {
+        color: $primary;
+        text-decoration: underline;
+    }
+}
+
+a.btn {
+    text-decoration: none;
+    &:hover {
+        text-decoration: none;
+    }
+}
+
+.hamburger {
+    width: 2.5em;
+    margin-top: -6px;
+
+    > div {
+        border: none;
+        height: 2.5px;
+        margin-top: 6px;
+    }
+}

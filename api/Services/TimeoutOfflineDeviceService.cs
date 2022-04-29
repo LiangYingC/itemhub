@@ -20,7 +20,7 @@ namespace Homo.IotApi
             CancellationToken cancellationToken = tokenSource.Token;
             var task = Task.Run(async () =>
             {
-                await Task.Delay(15000);
+                await Task.Delay(16000);
                 if (cancellationToken.IsCancellationRequested)
                 {
                     return;
@@ -32,6 +32,7 @@ namespace Homo.IotApi
 
                 // 15 秒內 device activity log 沒查到資料就當作下線
                 int count = DeviceActivityLogDataservice.GetRowNumThis15Seconds(newDbContext, ownerId, deviceId);
+                System.Console.WriteLine($"testing:{Newtonsoft.Json.JsonConvert.SerializeObject(count, Newtonsoft.Json.Formatting.Indented)}");
                 if (count == 0)
                 {
                     DeviceDataservice.Switch(newDbContext, ownerId, deviceId, false);

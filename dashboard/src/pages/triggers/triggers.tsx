@@ -52,9 +52,7 @@ const Triggers = () => {
     const limit = Number(query.get('limit') || 5);
     const page = Number(query.get('page') || 1);
 
-    const [triggerName, setTriggerName] = useState(
-        query.get('deviceName') || ''
-    );
+    const [triggerName, setTriggerName] = useState(query.get('name') || '');
     const { triggerOperators } = useAppSelector(selectUniversal);
 
     const sourceDeviceNameOptionsRef = useRef<string[]>([]);
@@ -299,7 +297,7 @@ const Triggers = () => {
                                                     checked={isSelectAll}
                                                     onChange={toggleSelectAll}
                                                 />
-                                                <span>觸發名稱 / ID</span>
+                                                <span>觸發名稱</span>
                                             </div>
                                         </label>
                                         <div className="col-2">來源裝置</div>
@@ -321,6 +319,7 @@ const Triggers = () => {
                                                 destinationPin,
                                                 operator,
                                                 sourceThreshold,
+                                                name,
                                             },
                                             index
                                         ) => (
@@ -330,9 +329,9 @@ const Triggers = () => {
                                             >
                                                 <div className="row col-12 col-sm-3 text-black text-opacity-65 h6 mx-0 mb-0 px-0 px-sm-25">
                                                     <div className="d-block d-sm-none col-4 p-3 bg-black bg-opacity-5 text-black text-opacity-45">
-                                                        觸發名稱 / ID
+                                                        觸發名稱
                                                     </div>
-                                                    <label className="col-8 col-sm-12 p-3 p-sm-0 d-flex flex-column flex-sm-row align-items-sm-center">
+                                                    <label className="col-8 col-sm-12 p-3 p-sm-0 d-flex flex-column flex-sm-row align-items-start">
                                                         <input
                                                             className="me-3 mb-3"
                                                             type="checkbox"
@@ -344,39 +343,30 @@ const Triggers = () => {
                                                                 id
                                                             )}
                                                         />
-                                                        <div className="d-flex flex-column">
-                                                            <h5 className="mb-2 mb-sm-0 lh-base">
-                                                                TODO:
-                                                                TriggerName
-                                                                尚無資料
-                                                            </h5>
-                                                            <h6 className="mb-0 lh-base text-opacity-4">
-                                                                {id}
-                                                            </h6>
-                                                        </div>
+                                                        {name}
                                                     </label>
                                                 </div>
                                                 <div className="row col-12 col-sm-2 mx-0 mb-0 px-0 px-sm-25">
                                                     <div className="d-block d-sm-none col-4 p-3 bg-black bg-opacity-5 text-black text-opacity-45">
                                                         來源裝置名稱
                                                     </div>
-                                                    <h5 className="col-8 col-sm-12 p-3 p-sm-0 lh-base">
+                                                    <div className="col-8 col-sm-12 p-3 p-sm-0 lh-base">
                                                         {sourceDevice?.name}
-                                                    </h5>
+                                                    </div>
                                                 </div>
                                                 <div className="row col-12 col-sm-1 mx-0 mb-0 px-0 px-sm-25">
                                                     <div className="d-block d-sm-none col-4 p-3 bg-black bg-opacity-5 text-black text-opacity-45">
                                                         來源 Pin
                                                     </div>
-                                                    <h5 className="col-8 col-sm-12 p-3 p-sm-0 lh-base">
+                                                    <div className="col-8 col-sm-12 p-3 p-sm-0 lh-base">
                                                         {sourcePin}
-                                                    </h5>
+                                                    </div>
                                                 </div>
                                                 <div className="row col-12 col-sm-2 mx-0 mb-0 px-0 px-sm-25">
                                                     <div className="d-block d-sm-none col-4 p-3 bg-black bg-opacity-5 text-black text-opacity-45">
                                                         條件
                                                     </div>
-                                                    <h5 className="d-flex col-8 col-sm-12 p-3 p-sm-0 lh-base">
+                                                    <div className="d-flex col-8 col-sm-12 p-3 p-sm-0 lh-base">
                                                         <span className="pe-1">
                                                             {
                                                                 triggerOperators[
@@ -387,25 +377,25 @@ const Triggers = () => {
                                                         <span>
                                                             {sourceThreshold}
                                                         </span>
-                                                    </h5>
+                                                    </div>
                                                 </div>
                                                 <div className="row col-12 col-sm-2 mx-0 mb-0 px-0 px-sm-25">
                                                     <div className="d-block d-sm-none col-4 p-3 bg-black bg-opacity-5 text-black text-opacity-45">
                                                         目標裝置名稱
                                                     </div>
-                                                    <h5 className="col-8 col-sm-12 p-3 p-sm-0 lh-base">
+                                                    <div className="col-8 col-sm-12 p-3 p-sm-0 lh-base">
                                                         {
                                                             destinationDevice?.name
                                                         }
-                                                    </h5>
+                                                    </div>
                                                 </div>
                                                 <div className="row col-12 col-sm-1 mx-0 mb-0 px-0 px-sm-25">
                                                     <div className="d-block d-sm-none col-4 p-3 bg-black bg-opacity-5 text-black text-opacity-45">
                                                         目標 Pin
                                                     </div>
-                                                    <h5 className="col-8 col-sm-12 p-3 p-sm-0 lh-base">
+                                                    <div className="col-8 col-sm-12 p-3 p-sm-0 lh-base">
                                                         {destinationPin}
-                                                    </h5>
+                                                    </div>
                                                 </div>
                                                 <div className="row col-12 col-sm-1 mx-0 mb-0 px-0 px-sm-25">
                                                     <div className="d-block d-sm-none col-4 p-3 bg-black bg-opacity-5 text-black text-opacity-45">

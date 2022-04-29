@@ -16,4 +16,5 @@ export interface TriggerItem {
     destinationDeviceSourceState: number;
     destinationDeviceTargetState: number;
     destinationPin: string;
+    name: string;
 }

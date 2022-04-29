@@ -31,6 +31,7 @@ namespace Homo.IotApi
 
         [Required]
         public TRIGGER_OPERATOR Operator { get; set; }
+        public string Name { get; set; }
 
     }
 }

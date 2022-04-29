@@ -7,20 +7,56 @@ $user-height: 94px;
 
     &.open {
         .head-nav {
-            max-width: $nav-w;
+            width: $nav-open-w;
             transition: 0.3s ease-in-out;
             transform: translateX(0);
             overflow: hidden;
             z-index: $nav-z-index;
         }
-    }
 
-    .logo-block {
-        width: $nav-w;
+        .text-block {
+            max-width: none;
+            max-height: none;
+            visibility: visible;
+            overflow: hidden;
+        }
+
+        .logo-block,
+        .item-block,
+        .user-block {
+            width: $nav-open-w;
+        }
+
+        .logo-block {
+            justify-content: space-between;
+            padding: 1.5rem 1.75rem;
+        }
+
+        .item-block {
+            .item {
+                justify-content: flex-start;
+                .text-block {
+                    padding-left: 0.75rem;
+                }
+            }
+        }
+
+        .user-block {
+            justify-content: space-between;
+            padding: 0 1rem;
+        }
+
+        .hamburger-open {
+            display: none;
+        }
+
+        .hamburger-close {
+            display: block;
+        }
     }
 
     .head-nav {
-        max-width: 0;
+        width: 80px;
         height: 100vh;
         top: 0;
         left: 0;
@@ -29,16 +65,25 @@ $user-height: 94px;
         overflow: hidden;
         z-index: $nav-z-index;
         position: relative;
+    }
+
+    .item-block {
+        height: calc(100vh - #{$logo-height} - #{$user-height});
+        padding: 0 1rem;
+        overflow: scroll;
 
         .item {
-            width: $nav-w;
-            height: calc(100vh - $logo-height - $user-height);
-            overflow: scroll;
-
-            .selected {
-                background: $primary-800;
-            }
+            justify-content: center;
         }
+
+        .selected {
+            background: $primary-800;
+        }
+    }
+
+    .logo-block {
+        justify-content: center;
+        padding: 1rem;
     }
 
     .logo {
@@ -50,6 +95,25 @@ $user-height: 94px;
         }
     }
 
+    .user-block {
+        justify-content: center;
+    }
+
+    .text-block {
+        max-width: 0;
+        max-height: 0;
+        visibility: hidden;
+        overflow: hidden;
+    }
+
+    .hamburger-open {
+        display: block;
+    }
+
+    .hamburger-close {
+        display: none;
+    }
+
     @include media-breakpoint-down(md) {
         position: fixed;
         top: 0;
@@ -58,17 +122,27 @@ $user-height: 94px;
         z-index: $mobile-header-z-index;
 
         .top-nav {
-            z-index: $nav-z-index;
+            z-index: $mobile-header-z-index;
         }
 
         .head-nav {
-            display: none;
+            width: 0;
             position: absolute;
+        }
+
+        .menu {
+            position: absolute;
+            top: 0;
         }
 
         &.open {
             .head-nav {
-                display: block;
+                width: $nav-open-w;
+            }
+
+            .hamburger-open,
+            .hamburger-close {
+                display: none;
             }
 
             .space {

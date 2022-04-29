@@ -16,6 +16,7 @@ const PageTitle = (props: {
     secondaryButtonCallback?: () => void;
     primaryButtonIcon?: string;
     primaryButtonClassName?: string;
+    secondaryButtonClassName?: string;
     secondaryButtonIcon?: string;
 }) => {
     const {
@@ -30,6 +31,7 @@ const PageTitle = (props: {
         secondaryButtonWording,
         primaryButtonIcon,
         primaryButtonClassName,
+        secondaryButtonClassName,
         secondaryButtonIcon,
     } = props;
     const isOpen = useAppSelector(selectMenu).menu.isOpen;
@@ -41,7 +43,7 @@ const PageTitle = (props: {
 
     return (
         <div className="page-title" data-testid="page-title">
-            <div className="w-100 d-flex align-items-center px-45 pt-4">
+            <div className="w-100 d-flex align-items-center px-45 pt-4 mb-45">
                 <div
                     role="button"
                     className={`d-none hamburger p-2 me-3 ${
@@ -71,34 +73,33 @@ const PageTitle = (props: {
 
                         <div className="d-flex">
                             <button
+                                onClick={secondaryButtonCallback}
+                                className={`${
+                                    secondaryButtonVisible ? ' me-3' : 'd-none'
+                                } ${
+                                    secondaryButtonClassName ||
+                                    'btn btn-secondary'
+                                } `}
+                            >
+                                <img
+                                    className="icon"
+                                    src={secondaryButtonIcon || refreshIcon}
+                                />
+                                <div>{secondaryButtonWording}</div>
+                            </button>
+                            <button
                                 onClick={primaryButtonCallback}
                                 className={`${
                                     primaryButtonVisible ? '' : 'd-none'
                                 } ${
-                                    primaryButtonClassName || 'bg-light'
-                                } d-flex align-items-center btn rounded-pill px-3 py-2`}
+                                    primaryButtonClassName || 'btn btn-primary'
+                                } `}
                             >
                                 <img
-                                    className="icon pe-2"
-                                    src={primaryButtonIcon || refreshIcon}
+                                    className="icon"
+                                    src={primaryButtonIcon || plusIcon}
                                 />
-                                <div className="lh-1 py-1 fw-bold">
-                                    {primaryButtonWording}
-                                </div>
-                            </button>
-                            <button
-                                onClick={secondaryButtonCallback}
-                                className={`${
-                                    secondaryButtonVisible ? '' : 'd-none'
-                                } d-flex align-items-center btn bg-light-blue text-white border border-light-blue rounded-pill ms-3  px-3 py-2`}
-                            >
-                                <img
-                                    className="icon pe-2"
-                                    src={secondaryButtonIcon || plusIcon}
-                                />
-                                <div className="lh-1 py-1 fw-bold">
-                                    {secondaryButtonWording}
-                                </div>
+                                <div>{primaryButtonWording}</div>
                             </button>
                         </div>
                     </div>

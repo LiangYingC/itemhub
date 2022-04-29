@@ -1,6 +1,3 @@
-@import '../../css/common.scss';
-@import '../../css/variables.scss';
-
 .dashboard {
     .content {
         @include media-breakpoint-down(md) {

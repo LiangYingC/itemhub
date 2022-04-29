@@ -1,16 +1,5 @@
-@import '../../css/overwrite.scss';
-
 .devices {
     $status-dot-size: 6px;
-    .filter {
-        max-width: 480px;
-        @include media-breakpoint-down(md) {
-            max-width: none;
-        }
-        button {
-            margin-left: -2px;
-        }
-    }
     .tag {
         width: 62px;
     }
@@ -20,7 +9,7 @@
     }
     .devices-list {
         > .row:hover {
-            background: rgba($light-blue, 0.04);
+            background: rgba($primary, 0.04);
         }
     }
 }

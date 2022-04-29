@@ -5,6 +5,7 @@ import oauthClientsReducer from './reducers/oauth-clients.reducer';
 import triggersReducer from './reducers/triggers.reducer';
 import pinsReducer from './reducers/pins.reducer';
 import menuReducer from './reducers/menu.reducer';
+import toasterReducer from './reducers/toaster.reducer';
 
 const store = configureStore({
     reducer: {
@@ -14,6 +15,7 @@ const store = configureStore({
         triggers: triggersReducer,
         pins: pinsReducer,
         menu: menuReducer,
+        toasters: toasterReducer,
     },
 });
 

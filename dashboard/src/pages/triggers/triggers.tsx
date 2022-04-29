@@ -343,7 +343,7 @@ const Triggers = () => {
                                                                 id
                                                             )}
                                                         />
-                                                        {name}
+                                                        {name || '--'}
                                                     </label>
                                                 </div>
                                                 <div className="row col-12 col-sm-2 mx-0 mb-0 px-0 px-sm-25">

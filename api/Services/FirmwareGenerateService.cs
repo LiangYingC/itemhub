@@ -56,6 +56,7 @@ namespace Homo.IotApi
             {
                 string pinString = item.Pin;
                 int pinNumber = DevicePinHelper.GetPinNumber(device.Microcontroller.GetValueOrDefault(), pinString);
+
                 pins.Add(pinTemplate.Replace("{PIN_NUMBER}", pinNumber.ToString()).Replace("{PIN_STRING}", pinString).Replace("{PIN_MODE}", item.Mode.ToString()));
             });
 
@@ -74,6 +75,7 @@ namespace Homo.IotApi
             {
                 zipFile.Password = zipPassword;
             }
+
             zipFile.AddDirectory(zipSourcePath);
             zipFile.Save(firmwareZipPath);
 

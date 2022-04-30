@@ -10,6 +10,12 @@ namespace Homo.IotApi
     {
         public static int GetPinNumber(DTOs.MICROCONTROLLER mcu, string pinString)
         {
+            Dictionary<string, int> pins = DevicePinDictionary[mcu.ToString()];
+            if (pins == null || !pins.ContainsKey(pinString))
+            {
+                return 0;
+            }
+
             return DevicePinDictionary[mcu.ToString()][pinString];
         }
 

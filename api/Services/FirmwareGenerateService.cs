@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -30,27 +31,42 @@ namespace Homo.IotApi
             IotDbContext dbContext = new IotDbContext(builder.Options);
 
             Device device = DeviceDataservice.GetOne(dbContext, ownerId, deviceId);
+            List<DevicePin> devicePins = DevicePinDataservice.GetList(dbContext, ownerId, deviceId);
 
             if (device.Microcontroller == null)
             {
                 // no microcontroller
-                // return new { message = "microcontroller is null" };
+                // todo: manually throw a error to error platform
             }
 
             string mcuName = device.Microcontroller.ToString().ToLower().Replace("_", "-");
             string microcontrollerFirmwareTemplatePath = $"{firmwareTemplatePath}/{mcuName}";
             string folderName = CryptographicHelper.GetSpecificLengthRandomString(32, true, false);
             string firmwareZipPath = $"{staticPath}/firmware/{folderName}.zip";
-            string destPath = $"{staticPath}/firmware/{folderName}";
-            string inoPath = $"{destPath}/{mcuName}.ino";
+            string destPath = $"{staticPath}/firmware/{folderName}/{folderName}";
+            string zipSourcePath = $"{staticPath}/firmware/{folderName}";
+            string sourceInoPath = $"{destPath}/{mcuName}.ino";
+            string inoPath = $"{destPath}/{folderName}.ino";
 
             // copy to static 
             CopyDirectory(microcontrollerFirmwareTemplatePath, destPath, true);
+            string pinTemplate = "pins.push_back(ItemhubPin({PIN_NUMBER}, \"{PIN_STRING}\", {PIN_MODE}))";
+            List<string> pins = new List<string>();
+            devicePins.ForEach(item =>
+            {
+                string pinString = item.Pin;
+                int pinNumber = DevicePinHelper.GetPinNumber(device.Microcontroller.GetValueOrDefault(), pinString);
+                pins.Add(pinTemplate.Replace("{PIN_NUMBER}", pinNumber.ToString()).Replace("{PIN_STRING}", pinString).Replace("{PIN_MODE}", item.Mode.ToString()));
+            });
 
-            string inoTemplate = System.IO.File.ReadAllText(inoPath);
+            string inoTemplate = System.IO.File.ReadAllText(sourceInoPath);
+
             inoTemplate = inoTemplate.Replace("{CLIENT_ID}", clientId);
             inoTemplate = inoTemplate.Replace("{CLIENT_SECRET}", clientSecret);
+            inoTemplate = inoTemplate.Replace("{PINS}", String.Join(";", pins));
+
             System.IO.File.WriteAllText(inoPath, inoTemplate);
+            System.IO.File.Delete(sourceInoPath);
 
             // zip
             var zipFile = new ZipFile();
@@ -58,11 +74,11 @@ namespace Homo.IotApi
             {
                 zipFile.Password = zipPassword;
             }
-            zipFile.AddDirectory(destPath);
+            zipFile.AddDirectory(zipSourcePath);
             zipFile.Save(firmwareZipPath);
 
             // archived source firmware
-            System.IO.Directory.Move(destPath, $"{staticPath}/archived/{folderName}");
+            System.IO.Directory.Move(zipSourcePath, $"{staticPath}/archived/{folderName}");
 
             // countdown 10 mins then remove zip file
             var tokenSource = new CancellationTokenSource();

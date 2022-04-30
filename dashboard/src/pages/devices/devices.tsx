@@ -134,6 +134,7 @@ const Devices = () => {
             }, 3000);
         } else if (downloadFirmwareHttpStatus === 200) {
             setIsFirmwarePrepare(false);
+            setShouldBeBundledId(0);
             retryDownloadFirmwareCountRef.current = 0;
         }
     }, [responseOfDownloadFirmware]);

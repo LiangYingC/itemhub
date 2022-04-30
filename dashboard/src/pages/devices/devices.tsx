@@ -17,7 +17,6 @@ import { useDeleteDevicesApi } from '@/hooks/apis/devices.hook';
 import { RESPONSE_STATUS } from '@/constants/api';
 import { dialogActions, DialogTypeEnum } from '@/redux/reducers/dialog.reducer';
 import { useDispatch } from 'react-redux';
-import { useDialog } from '@/contexts/dialog.context';
 
 const Devices = () => {
     const query = useQuery();
@@ -99,21 +98,6 @@ const Devices = () => {
             })
         );
     };
-
-    /** Test OpenDialog By Context */
-    const { openDialog } = useDialog();
-    useEffect(() => {
-        openDialog({
-            message: '請再次確認要刪除',
-            title: 'Title Prompt',
-            type: DialogTypeEnum.PROMPT,
-            checkedMessage: 'DELETE',
-            promptInvalidMessage: 'error message',
-            callback: () => {
-                console.log('prompt');
-            },
-        });
-    }, []);
 
     return (
         <div className="devices" data-testid="devices">

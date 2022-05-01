@@ -134,11 +134,13 @@ const Triggers = () => {
         getTriggersApi();
     }, [page]);
 
+    const [singleDeletedId, setSingleDeletedId] = useState(0);
     const [selectedIds, setSelectedIds] = useState(Array<number>());
 
     const isSelectAll =
         filterTriggersLength !== 0 &&
         selectedIds.length === filterTriggersLength;
+
     const toggleSelectAll = () => {
         if (selectedIds.length === filterTriggersLength) {
             setSelectedIds([]);
@@ -146,9 +148,6 @@ const Triggers = () => {
             setSelectedIds(filteredTriggers.map(({ id }) => id));
         }
     };
-
-    const { isDeletingTriggers, deleteTriggersApi, deleteTriggersResponse } =
-        useDeleteTriggersApi(selectedIds);
 
     const updateSelectedIds = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedIds((previous) => {
@@ -167,6 +166,33 @@ const Triggers = () => {
         });
     };
 
+    const {
+        isDeletingTriggers: isDeletingSingleTrigger,
+        deleteTriggersApi: deleteSingleTriggerApi,
+        deleteTriggersResponse: deleteSingleTriggerResponse,
+    } = useDeleteTriggersApi([singleDeletedId]);
+
+    const { isDeletingTriggers, deleteTriggersApi, deleteTriggersResponse } =
+        useDeleteTriggersApi(selectedIds);
+
+    const confirmToDeleteSingleTrigger = ({
+        id,
+        name,
+    }: {
+        id: number;
+        name: string;
+    }) => {
+        setSingleDeletedId(id);
+        if (
+            prompt(`請再次輸入 DELETE，藉此刪除 ${name || id}`) === 'DELETE' &&
+            !isDeletingSingleTrigger
+        ) {
+            deleteSingleTriggerApi();
+        } else {
+            alert('輸入錯誤，請再次嘗試');
+        }
+    };
+
     const confirmToDeleteTriggers = () => {
         if (
             prompt('請再次輸入 delete，藉此執行刪除') === 'delete' &&
@@ -181,6 +207,15 @@ const Triggers = () => {
     const jumpToCreatePage = () => {
         navigate('create');
     };
+
+    useEffect(() => {
+        if (
+            deleteSingleTriggerResponse &&
+            deleteSingleTriggerResponse.status === RESPONSE_STATUS.OK
+        ) {
+            getTriggersApi();
+        }
+    }, [deleteSingleTriggerResponse, getTriggersApi]);
 
     useEffect(() => {
         if (
@@ -414,9 +449,13 @@ const Triggers = () => {
                                                         <button
                                                             className="btn mb-3 p-0 bg-transparent"
                                                             onClick={() => {
-                                                                // TODO: 實作 delete on trigger api
+                                                                confirmToDeleteSingleTrigger(
+                                                                    { id, name }
+                                                                );
                                                             }}
-                                                            disabled={false}
+                                                            disabled={
+                                                                isDeletingSingleTrigger
+                                                            }
                                                         >
                                                             <img
                                                                 src={trashIcon}

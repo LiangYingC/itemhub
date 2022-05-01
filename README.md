@@ -2,9 +2,6 @@
 
 目前總共有兩個專案項目，分別為：
 
-- Website : 前台官網，前端位於 [website 資料夾](./website)中，API 端位於 [api 資料夾](./api)中。
-- Dashboard : 後台系統，前端位於 [dashboard 資料夾](./dashboard)中，API 端位於 [api 資料夾](./api)中。
-
 ```
 .
 ├── website         (負責認證, 金流, 訂閱, 行銷)

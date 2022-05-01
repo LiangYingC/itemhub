@@ -13,6 +13,7 @@ const Toaster = () => {
     const toasters = useAppSelector(selectToaster);
     const previousToastersRef = useRef<ToasterState[]>([]);
     const dispatch = useDispatch();
+
     useEffect(() => {
         const unSetupToasters = toasters.filter(
             (item) =>
@@ -40,7 +41,7 @@ const Toaster = () => {
         dispatch(
             toasterActions.changeOneState({
                 id: item.id,
-                isShow: true,
+                isShow: false,
             })
         );
         setTimeout(() => {

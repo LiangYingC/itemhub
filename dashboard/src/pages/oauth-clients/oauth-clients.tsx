@@ -35,9 +35,9 @@ const OauthClients = () => {
     const [isSelectAll, setIsSelectAll] = useState(false);
     const hasOauthClientsRef = useRef(false);
     const [
-        pageTitlePrimaryButtonClassName,
+        pageTitleSecondaryButtonClassName,
         setPageTitlePrimaryButtonClassName,
-    ] = useState('bg-danger text-white border border-danger disabled');
+    ] = useState('btn btn-danger disabled');
 
     const { isLoading, fetchApi } = useGetOauthClients({
         page,
@@ -120,12 +120,13 @@ const OauthClients = () => {
                 );
                 newSelectedIds.splice(index, 1);
             }
-            let pageTitlePrimaryButtonClassName =
-                'bg-danger border border-danger text-white';
+            let pageTitleSecondaryButtonClassName = 'btn btn-danger';
             if (newSelectedIds.length === 0) {
-                pageTitlePrimaryButtonClassName += ' disabled';
+                pageTitleSecondaryButtonClassName += ' disabled';
             }
-            setPageTitlePrimaryButtonClassName(pageTitlePrimaryButtonClassName);
+            setPageTitlePrimaryButtonClassName(
+                pageTitleSecondaryButtonClassName
+            );
             return newSelectedIds;
         });
     };
@@ -179,15 +180,15 @@ const OauthClients = () => {
             <PageTitle
                 title="oAuthClient 列表"
                 primaryButtonVisible
-                primaryButtonWording="刪除選取"
-                primaryButtonCallback={deleteMultiple}
-                primaryButtonIcon={lightTrashIcon}
-                primaryButtonClassName={pageTitlePrimaryButtonClassName}
+                primaryButtonWording="新增 oAuthClient"
+                primaryButtonCallback={jumpToCreatePage}
+                secondaryButtonIcon={lightTrashIcon}
+                secondaryButtonClassName={pageTitleSecondaryButtonClassName}
                 secondaryButtonVisible
-                secondaryButtonWording="新增 oAuthClient"
-                secondaryButtonCallback={jumpToCreatePage}
+                secondaryButtonWording="刪除選取"
+                secondaryButtonCallback={deleteMultiple}
             />
-            <div className="card mt-3 mx-4 p-45">
+            <div className="card">
                 {isLoading || oauthClients === null ? (
                     <div>Loading</div>
                 ) : (
@@ -205,12 +206,10 @@ const OauthClients = () => {
                             </div>
                             <button
                                 onClick={jumpToCreatePage}
-                                className="d-flex align-items-center btn bg-light-blue text-white border border-light-blue rounded-pill mx-auto mt-3 px-3 py-2"
+                                className="btn btn-primary mx-auto mt-3 "
                             >
                                 <img className="icon pe-2" src={plusIcon} />
-                                <div className="lh-1 py-1 fw-bold">
-                                    新增 oAuthClient
-                                </div>
+                                <div className="">新增 oAuthClient</div>
                             </button>
                         </div>
                         <div

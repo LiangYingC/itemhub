@@ -2,13 +2,17 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { RESPONSE_STATUS } from '@/constants/api';
 import { useQuery } from '@/hooks/query.hook';
-import { useAppSelector } from '@/hooks/redux.hook';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux.hook';
 import {
     useGetTriggersApi,
     useDeleteTriggersApi,
 } from '@/hooks/apis/triggers.hook';
 import { selectTriggers } from '@/redux/reducers/triggers.reducer';
 import { selectUniversal } from '@/redux/reducers/universal.reducer';
+import {
+    toasterActions,
+    ToasterTypeEnum,
+} from '@/redux/reducers/toaster.reducer';
 import { ArrayHelpers } from '@/helpers/array.helper';
 import { TriggerItem } from '@/types/triggers.type';
 import Pagination from '@/components/pagination/pagination';
@@ -51,14 +55,12 @@ const filterTriggers = ({
 const Triggers = () => {
     const navigate = useNavigate();
     const query = useQuery();
-    const dispatch = useDispatch();
 
     const limit = Number(query.get('limit') || 5);
     const page = Number(query.get('page') || 1);
 
-    const [triggerName, setTriggerName] = useState(
-        query.get('deviceName') || ''
-    );
+    const dispatch = useAppDispatch();
+    const [triggerName, setTriggerName] = useState(query.get('name') || '');
     const { triggerOperators } = useAppSelector(selectUniversal);
 
     const sourceDeviceNameOptionsRef = useRef<string[]>([]);
@@ -127,34 +129,35 @@ const Triggers = () => {
         sourceDeviceNameFilter,
         destinationDeviceNameFilter,
     });
+    const filterTriggersLength = filteredTriggers.length;
 
-    /**
-     *  TODO: Get triggers api 之後會實作 search trigger name 功能，實作後這邊要多傳 triggerName 進去篩選
-     * */
     const { isGettingTriggers, getTriggersApi } = useGetTriggersApi({
         page,
         limit,
+        name: triggerName,
         sourceDeviceName: sourceDeviceNameFilter,
         destinationDeviceName: destinationDeviceNameFilter,
     });
 
     useEffect(() => {
         getTriggersApi();
-    }, [getTriggersApi]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [page]);
 
+    const [deletedOneId, setDeletedOneId] = useState(0);
     const [selectedIds, setSelectedIds] = useState(Array<number>());
 
-    const isSelectAll = selectedIds.length === filteredTriggers.length;
+    const isSelectAll =
+        filterTriggersLength !== 0 &&
+        selectedIds.length === filterTriggersLength;
+
     const toggleSelectAll = () => {
-        if (selectedIds.length === filteredTriggers.length) {
+        if (selectedIds.length === filterTriggersLength) {
             setSelectedIds([]);
         } else {
             setSelectedIds(filteredTriggers.map(({ id }) => id));
         }
     };
-
-    const { isDeletingTriggers, deleteTriggersApi, deleteTriggersResponse } =
-        useDeleteTriggersApi(selectedIds);
 
     const updateSelectedIds = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedIds((previous) => {
@@ -171,6 +174,33 @@ const Triggers = () => {
             }
             return newSelectedIds;
         });
+    };
+
+    const {
+        isDeletingTriggers: isDeletingOneTrigger,
+        deleteTriggersApi: deleteOneTriggerApi,
+        deleteTriggersResponse: deleteOneTriggerResponse,
+    } = useDeleteTriggersApi([deletedOneId]);
+
+    const { isDeletingTriggers, deleteTriggersApi, deleteTriggersResponse } =
+        useDeleteTriggersApi(selectedIds);
+
+    const confirmToDeleteOneTrigger = ({
+        id,
+        name,
+    }: {
+        id: number;
+        name: string;
+    }) => {
+        setDeletedOneId(id);
+        if (
+            prompt(`請再次輸入 DELETE，藉此刪除 ${name || id}`) === 'DELETE' &&
+            !isDeletingOneTrigger
+        ) {
+            deleteOneTriggerApi();
+        } else {
+            alert('輸入錯誤，請再次嘗試');
+        }
     };
 
     const confirmToDeleteTriggers = () => {
@@ -192,25 +222,51 @@ const Triggers = () => {
 
     useEffect(() => {
         if (
+            deletedOneId &&
+            deleteOneTriggerResponse &&
+            deleteOneTriggerResponse.status === RESPONSE_STATUS.OK
+        ) {
+            dispatch(
+                toasterActions.pushOne({
+                    message: `Trigger ${deletedOneId} 已經成功刪除`,
+                    duration: 5,
+                    type: ToasterTypeEnum.INFO,
+                })
+            );
+            setDeletedOneId(0);
+            getTriggersApi();
+        }
+    }, [deleteOneTriggerResponse, deletedOneId, getTriggersApi, dispatch]);
+
+    useEffect(() => {
+        if (
+            selectedIds.length !== 0 &&
             deleteTriggersResponse &&
             deleteTriggersResponse.status === RESPONSE_STATUS.OK
         ) {
+            dispatch(
+                toasterActions.pushOne({
+                    message: '多個 Triggers 已經成功刪除',
+                    duration: 5,
+                    type: ToasterTypeEnum.INFO,
+                })
+            );
+            setSelectedIds([]);
             getTriggersApi();
         }
-    }, [deleteTriggersResponse, getTriggersApi]);
+    }, [deleteTriggersResponse, selectedIds.length, getTriggersApi, dispatch]);
 
     const [
-        pageTitlePrimaryButtonClassName,
-        setPageTitlePrimaryButtonClassName,
-    ] = useState('bg-danger text-white border border-danger disabled');
+        pageTitleSecondaryButtonClassName,
+        setPageTitleSecondaryButtonClassName,
+    ] = useState('btn btn-danger disabled');
 
     useEffect(() => {
-        let pageTitlePrimaryButtonClassName =
-            'bg-danger border border-danger text-white';
+        let pageTitleSecondaryButtonClassName = 'btn btn-danger';
         if (selectedIds.length === 0) {
-            pageTitlePrimaryButtonClassName += ' disabled';
+            pageTitleSecondaryButtonClassName += ' disabled';
         }
-        setPageTitlePrimaryButtonClassName(pageTitlePrimaryButtonClassName);
+        setPageTitleSecondaryButtonClassName(pageTitleSecondaryButtonClassName);
     }, [selectedIds]);
 
     return (
@@ -218,15 +274,15 @@ const Triggers = () => {
             <PageTitle
                 title="觸發列表"
                 primaryButtonVisible={hasTriggersRef.current}
-                primaryButtonWording="刪除選取"
-                primaryButtonCallback={confirmToDeleteTriggers}
-                primaryButtonIcon={lightTrashIcon}
-                primaryButtonClassName={pageTitlePrimaryButtonClassName}
+                primaryButtonWording="新增觸發"
+                primaryButtonCallback={jumpToCreatePage}
+                secondaryButtonIcon={lightTrashIcon}
+                secondaryButtonClassName={pageTitleSecondaryButtonClassName}
                 secondaryButtonVisible={hasTriggersRef.current}
-                secondaryButtonWording="新增觸發"
-                secondaryButtonCallback={jumpToCreatePage}
+                secondaryButtonWording="刪除選取"
+                secondaryButtonCallback={confirmToDeleteTriggers}
             />
-            <div className="mx-3 mx-sm-0 mx-xl-45 mt-4 mt-sm-0 p-3 p-sm-45 bg-white shadow-sm rounded-8">
+            <div className="card">
                 {!hasTriggersRef.current && triggers !== null ? (
                     <EmptyDataToCreateItem itemName="觸發" />
                 ) : (
@@ -307,7 +363,7 @@ const Triggers = () => {
                                                     checked={isSelectAll}
                                                     onChange={toggleSelectAll}
                                                 />
-                                                <span>觸發名稱 / ID</span>
+                                                <span>觸發名稱</span>
                                             </div>
                                         </label>
                                         <div className="col-2">來源裝置</div>
@@ -323,6 +379,7 @@ const Triggers = () => {
                                         (
                                             {
                                                 id,
+                                                name,
                                                 sourceDevice,
                                                 sourcePin,
                                                 destinationDevice,
@@ -338,9 +395,9 @@ const Triggers = () => {
                                             >
                                                 <div className="row col-12 col-sm-3 text-black text-opacity-65 h6 mx-0 mb-0 px-0 px-sm-25">
                                                     <div className="d-block d-sm-none col-4 p-3 bg-black bg-opacity-5 text-black text-opacity-45">
-                                                        觸發名稱 / ID
+                                                        觸發名稱
                                                     </div>
-                                                    <label className="col-8 col-sm-12 p-3 p-sm-0 d-flex flex-column flex-sm-row align-items-sm-center">
+                                                    <label className="col-8 col-sm-12 p-3 p-sm-0 d-flex flex-column flex-sm-row align-items-start">
                                                         <input
                                                             className="me-3 mb-3"
                                                             type="checkbox"
@@ -352,39 +409,30 @@ const Triggers = () => {
                                                                 id
                                                             )}
                                                         />
-                                                        <div className="d-flex flex-column">
-                                                            <h5 className="mb-2 mb-sm-0 lh-base">
-                                                                TODO:
-                                                                TriggerName
-                                                                尚無資料
-                                                            </h5>
-                                                            <h6 className="mb-0 lh-base text-opacity-4">
-                                                                {id}
-                                                            </h6>
-                                                        </div>
+                                                        {name || '--'}
                                                     </label>
                                                 </div>
                                                 <div className="row col-12 col-sm-2 mx-0 mb-0 px-0 px-sm-25">
                                                     <div className="d-block d-sm-none col-4 p-3 bg-black bg-opacity-5 text-black text-opacity-45">
                                                         來源裝置名稱
                                                     </div>
-                                                    <h5 className="col-8 col-sm-12 p-3 p-sm-0 lh-base">
+                                                    <div className="col-8 col-sm-12 p-3 p-sm-0 lh-base">
                                                         {sourceDevice?.name}
-                                                    </h5>
+                                                    </div>
                                                 </div>
                                                 <div className="row col-12 col-sm-1 mx-0 mb-0 px-0 px-sm-25">
                                                     <div className="d-block d-sm-none col-4 p-3 bg-black bg-opacity-5 text-black text-opacity-45">
                                                         來源 Pin
                                                     </div>
-                                                    <h5 className="col-8 col-sm-12 p-3 p-sm-0 lh-base">
+                                                    <div className="col-8 col-sm-12 p-3 p-sm-0 lh-base">
                                                         {sourcePin}
-                                                    </h5>
+                                                    </div>
                                                 </div>
                                                 <div className="row col-12 col-sm-2 mx-0 mb-0 px-0 px-sm-25">
                                                     <div className="d-block d-sm-none col-4 p-3 bg-black bg-opacity-5 text-black text-opacity-45">
                                                         條件
                                                     </div>
-                                                    <h5 className="d-flex col-8 col-sm-12 p-3 p-sm-0 lh-base">
+                                                    <div className="d-flex col-8 col-sm-12 p-3 p-sm-0 lh-base">
                                                         <span className="pe-1">
                                                             {
                                                                 triggerOperators[
@@ -395,25 +443,25 @@ const Triggers = () => {
                                                         <span>
                                                             {sourceThreshold}
                                                         </span>
-                                                    </h5>
+                                                    </div>
                                                 </div>
                                                 <div className="row col-12 col-sm-2 mx-0 mb-0 px-0 px-sm-25">
                                                     <div className="d-block d-sm-none col-4 p-3 bg-black bg-opacity-5 text-black text-opacity-45">
                                                         目標裝置名稱
                                                     </div>
-                                                    <h5 className="col-8 col-sm-12 p-3 p-sm-0 lh-base">
+                                                    <div className="col-8 col-sm-12 p-3 p-sm-0 lh-base">
                                                         {
                                                             destinationDevice?.name
                                                         }
-                                                    </h5>
+                                                    </div>
                                                 </div>
                                                 <div className="row col-12 col-sm-1 mx-0 mb-0 px-0 px-sm-25">
                                                     <div className="d-block d-sm-none col-4 p-3 bg-black bg-opacity-5 text-black text-opacity-45">
                                                         目標 Pin
                                                     </div>
-                                                    <h5 className="col-8 col-sm-12 p-3 p-sm-0 lh-base">
+                                                    <div className="col-8 col-sm-12 p-3 p-sm-0 lh-base">
                                                         {destinationPin}
-                                                    </h5>
+                                                    </div>
                                                 </div>
                                                 <div className="row col-12 col-sm-1 mx-0 mb-0 px-0 px-sm-25">
                                                     <div className="d-block d-sm-none col-4 p-3 bg-black bg-opacity-5 text-black text-opacity-45">
@@ -431,9 +479,13 @@ const Triggers = () => {
                                                         <button
                                                             className="btn mb-3 p-0 bg-transparent"
                                                             onClick={() => {
-                                                                // TODO: 實作 delete on trigger api
+                                                                confirmToDeleteOneTrigger(
+                                                                    { id, name }
+                                                                );
                                                             }}
-                                                            disabled={false}
+                                                            disabled={
+                                                                isDeletingOneTrigger
+                                                            }
                                                         >
                                                             <img
                                                                 src={trashIcon}

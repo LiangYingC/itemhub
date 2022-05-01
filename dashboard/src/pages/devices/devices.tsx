@@ -104,14 +104,13 @@ const Devices = () => {
             <PageTitle
                 title="裝置列表"
                 primaryButtonVisible={hasDevicesRef.current}
-                primaryButtonWording="重新整理"
-                primaryButtonClassName="bg-black bg-opacity-10 text-black text-opacity-65 border border-black border-opacity-10"
-                primaryButtonCallback={refresh}
+                primaryButtonWording="新增裝置"
+                primaryButtonCallback={jumpToCreatePage}
                 secondaryButtonVisible={hasDevicesRef.current}
-                secondaryButtonWording="新增裝置"
-                secondaryButtonCallback={jumpToCreatePage}
+                secondaryButtonWording="重新整理"
+                secondaryButtonCallback={refresh}
             />
-            <div className="bg-white shadow-sm mx-3 mx-sm-0 mx-xl-45 mt-4 mt-sm-0 p-3 p-sm-45 rounded-8">
+            <div className="card">
                 {!hasDevicesRef.current && devices !== null ? (
                     <EmptyDataToCreateItem itemName="裝置" />
                 ) : (
@@ -169,20 +168,13 @@ const Devices = () => {
                                                     </div>
                                                     <div className="col-8 col-sm-12 p-3 p-sm-0">
                                                         <div
-                                                            className={`rounded-pill tag text-center py-1 d-flex align-items-center justify-content-center ${
+                                                            className={`tag ${
                                                                 online
-                                                                    ? 'bg-green bg-opacity-10 text-green'
-                                                                    : 'bg-black bg-opacity-5 text-black text-opacity-45 fw-normal'
+                                                                    ? 'tag-green'
+                                                                    : 'tag-grey'
                                                             }`}
                                                         >
-                                                            <div
-                                                                className={`dot rounded-circle d-block me-2 ${
-                                                                    online
-                                                                        ? 'bg-green'
-                                                                        : 'bg-black bg-opacity-45'
-                                                                }`}
-                                                            />
-                                                            <div className="h6 mb-0">
+                                                            <div>
                                                                 {online
                                                                     ? '上線'
                                                                     : '離線'}

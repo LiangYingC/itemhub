@@ -40,7 +40,7 @@ const Dialog = () => {
         );
     }, [isOpen]);
 
-    const buttonBehavior = () => {
+    const doFunction = () => {
         if (type === DialogTypeEnum.ALERT) {
             alert();
         } else if (type === DialogTypeEnum.CONFIRM) {
@@ -121,7 +121,7 @@ const Dialog = () => {
                                 promptInputValue === checkedMessage
                             );
                             if (event.key === 'Enter') {
-                                buttonBehavior();
+                                doFunction();
                             }
                         }}
                         defaultValue={promptInputValue}
@@ -153,7 +153,7 @@ const Dialog = () => {
                     <button
                         className={`btn btn-danger ${buttonClassName}`}
                         disabled={!buttonAvaible}
-                        onClick={buttonBehavior}
+                        onClick={doFunction}
                     >
                         確認
                     </button>

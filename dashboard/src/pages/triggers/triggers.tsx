@@ -311,13 +311,13 @@ const Triggers = () => {
                                         (
                                             {
                                                 id,
+                                                name,
                                                 sourceDevice,
                                                 sourcePin,
                                                 destinationDevice,
                                                 destinationPin,
                                                 operator,
                                                 sourceThreshold,
-                                                name,
                                             },
                                             index
                                         ) => (

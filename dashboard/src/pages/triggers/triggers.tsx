@@ -120,6 +120,7 @@ const Triggers = () => {
         sourceDeviceNameFilter,
         destinationDeviceNameFilter,
     });
+    const filterTriggersLength = filteredTriggers.length;
 
     const { isGettingTriggers, getTriggersApi } = useGetTriggersApi({
         page,
@@ -135,9 +136,11 @@ const Triggers = () => {
 
     const [selectedIds, setSelectedIds] = useState(Array<number>());
 
-    const isSelectAll = selectedIds.length === filteredTriggers.length;
+    const isSelectAll =
+        filterTriggersLength !== 0 &&
+        selectedIds.length === filterTriggersLength;
     const toggleSelectAll = () => {
-        if (selectedIds.length === filteredTriggers.length) {
+        if (selectedIds.length === filterTriggersLength) {
             setSelectedIds([]);
         } else {
             setSelectedIds(filteredTriggers.map(({ id }) => id));

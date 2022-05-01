@@ -33,7 +33,6 @@ const Dialog = () => {
         if (isOpen && type === DialogTypeEnum.PROMPT) {
             promptInputRef.current?.focus();
         } else if (isOpen) {
-            console.log('focus');
             cardRef.current?.focus();
         }
         setButtonAvaible(

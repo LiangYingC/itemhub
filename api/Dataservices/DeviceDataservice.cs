@@ -77,7 +77,7 @@ namespace Homo.IotApi
             );
         }
 
-        public static Device Create(IotDbContext dbContext, long ownerId, DTOs.Device dto)
+        public static Device Create(IotDbContext dbContext, long ownerId, DTOs.CreateDevice dto)
         {
             Device record = new Device();
             foreach (var propOfDTO in dto.GetType().GetProperties())
@@ -104,7 +104,7 @@ namespace Homo.IotApi
             dbContext.SaveChanges();
         }
 
-        public static void Update(IotDbContext dbContext, long ownerId, long id, DTOs.Device dto)
+        public static void Update(IotDbContext dbContext, long ownerId, long id, DTOs.CreateDevice dto)
         {
             Device record = dbContext.Device.Where(x => x.Id == id && x.OwnerId == ownerId).FirstOrDefault();
             foreach (var propOfDTO in dto.GetType().GetProperties())

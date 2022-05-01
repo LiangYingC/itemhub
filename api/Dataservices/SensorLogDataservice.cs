@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Homo.IotApi
 {
-    public class DevicePinSensorDataservice
+    public class SensorLogDataservice
     {
 
         public static long? DeleteExpiredDataAndGetLatestItemId(IotDbContext dbContext, int page = 1, int limit = 50, long? latestItemId = null)

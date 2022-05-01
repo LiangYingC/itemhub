@@ -6,73 +6,85 @@ namespace Homo.IotApi
 {
     public class DevicePinDataservice
     {
-        public static List<DevicePin> GetList(IotDbContext dbContext, long ownerId, long deviceId)
+        public static List<DTOs.DevicePin> GetList(IotDbContext dbContext, long ownerId, List<long> deviceIds, int page, int limit)
         {
-            IEnumerable<DevicePin> fromSensorData = dbContext.DevicePinSensor
-                .Where(x =>
-                    x.DeletedAt == null
-                    && x.DeviceId == deviceId
-                    && x.OwnerId == ownerId
-                )
-                .GroupBy(x => new
+            return _GetQueryableDevicePins(dbContext, null, ownerId, deviceIds, null, null)
+                .Skip((page - 1) * limit)
+                .Take(limit)
+                .Select(x => new DTOs.DevicePin()
                 {
-                    x.DeviceId,
-                    x.Pin
+                    Id = x.Pin.Id,
+                    CreatedAt = x.Pin.CreatedAt,
+                    EditedAt = x.Pin.EditedAt,
+                    OwnerId = x.Pin.OwnerId,
+                    DeletedAt = x.Pin.DeletedAt,
+                    Pin = x.Pin.Pin,
+                    Mode = x.Pin.Mode,
+                    Name = x.Pin.Name,
+                    Value = x.Pin.Value,
+                    DeviceId = x.Pin.DeviceId,
+                    Device = x.Pin.Device,
+                    LastCreatedAt = x.LastLog.CreatedAt,
+                    LastValue = x.LastLog.Value
                 })
-                .Select(g => new
-                {
-                    DeviceId = g.Key.DeviceId,
-                    Pin = g.Key.Pin,
-                    LastId = g.Max(x => x.Id),
-                    CreatedAt = g.Max(x => x.CreatedAt)
-                })
-                .Join(dbContext.DevicePinSensor, x => x.LastId, y => y.Id, (x, y) => new DevicePin
-                {
-                    DeviceId = x.DeviceId,
-                    Pin = x.Pin,
-                    Mode = DEVICE_MODE.SENSOR,
-                    Value = (decimal)y.Value,
-                    CreatedAt = y.CreatedAt,
-                    OwnerId = ownerId
-                });
-
-
-            IEnumerable<DevicePin> fromSwitch = dbContext.DevicePinSwitch
-                .Where(x => x.DeletedAt == null
-                    && x.DeviceId == deviceId
-                    && x.OwnerId == ownerId
-                )
-                .Select(x => new DevicePin()
-                {
-                    DeviceId = x.DeviceId,
-                    Pin = x.Pin,
-                    Mode = DEVICE_MODE.SWITCH,
-                    Value = (decimal)x.Value,
-                    CreatedAt = null,
-                    OwnerId = x.OwnerId
-                });
-
-            return fromSensorData.Union(fromSwitch).ToList<DevicePin>().GroupJoin(dbContext.DevicePinName
-            , x => new { x.DeviceId, x.Pin, x.OwnerId }
-            , y => new { y.DeviceId, y.Pin, y.OwnerId, }
-            , (sensorGroupByDevice, devicePinNames) => new
-            {
-                SensorGroupByDevice = sensorGroupByDevice,
-                DevicePinName = devicePinNames.Where(x => x.DeletedAt == null).FirstOrDefault()?.Name
-            }).Select(x => new DevicePin()
-            {
-                DeviceId = x.SensorGroupByDevice.DeviceId,
-                Pin = x.SensorGroupByDevice.Pin,
-                Mode = x.SensorGroupByDevice.Mode,
-                Value = x.SensorGroupByDevice.Value,
-                CreatedAt = x.SensorGroupByDevice.CreatedAt,
-                Name = x.DevicePinName
-            }).ToList<DevicePin>();
+                .ToList();
         }
 
-        public static void RemoveUnuseSwitchPins(IotDbContext dbContext, long ownerId, long deviceId, List<string> usedPins)
+        public static List<DTOs.DevicePin> GetAll(IotDbContext dbContext, long ownerId, List<long> deviceIds, DEVICE_MODE? mode, string pin)
         {
-            dbContext.DevicePinSwitch.Where(x =>
+            return _GetQueryableDevicePins(dbContext, null, ownerId, deviceIds, mode, pin)
+                .Select(x => new DTOs.DevicePin()
+                {
+                    Id = x.Pin.Id,
+                    CreatedAt = x.Pin.CreatedAt,
+                    EditedAt = x.Pin.EditedAt,
+                    OwnerId = x.Pin.OwnerId,
+                    DeletedAt = x.Pin.DeletedAt,
+                    Pin = x.Pin.Pin,
+                    Mode = x.Pin.Mode,
+                    Name = x.Pin.Name,
+                    Value = x.Pin.Value,
+                    DeviceId = x.Pin.DeviceId,
+                    Device = x.Pin.Device,
+                    LastCreatedAt = x.LastLog.CreatedAt,
+                    LastValue = x.LastLog.Value
+                })
+                .ToList();
+        }
+
+        public static DevicePin Create(IotDbContext dbContext, long ownerId, long deviceId, DTOs.DevicePin dto)
+        {
+            DevicePin record = new DevicePin();
+            foreach (var propOfDTO in dto.GetType().GetProperties())
+            {
+                var value = propOfDTO.GetValue(dto);
+                var prop = record.GetType().GetProperty(propOfDTO.Name);
+                prop.SetValue(record, value);
+            }
+            record.CreatedAt = DateTime.Now;
+            record.OwnerId = ownerId;
+            record.DeviceId = deviceId;
+            dbContext.DevicePin.Add(record);
+            dbContext.SaveChanges();
+            return record;
+        }
+
+        public static DevicePin GetOne(IotDbContext dbContext, long id, long ownerId, long deviceId, DEVICE_MODE? mode, string pin)
+        {
+            return dbContext.DevicePin
+                .Where(x =>
+                    x.DeletedAt == null
+                    && x.Id == id
+                    && x.DeviceId == deviceId
+                    && x.OwnerId == ownerId // 前三項東西都要傳避免有人忘了做檢查
+                    && (mode == null || x.Mode == mode)
+                    && (pin == null || x.Pin == pin)
+                ).FirstOrDefault();
+        }
+
+        public static void RemoveUnusePins(IotDbContext dbContext, long ownerId, long deviceId, List<string> usedPins)
+        {
+            dbContext.DevicePin.Where(x =>
                 x.OwnerId == ownerId
                 && x.DeviceId == deviceId
                 && !usedPins.Contains(x.Pin)).UpdateFromQuery(x => new DevicePinSwitch()
@@ -83,37 +95,52 @@ namespace Homo.IotApi
 
         public static void UpdatePinName(IotDbContext dbContext, long ownerId, long deviceId, string pin, string name)
         {
-            dbContext.DevicePinName.Where(x =>
+            dbContext.DevicePin.Where(x =>
                 x.OwnerId == ownerId
                 && x.DeviceId == deviceId
                 && x.Pin == pin
-            ).UpdateFromQuery(x => new DevicePinName()
+            ).UpdateFromQuery(x => new DevicePin()
             {
-                DeletedAt = DateTime.Now
+                Name = name,
+                EditedAt = DateTime.Now
             });
-
-            var newOne = new DevicePinName()
-            {
-                OwnerId = ownerId,
-                DeviceId = deviceId,
-                CreatedAt = DateTime.Now,
-                Pin = pin,
-                Name = name
-            };
-
-            dbContext.DevicePinName.Add(newOne);
-            dbContext.SaveChanges();
         }
-    }
 
-    public class DevicePin
-    {
-        public string Pin { get; set; }
-        public long DeviceId { get; set; }
-        public DEVICE_MODE Mode { get; set; }
-        public decimal Value { get; set; }
-        public DateTime? CreatedAt { get; set; }
-        public string Name { get; set; }
-        public long OwnerId { get; set; }
+        public static void UpdateValueByDeviceId(IotDbContext dbContext, long ownerId, long deviceId, string pin, decimal value)
+        {
+            dbContext.DevicePin.Where(x =>
+                x.DeviceId == deviceId
+                && x.OwnerId == ownerId
+                && x.Pin == pin
+                && x.Mode == DEVICE_MODE.SWITCH
+            ).UpdateFromQuery(x => new DevicePin()
+            {
+                Value = value,
+                EditedAt = DateTime.Now
+            });
+        }
+
+
+        private static IQueryable<DevicePinRaw> _GetQueryableDevicePins(IotDbContext dbContext, long? id, long ownerId, List<long> deviceIds, DEVICE_MODE? mode, string pin)
+        {
+            return dbContext.DevicePin.Where(x =>
+                x.DeletedAt == null
+                && (id == null || x.Id == id)
+                && (deviceIds == null || deviceIds.Contains(x.DeviceId))
+                && x.OwnerId == ownerId
+                && (mode == null || x.Mode == mode)
+                && (pin == null || x.Pin == pin)
+            ).GroupJoin(dbContext.SensorLog,
+                pin => new { pin.DeviceId, pin.OwnerId, pin.Pin },
+                log => new { log.DeviceId, log.OwnerId, log.Pin },
+                (pin, logs) => new DevicePinRaw() { Pin = pin, LastLog = logs.OrderByDescending(log => log.CreatedAt).LastOrDefault() }
+            );
+        }
+
+        public partial class DevicePinRaw
+        {
+            public DevicePin Pin { get; set; }
+            public SensorLog LastLog { get; set; }
+        }
     }
 }

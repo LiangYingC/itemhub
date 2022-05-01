@@ -46,7 +46,7 @@ namespace Homo.IotApi
         }
 
         [HttpPost]
-        public ActionResult<dynamic> create([FromBody] DTOs.Device dto, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
+        public ActionResult<dynamic> create([FromBody] DTOs.CreateDevice dto, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
             long ownerId = extraPayload.Id;
             Device rewRecord = DeviceDataservice.Create(_dbContext, ownerId, dto);
@@ -89,7 +89,7 @@ namespace Homo.IotApi
 
         [HttpPatch]
         [Route("{id}")]
-        public ActionResult<dynamic> update([FromRoute] int id, [FromBody] DTOs.Device dto, dynamic extraPayload)
+        public ActionResult<dynamic> update([FromRoute] int id, [FromBody] DTOs.CreateDevice dto, dynamic extraPayload)
         {
             long ownerId = extraPayload.Id;
             DeviceDataservice.Update(_dbContext, ownerId, id, dto);

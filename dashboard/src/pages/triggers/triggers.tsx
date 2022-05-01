@@ -2,13 +2,17 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { RESPONSE_STATUS } from '@/constants/api';
 import { useQuery } from '@/hooks/query.hook';
-import { useAppSelector } from '@/hooks/redux.hook';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux.hook';
 import {
     useGetTriggersApi,
     useDeleteTriggersApi,
 } from '@/hooks/apis/triggers.hook';
 import { selectTriggers } from '@/redux/reducers/triggers.reducer';
 import { selectUniversal } from '@/redux/reducers/universal.reducer';
+import {
+    toasterActions,
+    ToasterTypeEnum,
+} from '@/redux/reducers/toaster.reducer';
 import { ArrayHelpers } from '@/helpers/array.helper';
 import { TriggerItem } from '@/types/triggers.type';
 import Pagination from '@/components/pagination/pagination';
@@ -52,6 +56,7 @@ const Triggers = () => {
     const limit = Number(query.get('limit') || 5);
     const page = Number(query.get('page') || 1);
 
+    const dispatch = useAppDispatch();
     const [triggerName, setTriggerName] = useState(query.get('name') || '');
     const { triggerOperators } = useAppSelector(selectUniversal);
 
@@ -210,21 +215,39 @@ const Triggers = () => {
 
     useEffect(() => {
         if (
+            deletedOneId &&
             deleteOneTriggerResponse &&
             deleteOneTriggerResponse.status === RESPONSE_STATUS.OK
         ) {
+            dispatch(
+                toasterActions.pushOne({
+                    message: `Trigger ${deletedOneId} 已經成功刪除`,
+                    duration: 5,
+                    type: ToasterTypeEnum.INFO,
+                })
+            );
+            setDeletedOneId(0);
             getTriggersApi();
         }
-    }, [deleteOneTriggerResponse, getTriggersApi]);
+    }, [deleteOneTriggerResponse, deletedOneId, getTriggersApi, dispatch]);
 
     useEffect(() => {
         if (
+            selectedIds.length !== 0 &&
             deleteTriggersResponse &&
             deleteTriggersResponse.status === RESPONSE_STATUS.OK
         ) {
+            dispatch(
+                toasterActions.pushOne({
+                    message: '多個 Triggers 已經成功刪除',
+                    duration: 5,
+                    type: ToasterTypeEnum.INFO,
+                })
+            );
+            setSelectedIds([]);
             getTriggersApi();
         }
-    }, [deleteTriggersResponse, getTriggersApi]);
+    }, [deleteTriggersResponse, selectedIds.length, getTriggersApi, dispatch]);
 
     const [
         pageTitleSecondaryButtonClassName,

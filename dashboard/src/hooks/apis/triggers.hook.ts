@@ -20,11 +20,13 @@ interface GetTriggersResponse {
 export const useGetTriggersApi = ({
     page,
     limit,
+    name,
     sourceDeviceName,
     destinationDeviceName,
 }: {
     page: number;
     limit: number;
+    name: string;
     sourceDeviceName: string;
     destinationDeviceName: string;
 }) => {
@@ -43,6 +45,7 @@ export const useGetTriggersApi = ({
         queryStrings: {
             page,
             limit,
+            name,
             sourceDeviceName,
             destinationDeviceName,
         },

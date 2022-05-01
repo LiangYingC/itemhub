@@ -2,13 +2,17 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { RESPONSE_STATUS } from '@/constants/api';
 import { useQuery } from '@/hooks/query.hook';
-import { useAppSelector } from '@/hooks/redux.hook';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux.hook';
 import {
     useGetTriggersApi,
     useDeleteTriggersApi,
 } from '@/hooks/apis/triggers.hook';
 import { selectTriggers } from '@/redux/reducers/triggers.reducer';
 import { selectUniversal } from '@/redux/reducers/universal.reducer';
+import {
+    toasterActions,
+    ToasterTypeEnum,
+} from '@/redux/reducers/toaster.reducer';
 import { ArrayHelpers } from '@/helpers/array.helper';
 import { TriggerItem } from '@/types/triggers.type';
 import Pagination from '@/components/pagination/pagination';
@@ -52,6 +56,7 @@ const Triggers = () => {
     const limit = Number(query.get('limit') || 5);
     const page = Number(query.get('page') || 1);
 
+    const dispatch = useAppDispatch();
     const [triggerName, setTriggerName] = useState(query.get('name') || '');
     const { triggerOperators } = useAppSelector(selectUniversal);
 
@@ -120,34 +125,35 @@ const Triggers = () => {
         sourceDeviceNameFilter,
         destinationDeviceNameFilter,
     });
+    const filterTriggersLength = filteredTriggers.length;
 
-    /**
-     *  TODO: Get triggers api 之後會實作 search trigger name 功能，實作後這邊要多傳 triggerName 進去篩選
-     * */
     const { isGettingTriggers, getTriggersApi } = useGetTriggersApi({
         page,
         limit,
+        name: triggerName,
         sourceDeviceName: sourceDeviceNameFilter,
         destinationDeviceName: destinationDeviceNameFilter,
     });
 
     useEffect(() => {
         getTriggersApi();
-    }, [getTriggersApi]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [page]);
 
+    const [deletedOneId, setDeletedOneId] = useState(0);
     const [selectedIds, setSelectedIds] = useState(Array<number>());
 
-    const isSelectAll = selectedIds.length === filteredTriggers.length;
+    const isSelectAll =
+        filterTriggersLength !== 0 &&
+        selectedIds.length === filterTriggersLength;
+
     const toggleSelectAll = () => {
-        if (selectedIds.length === filteredTriggers.length) {
+        if (selectedIds.length === filterTriggersLength) {
             setSelectedIds([]);
         } else {
             setSelectedIds(filteredTriggers.map(({ id }) => id));
         }
     };
-
-    const { isDeletingTriggers, deleteTriggersApi, deleteTriggersResponse } =
-        useDeleteTriggersApi(selectedIds);
 
     const updateSelectedIds = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedIds((previous) => {
@@ -164,6 +170,33 @@ const Triggers = () => {
             }
             return newSelectedIds;
         });
+    };
+
+    const {
+        isDeletingTriggers: isDeletingOneTrigger,
+        deleteTriggersApi: deleteOneTriggerApi,
+        deleteTriggersResponse: deleteOneTriggerResponse,
+    } = useDeleteTriggersApi([deletedOneId]);
+
+    const { isDeletingTriggers, deleteTriggersApi, deleteTriggersResponse } =
+        useDeleteTriggersApi(selectedIds);
+
+    const confirmToDeleteOneTrigger = ({
+        id,
+        name,
+    }: {
+        id: number;
+        name: string;
+    }) => {
+        setDeletedOneId(id);
+        if (
+            prompt(`請再次輸入 DELETE，藉此刪除 ${name || id}`) === 'DELETE' &&
+            !isDeletingOneTrigger
+        ) {
+            deleteOneTriggerApi();
+        } else {
+            alert('輸入錯誤，請再次嘗試');
+        }
     };
 
     const confirmToDeleteTriggers = () => {
@@ -183,12 +216,39 @@ const Triggers = () => {
 
     useEffect(() => {
         if (
+            deletedOneId &&
+            deleteOneTriggerResponse &&
+            deleteOneTriggerResponse.status === RESPONSE_STATUS.OK
+        ) {
+            dispatch(
+                toasterActions.pushOne({
+                    message: `Trigger ${deletedOneId} 已經成功刪除`,
+                    duration: 5,
+                    type: ToasterTypeEnum.INFO,
+                })
+            );
+            setDeletedOneId(0);
+            getTriggersApi();
+        }
+    }, [deleteOneTriggerResponse, deletedOneId, getTriggersApi, dispatch]);
+
+    useEffect(() => {
+        if (
+            selectedIds.length !== 0 &&
             deleteTriggersResponse &&
             deleteTriggersResponse.status === RESPONSE_STATUS.OK
         ) {
+            dispatch(
+                toasterActions.pushOne({
+                    message: '多個 Triggers 已經成功刪除',
+                    duration: 5,
+                    type: ToasterTypeEnum.INFO,
+                })
+            );
+            setSelectedIds([]);
             getTriggersApi();
         }
-    }, [deleteTriggersResponse, getTriggersApi]);
+    }, [deleteTriggersResponse, selectedIds.length, getTriggersApi, dispatch]);
 
     const [
         pageTitleSecondaryButtonClassName,
@@ -313,13 +373,13 @@ const Triggers = () => {
                                         (
                                             {
                                                 id,
+                                                name,
                                                 sourceDevice,
                                                 sourcePin,
                                                 destinationDevice,
                                                 destinationPin,
                                                 operator,
                                                 sourceThreshold,
-                                                name,
                                             },
                                             index
                                         ) => (
@@ -413,9 +473,13 @@ const Triggers = () => {
                                                         <button
                                                             className="btn mb-3 p-0 bg-transparent"
                                                             onClick={() => {
-                                                                // TODO: 實作 delete on trigger api
+                                                                confirmToDeleteOneTrigger(
+                                                                    { id, name }
+                                                                );
                                                             }}
-                                                            disabled={false}
+                                                            disabled={
+                                                                isDeletingOneTrigger
+                                                            }
                                                         >
                                                             <img
                                                                 src={trashIcon}

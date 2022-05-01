@@ -134,7 +134,7 @@ const Triggers = () => {
         getTriggersApi();
     }, [page]);
 
-    const [singleDeletedId, setSingleDeletedId] = useState(0);
+    const [deletedOneId, setDeletedOneId] = useState(0);
     const [selectedIds, setSelectedIds] = useState(Array<number>());
 
     const isSelectAll =
@@ -167,27 +167,27 @@ const Triggers = () => {
     };
 
     const {
-        isDeletingTriggers: isDeletingSingleTrigger,
-        deleteTriggersApi: deleteSingleTriggerApi,
-        deleteTriggersResponse: deleteSingleTriggerResponse,
-    } = useDeleteTriggersApi([singleDeletedId]);
+        isDeletingTriggers: isDeletingOneTrigger,
+        deleteTriggersApi: deleteOneTriggerApi,
+        deleteTriggersResponse: deleteOneTriggerResponse,
+    } = useDeleteTriggersApi([deletedOneId]);
 
     const { isDeletingTriggers, deleteTriggersApi, deleteTriggersResponse } =
         useDeleteTriggersApi(selectedIds);
 
-    const confirmToDeleteSingleTrigger = ({
+    const confirmToDeleteOneTrigger = ({
         id,
         name,
     }: {
         id: number;
         name: string;
     }) => {
-        setSingleDeletedId(id);
+        setDeletedOneId(id);
         if (
             prompt(`請再次輸入 DELETE，藉此刪除 ${name || id}`) === 'DELETE' &&
-            !isDeletingSingleTrigger
+            !isDeletingOneTrigger
         ) {
-            deleteSingleTriggerApi();
+            deleteOneTriggerApi();
         } else {
             alert('輸入錯誤，請再次嘗試');
         }
@@ -210,12 +210,12 @@ const Triggers = () => {
 
     useEffect(() => {
         if (
-            deleteSingleTriggerResponse &&
-            deleteSingleTriggerResponse.status === RESPONSE_STATUS.OK
+            deleteOneTriggerResponse &&
+            deleteOneTriggerResponse.status === RESPONSE_STATUS.OK
         ) {
             getTriggersApi();
         }
-    }, [deleteSingleTriggerResponse, getTriggersApi]);
+    }, [deleteOneTriggerResponse, getTriggersApi]);
 
     useEffect(() => {
         if (
@@ -449,12 +449,12 @@ const Triggers = () => {
                                                         <button
                                                             className="btn mb-3 p-0 bg-transparent"
                                                             onClick={() => {
-                                                                confirmToDeleteSingleTrigger(
+                                                                confirmToDeleteOneTrigger(
                                                                     { id, name }
                                                                 );
                                                             }}
                                                             disabled={
-                                                                isDeletingSingleTrigger
+                                                                isDeletingOneTrigger
                                                             }
                                                         >
                                                             <img

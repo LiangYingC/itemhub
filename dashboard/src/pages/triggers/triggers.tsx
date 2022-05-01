@@ -137,6 +137,7 @@ const Triggers = () => {
 
     useEffect(() => {
         getTriggersApi();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page]);
 
     const [deletedOneId, setDeletedOneId] = useState(0);

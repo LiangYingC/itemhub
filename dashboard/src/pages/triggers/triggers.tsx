@@ -121,12 +121,10 @@ const Triggers = () => {
         destinationDeviceNameFilter,
     });
 
-    /**
-     *  TODO: Get triggers api 之後會實作 search trigger name 功能，實作後這邊要多傳 triggerName 進去篩選
-     * */
     const { isGettingTriggers, getTriggersApi } = useGetTriggersApi({
         page,
         limit,
+        name: triggerName,
         sourceDeviceName: sourceDeviceNameFilter,
         destinationDeviceName: destinationDeviceNameFilter,
     });

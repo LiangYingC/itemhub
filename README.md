@@ -5,6 +5,21 @@
 - Website : 前台官網，前端位於 [website 資料夾](./website)中，API 端位於 [api 資料夾](./api)中。
 - Dashboard : 後台系統，前端位於 [dashboard 資料夾](./dashboard)中，API 端位於 [api 資料夾](./api)中。
 
+```
+.
+├── website         (負責認證, 金流, 訂閱, 行銷)
+├── dashboard       (負責裝置控制, 觸發, oAuthClient)
+├── api             (website, dashboard api 目前都共用這個專案, 未來如果有需要可以把兩個前台的 API 拆開)
+├── static          (靜態檔案, 目前只放使用者產生 firmware, 要避免 web server 直接 access 這個資料夾)
+│   ├── archived
+│   └── firmware
+└── firmware        (firmware template)
+    ├── arduino-nano-33-iot
+    ├── esp-01s
+    ├── particle-io-photon
+    └── raspberry-pi-pico
+```
+
 各個專案項目的說明，請參見各自資料夾中的 README。
 
 # 團隊協作遊戲規則

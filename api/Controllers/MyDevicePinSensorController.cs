@@ -19,7 +19,7 @@ namespace Homo.IotApi
         [HttpPost]
         [FilterRequestFactory]
         [Route("{pin}")]
-        public ActionResult<dynamic> create([FromRoute] long id, [FromRoute] string pin, [FromBody] DTOs.DevicePinSensor dto, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
+        public ActionResult<dynamic> create([FromRoute] long id, [FromRoute] string pin, [FromBody] DTOs.CreateSensorLog dto, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
             SensorLogDataservice.Create(_dbContext, extraPayload.Id, id, pin, dto);
             List<Trigger> triggers = TriggerDataservice.GetAll(_dbContext, extraPayload.Id, id, pin);
@@ -62,7 +62,7 @@ namespace Homo.IotApi
         [Route("{pin}")]
         public ActionResult<dynamic> getList([FromRoute] long id, [FromRoute] string pin, [FromQuery] int page, [FromQuery] int limit, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
-            return SensorLogDataservice.GetList(_dbContext, extraPayload.Id, new List<long>() { id }, (byte)DEVICE_MODE.SENSOR, pin, page, limit);
+            return SensorLogDataservice.GetList(_dbContext, extraPayload.Id, new List<long>() { id }, pin, page, limit);
         }
     }
 }

@@ -8,7 +8,7 @@ namespace Homo.IotApi
         public partial class DevicePin : DTOs
         {
             public long Id { get; set; }
-            public DateTime CreatedAt { get; set; }
+            public DateTime? CreatedAt { get; set; }
             public DateTime? EditedAt { get; set; }
             public long OwnerId { get; set; }
             public DateTime? DeletedAt { get; set; }
@@ -22,8 +22,6 @@ namespace Homo.IotApi
             [Required]
             public long DeviceId { get; set; }
             public Homo.IotApi.Device Device { get; set; }
-            public decimal? LastValue { get; set; }
-            public DateTime? LastCreatedAt { get; set; }
 
         }
 

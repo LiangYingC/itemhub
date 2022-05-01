@@ -10,7 +10,7 @@ namespace Homo.IotApi
 
         public static long? DeleteExpiredDataAndGetLatestItemId(IotDbContext dbContext, int page = 1, int limit = 50, long? latestItemId = null)
         {
-            List<DevicePinSensor> data = dbContext.DevicePinSensor
+            List<SensorLog> data = dbContext.SensorLog
                 .Where(x =>
                     x.DeletedAt == null
                     && (latestItemId == null || x.Id < latestItemId)
@@ -44,32 +44,31 @@ namespace Homo.IotApi
             .Select(x => x.Id)
             .ToList<long>();
 
-            dbContext.DevicePinSensor.Where(x => shouldBeDeletedIds.Contains(x.Id)).DeleteFromQuery();
+            dbContext.SensorLog.Where(x => shouldBeDeletedIds.Contains(x.Id)).DeleteFromQuery();
             dbContext.SaveChanges();
 
 
             return latestId;
         }
 
-        public static List<DevicePinSensor> GetList(IotDbContext dbContext, long? ownerId, List<long> deviceIds, byte? mode, string pin, int page = 1, int limit = 50)
+        public static List<SensorLog> GetList(IotDbContext dbContext, long? ownerId, List<long> deviceIds, string pin, int page = 1, int limit = 50)
         {
-            return dbContext.DevicePinSensor
+            return dbContext.SensorLog
                 .Where(x =>
                     x.DeletedAt == null &&
                     (ownerId == null || x.OwnerId == ownerId) &&
                     (deviceIds == null || deviceIds.Contains(x.DeviceId)) &&
-                    (mode == null || x.Mode == (byte)mode) &&
                     (pin == null || x.Pin == pin)
                 )
                 .OrderByDescending(x => x.Id)
                 .Skip((page - 1) * limit)
                 .Take(limit)
-                .ToList<DevicePinSensor>();
+                .ToList<SensorLog>();
         }
 
-        public static DevicePinSensor Create(IotDbContext dbContext, long ownerId, long deviceId, string pin, DTOs.DevicePinSensor dto)
+        public static SensorLog Create(IotDbContext dbContext, long ownerId, long deviceId, string pin, DTOs.CreateSensorLog dto)
         {
-            DevicePinSensor record = new DevicePinSensor();
+            SensorLog record = new SensorLog();
             foreach (var propOfDTO in dto.GetType().GetProperties())
             {
                 var value = propOfDTO.GetValue(dto);
@@ -80,7 +79,7 @@ namespace Homo.IotApi
             record.OwnerId = ownerId;
             record.DeviceId = deviceId;
             record.Pin = pin;
-            dbContext.DevicePinSensor.Add(record);
+            dbContext.SensorLog.Add(record);
             dbContext.SaveChanges();
             return record;
         }
@@ -89,8 +88,8 @@ namespace Homo.IotApi
         {
             foreach (long id in ids)
             {
-                DevicePinSensor record = new DevicePinSensor { Id = id, OwnerId = ownerId };
-                dbContext.Attach<DevicePinSensor>(record);
+                SensorLog record = new SensorLog { Id = id, OwnerId = ownerId };
+                dbContext.Attach<SensorLog>(record);
                 record.DeletedAt = DateTime.Now;
             }
             dbContext.SaveChanges();

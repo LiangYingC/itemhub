@@ -146,7 +146,7 @@ const OauthClients = () => {
         dispatch(
             dialogActions.open({
                 title: '確認刪除 oAuthClient ?',
-                message: '請輸入 DELETE 完成刪除',
+                message: '刪除後將無法復原, 請輸入 DELETE 完成刪除',
                 type: DialogTypeEnum.PROMPT,
                 checkedMessage: 'DELETE',
                 callback: () => {
@@ -163,7 +163,7 @@ const OauthClients = () => {
         dispatch(
             dialogActions.open({
                 title: '確認刪除 oAuthClient ?',
-                message: '請輸入 DELETE 完成刪除',
+                message: '刪除後將無法復原, 請輸入 DELETE 完成刪除',
                 type: DialogTypeEnum.PROMPT,
                 checkedMessage: 'DELETE',
                 callback: () => {

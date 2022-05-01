@@ -122,7 +122,7 @@ const OauthClient = () => {
     const deleteClient = () => {
         dispatch(
             dialogActions.open({
-                message: '請輸入 DELETE 完成刪除',
+                message: '刪除後將無法復原, 請輸入 DELETE 完成刪除',
                 title: '確認刪除 oAuthClient ?',
                 type: DialogTypeEnum.PROMPT,
                 checkedMessage: 'DELETE',
@@ -137,7 +137,7 @@ const OauthClient = () => {
             <PageTitle
                 titleClickCallback={backToList}
                 titleBackIconVisible
-                title={`oAuthClient 詳細內容`}
+                title="oAuthClient 詳細內容"
                 primaryButtonVisible={!isCreateMode}
                 primaryButtonWording="刪除"
                 primaryButtonCallback={deleteClient}

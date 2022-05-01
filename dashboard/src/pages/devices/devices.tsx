@@ -78,14 +78,14 @@ const Devices = () => {
 
     const deleteOne = (id: number) => {
         const shouldBeDeleteDevice = (devices || []).find(
-            (item) => item.id === shouldBeDeleteId
+            (item) => item.id === id
         );
         if (!shouldBeDeleteDevice) {
             return;
         }
         dispatch(
             dialogActions.open({
-                message: `刪除後將不可復原，是否確認刪除 ${shouldBeDeleteDevice.name} ?`,
+                message: `刪除後將無法復原, 請輸入 DELETE 完成刪除 ${shouldBeDeleteDevice.name}`,
                 title: '確認刪除裝置 ?',
                 type: DialogTypeEnum.PROMPT,
                 checkedMessage: 'DELETE',

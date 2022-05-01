@@ -57,7 +57,7 @@ const Device = () => {
     const deleteDevice = () => {
         dispatch(
             dialogActions.open({
-                message: `刪除後將不可復原，是否確認刪除 ${deviceName} ?`,
+                message: `刪除後將無法復原, 請輸入 DELETE 完成刪除 ${deviceName}`,
                 title: '確認刪除裝置 ?',
                 type: DialogTypeEnum.PROMPT,
                 checkedMessage: 'DELETE',

@@ -65,7 +65,7 @@ const Dialog = () => {
     };
 
     const checkMessage = () => {
-        if (checkedMessage === promptInputValue && callback) {
+        if (checkedMessage === promptInputRef.current?.value && callback) {
             callback();
             setIsValid(true);
             close();

@@ -131,7 +131,7 @@ const Triggers = () => {
 
     useEffect(() => {
         getTriggersApi();
-    }, [getTriggersApi]);
+    }, [page]);
 
     const [selectedIds, setSelectedIds] = useState(Array<number>());
 

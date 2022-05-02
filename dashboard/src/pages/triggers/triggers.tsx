@@ -237,7 +237,8 @@ const Triggers = () => {
             setDeletedOneId(0);
             getTriggersApi();
         }
-    }, [deleteOneTriggerResponse, deletedOneId, getTriggersApi, dispatch]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [deleteOneTriggerResponse, getTriggersApi, dispatch]);
 
     useEffect(() => {
         if (

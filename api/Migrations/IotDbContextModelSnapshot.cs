@@ -582,6 +582,9 @@ namespace IotApi.Migrations
                     b.Property<DateTime?>("EditedAt")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<string>("Name")
+                        .HasColumnType("varchar(255)");
+
                     b.Property<int>("Operator")
                         .HasColumnType("int");
 
@@ -604,6 +607,8 @@ namespace IotApi.Migrations
                     b.HasIndex("DestinationDeviceId");
 
                     b.HasIndex("DestinationPin");
+
+                    b.HasIndex("Name");
 
                     b.HasIndex("OwnerId");
 

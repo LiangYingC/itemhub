@@ -31,12 +31,13 @@ namespace Homo.IotApi
             [FromQuery] long? destinationDeviceId,
             [FromQuery] string destinationPin,
             [FromQuery] string destinationDeviceName,
+            [FromQuery] string name,
             Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
             return new
             {
-                triggers = TriggerDataservice.GetList(_dbContext, page, limit, extraPayload.Id, sourceDeviceId, sourcePin, sourceDeviceName, destinationDeviceId, destinationPin, destinationDeviceName),
-                rowNum = TriggerDataservice.GetRowNum(_dbContext, extraPayload.Id, sourceDeviceId, sourcePin, sourceDeviceName, destinationDeviceId, destinationPin, destinationDeviceName)
+                triggers = TriggerDataservice.GetList(_dbContext, page, limit, extraPayload.Id, sourceDeviceId, sourcePin, sourceDeviceName, destinationDeviceId, destinationPin, destinationDeviceName, name),
+                rowNum = TriggerDataservice.GetRowNum(_dbContext, extraPayload.Id, sourceDeviceId, sourcePin, sourceDeviceName, destinationDeviceId, destinationPin, destinationDeviceName, name)
             };
         }
 

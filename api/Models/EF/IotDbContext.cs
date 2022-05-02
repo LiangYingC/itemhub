@@ -94,6 +94,7 @@ namespace Homo.IotApi
                 entity.HasIndex(p => new { p.DestinationPin });
                 entity.HasIndex(p => new { p.DestinationDeviceId });
                 entity.HasIndex(p => new { p.OwnerId });
+                entity.HasIndex(p => new { p.Name });
                 entity.HasOne(p => p.SourceDevice).WithMany().HasForeignKey(p => p.SourceDeviceId);
                 entity.HasOne(p => p.DestinationDevice).WithMany().HasForeignKey(p => p.DestinationDeviceId);
             });

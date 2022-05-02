@@ -33,7 +33,7 @@ namespace Homo.AuthApi
         private readonly string _googleClientSecret;
         private readonly string _lineClientSecret;
         private readonly string _adminEmail;
-        private readonly bool _authByCookie; public AuthVerifyEmailController(DBContext dbContext, IOptions<AppSettings> appSettings, Microsoft.AspNetCore.Hosting.IWebHostEnvironment env, Homo.Api.CommonLocalizer commonLocalizer)
+        public AuthVerifyEmailController(DBContext dbContext, IOptions<AppSettings> appSettings, Microsoft.AspNetCore.Hosting.IWebHostEnvironment env, Homo.Api.CommonLocalizer commonLocalizer)
         {
             Secrets secrets = (Secrets)appSettings.Value.Secrets;
             Common common = (Common)appSettings.Value.Common;
@@ -74,8 +74,7 @@ namespace Homo.AuthApi
             User user = UserDataservice.GetOneByEmail(_dbContext, dto.Email);
             List<string> duplicatedUserProvider = new List<string>();
 
-            bool isEarlyBird = user != null && user.HashPhone == null;
-            if (user != null && !isEarlyBird)
+            if (user != null && !user.IsEarlyBird)
             {
                 throw new CustomException(ERROR_CODE.SIGN_IN_BY_OTHER_WAY, HttpStatusCode.BadRequest, null, new Dictionary<string, dynamic>(){
                             {"duplicatedUserProvider", AuthHelper.GetDuplicatedUserType(user)}
@@ -150,12 +149,14 @@ namespace Homo.AuthApi
         public dynamic verifyEmail([FromBody] DTOs.VerifyEmail dto)
         {
             User user = UserDataservice.GetOneByEmail(_dbContext, dto.Email);
-            bool isEarlyBird = user != null && user.HashPhone == null;
 
-            if (user != null && !isEarlyBird)
+            bool isEarlyBird = user != null && user.IsEarlyBird;
+
+            if (user != null && !user.IsEarlyBird)
             {
                 throw new CustomException(ERROR_CODE.DUPLICATE_EMAIL, HttpStatusCode.BadRequest);
             }
+
             VerifyCode record = VerifyCodeDataservice.GetOneUnUsedByEmail(_dbContext, dto.Email, dto.Code);
             if (record == null)
             {

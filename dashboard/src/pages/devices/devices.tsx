@@ -13,15 +13,16 @@ import moment from 'moment';
 import pencilIcon from '@/assets/images/pencil.svg';
 import cloudIcon from '@/assets/images/cloud.svg';
 import trashIcon from '@/assets/images/trash.svg';
-import searchIcon from '@/assets/images/icon-search.svg';
-import plusIcon from '@/assets/images/icon-plus.svg';
-import emptyImage from '@/assets/images/empty-image.svg';
 import Pagination from '@/components/pagination/pagination';
-import { useDeleteDevicesApi } from '../../hooks/apis/devices.hook';
+import SearchInput from '@/components/input/search-input/search-input';
+import EmptyDataToCreateItem from '@/components/empty-data-to-create-item/empty-data-to-create-item';
+import { useDeleteDevicesApi } from '@/hooks/apis/devices.hook';
 import { RESPONSE_STATUS } from '@/constants/api';
 import { useDownloadFirmwareApi } from '@/hooks/apis/firmware.hook';
 import compassIcon from '@/assets/images/compass.svg';
 import stopIcon from '@/assets/images/stop.svg';
+import { dialogActions, DialogTypeEnum } from '@/redux/reducers/dialog.reducer';
+import { useDispatch } from 'react-redux';
 
 const Devices = () => {
     const query = useQuery();
@@ -39,14 +40,13 @@ const Devices = () => {
     const [refreshFlag, setRefreshFlag] = useState(false);
     const [isFirmwarePrepare, setIsFirmwarePrepare] = useState(false);
     const devicesState = useAppSelector(selectDevices);
+    const dispatch = useDispatch();
     const hasDevicesRef = useRef(false);
     const retryDownloadFirmwareCountRef = useRef(0);
     const devices = devicesState.devices;
     const rowNum = devicesState.rowNum;
 
     const navigate = useNavigate();
-    let shouldBeTwiceEnter = false;
-    let enterCount = 0;
 
     const { isGetingDevices, getDevicesApi } = useGetDevicesApi({
         page,
@@ -146,36 +146,27 @@ const Devices = () => {
         navigate('create');
     };
 
-    const searchInputKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.nativeEvent.isComposing) {
-            shouldBeTwiceEnter = true;
-        }
-
-        if (event.code === 'Enter') {
-            enterCount += 1;
-        }
-
-        if (
-            (enterCount >= 2 && shouldBeTwiceEnter) ||
-            (enterCount == 1 && !shouldBeTwiceEnter)
-        ) {
-            shouldBeTwiceEnter = false;
-            enterCount = 0;
-            getDevicesApi();
-        }
-    };
-
-    const search = () => {
-        getDevicesApi();
-    };
-
     const deleteOne = (id: number) => {
-        if (prompt('請輸入 delete') !== 'delete') {
+        const shouldBeDeleteDevice = (devices || []).find(
+            (item) => item.id === id
+        );
+        if (!shouldBeDeleteDevice) {
             return;
         }
-        setShouldBeDeleteId(() => {
-            return id;
-        });
+        dispatch(
+            dialogActions.open({
+                message: `刪除後將無法復原, 請輸入 DELETE 完成刪除 ${shouldBeDeleteDevice.name}`,
+                title: '確認刪除裝置 ?',
+                type: DialogTypeEnum.PROMPT,
+                checkedMessage: 'DELETE',
+                callback: () => {
+                    setShouldBeDeleteId(() => {
+                        return id;
+                    });
+                },
+                promptInvalidMessage: '輸入錯誤',
+            })
+        );
     };
 
     const bundleFirmware = (id: number) => {
@@ -183,67 +174,29 @@ const Devices = () => {
     };
 
     return (
-        <div className="devices" data-testid="Devices">
+        <div className="devices" data-testid="devices">
             <PageTitle
                 title="裝置列表"
-                primaryButtonVisible
-                secondaryButtonVisible
-                primaryButtonWording="重新整理"
-                primaryButtonClassName="bg-black bg-opacity-10 text-black text-opacity-65 border border-black border-opacity-10"
-                primaryButtonCallback={refresh}
-                secondaryButtonWording="新增裝置"
-                secondaryButtonCallback={jumpToCreatePage}
+                primaryButtonVisible={hasDevicesRef.current}
+                primaryButtonWording="新增裝置"
+                primaryButtonCallback={jumpToCreatePage}
+                secondaryButtonVisible={hasDevicesRef.current}
+                secondaryButtonWording="重新整理"
+                secondaryButtonCallback={refresh}
             />
-            <div className="card mx-3 mx-sm-0 mx-xl-45 mt-3 mt-sm-0 p-3 p-sm-45">
-                <div
-                    className={`position-relative filter ${
-                        hasDevicesRef.current ? '' : 'd-none'
-                    }`}
-                >
-                    <input
-                        placeholder="搜尋裝置"
-                        className="form-control border border-black border-opacity-15 rounded-start "
-                        type="text"
-                        value={deviceName}
-                        onChange={(e) => setDeviceName(e.target.value)}
-                        onKeyUp={searchInputKeyUp}
-                    />
-                    <button
-                        className="position-absolute top-0 end-0 btn border-0 rounded-end"
-                        type="button"
-                        onClick={search}
-                    >
-                        <img src={searchIcon} alt="icon-search" />
-                    </button>
-                </div>
-                {isGetingDevices || devices === null ? (
-                    <div>Loading</div>
+            <div className="card">
+                {!hasDevicesRef.current && devices !== null ? (
+                    <EmptyDataToCreateItem itemName="裝置" />
                 ) : (
                     <>
-                        <div
-                            className={`${
-                                hasDevicesRef.current ? 'd-none' : 'd-block'
-                            } p-6 text-center`}
-                        >
-                            <img src={emptyImage} alt="" />
-                            <div className="mt-2">
-                                尚未建立任何裝置, 點擊按鈕開始新增吧！
-                            </div>
-                            <button
-                                onClick={jumpToCreatePage}
-                                className="d-flex align-items-center btn bg-light-blue text-white border border-light-blue rounded-pill mx-auto mt-3 px-3 py-2"
-                            >
-                                <img className="icon pe-2" src={plusIcon} />
-                                <div className="lh-1 py-1 fw-bold">
-                                    新增裝置
-                                </div>
-                            </button>
-                        </div>
-                        <div
-                            className={`${
-                                hasDevicesRef.current ? 'd-block' : 'd-none'
-                            }`}
-                        >
+                        <SearchInput
+                            placeholder="搜尋裝置"
+                            onChangeValue={(value) => setDeviceName(value)}
+                            onSearch={getDevicesApi}
+                        />
+                        {isGetingDevices || devices === null ? (
+                            <div>Loading</div>
+                        ) : (
                             <div className="mt-3 mt-sm-45">
                                 <div className="d-none d-sm-block">
                                     <div className="row bg-black bg-opacity-5 text-black text-opacity-45 h6 py-25 px-3 m-0">
@@ -266,7 +219,7 @@ const Devices = () => {
                                             online,
                                         }) => (
                                             <div
-                                                className="row border-bottom border-black border-opacity-10 p-0 py-sm-4 px-sm-3 mx-0 "
+                                                className="row border-bottom border-black border-opacity-10 p-0 py-sm-4 px-sm-3 mx-0"
                                                 key={id}
                                                 title={`建立時間: ${createdAt}`}
                                             >
@@ -289,20 +242,13 @@ const Devices = () => {
                                                     </div>
                                                     <div className="col-8 col-sm-12 p-3 p-sm-0">
                                                         <div
-                                                            className={`rounded-pill tag text-center py-1 d-flex align-items-center justify-content-center ${
+                                                            className={`tag ${
                                                                 online
-                                                                    ? 'bg-green bg-opacity-10 text-green'
-                                                                    : 'bg-black bg-opacity-5 text-black text-opacity-45 fw-normal'
+                                                                    ? 'tag-green'
+                                                                    : 'tag-grey'
                                                             }`}
                                                         >
-                                                            <div
-                                                                className={`dot rounded-circle d-block me-2 ${
-                                                                    online
-                                                                        ? 'bg-green'
-                                                                        : 'bg-black bg-opacity-45'
-                                                                }`}
-                                                            />
-                                                            <div className="h6 mb-0">
+                                                            <div>
                                                                 {online
                                                                     ? '上線'
                                                                     : '離線'}
@@ -414,19 +360,19 @@ const Devices = () => {
                                         )
                                     )}
                                 </div>
+                                <div
+                                    className={`${
+                                        devices.length > 0 ? 'd-flex' : 'd-none'
+                                    } justify-content-end w-100 mt-5`}
+                                >
+                                    <Pagination
+                                        rowNum={rowNum}
+                                        page={page}
+                                        limit={limit}
+                                    />
+                                </div>
                             </div>
-                        </div>
-                        <div
-                            className={`${
-                                devices.length > 0 ? 'd-block' : 'd-none'
-                            } d-flex justify-content-end w-100 mt-5`}
-                        >
-                            <Pagination
-                                rowNum={rowNum}
-                                page={page}
-                                limit={limit}
-                            />
-                        </div>
+                        )}
                     </>
                 )}
             </div>

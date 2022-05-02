@@ -12,7 +12,7 @@ using Homo.Core.Constants;
 
 namespace Homo.IotApi
 {
-    public class TriggerLogCronJob : CronJobService
+    public class ClearTriggerLogCronJob : CronJobService
     {
         private readonly string _envName;
         private readonly string _tapPayPartnerKey;
@@ -20,7 +20,7 @@ namespace Homo.IotApi
         private readonly string _tapPayEndpointByToken;
         private readonly string _dbc;
 
-        public TriggerLogCronJob(IScheduleConfig<TriggerLogCronJob> config, IServiceProvider serviceProvider, Microsoft.AspNetCore.Hosting.IWebHostEnvironment env, IOptions<AppSettings> appSettings)
+        public ClearTriggerLogCronJob(IScheduleConfig<ClearTriggerLogCronJob> config, IServiceProvider serviceProvider, Microsoft.AspNetCore.Hosting.IWebHostEnvironment env, IOptions<AppSettings> appSettings)
             : base(config.CronExpression, config.TimeZoneInfo, serviceProvider)
         {
             _envName = env.EnvironmentName;
@@ -33,7 +33,7 @@ namespace Homo.IotApi
 
         public override Task StartAsync(CancellationToken cancellationToken)
         {
-            Console.WriteLine("TriggerLogCronJob starts.");
+            Console.WriteLine("ClearTriggerLogCronJob starts.");
             return base.StartAsync(cancellationToken);
         }
 
@@ -57,7 +57,7 @@ namespace Homo.IotApi
 
         public override Task StopAsync(CancellationToken cancellationToken)
         {
-            Console.WriteLine("Ayto Payment is stopping.");
+            Console.WriteLine("ClearTriggerLogCronJob is stopping.");
             return base.StopAsync(cancellationToken);
         }
     }

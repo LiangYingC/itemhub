@@ -6,7 +6,7 @@ describe('<Devices />', () => {
     test('it should mount', () => {
         render(<Devices />);
 
-        const devices = screen.getByTestId('Devices');
+        const devices = screen.getByTestId('devices');
 
         expect(devices).toBeInTheDocument();
     });

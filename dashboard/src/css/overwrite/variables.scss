@@ -1,0 +1,107 @@
+$spacers: (
+    0: 0,
+    1: $spacer * 0.25,
+    2: $spacer * 0.25 * 2,
+    25: $spacer * 0.25 * 3,
+    3: $spacer * 0.25 * 4,
+    4: $spacer * 0.25 * 6,
+    45: $spacer * 0.25 * 8,
+    5: $spacer * 0.25 * 12,
+    6: $spacer * 0.25 * 24,
+);
+
+$h1-font-size: 38px;
+$h1-font-size-for-small-screen: 30px;
+$h2-font-size: 30px;
+$h2-font-size-for-small-screen: 24px;
+$h3-font-size: 24px;
+$h3-font-size-for-small-screen: 20px;
+$h4-font-size: 20px;
+$h4-font-size-for-small-screen: 16px;
+$h5-font-size: 16px;
+$font-size-base-for-small-screen: 14px;
+$h6-font-size: 14px;
+$small-font-size-for-small-screen: 12px;
+
+$font-weight-bold: 600;
+
+$primary: #4ac5ff; // deprecated
+$secondary: rgba(black, 0.04);
+$deep-dark-blue: #0c152d; // deprecated
+$dark-blue: #141b5e; // deprecated
+$darkest-blue: #161c2e; // deprecated
+$dark: #161c2e; // deprecated
+$blue: #0048ff; // deprecated
+$danger: #ff4747;
+$purple: #d415a1;
+$warn: #f49d00;
+$success: #198754;
+$primary-900: #1f305a;
+$primary-800: #163c9d;
+$primary-700: #1679c0;
+$primary-600: #30a7df;
+$primary-500: #4ac5ff;
+$primary-400: #6bdcff;
+$primary-300: #9de8ff;
+$primary-200: #d3f5ff;
+$primary-100: #e9faff;
+$green: #2ebf2e;
+$light-green: #e5f2f7;
+$grey-800: #13151f;
+$grey-700: #1e202b;
+$grey-600: #282b39;
+$grey-500: #404350;
+$grey-400: #666a7f;
+$grey-300: #8a90ad;
+$grey-200: #dcdff0;
+$grey-150: #e5e5e5;
+$grey-100: #f8f9fa;
+
+$input-placeholder-color: rgba(black, 0.15);
+
+$bg-blue2green: linear-gradient(135deg, #0048ff 0%, #14ffca 100%);
+$enable-negative-margins: true;
+
+// button
+$btn-line-height: 1rem;
+$btn-padding-y: 0.85rem;
+$btn-padding-x: 1rem;
+$btn-box-shadow: $box-shadow-lg;
+$btn-font-weight: $font-weight-bold;
+$btn-line-height: 1rem;
+
+// button
+$btn-line-height: 1rem;
+$btn-padding-y: 0.85rem;
+$btn-padding-x: 1rem;
+$btn-box-shadow: $box-shadow-lg;
+$btn-font-weight: $font-weight-bold;
+$btn-line-height: 1rem;
+
+$theme-button-hover-colors: (
+    'primary': $primary-600,
+    'secondary': rgba(black, 0.09),
+    'danger': #e84141,
+);
+
+$theme-button-active-colors: (
+    'primary': $primary-700,
+    'secondary': $light-green,
+    'danger': #fe5858,
+);
+
+$theme-button-font-colors: (
+    'primary': white,
+    'secondary': rgba(0, 0, 0, 0.65),
+    'danger': white,
+);
+
+$theme-button-border-colors: (
+    'secondary': rgba(0, 0, 0, 0.09),
+);
+
+$theme-button-hover-font-colors: (
+    'primary': white,
+    'secondary': rgba(0, 0, 0, 0.85),
+    'danger': white,
+);

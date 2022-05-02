@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useQuery } from '@/hooks/query.hook';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAppSelector } from '@/hooks/redux.hook';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux.hook';
 import {
     useDeleteOauthClients,
     useGetOauthClients,
@@ -15,6 +15,11 @@ import lightTrashIcon from '@/assets/images/light-trash.svg';
 import trashIcon from '@/assets/images/trash.svg';
 import plusIcon from '@/assets/images/icon-plus.svg';
 import emptyImage from '@/assets/images/empty-image.svg';
+import { dialogActions, DialogTypeEnum } from '@/redux/reducers/dialog.reducer';
+import {
+    toasterActions,
+    ToasterTypeEnum,
+} from '@/redux/reducers/toaster.reducer';
 
 const OauthClients = () => {
     const query = useQuery();
@@ -22,6 +27,7 @@ const OauthClients = () => {
     const page = Number(query.get('page') || 1);
 
     const { oauthClients, rowNum } = useAppSelector(selectOauthClients);
+    const dispatch = useAppDispatch();
 
     const [selectedIds, setSelectedIds] = useState(Array<number>());
     const [shouldBeDeleteId, setShouldBeDeleteId] = useState(0);
@@ -29,20 +35,17 @@ const OauthClients = () => {
     const [isSelectAll, setIsSelectAll] = useState(false);
     const hasOauthClientsRef = useRef(false);
     const [
-        pageTitlePrimaryButtonClassName,
+        pageTitleSecondaryButtonClassName,
         setPageTitlePrimaryButtonClassName,
-    ] = useState('bg-danger text-white border border-danger disabled');
+    ] = useState('btn btn-danger disabled');
 
     const { isLoading, fetchApi } = useGetOauthClients({
         page,
         limit,
     });
 
-    const {
-        isLoading: isDeleting,
-        fetchApi: deleteMultipleApi,
-        data: responseOfDelete,
-    } = useDeleteOauthClients(selectedIds);
+    const { fetchApi: deleteMultipleApi, data: responseOfDelete } =
+        useDeleteOauthClients(selectedIds);
 
     const {
         isLoading: isDeletingOne,
@@ -66,6 +69,14 @@ const OauthClients = () => {
         if (responseOfDelete?.status === RESPONSE_STATUS.OK) {
             setRefreshFlag(!refreshFlag);
             setSelectedIds([]);
+
+            dispatch(
+                toasterActions.pushOne({
+                    message: 'oAuthClient 已經成功刪除',
+                    duration: 5,
+                    type: ToasterTypeEnum.INFO,
+                })
+            );
         }
     }, [responseOfDelete]);
 
@@ -73,6 +84,14 @@ const OauthClients = () => {
         if (responseOfDeleteOne?.status === RESPONSE_STATUS.OK) {
             setRefreshFlag(!refreshFlag);
             setShouldBeDeleteId(0);
+
+            dispatch(
+                toasterActions.pushOne({
+                    message: 'oAuthClient 已經成功刪除',
+                    duration: 5,
+                    type: ToasterTypeEnum.INFO,
+                })
+            );
         }
     }, [responseOfDeleteOne]);
 
@@ -101,12 +120,13 @@ const OauthClients = () => {
                 );
                 newSelectedIds.splice(index, 1);
             }
-            let pageTitlePrimaryButtonClassName =
-                'bg-danger border border-danger text-white';
+            let pageTitleSecondaryButtonClassName = 'btn btn-danger';
             if (newSelectedIds.length === 0) {
-                pageTitlePrimaryButtonClassName += ' disabled';
+                pageTitleSecondaryButtonClassName += ' disabled';
             }
-            setPageTitlePrimaryButtonClassName(pageTitlePrimaryButtonClassName);
+            setPageTitlePrimaryButtonClassName(
+                pageTitleSecondaryButtonClassName
+            );
             return newSelectedIds;
         });
     };
@@ -124,19 +144,35 @@ const OauthClients = () => {
     };
 
     const deleteOne = (id: number) => {
-        if (prompt('請輸入 delete') !== 'delete') {
-            return;
-        }
-        setShouldBeDeleteId(() => {
-            return id;
-        });
+        dispatch(
+            dialogActions.open({
+                title: '確認刪除 oAuthClient ?',
+                message: '刪除後將無法復原, 請輸入 DELETE 完成刪除',
+                type: DialogTypeEnum.PROMPT,
+                checkedMessage: 'DELETE',
+                callback: () => {
+                    setShouldBeDeleteId(() => {
+                        return id;
+                    });
+                },
+                promptInvalidMessage: '輸入錯誤',
+            })
+        );
     };
 
     const deleteMultiple = () => {
-        if (prompt('請輸入 delete') !== 'delete') {
-            return;
-        }
-        deleteMultipleApi();
+        dispatch(
+            dialogActions.open({
+                title: '確認刪除 oAuthClient ?',
+                message: '刪除後將無法復原, 請輸入 DELETE 完成刪除',
+                type: DialogTypeEnum.PROMPT,
+                checkedMessage: 'DELETE',
+                callback: () => {
+                    deleteMultipleApi();
+                },
+                promptInvalidMessage: '輸入錯誤',
+            })
+        );
     };
 
     return (
@@ -144,15 +180,15 @@ const OauthClients = () => {
             <PageTitle
                 title="oAuthClient 列表"
                 primaryButtonVisible
-                primaryButtonWording="刪除選取"
-                primaryButtonCallback={deleteMultiple}
-                primaryButtonIcon={lightTrashIcon}
-                primaryButtonClassName={pageTitlePrimaryButtonClassName}
+                primaryButtonWording="新增 oAuthClient"
+                primaryButtonCallback={jumpToCreatePage}
+                secondaryButtonIcon={lightTrashIcon}
+                secondaryButtonClassName={pageTitleSecondaryButtonClassName}
                 secondaryButtonVisible
-                secondaryButtonWording="新增 oAuthClient"
-                secondaryButtonCallback={jumpToCreatePage}
+                secondaryButtonWording="刪除選取"
+                secondaryButtonCallback={deleteMultiple}
             />
-            <div className="card mt-3 mx-4 p-45">
+            <div className="card">
                 {isLoading || oauthClients === null ? (
                     <div>Loading</div>
                 ) : (
@@ -170,12 +206,10 @@ const OauthClients = () => {
                             </div>
                             <button
                                 onClick={jumpToCreatePage}
-                                className="d-flex align-items-center btn bg-light-blue text-white border border-light-blue rounded-pill mx-auto mt-3 px-3 py-2"
+                                className="btn btn-primary mx-auto mt-3 "
                             >
                                 <img className="icon pe-2" src={plusIcon} />
-                                <div className="lh-1 py-1 fw-bold">
-                                    新增 oAuthClient
-                                </div>
+                                <div className="">新增 oAuthClient</div>
                             </button>
                         </div>
                         <div

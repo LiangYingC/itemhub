@@ -15,7 +15,6 @@ namespace Homo.IotApi
     {
         private readonly IotDbContext _dbContext;
         private readonly string _dbConnectionString;
-        private DateTime _nextRunTimestamp;
         public MyDeviceController(IotDbContext dbContext, IOptions<AppSettings> appSettings)
         {
             _dbContext = dbContext;

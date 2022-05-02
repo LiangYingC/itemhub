@@ -264,11 +264,11 @@ const Triggers = () => {
 
     useEffect(() => {
         let pageTitleSecondaryButtonClassName = 'btn btn-danger';
-        if (selectedIds.length === 0) {
+        if (selectedIds.length === 0 || isDeletingTriggers) {
             pageTitleSecondaryButtonClassName += ' disabled';
         }
         setPageTitleSecondaryButtonClassName(pageTitleSecondaryButtonClassName);
-    }, [selectedIds]);
+    }, [selectedIds, isDeletingTriggers]);
 
     return (
         <div className="triggers" data-testid="triggers">

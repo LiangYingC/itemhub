@@ -23,6 +23,7 @@ import EmptyDataToCreateItem from '@/components/empty-data-to-create-item/empty-
 import lightTrashIcon from '@/assets/images/light-trash.svg';
 import pencilIcon from '@/assets/images/pencil.svg';
 import trashIcon from '@/assets/images/trash.svg';
+import ReactTooltip from 'react-tooltip';
 
 const filterTriggers = ({
     triggers,
@@ -474,13 +475,15 @@ const Triggers = () => {
                                                         <Link
                                                             className="me-3 mb-3"
                                                             to={`/dashboard/triggers/${id}`}
+                                                            data-tip="編輯"
                                                         >
                                                             <img
                                                                 src={pencilIcon}
                                                             />
                                                         </Link>
+
                                                         <button
-                                                            className="btn mb-3 p-0 bg-transparent"
+                                                            className="btn mb-3 p-0 bg-transparent shadow-none"
                                                             onClick={() => {
                                                                 confirmToDeleteOneTrigger(
                                                                     { id, name }
@@ -489,11 +492,13 @@ const Triggers = () => {
                                                             disabled={
                                                                 isDeletingOneTrigger
                                                             }
+                                                            data-tip="刪除"
                                                         >
                                                             <img
                                                                 src={trashIcon}
                                                             />
                                                         </button>
+                                                        <ReactTooltip effect="solid" />
                                                     </div>
                                                 </div>
                                             </div>

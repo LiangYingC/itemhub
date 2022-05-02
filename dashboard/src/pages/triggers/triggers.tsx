@@ -24,6 +24,7 @@ import lightTrashIcon from '@/assets/images/light-trash.svg';
 import pencilIcon from '@/assets/images/pencil.svg';
 import trashIcon from '@/assets/images/trash.svg';
 import ReactTooltip from 'react-tooltip';
+import Spinner from '@/components/spinner/spinner';
 
 const filterTriggers = ({
     triggers,
@@ -354,7 +355,9 @@ const Triggers = () => {
                             </label>
                         </div>
                         {isGettingTriggers || triggers === null ? (
-                            <div>Loading</div>
+                            <div className="w-100 d-flex justify-content-center my-4">
+                                <Spinner />
+                            </div>
                         ) : (
                             <div className="mt-3 mt-sm-45">
                                 <div className="d-none d-sm-block">

@@ -21,6 +21,7 @@ import {
     toasterActions,
     ToasterTypeEnum,
 } from '@/redux/reducers/toaster.reducer';
+import Spinner from '@/components/spinner/spinner';
 
 const OauthClients = () => {
     const query = useQuery();
@@ -191,7 +192,9 @@ const OauthClients = () => {
             />
             <div className="card">
                 {isLoading || oauthClients === null ? (
-                    <div>Loading</div>
+                    <div className="w-100 d-flex justify-content-center my-4">
+                        <Spinner />
+                    </div>
                 ) : (
                     <>
                         <div

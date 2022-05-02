@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { FetchErrorResultData } from '@/types/helpers.type';
 import { ApiHelpers } from '@/helpers/api.helper';
 import { ERROR_KEY } from '@/constants/error-key';
@@ -22,6 +22,8 @@ export const useFetchApi = <T>({
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<FetchErrorResultData | null>(null);
 
+    const controller = new AbortController();
+
     const fetchApi = useCallback(async () => {
         try {
             setIsLoading(true);
@@ -30,6 +32,7 @@ export const useFetchApi = <T>({
                 apiPath,
                 method,
                 payload,
+                signal: controller.signal,
             });
             const data = result.data;
 
@@ -47,7 +50,6 @@ export const useFetchApi = <T>({
             };
             const errorKey = errorData.errorKey;
 
-            // TODO: can handle global error ui here, e.g. open global error modal.
             if (errorKey === ERROR_KEY.TOKEN_EXPIRED) {
                 CookieHelpers.EraseCookie({ name: COOKIE_KEY.DASHBOARD_TOKEN });
                 location.href = `${
@@ -55,12 +57,20 @@ export const useFetchApi = <T>({
                 }/auth/two-factor-auth/`;
             }
 
-            // TODO: or just use error data to show on error section.
             setError(error);
         } finally {
             setIsLoading(false);
         }
-    }, [apiPath, method, payload, callbackFunc]);
+    }, [apiPath, method, payload, controller.signal, callbackFunc]);
+
+    const cancelFetch = () => {
+        controller.abort();
+    };
+
+    useEffect(() => {
+        return cancelFetch;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return {
         isLoading,

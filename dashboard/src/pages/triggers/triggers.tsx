@@ -357,7 +357,7 @@ const Triggers = () => {
                         ) : (
                             <div className="mt-3 mt-sm-45">
                                 <div className="d-none d-sm-block">
-                                    <div className="row py-25 px-3 m-0 bg-black bg-opacity-5 h6 text-black text-opacity-45">
+                                    <div className="row py-25 px-3 m-0 bg-black bg-opacity-5 fs-5 text-black text-opacity-45">
                                         <label className="col-3" role="button">
                                             <div className="d-flex align-items-center">
                                                 <input
@@ -396,7 +396,7 @@ const Triggers = () => {
                                                 key={`${id}-${index}`}
                                                 className="row border-bottom border-black border-opacity-10 p-0 m-0 py-sm-4 px-sm-3"
                                             >
-                                                <div className="row col-12 col-sm-3 text-black text-opacity-65 h6 mx-0 mb-0 px-0 px-sm-25">
+                                                <div className="row col-12 col-sm-3 text-black text-opacity-65 fs-5 mx-0 mb-0 px-0 px-sm-25">
                                                     <div className="d-block d-sm-none col-4 p-3 bg-black bg-opacity-5 text-black text-opacity-45">
                                                         觸發名稱
                                                     </div>

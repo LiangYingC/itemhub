@@ -26,13 +26,13 @@ namespace Homo.IotApi
         public ActionResult<dynamic> get([FromRoute] string bundleId, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
             FirmwareBundleLog log = FirmwareBundleLogDataservice.GetOneByBundleId(_dbContext, bundleId);
-            Device device = DeviceDataservice.GetOne(_dbContext, extraPayload.Id, log.DeviceId);
 
             if (log == null)
             {
                 return NotFound();
             }
 
+            Device device = DeviceDataservice.GetOne(_dbContext, extraPayload.Id, log.DeviceId);
             if (device == null)
             {
                 return Forbid();

@@ -39,11 +39,11 @@ export const useFetchApi = <T>({
             setHttpStatus(result.httpStatus);
             const data = result.data;
 
-            if (callbackFunc) {
-                callbackFunc(data);
-            }
-
             if (!controller.signal.aborted) {
+                if (callbackFunc) {
+                    callbackFunc(data);
+                }
+
                 setData(data);
             }
         } catch (error: any) {

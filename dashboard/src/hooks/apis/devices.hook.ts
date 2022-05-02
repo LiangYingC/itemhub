@@ -272,3 +272,23 @@ export const useUpdateDeviceSwitchPinApi = ({
         updateDeviceSwitchPinApi: fetchApi,
     };
 };
+
+export const useBundleFirmwareApi = ({ id }: { id: number }) => {
+    let apiPath = `${API_URL}${END_POINT.DEVICE_BUNDLE_FIRMWARE}`;
+    apiPath = apiPath.replace(':id', id.toString());
+
+    const { isLoading, error, data, fetchApi } = useFetchApi<{
+        bundleId: string;
+    }>({
+        apiPath,
+        method: HTTP_METHOD.POST,
+        initialData: null,
+    });
+
+    return {
+        isLoading,
+        error,
+        fetchApi,
+        data,
+    };
+};

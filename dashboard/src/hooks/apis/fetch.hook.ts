@@ -21,12 +21,14 @@ export const useFetchApi = <T>({
     const [data, setData] = useState<T | null>(initialData);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<FetchErrorResultData | null>(null);
+    const [httpStatus, setHttpStatus] = useState<number | null>(null);
 
     const controller = new AbortController();
 
     const fetchApi = useCallback(async () => {
         try {
             setIsLoading(true);
+            setError(null);
 
             const result = await ApiHelpers.SendRequestWithToken<T>({
                 apiPath,
@@ -34,6 +36,7 @@ export const useFetchApi = <T>({
                 payload,
                 signal: controller.signal,
             });
+            setHttpStatus(result.httpStatus);
             const data = result.data;
 
             if (callbackFunc) {
@@ -60,7 +63,8 @@ export const useFetchApi = <T>({
             }
 
             if (!controller.signal.aborted) {
-                setError(error);
+                const errorData = error?.data || error;
+                setError(errorData);
             }
         } finally {
             setIsLoading(false);
@@ -81,5 +85,6 @@ export const useFetchApi = <T>({
         error,
         data,
         fetchApi,
+        httpStatus,
     };
 };

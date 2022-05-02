@@ -43,5 +43,7 @@ namespace Homo.IotApi
         public string SmsClientUrl { get; set; }
         public string TapPayEndpointByPrime { get; set; }
         public string TapPayEndpointByToken { get; set; }
+        public string FirmwareTemplatePath { get; set; }
+        public string StaticPath { get; set; }
     }
 }

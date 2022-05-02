@@ -220,7 +220,7 @@ const OauthClients = () => {
                                     : 'd-none'
                             }`}
                         >
-                            <div className="row bg-black bg-opacity-5 text-black text-opacity-45 h6 py-25 mb-0">
+                            <div className="row bg-black bg-opacity-5 text-black text-opacity-45 fs-5 py-25 mb-0">
                                 <label
                                     role="button"
                                     className="col-8 col-sm-10"

@@ -200,7 +200,7 @@ const Devices = () => {
                         ) : (
                             <div className="mt-3 mt-sm-45">
                                 <div className="d-none d-sm-block">
-                                    <div className="row bg-black bg-opacity-5 text-black text-opacity-45 h6 py-25 px-3 m-0">
+                                    <div className="row bg-black bg-opacity-5 text-black text-opacity-45 fs-5 py-25 px-3 m-0">
                                         <div className="col-3">
                                             裝置名稱 / ID
                                         </div>
@@ -229,12 +229,12 @@ const Devices = () => {
                                                         裝置名稱 / ID
                                                     </div>
                                                     <div className="col-8 col-sm-12 p-3 p-sm-0">
-                                                        <h5 className="lh-base mb-2 mb-sm-0">
+                                                        <div className="fw-bold lh-base mb-2 mb-sm-0">
                                                             {name}
-                                                        </h5>
-                                                        <h6 className="lh-base mb-0 text-black text-opacity-45">
+                                                        </div>
+                                                        <div className="fs-5 lh-base mb-0 text-black text-opacity-45">
                                                             {deviceId}
-                                                        </h6>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div className="col-12 col-sm-2 row mx-0 px-0 px-sm-25 flex-shrink-0">
@@ -243,7 +243,7 @@ const Devices = () => {
                                                     </div>
                                                     <div className="col-8 col-sm-12 p-3 p-sm-0">
                                                         <div
-                                                            className={`tag ${
+                                                            className={`tag fs-5 ${
                                                                 online
                                                                     ? 'tag-green'
                                                                     : 'tag-grey'
@@ -257,7 +257,7 @@ const Devices = () => {
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div className="col-12 col-sm-2 row text-black text-opacity-65 h6 mb-0 mx-0 px-0 px-sm-25">
+                                                <div className="col-12 col-sm-2 row text-black text-opacity-65 fs-5 mb-0 mx-0 px-0 px-sm-25">
                                                     <div className="d-sm-none col-4 bg-black bg-opacity-5 text-black text-opacity-45 p-3">
                                                         建立時間
                                                     </div>

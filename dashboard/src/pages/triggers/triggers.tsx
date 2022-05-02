@@ -255,7 +255,8 @@ const Triggers = () => {
             setSelectedIds([]);
             getTriggersApi();
         }
-    }, [deleteTriggersResponse, selectedIds.length, getTriggersApi, dispatch]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [deleteTriggersResponse, getTriggersApi, dispatch]);
 
     const [
         pageTitleSecondaryButtonClassName,

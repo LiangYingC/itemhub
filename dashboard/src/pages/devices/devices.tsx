@@ -2,7 +2,10 @@ import { useRef, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useQuery } from '@/hooks/query.hook';
 import { useAppSelector } from '@/hooks/redux.hook';
-import { useGetDevicesApi } from '@/hooks/apis/devices.hook';
+import {
+    useBundleFirmwareApi,
+    useGetDevicesApi,
+} from '@/hooks/apis/devices.hook';
 import { selectDevices } from '@/redux/reducers/devices.reducer';
 import Pins from '@/components/pins/pins';
 import PageTitle from '@/components/page-title/page-title';
@@ -15,20 +18,31 @@ import SearchInput from '@/components/input/search-input/search-input';
 import EmptyDataToCreateItem from '@/components/empty-data-to-create-item/empty-data-to-create-item';
 import { useDeleteDevicesApi } from '@/hooks/apis/devices.hook';
 import { RESPONSE_STATUS } from '@/constants/api';
+import { useDownloadFirmwareApi } from '@/hooks/apis/firmware.hook';
+import compassIcon from '@/assets/images/compass.svg';
+import stopIcon from '@/assets/images/stop.svg';
 import { dialogActions, DialogTypeEnum } from '@/redux/reducers/dialog.reducer';
 import { useDispatch } from 'react-redux';
 
 const Devices = () => {
     const query = useQuery();
+    const retryDownloadFirmwareLimit = 10;
+
     const page = Number(query.get('page') || 1);
     const limit = Number(query.get('limit') || 10);
 
     const [deviceName, setDeviceName] = useState(query.get('deviceName') || '');
     const [shouldBeDeleteId, setShouldBeDeleteId] = useState(0);
+    const [shouldBeBundledId, setShouldBeBundledId] = useState(0);
+    const [downloadBundleId, setDownloadBundleId] = useState('');
+    const [retryDownloadFirmwareFlag, setRetryDownloadFirmwareFlag] =
+        useState(false);
     const [refreshFlag, setRefreshFlag] = useState(false);
+    const [isFirmwarePrepare, setIsFirmwarePrepare] = useState(false);
     const devicesState = useAppSelector(selectDevices);
     const dispatch = useDispatch();
     const hasDevicesRef = useRef(false);
+    const retryDownloadFirmwareCountRef = useRef(0);
     const devices = devicesState.devices;
     const rowNum = devicesState.rowNum;
 
@@ -40,11 +54,20 @@ const Devices = () => {
         name: deviceName,
     });
 
+    const { fetchApi: deleteMultipleApi, data: responseOfDelete } =
+        useDeleteDevicesApi([shouldBeDeleteId]);
+
     const {
-        isLoading: isDeleting,
-        fetchApi: deleteMultipleApi,
-        data: responseOfDelete,
-    } = useDeleteDevicesApi([shouldBeDeleteId]);
+        fetchApi: bundleFirmwareApi,
+        error: errorOfBundle,
+        data: responseOfBundle,
+    } = useBundleFirmwareApi({ id: shouldBeBundledId });
+
+    const {
+        fetchApi: downloadFirmwareApi,
+        httpStatus: downloadFirmwareHttpStatus,
+        data: responseOfDownloadFirmware,
+    } = useDownloadFirmwareApi({ bundleId: downloadBundleId });
 
     useEffect(() => {
         if (devices && devices.length > 0) {
@@ -67,6 +90,53 @@ const Devices = () => {
             setRefreshFlag(!refreshFlag);
         }
     }, [responseOfDelete]);
+
+    useEffect(() => {
+        if (shouldBeBundledId) {
+            setIsFirmwarePrepare(true);
+            bundleFirmwareApi();
+        }
+    }, [shouldBeBundledId]);
+
+    useEffect(() => {
+        if (errorOfBundle && errorOfBundle.message) {
+            alert(errorOfBundle.message);
+            setIsFirmwarePrepare(false);
+            return;
+        }
+        if (responseOfBundle?.bundleId) {
+            setIsFirmwarePrepare(true);
+            setDownloadBundleId(responseOfBundle.bundleId);
+        }
+    }, [responseOfBundle, errorOfBundle]);
+
+    useEffect(() => {
+        if (downloadBundleId) {
+            downloadFirmwareApi();
+        }
+    }, [downloadBundleId, retryDownloadFirmwareFlag]);
+
+    useEffect(() => {
+        if (downloadFirmwareHttpStatus === 204) {
+            retryDownloadFirmwareCountRef.current += 1;
+            if (
+                retryDownloadFirmwareCountRef.current >
+                retryDownloadFirmwareLimit
+            ) {
+                alert(
+                    '伺服器目前過於忙碌, 已經超過預期打包的時間, 請稍候再嘗試下載'
+                );
+                retryDownloadFirmwareCountRef.current = 0;
+                return;
+            }
+            setTimeout(() => {
+                setRetryDownloadFirmwareFlag(!retryDownloadFirmwareFlag);
+            }, 3000);
+        } else if (downloadFirmwareHttpStatus === 200) {
+            setIsFirmwarePrepare(false);
+            retryDownloadFirmwareCountRef.current = 0;
+        }
+    }, [responseOfDownloadFirmware]);
 
     const refresh = () => {
         getDevicesApi();
@@ -97,6 +167,10 @@ const Devices = () => {
                 promptInvalidMessage: '輸入錯誤',
             })
         );
+    };
+
+    const bundleFirmware = (id: number) => {
+        setShouldBeBundledId(id);
     };
 
     return (
@@ -224,11 +298,49 @@ const Devices = () => {
                                                         <div
                                                             className="me-4 mb-3"
                                                             role="button"
+                                                            onClick={() => {
+                                                                if (
+                                                                    isFirmwarePrepare
+                                                                ) {
+                                                                    return;
+                                                                }
+                                                                bundleFirmware(
+                                                                    id
+                                                                );
+                                                            }}
                                                         >
-                                                            <img
-                                                                className="icon"
-                                                                src={cloudIcon}
-                                                            />
+                                                            {isFirmwarePrepare &&
+                                                            shouldBeBundledId ===
+                                                                id ? (
+                                                                <img
+                                                                    title="正在產生 firmware project"
+                                                                    className="icon"
+                                                                    src={
+                                                                        compassIcon
+                                                                    }
+                                                                />
+                                                            ) : (
+                                                                <div className="position-relative">
+                                                                    <img
+                                                                        className="icon"
+                                                                        src={
+                                                                            cloudIcon
+                                                                        }
+                                                                    />
+                                                                    <img
+                                                                        className={`icon position-absolute ${
+                                                                            isFirmwarePrepare &&
+                                                                            shouldBeBundledId !==
+                                                                                id
+                                                                                ? ''
+                                                                                : 'd-none'
+                                                                        }`}
+                                                                        src={
+                                                                            stopIcon
+                                                                        }
+                                                                    />
+                                                                </div>
+                                                            )}
                                                         </div>
                                                         <div
                                                             className="me-4 mb-3"

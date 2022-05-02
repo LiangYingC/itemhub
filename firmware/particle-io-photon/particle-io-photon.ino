@@ -30,7 +30,7 @@ std::string apiEndpoint = "itemhub.io";
 
 std::string emptyString = "";
 std::string authApiEndpoint = "/api/v1/oauth/exchange-token-for-device";
-std::string authPostBody = "{\"clientId\":\"miterfrants@gmail.com\",\"clientSecret\":\"@Testing123123\"}";
+std::string authPostBody = "{\"clientId\":\"{CLIENT_ID}\",\"clientSecret\":\"{CLIENT_SECRET}\"}";
 std::string remoteDeviceId = "";
 std::string token = "";
 std::string POST = "POST";

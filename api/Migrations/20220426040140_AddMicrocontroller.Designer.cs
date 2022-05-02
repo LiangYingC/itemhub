@@ -3,14 +3,16 @@ using System;
 using Homo.IotApi;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IotApi.Migrations
 {
     [DbContext(typeof(IotDbContext))]
-    partial class IotDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220426040140_AddMicrocontroller")]
+    partial class AddMicrocontroller
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -271,9 +273,6 @@ namespace IotApi.Migrations
                     b.HasIndex("DeviceId");
 
                     b.HasIndex("OwnerId");
-
-                    b.HasIndex("BundleId", "DeletedAt")
-                        .IsUnique();
 
                     b.ToTable("FirmwareBundleLog");
                 });
@@ -582,9 +581,6 @@ namespace IotApi.Migrations
                     b.Property<DateTime?>("EditedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("varchar(255)");
-
                     b.Property<int>("Operator")
                         .HasColumnType("int");
 
@@ -607,8 +603,6 @@ namespace IotApi.Migrations
                     b.HasIndex("DestinationDeviceId");
 
                     b.HasIndex("DestinationPin");
-
-                    b.HasIndex("Name");
 
                     b.HasIndex("OwnerId");
 

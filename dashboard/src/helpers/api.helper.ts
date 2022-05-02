@@ -71,6 +71,7 @@ export const ApiHelpers = {
                 const contentType = response.headers.get('content-type');
                 const downloadTypes = [
                     'text/csv',
+                    'application/zip',
                     'application/vnd.ms-excel',
                     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                 ];
@@ -140,10 +141,13 @@ export const ApiHelpers = {
 
         const disposition = response.headers.get('content-disposition');
         if (disposition && disposition.indexOf('attachment') !== -1) {
-            const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+            const filenameRegex =
+                /filename[^;=\n]*=UTF-8''((['"]).*?\2|[^;\n]*)/;
             const matches = filenameRegex.exec(disposition);
             if (matches != null && matches[1]) {
-                filename = matches[1].replace(/['"]/g, '');
+                filename = window.decodeURIComponent(
+                    matches[1].replace(/['"]/g, '')
+                );
             }
         }
 

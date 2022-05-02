@@ -8,8 +8,8 @@
 #include "ItemhubUtilities/Certs.h"
 
 #ifndef STASSID
-#define STASSID "Peter Home"
-#define STAPSK "tdJ2k7wbeMvw"
+#define STASSID "{SSID}"
+#define STAPSK "{WIFI_PASSWORD}"
 #endif
 
 #define SWITCH "SWITCH"
@@ -23,6 +23,7 @@ std::string host = "itemhub.io";
 std::string remoteDeviceId;
 std::string token;
 std::string empty = "";
+std::string postBody = "{\"clientId\":\"{CLIENT_ID}\",\"clientSecret\":\"{CLIENT_SECRET}\"}";
 WiFiClientSecure client;
 X509List ca(CA_PEM);
 DHT dht(DHTPIN, DHTTYPE);
@@ -80,7 +81,7 @@ void setup()
 
   client.setTimeout(15 * 1000);
 
-  token = ItemhubUtilities::Auth(client, ca, host);
+  token = ItemhubUtilities::Auth(client, ca, host, postBody);
   Serial.print("token: ");
   Serial.println(token.c_str());
 

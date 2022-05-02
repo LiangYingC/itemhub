@@ -1,6 +1,7 @@
 export interface SendRequestParams<T> {
     apiPath: string;
     method: string;
+    signal: AbortSignal;
     headers?: { [key: string]: string };
     payload?: { [key: string]: any };
     shouldDeleteContentType?: boolean;
@@ -12,6 +13,7 @@ export interface FetchParams {
     fetchOption: {
         method: string;
         headers: { [key: string]: string };
+        signal: AbortSignal;
         body?: string;
     };
     shouldDeleteContentType: boolean;

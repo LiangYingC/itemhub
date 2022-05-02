@@ -40,7 +40,9 @@ export const useFetchApi = <T>({
                 callbackFunc(data);
             }
 
-            setData(data);
+            if (!controller.signal.aborted) {
+                setData(data);
+            }
         } catch (error: any) {
             const errorData: FetchErrorResultData = error?.data || {
                 errorKey: 'UNKNOWN_ERROR',
@@ -57,7 +59,9 @@ export const useFetchApi = <T>({
                 }/auth/two-factor-auth/`;
             }
 
-            setError(error);
+            if (!controller.signal.aborted) {
+                setError(error);
+            }
         } finally {
             setIsLoading(false);
         }

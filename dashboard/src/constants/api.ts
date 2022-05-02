@@ -28,4 +28,5 @@ export const HTTP_METHOD = {
 export const RESPONSE_STATUS = {
     OK: 'OK',
     FAILED: 'FAILED',
+    CANCEL: 'CANCEL',
 };

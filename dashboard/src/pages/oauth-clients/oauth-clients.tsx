@@ -219,7 +219,7 @@ const OauthClients = () => {
                                     : 'd-none'
                             }`}
                         >
-                            <div className="row bg-black bg-opacity-5 text-black text-opacity-45 h6 py-25 mb-0 d-none d-md-flex">
+                            <div className="row bg-black bg-opacity-5 text-black text-opacity-45 h6 py-25 mb-0 d-none d-lg-flex">
                                 <label
                                     role="button"
                                     className="col-8 col-sm-10"
@@ -240,12 +240,12 @@ const OauthClients = () => {
                             {oauthClients.map(({ id, clientId }) => (
                                 <div
                                     key={id}
-                                    className="row py-0 py-md-4 border-1 border-bottom text-black text-opacity-65 align-content"
+                                    className="row py-0 py-lg-4 border-1 border-bottom text-black text-opacity-65 align-content"
                                 >
-                                    <div className="d-flex d-md-none col-4 bg-black bg-opacity-5 p-3 align-items-center">
+                                    <div className="d-flex d-lg-none col-4 bg-black bg-opacity-5 p-3 align-items-center">
                                         oAuthClient ID
                                     </div>
-                                    <label className="col-8 col-md-10 d-flex align-items-center text-wrap word-brak">
+                                    <label className="col-8 col-lg-10 d-flex align-items-center text-wrap word-brak">
                                         <input
                                             type="checkbox"
                                             onChange={check}
@@ -255,10 +255,10 @@ const OauthClients = () => {
                                         />
                                         {clientId}
                                     </label>
-                                    <div className="d-flex d-md-none col-4 bg-black bg-opacity-5 p-3 align-items-center">
+                                    <div className="d-flex d-lg-none col-4 bg-black bg-opacity-5 p-3 align-items-center">
                                         操作
                                     </div>
-                                    <div className="col-8 col-md-2 d-flex align-items-center">
+                                    <div className="col-8 col-lg-2 d-flex align-items-center">
                                         <Link
                                             to={`/dashboard/oauth-clients/${id}`}
                                             className="me-4"

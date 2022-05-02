@@ -1,15 +1,38 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import paginationPrev from '@/assets/images/pagination-prev.svg';
+import paginationNext from '@/assets/images/pagination-next.svg';
+import paginationDot from '@/assets/images/pagination-dot.svg';
 
 const Pagination = (props: { rowNum: number; limit: number; page: number }) => {
     const [pages, setPages] = useState<Array<number>>([]);
     const { rowNum, limit, page } = props;
+    const [isShowPrevDot, setIsShowPrevDot] = useState<boolean>(false);
+    const [isShowNextDot, setIsShowNextDot] = useState<boolean>(false);
+    const [maxPage, setMaxPage] = useState<number>();
 
     useEffect(() => {
         const maxPage = Math.ceil(rowNum / limit);
+        setMaxPage(maxPage);
+
+        if (page - 2 > 1) {
+            setIsShowPrevDot(true);
+        }
+        if (page + 2 < maxPage) {
+            setIsShowNextDot(true);
+        }
+
         const pages = [];
         for (let i = 1; i <= maxPage; i++) {
-            pages.push(i);
+            if (i + 1 == page || i + 2 == page) {
+                pages.push(i);
+            }
+            if (i == page) {
+                pages.push(i);
+            }
+            if (i - 1 == page || i - 2 == page) {
+                pages.push(i);
+            }
         }
         setPages(pages);
     }, [rowNum, limit]);
@@ -20,24 +43,31 @@ const Pagination = (props: { rowNum: number; limit: number; page: number }) => {
             data-testid="pagination"
         >
             <Link
-                className={`${
-                    page === 1 ? 'd-none' : ''
-                } p-3 text-primary-600 text-decoration-none`}
+                className={`${page === 1 ? 'd-none' : 'item'} `}
                 to={`./?page=${page - 1}`}
             >
-                上一頁
+                <img src={paginationPrev} alt="" />
             </Link>
+            <Link
+                className={`${isShowPrevDot ? 'item' : 'd-none'} `}
+                to={`./?page=1`}
+            >
+                1
+            </Link>
+            <span className={`${isShowPrevDot ? 'item' : 'd-none'} `}>
+                <img src={paginationDot} alt="" />
+            </span>
             {pages.map((pageNumber) =>
                 pageNumber === page ? (
                     <span
                         key={pageNumber}
-                        className="p-3 text-primary-900 text-decoration-none"
+                        className="bg-primary text-white item"
                     >
                         {pageNumber}
                     </span>
                 ) : (
                     <Link
-                        className="p-3 text-primary-600 text-decoration-none"
+                        className="item"
                         to={`./?page=${pageNumber}`}
                         key={pageNumber}
                     >
@@ -45,13 +75,20 @@ const Pagination = (props: { rowNum: number; limit: number; page: number }) => {
                     </Link>
                 )
             )}
+            <span className={`${isShowNextDot ? 'item' : 'd-none'} `}>
+                <img src={paginationDot} alt="" />
+            </span>
             <Link
-                className={`${
-                    page === pages.length ? 'd-none' : ''
-                } p-3 text-primary-600 text-decoration-none`}
+                className={`${isShowNextDot ? 'item' : 'd-none'} `}
+                to={`./?page=${maxPage}`}
+            >
+                {maxPage}
+            </Link>
+            <Link
+                className={`${page === maxPage ? 'd-none' : 'item'}`}
                 to={`./?page=${page + 1}`}
             >
-                下一頁
+                <img src={paginationNext} alt="" />
             </Link>
         </div>
     );

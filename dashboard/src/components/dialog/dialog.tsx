@@ -6,11 +6,11 @@ import {
 } from '@/redux/reducers/dialog.reducer';
 import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
+import closeIcon from '@/assets/images/dark-close.svg';
 
 const Dialog = () => {
     const dialog = useAppSelector(selectDialog);
     const dispatch = useDispatch();
-    let promptInputValue = '';
 
     const {
         type,
@@ -75,10 +75,10 @@ const Dialog = () => {
     };
 
     const close = () => {
-        promptInputValue = '';
         if (promptInputRef.current) {
             promptInputRef.current.value = '';
         }
+        setIsValid(true);
         dispatch(dialogActions.close());
     };
 
@@ -107,7 +107,7 @@ const Dialog = () => {
                     }`}
                 >
                     <input
-                        className="form-control"
+                        className={`form-control ${isValid ? '' : 'invalid'}`}
                         type="text"
                         ref={promptInputRef}
                         onKeyUp={(
@@ -116,15 +116,13 @@ const Dialog = () => {
                             if (event.key === 'Escape') {
                                 close();
                             }
-                            promptInputValue = event.currentTarget.value;
                             setButtonAvaible(
-                                promptInputValue === checkedMessage
+                                event.currentTarget.value === checkedMessage
                             );
                             if (event.key === 'Enter') {
                                 doFunction();
                             }
                         }}
-                        defaultValue={promptInputValue}
                     />
                     <div
                         className={`text-danger text-sm mt-2 invalid-message ${
@@ -135,9 +133,9 @@ const Dialog = () => {
                     </div>
                 </div>
                 <hr />
-                <div className="d-flex align-items-center">
+                <div className="d-flex align-items-center justify-content-end">
                     <button
-                        className={`btn btn-secondary ${
+                        className={`btn btn-secondary me-3 ${
                             [
                                 DialogTypeEnum.PROMPT,
                                 DialogTypeEnum.CONFIRM,
@@ -156,6 +154,13 @@ const Dialog = () => {
                     >
                         確認
                     </button>
+                </div>
+                <div
+                    role="button"
+                    className="close-button position-absolute top-0 p-3"
+                    onClick={close}
+                >
+                    <img src={closeIcon} />
                 </div>
             </div>
         </div>

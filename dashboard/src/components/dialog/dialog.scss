@@ -2,6 +2,7 @@
     .card {
         z-index: 1;
     }
+
     &::after {
         display: block;
         position: absolute;
@@ -9,5 +10,9 @@
         background: rgba(black, 0.5);
         width: 100vw;
         height: 100vh;
+    }
+
+    .close-button {
+        right: 0;
     }
 }

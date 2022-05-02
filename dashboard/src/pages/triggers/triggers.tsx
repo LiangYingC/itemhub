@@ -17,6 +17,8 @@ import { ArrayHelpers } from '@/helpers/array.helper';
 import { TriggerItem } from '@/types/triggers.type';
 import Pagination from '@/components/pagination/pagination';
 import PageTitle from '@/components/page-title/page-title';
+import { dialogActions, DialogTypeEnum } from '@/redux/reducers/dialog.reducer';
+import { useDispatch } from 'react-redux';
 import SearchInput from '@/components/input/search-input/search-input';
 import EmptyDataToCreateItem from '@/components/empty-data-to-create-item/empty-data-to-create-item';
 import lightTrashIcon from '@/assets/images/light-trash.svg';
@@ -53,6 +55,7 @@ const filterTriggers = ({
 const Triggers = () => {
     const navigate = useNavigate();
     const query = useQuery();
+
     const limit = Number(query.get('limit') || 5);
     const page = Number(query.get('page') || 1);
 
@@ -62,6 +65,7 @@ const Triggers = () => {
 
     const sourceDeviceNameOptionsRef = useRef<string[]>([]);
     const destinationDeviceNameOptionsRef = useRef<string[]>([]);
+
     const sourceDeviceNameOptions = ArrayHelpers.FilterDuplicatedString(
         sourceDeviceNameOptionsRef.current
     );
@@ -200,14 +204,16 @@ const Triggers = () => {
     };
 
     const confirmToDeleteTriggers = () => {
-        if (
-            prompt('請再次輸入 delete，藉此執行刪除') === 'delete' &&
-            !isDeletingTriggers
-        ) {
-            deleteTriggersApi();
-        } else {
-            alert('輸入錯誤，請再次嘗試');
-        }
+        dispatch(
+            dialogActions.open({
+                message: '刪除後將無法復原, 請輸入 DELETE 完成刪除',
+                title: '確認刪除 Trigger ?',
+                type: DialogTypeEnum.PROMPT,
+                checkedMessage: 'DELETE',
+                callback: deleteTriggersApi,
+                promptInvalidMessage: '輸入錯誤',
+            })
+        );
     };
 
     const jumpToCreatePage = () => {

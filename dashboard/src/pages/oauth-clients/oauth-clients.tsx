@@ -15,6 +15,7 @@ import lightTrashIcon from '@/assets/images/light-trash.svg';
 import trashIcon from '@/assets/images/trash.svg';
 import plusIcon from '@/assets/images/icon-plus.svg';
 import emptyImage from '@/assets/images/empty-image.svg';
+import { dialogActions, DialogTypeEnum } from '@/redux/reducers/dialog.reducer';
 import {
     toasterActions,
     ToasterTypeEnum,
@@ -27,6 +28,7 @@ const OauthClients = () => {
 
     const { oauthClients, rowNum } = useAppSelector(selectOauthClients);
     const dispatch = useAppDispatch();
+
     const [selectedIds, setSelectedIds] = useState(Array<number>());
     const [shouldBeDeleteId, setShouldBeDeleteId] = useState(0);
     const [refreshFlag, setRefreshFlag] = useState(false);
@@ -42,11 +44,8 @@ const OauthClients = () => {
         limit,
     });
 
-    const {
-        isLoading: isDeleting,
-        fetchApi: deleteMultipleApi,
-        data: responseOfDelete,
-    } = useDeleteOauthClients(selectedIds);
+    const { fetchApi: deleteMultipleApi, data: responseOfDelete } =
+        useDeleteOauthClients(selectedIds);
 
     const {
         isLoading: isDeletingOne,
@@ -145,19 +144,35 @@ const OauthClients = () => {
     };
 
     const deleteOne = (id: number) => {
-        if (prompt('請輸入 delete') !== 'delete') {
-            return;
-        }
-        setShouldBeDeleteId(() => {
-            return id;
-        });
+        dispatch(
+            dialogActions.open({
+                title: '確認刪除 oAuthClient ?',
+                message: '刪除後將無法復原, 請輸入 DELETE 完成刪除',
+                type: DialogTypeEnum.PROMPT,
+                checkedMessage: 'DELETE',
+                callback: () => {
+                    setShouldBeDeleteId(() => {
+                        return id;
+                    });
+                },
+                promptInvalidMessage: '輸入錯誤',
+            })
+        );
     };
 
     const deleteMultiple = () => {
-        if (prompt('請輸入 delete') !== 'delete') {
-            return;
-        }
-        deleteMultipleApi();
+        dispatch(
+            dialogActions.open({
+                title: '確認刪除 oAuthClient ?',
+                message: '刪除後將無法復原, 請輸入 DELETE 完成刪除',
+                type: DialogTypeEnum.PROMPT,
+                checkedMessage: 'DELETE',
+                callback: () => {
+                    deleteMultipleApi();
+                },
+                promptInvalidMessage: '輸入錯誤',
+            })
+        );
     };
 
     return (

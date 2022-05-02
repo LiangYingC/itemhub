@@ -15,6 +15,8 @@ import SearchInput from '@/components/input/search-input/search-input';
 import EmptyDataToCreateItem from '@/components/empty-data-to-create-item/empty-data-to-create-item';
 import { useDeleteDevicesApi } from '@/hooks/apis/devices.hook';
 import { RESPONSE_STATUS } from '@/constants/api';
+import { dialogActions, DialogTypeEnum } from '@/redux/reducers/dialog.reducer';
+import { useDispatch } from 'react-redux';
 
 const Devices = () => {
     const query = useQuery();
@@ -25,6 +27,7 @@ const Devices = () => {
     const [shouldBeDeleteId, setShouldBeDeleteId] = useState(0);
     const [refreshFlag, setRefreshFlag] = useState(false);
     const devicesState = useAppSelector(selectDevices);
+    const dispatch = useDispatch();
     const hasDevicesRef = useRef(false);
     const devices = devicesState.devices;
     const rowNum = devicesState.rowNum;
@@ -74,12 +77,26 @@ const Devices = () => {
     };
 
     const deleteOne = (id: number) => {
-        if (prompt('請輸入 delete') !== 'delete') {
+        const shouldBeDeleteDevice = (devices || []).find(
+            (item) => item.id === id
+        );
+        if (!shouldBeDeleteDevice) {
             return;
         }
-        setShouldBeDeleteId(() => {
-            return id;
-        });
+        dispatch(
+            dialogActions.open({
+                message: `刪除後將無法復原, 請輸入 DELETE 完成刪除 ${shouldBeDeleteDevice.name}`,
+                title: '確認刪除裝置 ?',
+                type: DialogTypeEnum.PROMPT,
+                checkedMessage: 'DELETE',
+                callback: () => {
+                    setShouldBeDeleteId(() => {
+                        return id;
+                    });
+                },
+                promptInvalidMessage: '輸入錯誤',
+            })
+        );
     };
 
     return (

@@ -18,7 +18,6 @@ import { TriggerItem } from '@/types/triggers.type';
 import Pagination from '@/components/pagination/pagination';
 import PageTitle from '@/components/page-title/page-title';
 import { dialogActions, DialogTypeEnum } from '@/redux/reducers/dialog.reducer';
-import { useDispatch } from 'react-redux';
 import SearchInput from '@/components/input/search-input/search-input';
 import EmptyDataToCreateItem from '@/components/empty-data-to-create-item/empty-data-to-create-item';
 import lightTrashIcon from '@/assets/images/light-trash.svg';
@@ -193,25 +192,27 @@ const Triggers = () => {
         name: string;
     }) => {
         setDeletedOneId(id);
-        if (
-            prompt(`請再次輸入 DELETE，藉此刪除 ${name || id}`) === 'DELETE' &&
-            !isDeletingOneTrigger
-        ) {
-            deleteOneTriggerApi();
-        } else {
-            alert('輸入錯誤，請再次嘗試');
-        }
+        dispatch(
+            dialogActions.open({
+                message: '刪除後將無法復原, 請輸入 DELETE 完成刪除',
+                title: `確認刪除 Trigger ${name || id} ?`,
+                type: DialogTypeEnum.PROMPT,
+                checkedMessage: 'DELETE',
+                callback: deleteOneTriggerApi,
+                promptInvalidMessage: '輸入錯誤，請再次嘗試',
+            })
+        );
     };
 
     const confirmToDeleteTriggers = () => {
         dispatch(
             dialogActions.open({
                 message: '刪除後將無法復原, 請輸入 DELETE 完成刪除',
-                title: '確認刪除 Trigger ?',
+                title: '確認刪除 Triggers ?',
                 type: DialogTypeEnum.PROMPT,
                 checkedMessage: 'DELETE',
                 callback: deleteTriggersApi,
-                promptInvalidMessage: '輸入錯誤',
+                promptInvalidMessage: '輸入錯誤，請再次嘗試',
             })
         );
     };
@@ -236,7 +237,8 @@ const Triggers = () => {
             setDeletedOneId(0);
             getTriggersApi();
         }
-    }, [deleteOneTriggerResponse, deletedOneId, getTriggersApi, dispatch]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [deleteOneTriggerResponse, getTriggersApi, dispatch]);
 
     useEffect(() => {
         if (
@@ -254,7 +256,8 @@ const Triggers = () => {
             setSelectedIds([]);
             getTriggersApi();
         }
-    }, [deleteTriggersResponse, selectedIds.length, getTriggersApi, dispatch]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [deleteTriggersResponse, getTriggersApi, dispatch]);
 
     const [
         pageTitleSecondaryButtonClassName,
@@ -263,11 +266,11 @@ const Triggers = () => {
 
     useEffect(() => {
         let pageTitleSecondaryButtonClassName = 'btn btn-danger';
-        if (selectedIds.length === 0) {
+        if (selectedIds.length === 0 || isDeletingTriggers) {
             pageTitleSecondaryButtonClassName += ' disabled';
         }
         setPageTitleSecondaryButtonClassName(pageTitleSecondaryButtonClassName);
-    }, [selectedIds]);
+    }, [selectedIds, isDeletingTriggers]);
 
     return (
         <div className="triggers" data-testid="triggers">

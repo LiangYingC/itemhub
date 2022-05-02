@@ -23,6 +23,7 @@ import compassIcon from '@/assets/images/compass.svg';
 import stopIcon from '@/assets/images/stop.svg';
 import { dialogActions, DialogTypeEnum } from '@/redux/reducers/dialog.reducer';
 import { useDispatch } from 'react-redux';
+import ReactTooltip from 'react-tooltip';
 
 const Devices = () => {
     const query = useQuery();
@@ -289,6 +290,7 @@ const Devices = () => {
                                                         <Link
                                                             className="me-4 mb-3"
                                                             to={`/dashboard/devices/${id}`}
+                                                            data-tip="編輯"
                                                         >
                                                             <img
                                                                 className="icon"
@@ -308,6 +310,7 @@ const Devices = () => {
                                                                     id
                                                                 );
                                                             }}
+                                                            data-tip="打包程式碼"
                                                         >
                                                             {isFirmwarePrepare &&
                                                             shouldBeBundledId ===
@@ -348,12 +351,14 @@ const Devices = () => {
                                                             onClick={() => {
                                                                 deleteOne(id);
                                                             }}
+                                                            data-tip="刪除"
                                                         >
                                                             <img
                                                                 className="icon"
                                                                 src={trashIcon}
                                                             />
                                                         </div>
+                                                        <ReactTooltip effect="solid" />
                                                     </div>
                                                 </div>
                                             </div>

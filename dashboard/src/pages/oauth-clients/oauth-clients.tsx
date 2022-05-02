@@ -16,6 +16,7 @@ import trashIcon from '@/assets/images/trash.svg';
 import plusIcon from '@/assets/images/icon-plus.svg';
 import emptyImage from '@/assets/images/empty-image.svg';
 import { dialogActions, DialogTypeEnum } from '@/redux/reducers/dialog.reducer';
+import ReactTooltip from 'react-tooltip';
 import {
     toasterActions,
     ToasterTypeEnum,
@@ -257,6 +258,7 @@ const OauthClients = () => {
                                             <Link
                                                 to={`/dashboard/oauth-clients/${id}`}
                                                 className="me-4"
+                                                data-tip="編輯"
                                             >
                                                 <img src={pencilIcon} />
                                             </Link>
@@ -265,10 +267,12 @@ const OauthClients = () => {
                                                     deleteOne(id);
                                                 }}
                                                 disabled={isDeletingOne}
-                                                className="btn bg-transparent p-0"
+                                                className="btn bg-transparent p-0 shadow-none"
+                                                data-tip="刪除"
                                             >
                                                 <img src={trashIcon} />
                                             </button>
+                                            <ReactTooltip effect="solid" />
                                         </div>
                                     </div>
                                 </div>

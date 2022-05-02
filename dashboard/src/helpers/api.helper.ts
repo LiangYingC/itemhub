@@ -14,6 +14,7 @@ export const ApiHelpers = {
         method,
         headers = {},
         payload,
+        signal,
         shouldDeleteContentType = false,
         callbackFunc,
     }: SendRequestParams<T>) => {
@@ -24,6 +25,7 @@ export const ApiHelpers = {
             method,
             headers: { Authorization: `Bearer ${token}`, ...headers },
             payload,
+            signal,
             shouldDeleteContentType,
             callbackFunc,
         });
@@ -33,6 +35,7 @@ export const ApiHelpers = {
         method,
         headers = {},
         payload,
+        signal,
         shouldDeleteContentType = false,
         callbackFunc,
     }: SendRequestParams<T>) => {
@@ -40,22 +43,52 @@ export const ApiHelpers = {
             ? {
                   method: method,
                   headers,
+                  signal,
                   body: JSON.stringify(payload),
               }
             : {
                   method: method,
                   headers,
+                  signal,
               };
 
         // eslint-disable-next-line no-async-promise-executor
         return new Promise<FetchResult<T>>(async (resolve, reject) => {
             let result: FetchResult<T>;
+            let response: Response;
 
-            const response = await ApiHelpers.Fetch({
-                apiPath,
-                fetchOption,
-                shouldDeleteContentType,
-            });
+            try {
+                response = await ApiHelpers.Fetch({
+                    apiPath,
+                    fetchOption,
+                    shouldDeleteContentType,
+                });
+            } catch (error: any) {
+                let errorResult: FetchErrorResult;
+                if (error.name === 'AbortError') {
+                    errorResult = {
+                        httpStatus: 499,
+                        status: RESPONSE_STATUS.CANCEL,
+                        data: {
+                            errorKey: 'CANCEL_REQUEST',
+                            message: error.message,
+                            stackTrace: error.name,
+                        },
+                    };
+                } else {
+                    errorResult = {
+                        httpStatus: 404,
+                        status: RESPONSE_STATUS.FAILED,
+                        data: {
+                            errorKey: 'UNKNOWN_ERROR',
+                            message: error.message,
+                            payload: [error.code],
+                            stackTrace: error.name,
+                        },
+                    };
+                }
+                return reject(errorResult);
+            }
 
             if (!response.ok) {
                 const errorJsonData = await response.json();

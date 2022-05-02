@@ -219,7 +219,7 @@ const OauthClients = () => {
                                     : 'd-none'
                             }`}
                         >
-                            <div className="row bg-black bg-opacity-5 text-black text-opacity-45 h6 py-25 mb-0">
+                            <div className="row bg-black bg-opacity-5 text-black text-opacity-45 h6 py-25 mb-0 d-none d-md-flex">
                                 <label
                                     role="button"
                                     className="col-8 col-sm-10"
@@ -240,9 +240,12 @@ const OauthClients = () => {
                             {oauthClients.map(({ id, clientId }) => (
                                 <div
                                     key={id}
-                                    className="row py-4 border-1 border-bottom text-black text-opacity-65"
+                                    className="row py-0 py-md-4 border-1 border-bottom text-black text-opacity-65 align-content"
                                 >
-                                    <label className="col-8 col-sm-10">
+                                    <div className="d-flex d-md-none col-4 bg-black bg-opacity-5 p-3 align-items-center">
+                                        oAuthClient ID
+                                    </div>
+                                    <label className="col-8 col-md-10 d-flex align-items-center text-wrap word-brak">
                                         <input
                                             type="checkbox"
                                             onChange={check}
@@ -252,24 +255,25 @@ const OauthClients = () => {
                                         />
                                         {clientId}
                                     </label>
-                                    <div className="col-4 col-sm-2">
-                                        <div className="d-flex justify-content-start">
-                                            <Link
-                                                to={`/dashboard/oauth-clients/${id}`}
-                                                className="me-4"
-                                            >
-                                                <img src={pencilIcon} />
-                                            </Link>
-                                            <button
-                                                onClick={() => {
-                                                    deleteOne(id);
-                                                }}
-                                                disabled={isDeletingOne}
-                                                className="btn bg-transparent p-0"
-                                            >
-                                                <img src={trashIcon} />
-                                            </button>
-                                        </div>
+                                    <div className="d-flex d-md-none col-4 bg-black bg-opacity-5 p-3 align-items-center">
+                                        操作
+                                    </div>
+                                    <div className="col-8 col-md-2 d-flex align-items-center">
+                                        <Link
+                                            to={`/dashboard/oauth-clients/${id}`}
+                                            className="me-4"
+                                        >
+                                            <img src={pencilIcon} />
+                                        </Link>
+                                        <button
+                                            onClick={() => {
+                                                deleteOne(id);
+                                            }}
+                                            disabled={isDeletingOne}
+                                            className="btn bg-transparent p-0"
+                                        >
+                                            <img src={trashIcon} />
+                                        </button>
                                     </div>
                                 </div>
                             ))}

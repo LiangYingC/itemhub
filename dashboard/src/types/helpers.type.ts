@@ -28,7 +28,7 @@ export type FetchResult<T> = {
 export interface FetchErrorResultData {
     errorKey: string;
     message: string;
-    payload: any[];
+    payload?: any[];
     stackTrace: string;
 }
 export interface FetchErrorResult {

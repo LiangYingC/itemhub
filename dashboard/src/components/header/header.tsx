@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '@/hooks/redux.hook';
 import { menuActions, selectMenu } from '@/redux/reducers/menu.reducer';
 import triggerIcon from '@/assets/images/trigger.svg';
-import dashboardIcon from '@/assets/images/dashboard.svg';
+import chartIcon from '@/assets/images/chart.svg';
 import deviceIcon from '@/assets/images/device.svg';
 import logoIcon from '@/assets/images/logo.svg';
 import logoWordingIcon from '@/assets/images/logo-wording.svg';
@@ -55,7 +55,7 @@ const Header = () => {
                     to="/dashboard/"
                     className="nav-item d-flex align-items-center justify-content-start justify-content-md-center text-white text-opacity-85 rounded-1 py-2 px-3 my-2 mx-3"
                 >
-                    <img src={dashboardIcon} />
+                    <img src={chartIcon} />
                     <span className="text-block text-nowrap overflow-hidden">
                         <div className="mx-3">監控中心</div>
                     </span>

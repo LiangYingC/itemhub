@@ -45,7 +45,7 @@ namespace Homo.IotApi
             return dbContext.Zone.FirstOrDefault(x => x.DeletedAt == null && x.Id == id && x.OwnerId == ownerId);
         }
 
-        public static Zone Create(IotDbContext dbContext, long ownerId, DTOs.Zone dto)
+        public static Zone Create(IotDbContext dbContext, long ownerId, DTOs.ZonePayload dto)
         {
             Zone record = new Zone();
             foreach (var propOfDTO in dto.GetType().GetProperties())
@@ -72,7 +72,7 @@ namespace Homo.IotApi
             dbContext.SaveChanges();
         }
 
-        public static void Update(IotDbContext dbContext, long ownerId, long id, DTOs.Zone dto)
+        public static void Update(IotDbContext dbContext, long ownerId, long id, DTOs.ZonePayload dto)
         {
             Zone record = dbContext.Zone.Where(x => x.OwnerId == ownerId && x.Id == id).FirstOrDefault();
             foreach (var propOfDTO in dto.GetType().GetProperties())

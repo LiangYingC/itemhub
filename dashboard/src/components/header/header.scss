@@ -1,6 +1,6 @@
 $header-height: 64px;
 $logo-block-y-padding: 2.125rem;
-$desktop-header-width: 285px;
+$desktop-header-width: calc(285px + 2rem);
 $logo-width: 236px;
 $text-block-width: 225px;
 $desktop-header-close-width: 80px;
@@ -21,12 +21,26 @@ $desktop-header-close-width: 80px;
             height: 2.5px;
             width: 24px;
             margin-top: 6px;
-            transition: opacity 1.5s ease-in-out, transform 1.5s ease-in-out;
+            transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+        }
+
+        :nth-child(1) {
+            transform: translateY(8.75px) rotate(45deg);
+        }
+        :nth-child(2) {
+            opacity: 0;
+        }
+        :nth-child(3) {
+            transform: translateY(-8.75px) rotate(-45deg);
         }
     }
 
     .logo-block {
         height: $header-height;
+    }
+
+    .nav-item:hover {
+        background-color: $primary-800;
     }
 
     .logo {
@@ -52,13 +66,13 @@ $desktop-header-close-width: 80px;
 
         .hamburger {
             :nth-child(1) {
-                transform: translateY(8.75px) rotate(45deg);
+                transform: none;
             }
             :nth-child(2) {
-                opacity: 0;
+                opacity: 1;
             }
             :nth-child(3) {
-                transform: translateY(-8.75px) rotate(-45deg);
+                transform: none;
             }
         }
     }

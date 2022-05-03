@@ -28,7 +28,7 @@ const Header = () => {
             } flex-shrink-0 header sticky-md-top align-items-start`}
             data-testid="Header"
         >
-            <div className="logo-block d-flex align-items-center justify-content-between justify-content-md-center">
+            <div className="logo-block d-flex align-items-center justify-content-between justify-content-md-center px-3">
                 <Link to="/dashboard/">
                     <div className="logo align-items-center overflow-hidden d-flex flex-nowrap justify-content-center">
                         <img src={logoIcon} />
@@ -54,7 +54,7 @@ const Header = () => {
             <div className="menu-block py-2">
                 <Link
                     to="/dashboard/"
-                    className="nav-item d-flex align-items-center justify-content-start justify-content-md-center text-white text-opacity-85 rounded-1 py-3 mx-3 mx-md-0"
+                    className="nav-item d-flex align-items-center justify-content-start justify-content-md-center text-white text-opacity-85 rounded-1 py-2 px-3 my-2 mx-3"
                 >
                     <img src={dashboardIcon} />
                     <span className="text-block text-nowrap overflow-hidden">
@@ -63,7 +63,7 @@ const Header = () => {
                 </Link>
                 <Link
                     to="/dashboard/devices"
-                    className="nav-item d-flex align-items-center justify-content-start justify-content-md-center text-white text-opacity-85 rounded-1 py-3 mx-3 mx-md-0"
+                    className="nav-item d-flex align-items-center justify-content-start justify-content-md-center text-white text-opacity-85 rounded-1 py-2 px-3 my-2 mx-3"
                 >
                     <img src={deviceIcon} />
                     <span className="text-block text-nowrap overflow-hidden">
@@ -73,7 +73,7 @@ const Header = () => {
 
                 <Link
                     to="/dashboard/triggers"
-                    className="nav-item d-flex align-items-center justify-content-start justify-content-md-center text-white text-opacity-85 rounded-1 py-3 mx-3 mx-md-0"
+                    className="nav-item d-flex align-items-center justify-content-start justify-content-md-center text-white text-opacity-85 rounded-1 py-2 px-3 my-2 mx-3"
                 >
                     <img src={triggerIcon} />
                     <span className="text-block text-nowrap overflow-hidden">
@@ -82,7 +82,7 @@ const Header = () => {
                 </Link>
                 <Link
                     to="/dashboard/oauth-clients"
-                    className="nav-item d-flex align-items-center justify-content-start justify-content-md-center text-white text-opacity-85 rounded-1 py-3 mx-3 mx-md-0"
+                    className="nav-item d-flex align-items-center justify-content-start justify-content-md-center text-white text-opacity-85 rounded-1 py-2 px-3 my-2 mx-3"
                 >
                     <img src={oAuthClientIcon} />
                     <span className="text-block text-nowrap overflow-hidden">

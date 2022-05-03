@@ -101,7 +101,7 @@ export const ApiHelpers = {
                     };
                 } catch (error: any) {
                     errorResult = {
-                        httpStatus: 404,
+                        httpStatus: 0,
                         status: RESPONSE_STATUS.FAILED,
                         data: {
                             errorKey: 'UNKNOWN_ERROR',

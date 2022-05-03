@@ -39,6 +39,12 @@ $desktop-header-close-width: 80px;
         height: $header-height;
     }
 
+    .nav-item {
+        img {
+            width: 20px;
+            height: 20px;
+        }
+    }
     .nav-item:hover {
         background-color: $primary-800;
     }

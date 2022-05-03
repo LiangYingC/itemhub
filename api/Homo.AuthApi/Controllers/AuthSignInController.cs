@@ -71,7 +71,7 @@ namespace Homo.AuthApi
                         {"duplicatedUserProviders", AuthHelper.GetDuplicatedUserType(user)}
                     });
             }
-            if (user.IsEarlyBird && user.HashPhone == null)
+            if (user.HashPhone == null)
             {
                 throw new CustomException(ERROR_CODE.LACK_PHONE, HttpStatusCode.Forbidden);
             }

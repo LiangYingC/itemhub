@@ -2,22 +2,29 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { RESPONSE_STATUS } from '@/constants/api';
 import { useQuery } from '@/hooks/query.hook';
-import { useAppSelector } from '@/hooks/redux.hook';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux.hook';
 import {
     useGetTriggersApi,
     useDeleteTriggersApi,
 } from '@/hooks/apis/triggers.hook';
 import { selectTriggers } from '@/redux/reducers/triggers.reducer';
 import { selectUniversal } from '@/redux/reducers/universal.reducer';
+import {
+    toasterActions,
+    ToasterTypeEnum,
+} from '@/redux/reducers/toaster.reducer';
 import { ArrayHelpers } from '@/helpers/array.helper';
 import { TriggerItem } from '@/types/triggers.type';
 import Pagination from '@/components/pagination/pagination';
 import PageTitle from '@/components/page-title/page-title';
+import { dialogActions, DialogTypeEnum } from '@/redux/reducers/dialog.reducer';
 import SearchInput from '@/components/input/search-input/search-input';
 import EmptyDataToCreateItem from '@/components/empty-data-to-create-item/empty-data-to-create-item';
 import lightTrashIcon from '@/assets/images/light-trash.svg';
 import pencilIcon from '@/assets/images/pencil.svg';
 import trashIcon from '@/assets/images/trash.svg';
+import ReactTooltip from 'react-tooltip';
+import Spinner from '@/components/spinner/spinner';
 
 const filterTriggers = ({
     triggers,
@@ -49,14 +56,17 @@ const filterTriggers = ({
 const Triggers = () => {
     const navigate = useNavigate();
     const query = useQuery();
+
     const limit = Number(query.get('limit') || 5);
     const page = Number(query.get('page') || 1);
 
+    const dispatch = useAppDispatch();
     const [triggerName, setTriggerName] = useState(query.get('name') || '');
     const { triggerOperators } = useAppSelector(selectUniversal);
 
     const sourceDeviceNameOptionsRef = useRef<string[]>([]);
     const destinationDeviceNameOptionsRef = useRef<string[]>([]);
+
     const sourceDeviceNameOptions = ArrayHelpers.FilterDuplicatedString(
         sourceDeviceNameOptionsRef.current
     );
@@ -120,61 +130,89 @@ const Triggers = () => {
         sourceDeviceNameFilter,
         destinationDeviceNameFilter,
     });
+    const filterTriggersLength = filteredTriggers.length;
 
-    /**
-     *  TODO: Get triggers api 之後會實作 search trigger name 功能，實作後這邊要多傳 triggerName 進去篩選
-     * */
     const { isGettingTriggers, getTriggersApi } = useGetTriggersApi({
         page,
         limit,
+        name: triggerName,
         sourceDeviceName: sourceDeviceNameFilter,
         destinationDeviceName: destinationDeviceNameFilter,
     });
 
     useEffect(() => {
         getTriggersApi();
-    }, [getTriggersApi]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [page]);
 
+    const [deletedOneId, setDeletedOneId] = useState(0);
     const [selectedIds, setSelectedIds] = useState(Array<number>());
 
-    const isSelectAll = selectedIds.length === filteredTriggers.length;
+    const isSelectAll =
+        filterTriggersLength !== 0 &&
+        selectedIds.length === filterTriggersLength;
+
     const toggleSelectAll = () => {
-        if (selectedIds.length === filteredTriggers.length) {
+        if (selectedIds.length === filterTriggersLength) {
             setSelectedIds([]);
         } else {
             setSelectedIds(filteredTriggers.map(({ id }) => id));
         }
     };
 
-    const { isDeletingTriggers, deleteTriggersApi, deleteTriggersResponse } =
-        useDeleteTriggersApi(selectedIds);
-
-    const updateSelectedIds = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const updateSelectedIds = (id: number) => {
         setSelectedIds((previous) => {
-            const id = e.target.value;
             const newSelectedIds = [...previous];
-
-            if (e.target.checked) {
-                newSelectedIds.push(Number(id));
+            const targetIndex = newSelectedIds.indexOf(id);
+            if (targetIndex !== -1) {
+                newSelectedIds.splice(targetIndex, 1);
             } else {
-                const index = newSelectedIds.findIndex(
-                    (item) => item === Number(id)
-                );
-                newSelectedIds.splice(index, 1);
+                newSelectedIds.push(id);
             }
             return newSelectedIds;
         });
     };
 
+    const {
+        isDeletingTriggers: isDeletingOneTrigger,
+        deleteTriggersApi: deleteOneTriggerApi,
+        deleteTriggersResponse: deleteOneTriggerResponse,
+    } = useDeleteTriggersApi([deletedOneId]);
+
+    const { isDeletingTriggers, deleteTriggersApi, deleteTriggersResponse } =
+        useDeleteTriggersApi(selectedIds);
+
+    const confirmToDeleteOneTrigger = ({
+        id,
+        name,
+    }: {
+        id: number;
+        name: string;
+    }) => {
+        setDeletedOneId(id);
+        dispatch(
+            dialogActions.open({
+                message: '刪除後將無法復原, 請輸入 DELETE 完成刪除',
+                title: `確認刪除 Trigger ${name || id} ?`,
+                type: DialogTypeEnum.PROMPT,
+                checkedMessage: 'DELETE',
+                callback: deleteOneTriggerApi,
+                promptInvalidMessage: '輸入錯誤，請再次嘗試',
+            })
+        );
+    };
+
     const confirmToDeleteTriggers = () => {
-        if (
-            prompt('請再次輸入 delete，藉此執行刪除') === 'delete' &&
-            !isDeletingTriggers
-        ) {
-            deleteTriggersApi();
-        } else {
-            alert('輸入錯誤，請再次嘗試');
-        }
+        dispatch(
+            dialogActions.open({
+                message: '刪除後將無法復原, 請輸入 DELETE 完成刪除',
+                title: '確認刪除 Triggers ?',
+                type: DialogTypeEnum.PROMPT,
+                checkedMessage: 'DELETE',
+                callback: deleteTriggersApi,
+                promptInvalidMessage: '輸入錯誤，請再次嘗試',
+            })
+        );
     };
 
     const jumpToCreatePage = () => {
@@ -183,12 +221,41 @@ const Triggers = () => {
 
     useEffect(() => {
         if (
+            deletedOneId &&
+            deleteOneTriggerResponse &&
+            deleteOneTriggerResponse.status === RESPONSE_STATUS.OK
+        ) {
+            dispatch(
+                toasterActions.pushOne({
+                    message: `Trigger ${deletedOneId} 已經成功刪除`,
+                    duration: 5,
+                    type: ToasterTypeEnum.INFO,
+                })
+            );
+            setDeletedOneId(0);
+            getTriggersApi();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [deleteOneTriggerResponse, getTriggersApi, dispatch]);
+
+    useEffect(() => {
+        if (
+            selectedIds.length !== 0 &&
             deleteTriggersResponse &&
             deleteTriggersResponse.status === RESPONSE_STATUS.OK
         ) {
+            dispatch(
+                toasterActions.pushOne({
+                    message: '多個 Triggers 已經成功刪除',
+                    duration: 5,
+                    type: ToasterTypeEnum.INFO,
+                })
+            );
+            setSelectedIds([]);
             getTriggersApi();
         }
-    }, [deleteTriggersResponse, getTriggersApi]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [deleteTriggersResponse, getTriggersApi, dispatch]);
 
     const [
         pageTitleSecondaryButtonClassName,
@@ -197,11 +264,11 @@ const Triggers = () => {
 
     useEffect(() => {
         let pageTitleSecondaryButtonClassName = 'btn btn-danger';
-        if (selectedIds.length === 0) {
+        if (selectedIds.length === 0 || isDeletingTriggers) {
             pageTitleSecondaryButtonClassName += ' disabled';
         }
         setPageTitleSecondaryButtonClassName(pageTitleSecondaryButtonClassName);
-    }, [selectedIds]);
+    }, [selectedIds, isDeletingTriggers]);
 
     return (
         <div className="triggers" data-testid="triggers">
@@ -221,14 +288,18 @@ const Triggers = () => {
                     <EmptyDataToCreateItem itemName="觸發" />
                 ) : (
                     <>
-                        <div className="d-flex flex-column flex-sm-row">
-                            <SearchInput
-                                placeholder="搜尋觸發"
-                                onChangeValue={(value) => setTriggerName(value)}
-                                onSearch={getTriggersApi}
-                            />
+                        <div className="d-flex flex-column flex-sm-row flex-wrap">
+                            <div className="me-3 mb-2">
+                                <SearchInput
+                                    placeholder="搜尋觸發"
+                                    onChangeValue={(value) =>
+                                        setTriggerName(value)
+                                    }
+                                    onSearch={getTriggersApi}
+                                />
+                            </div>
                             {/* TODO: 來源裝置、目標裝置的 filter，接著要等設計稿改動再調整，應該會改成 autocompeleted input search，現在先不動 */}
-                            <label className="ms-3">
+                            <label className="me-3 mb-2">
                                 <select
                                     value={sourceDeviceNameFilter}
                                     onChange={(e) => {
@@ -255,7 +326,7 @@ const Triggers = () => {
                                     )}
                                 </select>
                             </label>
-                            <label className="ms-3">
+                            <label className="me-3 mb-2">
                                 <select
                                     value={destinationDeviceNameFilter}
                                     onChange={(e) => {
@@ -284,144 +355,141 @@ const Triggers = () => {
                             </label>
                         </div>
                         {isGettingTriggers || triggers === null ? (
-                            <div>Loading</div>
+                            <div className="w-100 d-flex justify-content-center my-4">
+                                <Spinner />
+                            </div>
                         ) : (
                             <div className="mt-3 mt-sm-45">
-                                <div className="d-none d-sm-block">
-                                    <div className="row py-25 px-3 m-0 bg-black bg-opacity-5 h6 text-black text-opacity-45">
-                                        <label className="col-3" role="button">
-                                            <div className="d-flex align-items-center">
-                                                <input
-                                                    type="checkbox"
-                                                    className="me-3"
-                                                    checked={isSelectAll}
-                                                    onChange={toggleSelectAll}
-                                                />
-                                                <span>觸發名稱</span>
-                                            </div>
-                                        </label>
-                                        <div className="col-2">來源裝置</div>
-                                        <div className="col-1">來源 Pin</div>
-                                        <div className="col-2">條件</div>
-                                        <div className="col-2">目標裝置</div>
-                                        <div className="col-1">目標 Pin</div>
-                                        <div className="col-1">操作</div>
-                                    </div>
+                                <div className="row py-25 px-3 m-0 bg-black bg-opacity-5 fs-5 text-black text-opacity-45 d-none d-lg-flex">
+                                    <label className="col-3" role="button">
+                                        <div className="d-flex align-items-center">
+                                            <input
+                                                type="checkbox"
+                                                className="me-3"
+                                                checked={isSelectAll}
+                                                onChange={toggleSelectAll}
+                                            />
+                                            <span>觸發名稱</span>
+                                        </div>
+                                    </label>
+                                    <div className="col-2">來源裝置</div>
+                                    <div className="col-1">來源 Pin</div>
+                                    <div className="col-2">條件</div>
+                                    <div className="col-2">目標裝置</div>
+                                    <div className="col-1">目標 Pin</div>
+                                    <div className="col-1">操作</div>
                                 </div>
                                 <div className="triggers-list">
                                     {filteredTriggers.map(
                                         (
                                             {
                                                 id,
+                                                name,
                                                 sourceDevice,
                                                 sourcePin,
                                                 destinationDevice,
                                                 destinationPin,
                                                 operator,
                                                 sourceThreshold,
-                                                name,
                                             },
                                             index
                                         ) => (
                                             <div
                                                 key={`${id}-${index}`}
-                                                className="row border-bottom border-black border-opacity-10 p-0 m-0 py-sm-4 px-sm-3"
+                                                role="button"
+                                                className="row list border-bottom border-black border-opacity-10 p-0 m-0 py-lg-4 px-lg-3"
+                                                onClick={() => {
+                                                    updateSelectedIds(id);
+                                                }}
                                             >
-                                                <div className="row col-12 col-sm-3 text-black text-opacity-65 h6 mx-0 mb-0 px-0 px-sm-25">
-                                                    <div className="d-block d-sm-none col-4 p-3 bg-black bg-opacity-5 text-black text-opacity-45">
-                                                        觸發名稱
-                                                    </div>
-                                                    <label className="col-8 col-sm-12 p-3 p-sm-0 d-flex flex-column flex-sm-row align-items-start">
-                                                        <input
-                                                            className="me-3 mb-3"
-                                                            type="checkbox"
-                                                            onChange={
-                                                                updateSelectedIds
-                                                            }
-                                                            value={id}
-                                                            checked={selectedIds.includes(
+                                                <div className="d-block d-lg-none py-3 col-4 bg-black bg-opacity-5 text-black text-opacity-45">
+                                                    觸發名稱
+                                                </div>
+                                                <div className="col-8 col-lg-3 py-3 py-lg-0 d-flex flex-column flex-lg-row align-items-start">
+                                                    <input
+                                                        className="me-3 mt-2"
+                                                        type="checkbox"
+                                                        onClick={(
+                                                            event: React.MouseEvent<HTMLInputElement>
+                                                        ) => {
+                                                            event.stopPropagation();
+                                                            updateSelectedIds(
                                                                 id
-                                                            )}
-                                                        />
-                                                        {name || '--'}
-                                                    </label>
+                                                            );
+                                                        }}
+                                                        value={id}
+                                                        checked={selectedIds.includes(
+                                                            id
+                                                        )}
+                                                    />
+                                                    <div>{name || '--'}</div>
                                                 </div>
-                                                <div className="row col-12 col-sm-2 mx-0 mb-0 px-0 px-sm-25">
-                                                    <div className="d-block d-sm-none col-4 p-3 bg-black bg-opacity-5 text-black text-opacity-45">
-                                                        來源裝置名稱
-                                                    </div>
-                                                    <div className="col-8 col-sm-12 p-3 p-sm-0 lh-base">
-                                                        {sourceDevice?.name}
-                                                    </div>
+                                                <div className="d-block d-lg-none col-4 py-3 bg-black bg-opacity-5 text-black text-opacity-45">
+                                                    來源裝置名稱
                                                 </div>
-                                                <div className="row col-12 col-sm-1 mx-0 mb-0 px-0 px-sm-25">
-                                                    <div className="d-block d-sm-none col-4 p-3 bg-black bg-opacity-5 text-black text-opacity-45">
-                                                        來源 Pin
-                                                    </div>
-                                                    <div className="col-8 col-sm-12 p-3 p-sm-0 lh-base">
-                                                        {sourcePin}
-                                                    </div>
+                                                <div className="col-8 col-lg-2 py-3 py-lg-0 lh-base">
+                                                    {sourceDevice?.name}
                                                 </div>
-                                                <div className="row col-12 col-sm-2 mx-0 mb-0 px-0 px-sm-25">
-                                                    <div className="d-block d-sm-none col-4 p-3 bg-black bg-opacity-5 text-black text-opacity-45">
-                                                        條件
-                                                    </div>
-                                                    <div className="d-flex col-8 col-sm-12 p-3 p-sm-0 lh-base">
-                                                        <span className="pe-1">
-                                                            {
-                                                                triggerOperators[
-                                                                    operator
-                                                                ]?.label
-                                                            }
-                                                        </span>
-                                                        <span>
-                                                            {sourceThreshold}
-                                                        </span>
-                                                    </div>
+                                                <div className="d-block d-lg-none col-4 py-3 bg-black bg-opacity-5 text-black text-opacity-45">
+                                                    來源 Pin
                                                 </div>
-                                                <div className="row col-12 col-sm-2 mx-0 mb-0 px-0 px-sm-25">
-                                                    <div className="d-block d-sm-none col-4 p-3 bg-black bg-opacity-5 text-black text-opacity-45">
-                                                        目標裝置名稱
-                                                    </div>
-                                                    <div className="col-8 col-sm-12 p-3 p-sm-0 lh-base">
+                                                <div className="col-8 col-lg-1 py-3 py-lg-0 lh-base">
+                                                    {sourcePin}
+                                                </div>
+                                                <div className="d-block d-lg-none col-4 py-3 bg-black bg-opacity-5 text-black text-opacity-45">
+                                                    條件
+                                                </div>
+                                                <div className="d-flex col-8 col-lg-2 py-3 py-lg-0 lh-base">
+                                                    <span className="pe-1">
                                                         {
-                                                            destinationDevice?.name
+                                                            triggerOperators[
+                                                                operator
+                                                            ]?.label
                                                         }
-                                                    </div>
+                                                    </span>
+                                                    <span>
+                                                        {sourceThreshold}
+                                                    </span>
                                                 </div>
-                                                <div className="row col-12 col-sm-1 mx-0 mb-0 px-0 px-sm-25">
-                                                    <div className="d-block d-sm-none col-4 p-3 bg-black bg-opacity-5 text-black text-opacity-45">
-                                                        目標 Pin
-                                                    </div>
-                                                    <div className="col-8 col-sm-12 p-3 p-sm-0 lh-base">
-                                                        {destinationPin}
-                                                    </div>
+                                                <div className="d-block d-lg-none col-4 py-3 bg-black bg-opacity-5 text-black text-opacity-45">
+                                                    目標裝置名稱
                                                 </div>
-                                                <div className="row col-12 col-sm-1 mx-0 mb-0 px-0 px-sm-25">
-                                                    <div className="d-block d-sm-none col-4 p-3 bg-black bg-opacity-5 text-black text-opacity-45">
-                                                        操作
-                                                    </div>
-                                                    <div className="col-8 col-sm-12 p-3 p-sm-0 d-flex justify-content-start flex-wrap">
-                                                        <Link
-                                                            className="me-3 mb-3"
-                                                            to={`/dashboard/triggers/${id}`}
-                                                        >
-                                                            <img
-                                                                src={pencilIcon}
-                                                            />
-                                                        </Link>
-                                                        <button
-                                                            className="btn mb-3 p-0 bg-transparent"
-                                                            onClick={() => {
-                                                                // TODO: 實作 delete on trigger api
-                                                            }}
-                                                            disabled={false}
-                                                        >
-                                                            <img
-                                                                src={trashIcon}
-                                                            />
-                                                        </button>
-                                                    </div>
+                                                <div className="col-8 col-lg-2 lh-base py-3 py-lg-0">
+                                                    {destinationDevice?.name}
+                                                </div>
+                                                <div className="d-block d-lg-none col-4 py-3 bg-black bg-opacity-5 text-black text-opacity-45">
+                                                    目標 Pin
+                                                </div>
+                                                <div className="col-8 col-lg-1 lh-base py-3 py-lg-0">
+                                                    {destinationPin}
+                                                </div>
+                                                <div className="d-block d-lg-none col-4 py-3 bg-black bg-opacity-5 text-black text-opacity-45">
+                                                    操作
+                                                </div>
+                                                <div className="col-8 col-lg-1 py-3 py-lg-0 d-flex justify-content-start flex-wrap">
+                                                    <Link
+                                                        className="me-3 mb-3"
+                                                        to={`/dashboard/triggers/${id}`}
+                                                        data-tip="編輯"
+                                                    >
+                                                        <img src={pencilIcon} />
+                                                    </Link>
+
+                                                    <button
+                                                        className="btn mb-3 p-0 bg-transparent shadow-none"
+                                                        onClick={() => {
+                                                            confirmToDeleteOneTrigger(
+                                                                { id, name }
+                                                            );
+                                                        }}
+                                                        disabled={
+                                                            isDeletingOneTrigger
+                                                        }
+                                                        data-tip="刪除"
+                                                    >
+                                                        <img src={trashIcon} />
+                                                    </button>
+                                                    <ReactTooltip effect="solid" />
                                                 </div>
                                             </div>
                                         )

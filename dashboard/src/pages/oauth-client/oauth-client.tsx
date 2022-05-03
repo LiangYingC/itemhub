@@ -13,9 +13,10 @@ import {
 } from '@/hooks/apis/oauth-clients.hook';
 import { RESPONSE_STATUS } from '@/constants/api';
 import PageTitle from '@/components/page-title/page-title';
-import refreshIcon from '/src/assets/images/refresh.svg';
+import refreshIcon from '@/assets/images/refresh.svg';
 import lightTrashIcon from '@/assets/images/light-trash.svg';
-import plusIcon from '/src/assets/images/icon-plus.svg';
+import { dialogActions, DialogTypeEnum } from '@/redux/reducers/dialog.reducer';
+import plusIcon from '@/assets/images/icon-plus.svg';
 import { useDispatch } from 'react-redux';
 import {
     toasterActions,
@@ -120,11 +121,16 @@ const OauthClient = () => {
     };
 
     const deleteClient = () => {
-        if (prompt('確認刪除 oAuthClient? 請輸入 delete') !== 'delete') {
-            alert('輸入錯誤');
-            return;
-        }
-        deleteApi();
+        dispatch(
+            dialogActions.open({
+                message: '刪除後將無法復原, 請輸入 DELETE 完成刪除',
+                title: '確認刪除 oAuthClient ?',
+                type: DialogTypeEnum.PROMPT,
+                checkedMessage: 'DELETE',
+                callback: deleteApi,
+                promptInvalidMessage: '輸入錯誤',
+            })
+        );
     };
 
     return (
@@ -132,9 +138,9 @@ const OauthClient = () => {
             <PageTitle
                 titleClickCallback={backToList}
                 titleBackIconVisible
-                title={`oAuthClient 詳細內容`}
+                title="oAuthClient 詳細內容"
                 primaryButtonVisible={!isCreateMode}
-                primaryButtonWording="刪除選取"
+                primaryButtonWording="刪除"
                 primaryButtonCallback={deleteClient}
                 primaryButtonIcon={lightTrashIcon}
                 primaryButtonClassName="btn btn-danger"

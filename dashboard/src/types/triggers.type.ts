@@ -2,6 +2,7 @@ import { DeviceItem } from '@/types/devices.type';
 
 export interface TriggerItem {
     id: number;
+    name: string;
     ownerId: number;
     createdAt: string;
     editedAt: string | null;
@@ -16,5 +17,4 @@ export interface TriggerItem {
     destinationDeviceSourceState: number;
     destinationDeviceTargetState: number;
     destinationPin: string;
-    name: string;
 }

@@ -109,7 +109,7 @@ const Pin = (props: { pinItem: PinItem; isEditMode: boolean }) => {
                     <div className="text-black text-opacity-65 mb-2">
                         : {value}
                     </div>
-                    <div className="h6 mb-0 text-black text-opacity-45 fw-normal w-100">
+                    <div className="fs-5 mb-0 text-black text-opacity-45 fw-normal w-100">
                         最後回傳時間
                         {` ${moment(createdAt).format('YYYY-MM-DD HH:mm')}`}
                     </div>

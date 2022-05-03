@@ -1,2 +1,14 @@
+$page-w: 35px;
+$page-h: 38px;
+
 .pagination {
+    .item {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: $primary;
+        text-decoration: none;
+        width: $page-w;
+        height: $page-h;
+    }
 }

@@ -21,16 +21,19 @@ export const useFetchApi = <T>({
     const [data, setData] = useState<T | null>(initialData);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<FetchErrorResultData | null>(null);
+    const [httpStatus, setHttpStatus] = useState<number | null>(null);
 
     const fetchApi = useCallback(async () => {
         try {
             setIsLoading(true);
+            setError(null);
 
             const result = await ApiHelpers.SendRequestWithToken<T>({
                 apiPath,
                 method,
                 payload,
             });
+            setHttpStatus(result.httpStatus);
             const data = result.data;
 
             if (callbackFunc) {
@@ -56,7 +59,7 @@ export const useFetchApi = <T>({
             }
 
             // TODO: or just use error data to show on error section.
-            setError(error);
+            setError(error.data);
         } finally {
             setIsLoading(false);
         }
@@ -67,5 +70,6 @@ export const useFetchApi = <T>({
         error,
         data,
         fetchApi,
+        httpStatus,
     };
 };

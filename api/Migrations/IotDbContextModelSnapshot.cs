@@ -39,6 +39,9 @@ namespace IotApi.Migrations
                     b.Property<string>("Info")
                         .HasColumnType("longtext");
 
+                    b.Property<int?>("Microcontroller")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(64)
@@ -60,6 +63,8 @@ namespace IotApi.Migrations
                     b.HasIndex("DeletedAt");
 
                     b.HasIndex("DeviceId");
+
+                    b.HasIndex("Microcontroller");
 
                     b.HasIndex("Name");
 
@@ -288,6 +293,49 @@ namespace IotApi.Migrations
                     b.HasIndex("Pin");
 
                     b.ToTable("DevicePinSwitch");
+                });
+
+            modelBuilder.Entity("Homo.IotApi.FirmwareBundleLog", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("BundleId")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("varchar(32)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<long>("DeviceId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Filename")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Microcontroller")
+                        .HasColumnType("int");
+
+                    b.Property<long>("OwnerId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BundleId");
+
+                    b.HasIndex("DeviceId");
+
+                    b.HasIndex("OwnerId");
+
+                    b.HasIndex("BundleId", "DeletedAt")
+                        .IsUnique();
+
+                    b.ToTable("FirmwareBundleLog");
                 });
 
             modelBuilder.Entity("Homo.IotApi.OauthClient", b =>

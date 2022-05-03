@@ -14,5 +14,7 @@ namespace Homo.IotApi
         public static string NO_SUBSCRIPTION = "NO_SUBSCRIPTION";
         public static string OAUTH_CLIENT_SECRET_ERROR = "OAUTH_CLIENT_SECRET_ERROR";
         public static string TOO_MANY_REQUEST = "TOO_MANY_REQUEST";
+        public static string DEVICE_NOT_FOUND = "DEVICE_NOT_FOUND";
+        public static string DEIVCE_WITHOUT_MCU = "DEIVCE_WITHOUT_MCU";
     }
 }

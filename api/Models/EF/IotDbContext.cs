@@ -38,6 +38,7 @@ namespace Homo.IotApi
         public virtual DbSet<DeviceActivityLog> DeviceActivityLog { get; set; }
         public virtual DbSet<SystemConfig> SystemConfig { get; set; }
         public virtual DbSet<SensorLog> SensorLog { get; set; }
+        public virtual DbSet<FirmwareBundleLog> FirmwareBundleLog { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -63,6 +64,7 @@ namespace Homo.IotApi
                 entity.HasIndex(p => new { p.DeviceId });
                 entity.HasIndex(p => new { p.OwnerId });
                 entity.HasIndex(p => new { p.Online });
+                entity.HasIndex(p => new { p.Microcontroller });
                 entity.HasOne(p => p.Zone).WithMany().HasForeignKey(p => p.ZoneId);
                 entity.HasIndex(p => new { p.CreatedAt });
                 entity.HasIndex(p => new { p.DeletedAt });
@@ -176,6 +178,12 @@ namespace Homo.IotApi
                 entity.HasIndex(p => new { p.CreatedAt });
                 entity.HasIndex(p => new { p.DeletedAt });
                 entity.HasOne(p => p.Device).WithMany().HasForeignKey(p => p.DeviceId);
+            modelBuilder.Entity<FirmwareBundleLog>(entity =>
+            {
+                entity.HasIndex(p => new { p.DeviceId });
+                entity.HasIndex(p => new { p.OwnerId });
+                entity.HasIndex(p => new { p.BundleId });
+                entity.HasIndex(p => new { p.BundleId, p.DeletedAt }).IsUnique();
             });
 
             OnModelCreatingPartial(modelBuilder);

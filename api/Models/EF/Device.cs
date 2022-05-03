@@ -19,5 +19,6 @@ namespace Homo.IotApi
         [MaxLength(128)]
         public string DeviceId { get; set; }
         public bool Online { get; set; }
+        public DTOs.MICROCONTROLLER? Microcontroller { get; set; }
     }
 }

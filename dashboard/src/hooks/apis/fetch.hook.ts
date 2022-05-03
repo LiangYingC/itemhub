@@ -36,14 +36,13 @@ export const useFetchApi = <T>({
                 payload,
                 signal: controller.signal,
             });
-            setHttpStatus(result.httpStatus);
             const data = result.data;
 
             if (!controller.signal.aborted) {
                 if (callbackFunc) {
                     callbackFunc(data);
                 }
-
+                setHttpStatus(result.httpStatus);
                 setData(data);
             }
         } catch (error: any) {
@@ -84,7 +83,7 @@ export const useFetchApi = <T>({
         isLoading,
         error,
         data,
-        fetchApi,
         httpStatus,
+        fetchApi,
     };
 };

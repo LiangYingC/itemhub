@@ -394,7 +394,7 @@ const Triggers = () => {
                                             <div
                                                 key={`${id}-${index}`}
                                                 role="button"
-                                                className="row border-bottom border-black border-opacity-10 p-0 m-0 py-lg-4 px-lg-3"
+                                                className="row list border-bottom border-black border-opacity-10 p-0 m-0 py-lg-4 px-lg-3"
                                                 onClick={() => {
                                                     updateSelectedIds(id);
                                                 }}

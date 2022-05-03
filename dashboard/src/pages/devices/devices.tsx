@@ -216,7 +216,7 @@ const Devices = () => {
                                             online,
                                         }) => (
                                             <div
-                                                className="row border-bottom border-black border-opacity-10 p-0 py-lg-4 px-lg-3 mx-0"
+                                                className="row list border-bottom border-black border-opacity-10 p-0 py-lg-4 px-lg-3 mx-0"
                                                 key={id}
                                                 title={`建立時間: ${createdAt}`}
                                             >

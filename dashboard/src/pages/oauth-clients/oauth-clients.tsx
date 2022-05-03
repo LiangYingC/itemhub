@@ -239,7 +239,7 @@ const OauthClients = () => {
                             {oauthClients.map(({ id, clientId }) => (
                                 <div
                                     key={id}
-                                    className="row py-4 border-1 border-bottom text-black text-opacity-65"
+                                    className="row list py-4 border-1 border-bottom text-black text-opacity-65"
                                     onClick={() => {
                                         check(id);
                                     }}

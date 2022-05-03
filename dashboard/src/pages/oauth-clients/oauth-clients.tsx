@@ -241,7 +241,7 @@ const OauthClients = () => {
                             {oauthClients.map(({ id, clientId }) => (
                                 <div
                                     key={id}
-                                    className="row py-0 py-lg-4 border-1 border-bottom text-black text-opacity-65 align-content"
+                                    className="row py-0 py-lg-4 border-1 border-bottom text-black text-opacity-65"
                                 >
                                     <div className="d-flex d-lg-none col-4 bg-black bg-opacity-5 p-3 align-items-center">
                                         oAuthClient ID

@@ -69,6 +69,7 @@ namespace Homo.IotApi
                 entity.HasIndex(p => new { p.CreatedAt });
                 entity.HasIndex(p => new { p.DeletedAt });
             });
+
             /* deprecated start */
             modelBuilder.Entity<DevicePinSwitch>(entity =>
             {

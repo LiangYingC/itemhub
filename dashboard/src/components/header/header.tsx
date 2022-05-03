@@ -27,74 +27,76 @@ const Header = () => {
             } flex-shrink-0 header sticky-md-top align-items-start`}
             data-testid="Header"
         >
-            <div className="logo-block d-flex align-items-center justify-content-between justify-content-md-center px-3">
-                <Link to="/dashboard/">
-                    <div className="logo align-items-center overflow-hidden d-flex flex-nowrap justify-content-center">
-                        <img src={logoIcon} />
-                        <img
-                            className="ms-25 logo-text"
-                            src={logoWordingIcon}
-                        />
+            <div className="position-fixed">
+                <div className="logo-block d-flex align-items-center justify-content-between justify-content-md-center px-3">
+                    <Link to="/dashboard/">
+                        <div className="logo align-items-center overflow-hidden d-flex flex-nowrap justify-content-start">
+                            <img className="logo-icon ps-3" src={logoIcon} />
+                            <img
+                                className="ms-25 logo-text"
+                                src={logoWordingIcon}
+                            />
+                        </div>
+                    </Link>
+
+                    <div
+                        role="button"
+                        className="hamburger p-2"
+                        onClick={() => {
+                            isOpen ? closeMenu() : openMenu();
+                        }}
+                    >
+                        <div className="bg-white w-100 rounded-pill" />
+                        <div className="bg-white w-100 rounded-pill" />
+                        <div className="bg-white w-100 rounded-pill" />
                     </div>
-                </Link>
-
-                <div
-                    role="button"
-                    className="hamburger p-2"
-                    onClick={() => {
-                        isOpen ? closeMenu() : openMenu();
-                    }}
-                >
-                    <div className="bg-white w-100 rounded-pill" />
-                    <div className="bg-white w-100 rounded-pill" />
-                    <div className="bg-white w-100 rounded-pill" />
                 </div>
-            </div>
-            <div className="menu-block py-2">
-                <Link
-                    to="/dashboard/"
-                    className="nav-item d-flex align-items-center justify-content-start justify-content-md-center text-white text-opacity-85 rounded-1 py-2 px-3 my-2 mx-3"
-                >
-                    <img src={chartIcon} />
-                    <span className="text-block text-nowrap overflow-hidden">
-                        <div className="mx-3">監控中心</div>
-                    </span>
-                </Link>
-                <Link
-                    to="/dashboard/devices"
-                    className="nav-item d-flex align-items-center justify-content-start justify-content-md-center text-white text-opacity-85 rounded-1 py-2 px-3 my-2 mx-3"
-                >
-                    <img src={deviceIcon} />
-                    <span className="text-block text-nowrap overflow-hidden">
-                        <div className="mx-3">裝置</div>
-                    </span>
-                </Link>
+                <div className="menu-block py-2">
+                    <Link
+                        to="/dashboard/"
+                        className="nav-item d-flex align-items-center justify-content-start justify-content-md-center text-white text-opacity-85 rounded-1 py-2 px-3 my-2 mx-3"
+                    >
+                        <img src={chartIcon} />
+                        <span className="text-block text-nowrap overflow-hidden">
+                            <div className="mx-3">監控中心</div>
+                        </span>
+                    </Link>
+                    <Link
+                        to="/dashboard/devices"
+                        className="nav-item d-flex align-items-center justify-content-start justify-content-md-center text-white text-opacity-85 rounded-1 py-2 px-3 my-2 mx-3"
+                    >
+                        <img src={deviceIcon} />
+                        <span className="text-block text-nowrap overflow-hidden">
+                            <div className="mx-3">裝置</div>
+                        </span>
+                    </Link>
 
-                <Link
-                    to="/dashboard/triggers"
-                    className="nav-item d-flex align-items-center justify-content-start justify-content-md-center text-white text-opacity-85 rounded-1 py-2 px-3 my-2 mx-3"
-                >
-                    <img src={triggerIcon} />
-                    <span className="text-block text-nowrap overflow-hidden">
-                        <div className="mx-3">觸發</div>
-                    </span>
-                </Link>
-                <Link
-                    to="/dashboard/oauth-clients"
-                    className="nav-item d-flex align-items-center justify-content-start justify-content-md-center text-white text-opacity-85 rounded-1 py-2 px-3 my-2 mx-3"
-                >
-                    <img src={shieldIcon} />
-                    <span className="text-block text-nowrap overflow-hidden">
-                        <div className="mx-3">oAuthClient</div>
-                    </span>
-                </Link>
+                    <Link
+                        to="/dashboard/triggers"
+                        className="nav-item d-flex align-items-center justify-content-start justify-content-md-center text-white text-opacity-85 rounded-1 py-2 px-3 my-2 mx-3"
+                    >
+                        <img src={triggerIcon} />
+                        <span className="text-block text-nowrap overflow-hidden">
+                            <div className="mx-3">觸發</div>
+                        </span>
+                    </Link>
+                    <Link
+                        to="/dashboard/oauth-clients"
+                        className="nav-item d-flex align-items-center justify-content-start justify-content-md-center text-white text-opacity-85 rounded-1 py-2 px-3 my-2 mx-3"
+                    >
+                        <img src={shieldIcon} />
+                        <span className="text-block text-nowrap overflow-hidden">
+                            <div className="mx-3">oAuthClient</div>
+                        </span>
+                    </Link>
+                </div>
+                <div
+                    className={`space position-absolute bg-black bg-opacity-65 ${
+                        isOpen ? 'd-md-none' : 'd-none'
+                    }`}
+                    onClick={closeMenu}
+                />
             </div>
-            <div
-                className={`space position-absolute bg-black bg-opacity-65 ${
-                    isOpen ? 'd-md-none' : 'd-none'
-                }`}
-                onClick={closeMenu}
-            />
         </div>
     );
 };

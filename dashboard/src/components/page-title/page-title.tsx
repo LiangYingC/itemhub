@@ -37,7 +37,7 @@ const PageTitle = (props: {
 
     return (
         <div className="page-title" data-testid="page-title">
-            <div className="w-100 px-45 pt-3 mb-45">
+            <div className="w-100 px-45 pt-45 mb-45">
                 <div className="flex-fill">
                     <div className="d-flex align-items-start justify-content-between flex-wrap">
                         <h3

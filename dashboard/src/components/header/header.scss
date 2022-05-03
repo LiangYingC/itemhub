@@ -1,9 +1,10 @@
 $header-height: 64px;
 $logo-block-y-padding: 2.125rem;
-$desktop-header-width: calc(285px + 2rem);
-$logo-width: 236px;
-$text-block-width: 225px;
+$logo-width: 202px;
+$text-block-width: 190px;
+$desktop-header-width: 274px;
 $desktop-header-close-width: 80px;
+$nav-item-height: 20px;
 
 .header {
     position: relative;
@@ -41,17 +42,24 @@ $desktop-header-close-width: 80px;
 
     .nav-item {
         img {
-            width: 20px;
-            height: 20px;
+            width: $nav-item-height;
+            height: $nav-item-height;
         }
     }
     .nav-item:hover {
         background-color: $primary-800;
+        text-decoration: none;
     }
 
     .logo {
         width: $logo-width;
         transition: width 0.3s ease-in-out;
+        .logo-icon {
+            height: 25px;
+        }
+        .logo-text {
+            height: 20px;
+        }
     }
 
     .text-block {

@@ -69,3 +69,7 @@ a.btn {
     white-space: normal !important;
     word-break: break-all;
 }
+
+.list:hover {
+    background: rgba($primary, 0.04);
+}

@@ -64,3 +64,16 @@ a.btn {
         margin-top: 6px;
     }
 }
+
+.row:hover {
+    background: rgba($primary, 0.04);
+}
+
+.space {
+    width: 100vh;
+    height: 100vh;
+    position: fixed;
+    z-index: $space-z-index;
+    top: 0;
+    left: 0;
+}

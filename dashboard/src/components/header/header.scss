@@ -1,157 +1,79 @@
-$header-height: 50px;
-$logo-height: 92px;
-$user-height: 94px;
+$header-height: 64px;
 $logo-block-y-padding: 2.125rem;
+$desktop-header-width: 285px;
+$logo-width: 236px;
+$text-block-width: 225px;
+$desktop-header-close-width: 80px;
 
 .header {
     position: relative;
-
-    &.open {
-        .head-nav {
-            width: $nav-open-w;
-            transition: 0.3s ease-in-out;
-            transform: translateX(0);
-            overflow: hidden;
-            z-index: $nav-z-index;
-        }
-
-        .text-block {
-            max-width: none;
-            max-height: none;
-            visibility: visible;
-            overflow: hidden;
-        }
-
-        .logo-block,
-        .item-block,
-        .user-block {
-            width: $nav-open-w;
-        }
-
-        .logo-block {
-            justify-content: space-between;
-            padding: $logo-block-y-padding 1.75rem;
-        }
-
-        .item-block {
-            .item {
-                justify-content: flex-start;
-                .text-block {
-                    padding-left: 0.75rem;
-                }
-            }
-        }
-
-        .user-block {
-            justify-content: space-between;
-            padding: 0 1rem;
-        }
-
-        .hamburger-open {
-            display: none;
-        }
-
-        .hamburger-close {
-            display: block;
-        }
-    }
-
-    .head-nav {
-        width: 80px;
-        height: 100vh;
-        top: 0;
-        left: 0;
-        transition: 0.3s ease-in-out;
-        transform: translateX(0);
-        overflow: hidden;
-        z-index: $nav-z-index;
-        position: relative;
-    }
-
-    .item-block {
-        height: calc(100vh - #{$logo-height} - #{$user-height});
-        padding: 0 1rem;
-        overflow: scroll;
-
-        .item {
-            justify-content: center;
-        }
-
-        .selected {
-            background: $primary-800;
-        }
-    }
+    transition: width 0.3s ease-in-out;
+    min-height: 100vh;
+    background-color: $grey-800;
+    width: $desktop-header-width;
 
     .logo-block {
-        justify-content: center;
-        padding: 2.125rem 1rem;
+        height: $header-height;
     }
 
     .logo {
-        height: 25px;
-        object-fit: cover;
-
-        .logo-text {
-            height: 20px;
-        }
-    }
-
-    .user-block {
-        justify-content: center;
+        width: $logo-width;
+        transition: width 0.3s ease-in-out;
     }
 
     .text-block {
-        max-width: 0;
-        max-height: 0;
-        visibility: hidden;
-        overflow: hidden;
+        width: $text-block-width;
+        transition: width 0.3s ease-in-out;
     }
 
-    .hamburger-open {
-        display: block;
-    }
+    &.close {
+        width: $desktop-header-close-width;
 
-    .hamburger-close {
-        display: none;
+        .text-block {
+            width: 0;
+        }
+
+        .logo {
+            width: 0;
+        }
     }
 
     @include media-breakpoint-down(md) {
         position: fixed;
         top: 0;
-        left: 0;
         width: 100%;
-        z-index: $mobile-header-z-index;
+        background-color: transparent;
+        z-index: $nav-z-index;
 
-        .top-nav {
-            z-index: $mobile-header-z-index;
+        .logo-block {
+            position: fixed;
+            width: 100%;
+            background: $grey-800;
+            z-index: $nav-z-index;
         }
 
-        .head-nav {
-            width: 0;
-            position: absolute;
+        .text-block {
+            width: $text-block-width;
         }
 
-        .menu {
-            position: absolute;
-            top: 0;
+        .menu-block {
+            background: $grey-800;
+            transform: translateX(0);
+            transition: transform 0.3s ease-in-out;
+            position: relative;
+            top: $header-height;
+            height: 100vh;
+            width: $logo-width;
+            z-index: $nav-z-index;
         }
 
-        &.open {
-            .head-nav {
-                width: $nav-open-w;
+        &.close {
+            .logo {
+                width: $logo-width;
             }
 
-            .hamburger-open,
-            .hamburger-close {
-                display: none;
-            }
-
-            .space {
-                width: 100vw;
-                height: 100vh;
-                top: 0;
-                left: 0;
-                z-index: $nav-space-z-index;
+            .menu-block {
+                transform: translateX(-$logo-width);
             }
         }
     }

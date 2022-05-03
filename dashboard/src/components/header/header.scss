@@ -12,6 +12,19 @@ $desktop-header-close-width: 80px;
     background-color: $grey-800;
     width: $desktop-header-width;
 
+    .hamburger {
+        width: 2.5em;
+        margin-top: -6px;
+
+        > div {
+            border: none;
+            height: 2.5px;
+            width: 24px;
+            margin-top: 6px;
+            transition: opacity 1.5s ease-in-out, transform 1.5s ease-in-out;
+        }
+    }
+
     .logo-block {
         height: $header-height;
     }
@@ -35,6 +48,18 @@ $desktop-header-close-width: 80px;
 
         .logo {
             width: 0;
+        }
+
+        .hamburger {
+            :nth-child(1) {
+                transform: translateY(8.75px) rotate(45deg);
+            }
+            :nth-child(2) {
+                opacity: 0;
+            }
+            :nth-child(3) {
+                transform: translateY(-8.75px) rotate(-45deg);
+            }
         }
     }
 

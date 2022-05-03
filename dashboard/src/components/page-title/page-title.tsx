@@ -34,12 +34,6 @@ const PageTitle = (props: {
         secondaryButtonClassName,
         secondaryButtonIcon,
     } = props;
-    const isOpen = useAppSelector(selectMenu).menu.isOpen;
-    const dispatch = useAppDispatch();
-
-    const openMenu = () => {
-        dispatch(menuActions.open());
-    };
 
     return (
         <div className="page-title" data-testid="page-title">

@@ -24,6 +24,7 @@ import stopIcon from '@/assets/images/stop.svg';
 import { dialogActions, DialogTypeEnum } from '@/redux/reducers/dialog.reducer';
 import { useDispatch } from 'react-redux';
 import ReactTooltip from 'react-tooltip';
+import Spinner from '@/components/spinner/spinner';
 
 const Devices = () => {
     const query = useQuery();
@@ -196,7 +197,9 @@ const Devices = () => {
                             onSearch={getDevicesApi}
                         />
                         {isGetingDevices || devices === null ? (
-                            <div>Loading</div>
+                            <div className="w-100 d-flex justify-content-center my-4">
+                                <Spinner />
+                            </div>
                         ) : (
                             <div className="mt-3 mt-sm-45">
                                 <div className="d-none d-sm-block">

@@ -110,16 +110,14 @@ const OauthClients = () => {
         }
     }, [selectedIds, oauthClients]);
 
-    const check = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const check = (id: number) => {
         setSelectedIds((previous) => {
             const newSelectedIds = [...previous];
-            if (event.target.checked) {
-                newSelectedIds.push(Number(event.target.value));
+            const targetIndex = newSelectedIds.indexOf(id);
+            if (targetIndex !== -1) {
+                newSelectedIds.splice(targetIndex, 1);
             } else {
-                const index = newSelectedIds.findIndex(
-                    (item) => item === Number(event.target.value)
-                );
-                newSelectedIds.splice(index, 1);
+                newSelectedIds.push(id);
             }
             let pageTitleSecondaryButtonClassName = 'btn btn-danger';
             if (newSelectedIds.length === 0) {
@@ -242,17 +240,25 @@ const OauthClients = () => {
                                 <div
                                     key={id}
                                     className="row py-4 border-1 border-bottom text-black text-opacity-65"
+                                    onClick={() => {
+                                        check(id);
+                                    }}
                                 >
-                                    <label className="col-8 col-sm-10">
+                                    <div className="col-8 col-sm-10">
                                         <input
                                             type="checkbox"
-                                            onChange={check}
+                                            onClick={(
+                                                event: React.MouseEvent<HTMLInputElement>
+                                            ) => {
+                                                event.stopPropagation();
+                                                check(id);
+                                            }}
                                             value={id}
                                             className="me-3"
                                             checked={selectedIds.includes(id)}
                                         />
                                         {clientId}
-                                    </label>
+                                    </div>
                                     <div className="col-4 col-sm-2">
                                         <div className="d-flex justify-content-start">
                                             <Link

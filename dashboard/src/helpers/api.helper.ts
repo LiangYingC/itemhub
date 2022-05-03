@@ -91,13 +91,27 @@ export const ApiHelpers = {
             }
 
             if (!response.ok) {
-                const errorJsonData = await response.json();
-                const errprResult: FetchErrorResult = {
-                    httpStatus: response.status,
-                    status: RESPONSE_STATUS.FAILED,
-                    data: errorJsonData,
-                };
-                reject(errprResult);
+                let errorResult: FetchErrorResult;
+                try {
+                    const errorResponseJsonData = await response.json();
+                    errorResult = {
+                        httpStatus: response.status,
+                        status: RESPONSE_STATUS.FAILED,
+                        data: errorResponseJsonData,
+                    };
+                } catch (error: any) {
+                    errorResult = {
+                        httpStatus: 404,
+                        status: RESPONSE_STATUS.FAILED,
+                        data: {
+                            errorKey: 'UNKNOWN_ERROR',
+                            message: error.message,
+                            payload: [error.code],
+                            stackTrace: error.name,
+                        },
+                    };
+                }
+                return reject(errorResult);
             }
 
             if (response.status === 200) {
@@ -133,7 +147,7 @@ export const ApiHelpers = {
                 callbackFunc(result);
             }
 
-            resolve(result);
+            return resolve(result);
         });
     },
     Fetch: ({ apiPath, fetchOption, shouldDeleteContentType }: FetchParams) => {

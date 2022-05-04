@@ -1,3 +1,7 @@
 .trigger-form-wrapper {
   width: 720px;
+
+  @include media-breakpoint-down(md) {
+    width: 100%;
+  }
 }

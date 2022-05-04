@@ -109,10 +109,10 @@ const TriggerForm = ({
     ];
 
     return (
-        <div className="trigger-form-wrapper m-auto mt-5">
+        <div className="trigger-form-wrapper px-3 px-md-0 mx-auto mt-4 mt-md-5">
             <Breadcrumbs breadcrumbs={breadcrumbs} />
-            <h3 className="d-flex align-item-center mb-4">
-                <img className="me-3" src={leftArrowIcon} alt="Back" />
+            <h3 className="d-flex align-item-center mb-3 mb-md-4">
+                <img className="me-2 me-md-3" src={leftArrowIcon} alt="Back" />
                 {isCreateMode ? '新增觸發' : '編輯觸發'}
             </h3>
             <form className="card m-0">
@@ -151,8 +151,8 @@ const TriggerForm = ({
                         })
                     }
                 />
-                <div className="d-flex w-100">
-                    <div className="form-group w-50 mb-3 pe-3">
+                <div className="w-100 d-flex flex-column flex-md-row">
+                    <div className="form-group w-100 mb-3 pe-md-3">
                         <label className="mb-1">運算子</label>
                         <select
                             className="form-select"
@@ -175,7 +175,7 @@ const TriggerForm = ({
                             })}
                         </select>
                     </div>
-                    <div className="form-group w-50 mb-3 ps-3">
+                    <div className="form-group w-100 mb-3 ps-md-3">
                         <label className="mb-1">來源裝置門檻</label>
                         <input
                             className="form-control"

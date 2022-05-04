@@ -32,8 +32,8 @@ const DeviceAndPinInputs = ({
     }, [currentDeviceId]);
 
     return (
-        <div className="d-flex f-wrap w-100 mb-3">
-            <div className="form-group w-50 pe-3">
+        <div className="d-flex flex-column flex-md-row w-100 mb-3">
+            <div className="form-group w-100 pe-md-3 mb-3 mb-md-0">
                 <label className="mb-1">{deviceNameLabel}</label>
                 <AutocompletedSearch
                     currentValue={deviceName}
@@ -41,7 +41,7 @@ const DeviceAndPinInputs = ({
                     allSuggestions={allDevices.map(({ name }) => name)}
                 />
             </div>
-            <div className="form-group w-50 ps-3">
+            <div className="form-group w-100 ps-md-3">
                 <label className="mb-1">{pinLabel}</label>
                 <select
                     className="form-select"

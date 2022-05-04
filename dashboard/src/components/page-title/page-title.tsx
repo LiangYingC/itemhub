@@ -10,14 +10,19 @@ const PageTitle = (props: {
     titleBackIconVisible?: boolean;
     primaryButtonVisible?: boolean;
     secondaryButtonVisible?: boolean;
+    thirdlyButtonVisible?: boolean;
     primaryButtonWording?: string;
     secondaryButtonWording?: string;
+    thirdlyButtonWording?: string;
     primaryButtonCallback?: () => void;
     secondaryButtonCallback?: () => void;
+    thirdlyButtonCallback?: () => void;
     primaryButtonIcon?: string;
     primaryButtonClassName?: string;
     secondaryButtonClassName?: string;
     secondaryButtonIcon?: string;
+    thirdlyButtonIcon?: string;
+    thirdlyButtonClassName?: string;
 }) => {
     const {
         title,
@@ -25,14 +30,19 @@ const PageTitle = (props: {
         titleBackIconVisible,
         primaryButtonVisible,
         secondaryButtonVisible,
+        thirdlyButtonVisible,
         primaryButtonCallback,
         primaryButtonWording,
         secondaryButtonCallback,
         secondaryButtonWording,
+        thirdlyButtonCallback,
+        thirdlyButtonWording,
         primaryButtonIcon,
         primaryButtonClassName,
         secondaryButtonClassName,
         secondaryButtonIcon,
+        thirdlyButtonClassName,
+        thirdlyButtonIcon,
     } = props;
     const isOpen = useAppSelector(selectMenu).menu.isOpen;
     const dispatch = useAppDispatch();
@@ -61,6 +71,21 @@ const PageTitle = (props: {
                         </h3>
 
                         <div className="d-flex">
+                            <button
+                                onClick={thirdlyButtonCallback}
+                                className={`${
+                                    thirdlyButtonVisible ? ' me-3' : 'd-none'
+                                } ${
+                                    thirdlyButtonClassName ||
+                                    'btn btn-secondary'
+                                } `}
+                            >
+                                <img
+                                    className="icon"
+                                    src={thirdlyButtonIcon || refreshIcon}
+                                />
+                                <div>{thirdlyButtonWording}</div>
+                            </button>
                             <button
                                 onClick={secondaryButtonCallback}
                                 className={`${

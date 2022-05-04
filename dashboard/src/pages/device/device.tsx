@@ -18,6 +18,7 @@ import {
     ToasterTypeEnum,
 } from '@/redux/reducers/toaster.reducer';
 import moment from 'moment';
+import cloudIcon from '@/assets/images/cloud.svg';
 
 const Device = () => {
     const { id: idFromUrl } = useParams();
@@ -101,10 +102,13 @@ const Device = () => {
                 primaryButtonVisible
                 primaryButtonWording="編輯"
                 primaryButtonCallback={jumpToEditPage}
-                secondaryButtonIcon={trashIcon}
+                secondaryButtonIcon={cloudIcon}
                 secondaryButtonVisible
-                secondaryButtonWording="刪除"
-                secondaryButtonCallback={deleteDevice}
+                secondaryButtonWording="打包程式碼"
+                thirdlyButtonIcon={trashIcon}
+                thirdlyButtonVisible
+                thirdlyButtonWording="刪除"
+                thirdlyButtonCallback={deleteDevice}
             />
             {isGetting || device === null ? (
                 <div>Loading</div>

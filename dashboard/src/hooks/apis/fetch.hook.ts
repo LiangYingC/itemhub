@@ -68,7 +68,8 @@ export const useFetchApi = <T>({
         } finally {
             setIsLoading(false);
         }
-    }, [apiPath, method, payload, controller.signal, callbackFunc]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [apiPath, method, payload, callbackFunc]);
 
     const cancelFetch = () => {
         controller.abort();

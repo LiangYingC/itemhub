@@ -247,7 +247,7 @@ const OauthClients = () => {
                                     <div className="d-flex d-lg-none col-4 bg-black bg-opacity-5 p-3 align-items-center">
                                         oAuthClient ID
                                     </div>
-                                    <div className="col-8 d-flex align-items-center text-wrap word-brak">
+                                    <div className="col-8 d-flex align-items-center text-wrap text-break">
                                         <input
                                             type="checkbox"
                                             onClick={(

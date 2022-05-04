@@ -474,7 +474,7 @@ const Triggers = () => {
                                                     <div className="col-8 col-sm-12 p-3 p-sm-0 d-flex justify-content-start flex-wrap">
                                                         <Link
                                                             className="me-3 mb-3"
-                                                            to={`/dashboard/triggers/${id}`}
+                                                            to={`/dashboard/triggers/edit/${id}`}
                                                             data-tip="編輯"
                                                         >
                                                             <img

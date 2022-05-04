@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
     useDeleteDevicesApi,
     useGetDeviceApi,
     useUpdateDeviceApi,
+    useBundleFirmwareApi,
 } from '@/hooks/apis/devices.hook';
+import { useDownloadFirmwareApi } from '@/hooks/apis/firmware.hook';
 import { useAppSelector } from '@/hooks/redux.hook';
 import { selectDevices } from '@/redux/reducers/devices.reducer';
 import Pins from '@/components/pins/pins';
@@ -19,6 +21,7 @@ import {
 } from '@/redux/reducers/toaster.reducer';
 import moment from 'moment';
 import cloudIcon from '@/assets/images/cloud.svg';
+import compassIcon from '@/assets/images/compass.svg';
 
 const Device = () => {
     const { id: idFromUrl } = useParams();
@@ -36,6 +39,14 @@ const Device = () => {
     const { isLoading: isGetting, fetchApi: getDeviceApi } = useGetDeviceApi(
         Number(id)
     );
+    const [downloadIcon, setDownloaIcon] = useState<string>(cloudIcon);
+    const [isFirmwarePrepare, setIsFirmwarePrepare] = useState(false);
+    const [shouldBeBundledId, setShouldBeBundledId] = useState(0);
+    const [downloadBundleId, setDownloadBundleId] = useState('');
+    const retryDownloadFirmwareCountRef = useRef(0);
+    const retryDownloadFirmwareLimit = 10;
+    const [retryDownloadFirmwareFlag, setRetryDownloadFirmwareFlag] =
+        useState(false);
 
     const { updateDeviceApi, isLoading: isUpdating } = useUpdateDeviceApi({
         id: Number(id),
@@ -55,6 +66,27 @@ const Device = () => {
     const jumpToEditPage = () => {
         navigate('edit');
     };
+
+    const bundleFirmware = () => {
+        console.log(isFirmwarePrepare);
+        if (isFirmwarePrepare) {
+            return;
+        }
+        setDownloaIcon(compassIcon);
+        setShouldBeBundledId(Number(id));
+    };
+
+    const {
+        fetchApi: bundleFirmwareApi,
+        error: errorOfBundle,
+        data: responseOfBundle,
+    } = useBundleFirmwareApi({ id: shouldBeBundledId });
+
+    const {
+        fetchApi: downloadFirmwareApi,
+        httpStatus: downloadFirmwareHttpStatus,
+        data: responseOfDownloadFirmware,
+    } = useDownloadFirmwareApi({ bundleId: downloadBundleId });
 
     useEffect(() => {
         if (device === null) {
@@ -79,6 +111,58 @@ const Device = () => {
         }
     }, [deleteDeviceResponse]);
 
+    useEffect(() => {
+        if (shouldBeBundledId) {
+            setIsFirmwarePrepare(true);
+            bundleFirmwareApi();
+        }
+    }, [shouldBeBundledId]);
+
+    useEffect(() => {
+        if (errorOfBundle && errorOfBundle.message) {
+            alert(errorOfBundle.message);
+            setIsFirmwarePrepare(false);
+            return;
+        }
+        if (responseOfBundle?.bundleId) {
+            setIsFirmwarePrepare(true);
+            setDownloadBundleId(responseOfBundle.bundleId);
+        }
+    }, [responseOfBundle, errorOfBundle]);
+
+    useEffect(() => {
+        if (downloadBundleId) {
+            downloadFirmwareApi();
+        }
+    }, [downloadBundleId, retryDownloadFirmwareFlag]);
+
+    useEffect(() => {
+        if (downloadFirmwareHttpStatus === 204) {
+            retryDownloadFirmwareCountRef.current += 1;
+            if (
+                retryDownloadFirmwareCountRef.current >
+                retryDownloadFirmwareLimit
+            ) {
+                alert(
+                    '伺服器目前過於忙碌, 已經超過預期打包的時間, 請稍候再嘗試下載'
+                );
+                retryDownloadFirmwareCountRef.current = 0;
+                setIsFirmwarePrepare(false);
+                setDownloaIcon(cloudIcon);
+                setShouldBeBundledId(0);
+                return;
+            }
+            setTimeout(() => {
+                setRetryDownloadFirmwareFlag(!retryDownloadFirmwareFlag);
+            }, 3000);
+        } else if (downloadFirmwareHttpStatus === 200) {
+            setIsFirmwarePrepare(false);
+            setDownloaIcon(cloudIcon);
+            setShouldBeBundledId(0);
+            retryDownloadFirmwareCountRef.current = 0;
+        }
+    }, [responseOfDownloadFirmware]);
+
     const deleteDevice = () => {
         dispatch(
             dialogActions.open({
@@ -102,9 +186,10 @@ const Device = () => {
                 primaryButtonVisible
                 primaryButtonWording="編輯"
                 primaryButtonCallback={jumpToEditPage}
-                secondaryButtonIcon={cloudIcon}
+                secondaryButtonIcon={downloadIcon}
                 secondaryButtonVisible
                 secondaryButtonWording="打包程式碼"
+                secondaryButtonCallback={bundleFirmware}
                 thirdlyButtonIcon={trashIcon}
                 thirdlyButtonVisible
                 thirdlyButtonWording="刪除"

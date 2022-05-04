@@ -13,6 +13,13 @@ namespace Homo.AuthApi
         }
 
         [HttpGet]
+        [Route("firmware-types")]
+        public ActionResult<dynamic> getFirmwareTypes()
+        {
+            return ConvertHelper.EnumToList(typeof(MICROCONTROLLER));
+        }
+
+        [HttpGet]
         [Route("social-media-types")]
         public ActionResult<dynamic> getSocialMediaTypes()
         {

@@ -66,19 +66,9 @@ namespace Homo.IotApi
             long ownerId = extraPayload.Id;
             List<Device> devices = DeviceDataservice.GetAll(_dbContext, ownerId);
             List<long> myDeviceIds = devices.Select(x => x.Id).ToList<long>();
-            List<DevicePinSwitch> myDeviceStates = DevicePinSwitchDataservice.GetAll(_dbContext, ownerId, myDeviceIds, (byte)DEVICE_MODE.SWITCH, this.GoogleDevicePin);
+            List<DTOs.DevicePin> myDeviceStates = DevicePinDataservice.GetAll(_dbContext, ownerId, myDeviceIds, DEVICE_MODE.SWITCH, this.GoogleDevicePin);
             List<long> existsStateDeviceIds = myDeviceStates.Select(x => x.DeviceId).ToList();
-            // create device state to memory
-            devices.Where(x => !existsStateDeviceIds.Contains(x.Id)).ToList().ForEach(device =>
-            {
-                // Google Smart Home Device Default Pin: D0
-                DevicePinSwitchDataservice.Create(_dbContext, ownerId, device.Id, new DTOs.DevicePinSwitch()
-                {
-                    Pin = GoogleDevicePin,
-                    Mode = (byte)DEVICE_MODE.SWITCH,
-                    Value = 0
-                });
-            });
+
             return new
             {
                 RequestId = dto.RequestId,
@@ -108,11 +98,11 @@ namespace Homo.IotApi
             {
                 for (int i = 0; i < command.Devices.Count; i++)
                 {
-                    DevicePinSwitchDataservice.UpdateValueByDeviceId(_dbContext, ownerId, command.Devices[i].Id, GoogleDevicePin, command.Execution[i].Params.on.Value ? 1 : 0);
+                    DevicePinDataservice.UpdateValueByDeviceId(_dbContext, ownerId, command.Devices[i].Id, GoogleDevicePin, command.Execution[i].Params.on.Value ? 1 : 0);
                 }
             });
             List<long> myDeviceIds = commands[0].Devices.Select(x => x.Id).ToList<long>();
-            List<DevicePinSwitch> states = DevicePinSwitchDataservice.GetAll(_dbContext, ownerId, myDeviceIds, (byte)DEVICE_MODE.SWITCH, this.GoogleDevicePin);
+            List<DTOs.DevicePin> states = DevicePinDataservice.GetAll(_dbContext, ownerId, myDeviceIds, DEVICE_MODE.SWITCH, this.GoogleDevicePin);
             List<Device> devices = DeviceDataservice.GetAllByIds(_dbContext, ownerId, states.Select(x => x.DeviceId).ToList<long>());
             List<GoogleDeviceState> statesForGoogle = states
             .Select(x => new GoogleDeviceState()

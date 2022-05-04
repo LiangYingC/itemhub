@@ -52,7 +52,7 @@ const PageTitle = (props: {
                             className="text-break text-black text-opacity-85 mb-0"
                         >
                             <img
-                                className={`icon me-2 ${
+                                className={`icon me-3 ${
                                     titleBackIconVisible ? '' : 'd-none'
                                 }`}
                                 src={leftArrowIcon}

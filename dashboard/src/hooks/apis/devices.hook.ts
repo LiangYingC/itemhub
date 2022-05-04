@@ -76,11 +76,13 @@ export const useGetAllDevicesApi = () => {
     };
 };
 
-export const useGetDeviceApi = ({ id }: { id: number }) => {
+export const useGetDeviceApi = (id: number) => {
     const dispatch = useAppDispatch();
-    const dispatchAppendDevice = useCallback(
+    const dispatchRefresh = useCallback(
         (data: DeviceItem) => {
-            dispatch(devicesActions.append(data));
+            if (data) {
+                dispatch(devicesActions.refreshOne(data));
+            }
         },
         [dispatch]
     );
@@ -88,18 +90,12 @@ export const useGetDeviceApi = ({ id }: { id: number }) => {
     let apiPath = `${API_URL}${END_POINT.DEVICE}`;
     apiPath = apiPath.replace(':id', id.toString());
 
-    const { isLoading, error, fetchApi } = useFetchApi<DeviceItem>({
+    return useFetchApi<DeviceItem>({
         apiPath,
         method: HTTP_METHOD.GET,
         initialData: null,
-        callbackFunc: dispatchAppendDevice,
+        callbackFunc: dispatchRefresh,
     });
-
-    return {
-        isLoading,
-        error,
-        getDeviceApi: fetchApi,
-    };
 };
 
 export const useUpdateDeviceApi = ({

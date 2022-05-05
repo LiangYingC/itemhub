@@ -22,6 +22,7 @@ import {
 import moment from 'moment';
 import cloudIcon from '@/assets/images/cloud.svg';
 import compassIcon from '@/assets/images/compass.svg';
+import { selectUniversal } from '@/redux/reducers/universal.reducer';
 
 const Device = () => {
     const { id: idFromUrl } = useParams();
@@ -47,6 +48,7 @@ const Device = () => {
     const retryDownloadFirmwareLimit = 10;
     const [retryDownloadFirmwareFlag, setRetryDownloadFirmwareFlag] =
         useState(false);
+    const { firmwareTypes } = useAppSelector(selectUniversal);
 
     const { updateDeviceApi, isLoading: isUpdating } = useUpdateDeviceApi({
         id: Number(id),
@@ -230,6 +232,14 @@ const Device = () => {
                                 {` ${moment(device.createdAt).format(
                                     'YYYY-MM-DD HH:mm'
                                 )}`}
+                            </div>
+                        </div>
+                        <div className="col-12 col-md-6 d-flex p-0 item">
+                            <div className="d-flex flex-shrink-0 fs-5 item-title py-2 px-25">
+                                裝置類型
+                            </div>
+                            <div className="text-wrap text-black text-opacity-65 py-2 px-25">
+                                {firmwareTypes[device.microcontroller]?.label}
                             </div>
                         </div>
                         <div className="col-12 p-0 item">

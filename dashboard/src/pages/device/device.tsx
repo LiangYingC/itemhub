@@ -161,6 +161,14 @@ const Device = () => {
             setDownloaIcon(cloudIcon);
             setShouldBeBundledId(0);
             retryDownloadFirmwareCountRef.current = 0;
+
+            dispatch(
+                toasterActions.pushOne({
+                    message: '程式碼已成功打包下載',
+                    duration: 5,
+                    type: ToasterTypeEnum.INFO,
+                })
+            );
         }
     }, [responseOfDownloadFirmware]);
 

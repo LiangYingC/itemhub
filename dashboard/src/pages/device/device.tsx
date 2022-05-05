@@ -70,7 +70,6 @@ const Device = () => {
     };
 
     const bundleFirmware = () => {
-        console.log(isFirmwarePrepare);
         if (isFirmwarePrepare) {
             return;
         }
@@ -178,6 +177,17 @@ const Device = () => {
         );
     };
 
+    const bundleDevice = () => {
+        dispatch(
+            dialogActions.open({
+                message: `Client ID 會被重新建立，舊有程式碼將無法使用，請確認是否重新打包？`,
+                title: '重新打包程式碼',
+                type: DialogTypeEnum.CONFIRM,
+                callback: bundleFirmware,
+            })
+        );
+    };
+
     return (
         // UI 結構等設計稿後再重構調整
         <div className="device" data-testid="device">
@@ -191,7 +201,7 @@ const Device = () => {
                 secondaryButtonIcon={downloadIcon}
                 secondaryButtonVisible
                 secondaryButtonWording="打包程式碼"
-                secondaryButtonCallback={bundleFirmware}
+                secondaryButtonCallback={bundleDevice}
                 thirdlyButtonIcon={trashIcon}
                 thirdlyButtonVisible
                 thirdlyButtonWording="刪除"

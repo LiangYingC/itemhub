@@ -39,6 +39,9 @@ namespace IotApi.Migrations
                     b.Property<string>("Info")
                         .HasColumnType("longtext");
 
+                    b.Property<int?>("Microcontroller")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(64)
@@ -55,7 +58,13 @@ namespace IotApi.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("DeletedAt");
+
                     b.HasIndex("DeviceId");
+
+                    b.HasIndex("Microcontroller");
 
                     b.HasIndex("Name");
 
@@ -93,11 +102,67 @@ namespace IotApi.Migrations
 
                     b.HasIndex("CreatedAt");
 
+                    b.HasIndex("DeletedAt");
+
                     b.HasIndex("DeviceId");
 
                     b.HasIndex("OwnerId");
 
                     b.ToTable("DeviceActivityLog");
+                });
+
+            modelBuilder.Entity("Homo.IotApi.DevicePin", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<long>("DeviceId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("EditedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("Mode")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<long>("OwnerId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Pin")
+                        .IsRequired()
+                        .HasMaxLength(3)
+                        .HasColumnType("varchar(3)");
+
+                    b.Property<decimal?>("Value")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("DeletedAt");
+
+                    b.HasIndex("DeviceId");
+
+                    b.HasIndex("Mode");
+
+                    b.HasIndex("Name");
+
+                    b.HasIndex("OwnerId");
+
+                    b.HasIndex("Value");
+
+                    b.ToTable("DevicePin");
                 });
 
             modelBuilder.Entity("Homo.IotApi.DevicePinName", b =>
@@ -230,6 +295,49 @@ namespace IotApi.Migrations
                     b.ToTable("DevicePinSwitch");
                 });
 
+            modelBuilder.Entity("Homo.IotApi.FirmwareBundleLog", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("BundleId")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("varchar(32)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<long>("DeviceId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Filename")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Microcontroller")
+                        .HasColumnType("int");
+
+                    b.Property<long>("OwnerId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BundleId");
+
+                    b.HasIndex("DeviceId");
+
+                    b.HasIndex("OwnerId");
+
+                    b.HasIndex("BundleId", "DeletedAt")
+                        .IsUnique();
+
+                    b.ToTable("FirmwareBundleLog");
+                });
+
             modelBuilder.Entity("Homo.IotApi.OauthClient", b =>
                 {
                     b.Property<long>("Id")
@@ -266,6 +374,10 @@ namespace IotApi.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ClientId");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("DeletedAt");
 
                     b.HasIndex("DeviceId");
 
@@ -346,6 +458,51 @@ namespace IotApi.Migrations
                     b.ToTable("OauthCode");
                 });
 
+            modelBuilder.Entity("Homo.IotApi.SensorLog", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<long>("DeviceId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("EditedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<long>("OwnerId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Pin")
+                        .IsRequired()
+                        .HasMaxLength(3)
+                        .HasColumnType("varchar(3)");
+
+                    b.Property<decimal?>("Value")
+                        .IsRequired()
+                        .HasColumnType("decimal(65,30)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("DeletedAt");
+
+                    b.HasIndex("DeviceId");
+
+                    b.HasIndex("OwnerId");
+
+                    b.HasIndex("Pin");
+
+                    b.ToTable("SensorLog");
+                });
+
             modelBuilder.Entity("Homo.IotApi.Subscription", b =>
                 {
                     b.Property<long>("Id")
@@ -390,6 +547,10 @@ namespace IotApi.Migrations
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("DeletedAt");
 
                     b.HasIndex("EndAt");
 
@@ -456,6 +617,8 @@ namespace IotApi.Migrations
 
                     b.HasIndex("CreatedAt");
 
+                    b.HasIndex("DeletedAt");
+
                     b.HasIndex("ExternalTransactionId");
 
                     b.ToTable("ThirdPartyPaymentFlow");
@@ -496,6 +659,8 @@ namespace IotApi.Migrations
 
                     b.HasIndex("CreatedAt");
 
+                    b.HasIndex("DeletedAt");
+
                     b.HasIndex("ExternalTransactionId");
 
                     b.HasIndex("OwnerId");
@@ -534,6 +699,9 @@ namespace IotApi.Migrations
                     b.Property<DateTime?>("EditedAt")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<string>("Name")
+                        .HasColumnType("varchar(255)");
+
                     b.Property<int>("Operator")
                         .HasColumnType("int");
 
@@ -553,9 +721,15 @@ namespace IotApi.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("DeletedAt");
+
                     b.HasIndex("DestinationDeviceId");
 
                     b.HasIndex("DestinationPin");
+
+                    b.HasIndex("Name");
 
                     b.HasIndex("OwnerId");
 
@@ -632,6 +806,17 @@ namespace IotApi.Migrations
                     b.Navigation("Zone");
                 });
 
+            modelBuilder.Entity("Homo.IotApi.DevicePin", b =>
+                {
+                    b.HasOne("Homo.IotApi.Device", "Device")
+                        .WithMany()
+                        .HasForeignKey("DeviceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Device");
+                });
+
             modelBuilder.Entity("Homo.IotApi.DevicePinSensor", b =>
                 {
                     b.HasOne("Homo.IotApi.Device", "Device")
@@ -644,6 +829,17 @@ namespace IotApi.Migrations
                 });
 
             modelBuilder.Entity("Homo.IotApi.DevicePinSwitch", b =>
+                {
+                    b.HasOne("Homo.IotApi.Device", "Device")
+                        .WithMany()
+                        .HasForeignKey("DeviceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Device");
+                });
+
+            modelBuilder.Entity("Homo.IotApi.SensorLog", b =>
                 {
                     b.HasOne("Homo.IotApi.Device", "Device")
                         .WithMany()

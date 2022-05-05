@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -26,6 +27,9 @@ namespace Homo.IotApi
             {
                 secretsFilename = "secrets.migration.json";
             }
+
+            System.Text.Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
@@ -76,7 +80,10 @@ namespace Homo.IotApi
             var secrets = (Homo.IotApi.Secrets)appSettings.Secrets;
             services.AddDbContext<IotDbContext>(options => options.UseMySql(secrets.DBConnectionString, serverVersion));
             services.AddDbContext<Homo.AuthApi.DBContext>(options => options.UseMySql(secrets.DBConnectionString, serverVersion));
-            StartupOfflineService.OfflineTooLongNoActivityDevice(secrets.DBConnectionString);
+            if (_env.EnvironmentName.ToLower() != "dev")
+            {
+                StartupOfflineService.OfflineTooLongNoActivityDevice(secrets.DBConnectionString);
+            }
 
             services.AddControllers();
             if (_env.EnvironmentName.ToLower() != "dev")

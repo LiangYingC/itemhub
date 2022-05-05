@@ -13,6 +13,7 @@ const Toaster = () => {
     const toasters = useAppSelector(selectToaster);
     const previousToastersRef = useRef<ToasterState[]>([]);
     const dispatch = useDispatch();
+
     useEffect(() => {
         const unSetupToasters = toasters.filter(
             (item) =>

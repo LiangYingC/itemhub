@@ -9,9 +9,6 @@ html {
     color: rgba(0, 0, 0, map-get($opacity, 65));
     font-size: $font-size-base;
     background: $grey-150;
-    @include media-breakpoint-down(lg) {
-        font-size: $font-size-base-for-small-screen;
-    }
 }
 
 h1,
@@ -66,4 +63,8 @@ a.btn {
         height: 2.5px;
         margin-top: 6px;
     }
+}
+
+.list:hover {
+    background: rgba($primary, 0.04);
 }

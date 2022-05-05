@@ -66,7 +66,6 @@ namespace Homo.AuthApi
         [HttpPost]
         public ActionResult<dynamic> signUp([FromBody] DTOs.SignUp dto, DTOs.JwtExtraPayload extraPayload)
         {
-            System.Console.WriteLine($"testing:{Newtonsoft.Json.JsonConvert.SerializeObject(extraPayload, Newtonsoft.Json.Formatting.Indented)}");
             User newUser = null;
             User user = null;
             SocialMediaProvider? socialMediaProvider = null;

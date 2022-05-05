@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import searchIcon from '@/assets/images/icon-search.svg';
+import debounce from 'lodash.debounce';
 
 const SearchInput = ({
     placeholder,
@@ -43,7 +44,10 @@ const SearchInput = ({
                 ref={inputRef}
                 placeholder={placeholder}
                 defaultValue={defaultValue}
-                onChange={() => onChangeValue(inputRef.current?.value || '')}
+                onChange={debounce(
+                    () => onChangeValue(inputRef.current?.value || ''),
+                    300
+                )}
                 onKeyUp={searchInputKeyUp}
             />
             <button

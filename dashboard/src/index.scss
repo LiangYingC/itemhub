@@ -2,6 +2,7 @@
 @import 'bootstrap/scss/_variables.scss';
 @import 'bootstrap/scss/_mixins.scss';
 @import './css/overwrite/variables.scss';
+@import './css/overwrite/tooltip.scss';
 @import 'bootstrap/scss/_utilities.scss';
 @import './css/overwrite/utilities.scss';
 
@@ -30,4 +31,6 @@
 @import './components/pins/pins.scss';
 @import './components/page-title/page-title.scss';
 @import './components/toaster/toaster.scss';
+@import './components/dialog/dialog.scss';
+@import './components/spinner/spinner.scss';
 @import './components/input/search-input/search-input.scss';

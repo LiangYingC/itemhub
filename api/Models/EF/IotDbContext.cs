@@ -23,10 +23,13 @@ namespace Homo.IotApi
         public virtual DbSet<OauthClient> OauthClient { get; set; }
 
         public virtual DbSet<OauthClientRedirectUri> OauthClientRedirectUri { get; set; }
-
+        /* deprecated start */
         public virtual DbSet<DevicePinSwitch> DevicePinSwitch { get; set; }
         public virtual DbSet<DevicePinSensor> DevicePinSensor { get; set; }
         public virtual DbSet<DevicePinName> DevicePinName { get; set; }
+        /* deprecated end */
+
+        public virtual DbSet<DevicePin> DevicePin { get; set; }
         public virtual DbSet<Trigger> Trigger { get; set; }
         public virtual DbSet<TriggerLog> TriggerLog { get; set; }
         public virtual DbSet<Subscription> Subscription { get; set; }
@@ -34,6 +37,8 @@ namespace Homo.IotApi
         public virtual DbSet<ThirdPartyPaymentFlow> ThirdPartyPaymentFlow { get; set; }
         public virtual DbSet<DeviceActivityLog> DeviceActivityLog { get; set; }
         public virtual DbSet<SystemConfig> SystemConfig { get; set; }
+        public virtual DbSet<SensorLog> SensorLog { get; set; }
+        public virtual DbSet<FirmwareBundleLog> FirmwareBundleLog { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -49,6 +54,8 @@ namespace Homo.IotApi
                 entity.HasIndex(p => new { p.OwnerId, p.ClientId, p.DeletedAt }).IsUnique();
                 entity.HasIndex(p => new { p.ClientId, p.DeletedAt }).IsUnique();
                 entity.HasIndex(p => new { p.DeviceId });
+                entity.HasIndex(p => new { p.CreatedAt });
+                entity.HasIndex(p => new { p.DeletedAt });
             });
 
             modelBuilder.Entity<Device>(entity =>
@@ -57,9 +64,13 @@ namespace Homo.IotApi
                 entity.HasIndex(p => new { p.DeviceId });
                 entity.HasIndex(p => new { p.OwnerId });
                 entity.HasIndex(p => new { p.Online });
+                entity.HasIndex(p => new { p.Microcontroller });
                 entity.HasOne(p => p.Zone).WithMany().HasForeignKey(p => p.ZoneId);
+                entity.HasIndex(p => new { p.CreatedAt });
+                entity.HasIndex(p => new { p.DeletedAt });
             });
 
+            /* deprecated start */
             modelBuilder.Entity<DevicePinSwitch>(entity =>
             {
                 entity.HasIndex(p => new { p.Pin });
@@ -84,6 +95,7 @@ namespace Homo.IotApi
                 entity.HasIndex(p => new { p.DeviceId });
                 entity.HasIndex(p => new { p.OwnerId });
             });
+            /* deprecated end */
 
             modelBuilder.Entity<Trigger>(entity =>
             {
@@ -92,8 +104,11 @@ namespace Homo.IotApi
                 entity.HasIndex(p => new { p.DestinationPin });
                 entity.HasIndex(p => new { p.DestinationDeviceId });
                 entity.HasIndex(p => new { p.OwnerId });
+                entity.HasIndex(p => new { p.Name });
                 entity.HasOne(p => p.SourceDevice).WithMany().HasForeignKey(p => p.SourceDeviceId);
                 entity.HasOne(p => p.DestinationDevice).WithMany().HasForeignKey(p => p.DestinationDeviceId);
+                entity.HasIndex(p => new { p.CreatedAt });
+                entity.HasIndex(p => new { p.DeletedAt });
             });
 
             modelBuilder.Entity<TriggerLog>(entity =>
@@ -110,6 +125,8 @@ namespace Homo.IotApi
                 entity.HasIndex(p => new { p.TransactionId });
                 entity.Property(b => b.StopNextSubscribed)
                     .HasDefaultValueSql("0");
+                entity.HasIndex(p => new { p.CreatedAt });
+                entity.HasIndex(p => new { p.DeletedAt });
             });
 
             modelBuilder.Entity<Transaction>(entity =>
@@ -118,12 +135,14 @@ namespace Homo.IotApi
                 entity.HasIndex(p => new { p.CreatedAt });
                 entity.HasIndex(p => new { p.ExternalTransactionId });
                 entity.HasIndex(p => new { p.Status });
+                entity.HasIndex(p => new { p.DeletedAt });
             });
 
             modelBuilder.Entity<ThirdPartyPaymentFlow>(entity =>
             {
                 entity.HasIndex(p => new { p.CreatedAt });
                 entity.HasIndex(p => new { p.ExternalTransactionId });
+                entity.HasIndex(p => new { p.DeletedAt });
             });
 
             modelBuilder.Entity<DeviceActivityLog>(entity =>
@@ -131,12 +150,43 @@ namespace Homo.IotApi
                 entity.HasIndex(p => new { p.CreatedAt });
                 entity.HasIndex(p => new { p.OwnerId });
                 entity.HasIndex(p => new { p.DeviceId });
+                entity.HasIndex(p => new { p.DeletedAt });
             });
 
             modelBuilder.Entity<SystemConfig>(entity =>
             {
                 entity.HasIndex(p => new { p.Key });
                 entity.HasIndex(p => new { p.Value });
+            });
+
+            modelBuilder.Entity<DevicePin>(entity =>
+            {
+                entity.HasIndex(p => new { p.Name });
+                entity.HasIndex(p => new { p.Value });
+                entity.HasIndex(p => new { p.DeviceId });
+                entity.HasIndex(p => new { p.OwnerId });
+                entity.HasIndex(p => new { p.Mode });
+                entity.HasIndex(p => new { p.CreatedAt });
+                entity.HasIndex(p => new { p.DeletedAt });
+                entity.HasOne(p => p.Device).WithMany().HasForeignKey(p => p.DeviceId);
+            });
+
+            modelBuilder.Entity<SensorLog>(entity =>
+            {
+                entity.HasIndex(p => new { p.Pin });
+                entity.HasIndex(p => new { p.DeviceId });
+                entity.HasIndex(p => new { p.OwnerId });
+                entity.HasIndex(p => new { p.CreatedAt });
+                entity.HasIndex(p => new { p.DeletedAt });
+                entity.HasOne(p => p.Device).WithMany().HasForeignKey(p => p.DeviceId);
+            });
+
+            modelBuilder.Entity<FirmwareBundleLog>(entity =>
+            {
+                entity.HasIndex(p => new { p.DeviceId });
+                entity.HasIndex(p => new { p.OwnerId });
+                entity.HasIndex(p => new { p.BundleId });
+                entity.HasIndex(p => new { p.BundleId, p.DeletedAt }).IsUnique();
             });
 
             OnModelCreatingPartial(modelBuilder);

@@ -26,7 +26,8 @@ namespace Homo.IotApi
             string sourceDeviceName,
             long? destinationDeviceId,
             string destinationPin,
-            string destinationDeviceName
+            string destinationDeviceName,
+            string name
         )
         {
             return dbContext.Trigger
@@ -41,6 +42,7 @@ namespace Homo.IotApi
                     && (destinationPin == null || x.DestinationPin == destinationPin)
                     && (sourceDeviceName == null || x.SourceDevice.Name == sourceDeviceName)
                     && (destinationDeviceName == null || x.DestinationDevice.Name == destinationDeviceName)
+                    && (name == null || x.Name.Contains(name))
                 )
                 .OrderByDescending(x => x.Id)
                 .Skip((page - 1) * limit)
@@ -54,7 +56,8 @@ namespace Homo.IotApi
             string sourceDeviceName,
             long? destinationDeviceId,
             string destinationPin,
-            string destinationDeviceName
+            string destinationDeviceName,
+            string name
         )
         {
             return dbContext.Trigger
@@ -69,6 +72,7 @@ namespace Homo.IotApi
                     && (destinationPin == null || x.DestinationPin == destinationPin)
                     && (sourceDeviceName == null || x.SourceDevice.Name == sourceDeviceName)
                     && (destinationDeviceName == null || x.DestinationDevice.Name == destinationDeviceName)
+                    && (name == null || x.Name.Contains(name))
                 )
                 .Count();
         }

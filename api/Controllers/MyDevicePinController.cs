@@ -23,7 +23,7 @@ namespace Homo.IotApi
         public ActionResult<dynamic> getAll([FromRoute] long id, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
             long ownerId = extraPayload.Id;
-            return DevicePinDataservice.GetList(_dbContext, ownerId, id);
+            return DevicePinDataservice.GetAll(_dbContext, ownerId, new List<long>() { id }, null, null);
         }
 
         [HttpDelete]
@@ -31,13 +31,13 @@ namespace Homo.IotApi
         {
             long ownerId = extraPayload.Id;
             List<string> pins = usedPins.Split(",").ToList<string>();
-            DevicePinDataservice.RemoveUnuseSwitchPins(_dbContext, ownerId, id, pins);
+            DevicePinDataservice.RemoveUnusePins(_dbContext, ownerId, id, pins);
             return new { status = CUSTOM_RESPONSE.OK };
         }
 
         [HttpPatch]
         [Route("{pin}")]
-        public ActionResult<dynamic> updatePinName([FromRoute] long id, [FromRoute] string pin, [FromBody] DTOs.DevicePinName dto, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
+        public ActionResult<dynamic> updatePinName([FromRoute] long id, [FromRoute] string pin, [FromBody] DTOs.UpdateDevicePinName dto, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
             long ownerId = extraPayload.Id;
             DevicePinDataservice.UpdatePinName(_dbContext, ownerId, id, pin, dto.Name);

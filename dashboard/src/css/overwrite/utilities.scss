@@ -33,6 +33,15 @@ $theme-colors: (
     'green-12': rgba($green, 0.12),
 );
 
+$font-sizes: (
+    1: 2.375rem,
+    2: 1.875rem,
+    3: 1.5rem,
+    4: 1.25rem,
+    5: 0.875rem,
+    6: 0.75rem,
+);
+
 $opacity: (
     100: 1,
     85: 0.85,
@@ -191,6 +200,12 @@ $utilities: map-merge(
             property: 'box-shadow',
             class: 'shadow',
             values: $shadows,
+        ),
+        'font-size': (
+            rfs: true,
+            property: 'font-size',
+            class: 'fs',
+            values: $font-sizes,
         ),
     )
 );

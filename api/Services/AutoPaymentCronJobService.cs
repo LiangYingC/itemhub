@@ -133,7 +133,6 @@ namespace Homo.IotApi
                     (response != null && response.status == DTOs.TAP_PAY_TRANSACTION_STATUS.OK)
                 )
                 {
-                    // System.Console.WriteLine($"testing:{Newtonsoft.Json.JsonConvert.SerializeObject(subscriber.Id, Newtonsoft.Json.Formatting.Indented)}");
                     SubscriptionDataservice.Create(_iotDbContext, new DTOs.Subscription()
                     {
                         OwnerId = subscriber.Id,

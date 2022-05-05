@@ -12,7 +12,7 @@ namespace Homo.IotApi
                 x.DeletedAt == null
                 && x.DeviceId == deviceId
                 && x.OwnerId == ownerId
-                && (DateTime.Now - x.CreatedAt).TotalSeconds <= 15
+                && DateTime.Now <= x.CreatedAt.AddSeconds(15)
             ).Count();
         }
 

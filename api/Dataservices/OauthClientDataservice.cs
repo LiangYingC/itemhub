@@ -123,5 +123,10 @@ namespace Homo.IotApi
             record.DeletedAt = DateTime.Now;
             dbContext.SaveChanges();
         }
+
+        public static void DeleteByDeviceId(IotDbContext dbContext, long ownerId, long deviceId)
+        {
+            dbContext.OauthClient.Where(x => x.DeviceId == deviceId && x.OwnerId == ownerId).UpdateFromQuery(x => new OauthClient() { DeletedAt = DateTime.Now });
+        }
     }
 }

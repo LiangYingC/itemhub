@@ -27,8 +27,17 @@ const Header = () => {
             data-testid="Header"
         >
             <div>
-                <div className="d-md-none bg-grey-800 py-4 px-3 top-nav position-relative">
-                    <div className="d-flex justify-content-between align-items-center px-3 ">
+                <div className="d-md-none bg-grey-800 p-4 top-nav position-relative">
+                    <div className="d-flex align-items-center px-2">
+                        <div
+                            role="button"
+                            className="hamburger p-2 me-3"
+                            onClick={openMenu}
+                        >
+                            <div className="bg-white w-100 rounded-pill" />
+                            <div className="bg-white w-100 rounded-pill" />
+                            <div className="bg-white w-100 rounded-pill" />
+                        </div>
                         <Link
                             to="/dashboard/"
                             className="logo d-flex align-items-center"
@@ -39,16 +48,6 @@ const Header = () => {
                                 src={logoWordingIcon}
                             />
                         </Link>
-
-                        <div
-                            role="button"
-                            className="hamburger p-2"
-                            onClick={openMenu}
-                        >
-                            <div className="bg-white w-100 rounded-pill" />
-                            <div className="bg-white w-100 rounded-pill" />
-                            <div className="bg-white w-100 rounded-pill" />
-                        </div>
                     </div>
                 </div>
             </div>
@@ -58,78 +57,82 @@ const Header = () => {
                     onClick={closeMenu}
                 />
                 <div className="head-nav flex-shrink-0 position-relative bg-grey-800">
-                    <div className="d-flex d-md-none justify-content-end m-3">
-                        <div
-                            role="button"
-                            className="position-relative p-2 icon"
-                            onClick={closeMenu}
-                        >
-                            <img src={closeIcon} alt="close" />
-                        </div>
-                    </div>
-                    <div className="d-none d-md-block overflow-hidden logo-block py-4 px-3">
-                        <div className="d-flex justify-content-between align-items-center px-3 ">
-                            <Link
-                                to="/dashboard/"
-                                className="logo d-flex align-items-center"
-                            >
-                                <img
-                                    className="w-100 h-100 icon"
-                                    src={logoIcon}
-                                />
+                    <div className="d-flex align-items-center logo-block">
+                        <Link to="/dashboard/" className="text-block">
+                            <div className="d-flex align-items-center logo">
+                                <img className="w-100 h-100" src={logoIcon} />
                                 <img
                                     className="ms-25 logo-text"
                                     src={logoWordingIcon}
                                 />
-                            </Link>
-
-                            <div
-                                role="button"
-                                className="hamburger p-2"
-                                onClick={closeMenu}
-                            >
-                                <div className="bg-white w-100 rounded-pill" />
-                                <div className="bg-white w-100 rounded-pill" />
-                                <div className="bg-white w-100 rounded-pill" />
                             </div>
+                        </Link>
+
+                        <div
+                            role="button"
+                            className="hamburger p-2 hamburger-close"
+                            onClick={closeMenu}
+                        >
+                            <div className="bg-white w-100 rounded-pill" />
+                            <div className="bg-white w-100 rounded-pill" />
+                            <div className="bg-white w-100 rounded-pill" />
+                        </div>
+                        <div
+                            role="button"
+                            className="hamburger p-2 hamburger-open"
+                            onClick={openMenu}
+                        >
+                            <div className="bg-white w-100 rounded-pill" />
+                            <div className="bg-white w-100 rounded-pill" />
+                            <div className="bg-white w-100 rounded-pill" />
+                        </div>
+                        <div
+                            role="button"
+                            className="d-block d-md-none icon-close p-2"
+                            onClick={closeMenu}
+                        >
+                            <img src={closeIcon} alt="close" className="" />
                         </div>
                     </div>
-                    <div className="item px-3">
-                        <div className="py-2">
-                            <Link
-                                to="/dashboard/"
-                                className="d-flex align-items-center text-white text-opacity-85 text-decoration-none p-3"
-                            >
-                                <img className="" src={dashboardIcon} />
-                                <span className="lh-1 ps-25">監控中心</span>
-                            </Link>
-                            <Link
-                                to="/dashboard/devices"
-                                className="d-flex align-items-center text-white text-opacity-85 text-decoration-none p-3"
-                            >
-                                <img className="" src={deviceIcon} />
-                                <span className="lh-1 ps-25">裝置</span>
-                            </Link>
+                    <div className="item-block py-2">
+                        <Link
+                            to="/dashboard/"
+                            className="d-flex align-items-center text-white text-opacity-85 rounded-1 px-3 py-2 mb-2 item"
+                        >
+                            <img className="" src={dashboardIcon} />
+                            <span className="text-block">
+                                <div>監控中心</div>
+                            </span>
+                        </Link>
+                        <Link
+                            to="/dashboard/devices"
+                            className="d-flex align-items-center text-white text-opacity-85 rounded-1 px-3 py-2 mb-2 item"
+                        >
+                            <img className="" src={deviceIcon} />
+                            <span className="text-block">裝置</span>
+                        </Link>
 
-                            <Link
-                                to="/dashboard/triggers"
-                                className="d-flex align-items-center text-white text-opacity-85 text-decoration-none p-3"
-                            >
-                                <img className="" src={triggerIcon} />
-                                <span className="lh-1 ps-25">觸發</span>
-                            </Link>
-                            <Link
-                                to="/dashboard/oauth-clients"
-                                className="d-flex align-items-center text-white text-opacity-85 text-decoration-none p-3"
-                            >
-                                <img className="" src={oAuthClientIcon} />
-                                <span className="lh-1 ps-25">oAuthClient</span>
-                            </Link>
-                        </div>
+                        <Link
+                            to="/dashboard/triggers"
+                            className="d-flex align-items-center text-white text-opacity-85 rounded-1 px-3 py-2 mb-2 item"
+                        >
+                            <img className="" src={triggerIcon} />
+                            <span className="text-block">觸發</span>
+                        </Link>
+                        <Link
+                            to="/dashboard/oauth-clients"
+                            className="d-flex align-items-center text-white text-opacity-85 rounded-1 px-3 py-2 mb-2 item"
+                        >
+                            <img className="" src={oAuthClientIcon} />
+                            <span className="text-block">oAuthClient</span>
+                        </Link>
                     </div>
                     <div className="position-absolute bottom-0 end-0 w-100">
-                        <div className="border-top border-white border-opacity-15 text-white text-opacity-85 p-3">
-                            <div className="p-3">UserName</div>
+                        <div className="border-top border-white border-opacity-15 text-white text-opacity-85">
+                            <div className="d-flex align-items-center user-block p-3 mb-2">
+                                <div className="text-block">UserName</div>
+                                <div className="bg-primary p-3 rounded-circle" />
+                            </div>
                         </div>
                     </div>
                 </div>

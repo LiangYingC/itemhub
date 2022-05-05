@@ -1,2 +1,5 @@
 dump.sh
 dev-ops
+static/firmware
+static/upload
+static/archived

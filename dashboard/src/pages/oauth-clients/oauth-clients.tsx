@@ -15,10 +15,13 @@ import lightTrashIcon from '@/assets/images/light-trash.svg';
 import trashIcon from '@/assets/images/trash.svg';
 import plusIcon from '@/assets/images/icon-plus.svg';
 import emptyImage from '@/assets/images/empty-image.svg';
+import { dialogActions, DialogTypeEnum } from '@/redux/reducers/dialog.reducer';
+import ReactTooltip from 'react-tooltip';
 import {
     toasterActions,
     ToasterTypeEnum,
 } from '@/redux/reducers/toaster.reducer';
+import Spinner from '@/components/spinner/spinner';
 
 const OauthClients = () => {
     const query = useQuery();
@@ -27,6 +30,7 @@ const OauthClients = () => {
 
     const { oauthClients, rowNum } = useAppSelector(selectOauthClients);
     const dispatch = useAppDispatch();
+
     const [selectedIds, setSelectedIds] = useState(Array<number>());
     const [shouldBeDeleteId, setShouldBeDeleteId] = useState(0);
     const [refreshFlag, setRefreshFlag] = useState(false);
@@ -42,11 +46,8 @@ const OauthClients = () => {
         limit,
     });
 
-    const {
-        isLoading: isDeleting,
-        fetchApi: deleteMultipleApi,
-        data: responseOfDelete,
-    } = useDeleteOauthClients(selectedIds);
+    const { fetchApi: deleteMultipleApi, data: responseOfDelete } =
+        useDeleteOauthClients(selectedIds);
 
     const {
         isLoading: isDeletingOne,
@@ -110,16 +111,14 @@ const OauthClients = () => {
         }
     }, [selectedIds, oauthClients]);
 
-    const check = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const check = (id: number) => {
         setSelectedIds((previous) => {
             const newSelectedIds = [...previous];
-            if (event.target.checked) {
-                newSelectedIds.push(Number(event.target.value));
+            const targetIndex = newSelectedIds.indexOf(id);
+            if (targetIndex !== -1) {
+                newSelectedIds.splice(targetIndex, 1);
             } else {
-                const index = newSelectedIds.findIndex(
-                    (item) => item === Number(event.target.value)
-                );
-                newSelectedIds.splice(index, 1);
+                newSelectedIds.push(id);
             }
             let pageTitleSecondaryButtonClassName = 'btn btn-danger';
             if (newSelectedIds.length === 0) {
@@ -145,19 +144,35 @@ const OauthClients = () => {
     };
 
     const deleteOne = (id: number) => {
-        if (prompt('請輸入 delete') !== 'delete') {
-            return;
-        }
-        setShouldBeDeleteId(() => {
-            return id;
-        });
+        dispatch(
+            dialogActions.open({
+                title: '確認刪除 oAuthClient ?',
+                message: '刪除後將無法復原, 請輸入 DELETE 完成刪除',
+                type: DialogTypeEnum.PROMPT,
+                checkedMessage: 'DELETE',
+                callback: () => {
+                    setShouldBeDeleteId(() => {
+                        return id;
+                    });
+                },
+                promptInvalidMessage: '輸入錯誤',
+            })
+        );
     };
 
     const deleteMultiple = () => {
-        if (prompt('請輸入 delete') !== 'delete') {
-            return;
-        }
-        deleteMultipleApi();
+        dispatch(
+            dialogActions.open({
+                title: '確認刪除 oAuthClient ?',
+                message: '刪除後將無法復原, 請輸入 DELETE 完成刪除',
+                type: DialogTypeEnum.PROMPT,
+                checkedMessage: 'DELETE',
+                callback: () => {
+                    deleteMultipleApi();
+                },
+                promptInvalidMessage: '輸入錯誤',
+            })
+        );
     };
 
     return (
@@ -175,7 +190,9 @@ const OauthClients = () => {
             />
             <div className="card">
                 {isLoading || oauthClients === null ? (
-                    <div>Loading</div>
+                    <div className="w-100 d-flex justify-content-center my-4">
+                        <Spinner />
+                    </div>
                 ) : (
                     <>
                         <div
@@ -204,7 +221,7 @@ const OauthClients = () => {
                                     : 'd-none'
                             }`}
                         >
-                            <div className="row bg-black bg-opacity-5 text-black text-opacity-45 h6 py-25 mb-0">
+                            <div className="row bg-black bg-opacity-5 text-black text-opacity-45 fs-5 py-25 mb-0">
                                 <label
                                     role="button"
                                     className="col-8 col-sm-10"
@@ -225,23 +242,32 @@ const OauthClients = () => {
                             {oauthClients.map(({ id, clientId }) => (
                                 <div
                                     key={id}
-                                    className="row py-4 border-1 border-bottom text-black text-opacity-65"
+                                    className="row list py-4 border-1 border-bottom text-black text-opacity-65"
+                                    onClick={() => {
+                                        check(id);
+                                    }}
                                 >
-                                    <label className="col-8 col-sm-10">
+                                    <div className="col-8 col-sm-10">
                                         <input
                                             type="checkbox"
-                                            onChange={check}
+                                            onClick={(
+                                                event: React.MouseEvent<HTMLInputElement>
+                                            ) => {
+                                                event.stopPropagation();
+                                                check(id);
+                                            }}
                                             value={id}
                                             className="me-3"
                                             checked={selectedIds.includes(id)}
                                         />
                                         {clientId}
-                                    </label>
+                                    </div>
                                     <div className="col-4 col-sm-2">
                                         <div className="d-flex justify-content-start">
                                             <Link
                                                 to={`/dashboard/oauth-clients/${id}`}
                                                 className="me-4"
+                                                data-tip="編輯"
                                             >
                                                 <img src={pencilIcon} />
                                             </Link>
@@ -250,10 +276,12 @@ const OauthClients = () => {
                                                     deleteOne(id);
                                                 }}
                                                 disabled={isDeletingOne}
-                                                className="btn bg-transparent p-0"
+                                                className="btn bg-transparent p-0 shadow-none"
+                                                data-tip="刪除"
                                             >
                                                 <img src={trashIcon} />
                                             </button>
+                                            <ReactTooltip effect="solid" />
                                         </div>
                                     </div>
                                 </div>

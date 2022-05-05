@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 const Footer = () => (
     <div
-        className="footer d-flex justify-content-between p-5 h6"
+        className="footer d-flex justify-content-between p-5 fs-5"
         data-testid="Footer"
     >
         <div className="flex-fill">

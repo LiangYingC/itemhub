@@ -1,11 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Builder;
-using System.Threading.Tasks;
-using System.Threading;
 using System;
-using Microsoft.EntityFrameworkCore;
 using Homo.Api;
 using Homo.Core.Constants;
 
@@ -46,7 +42,7 @@ namespace Homo.IotApi
         }
 
         [HttpPost]
-        public ActionResult<dynamic> create([FromBody] DTOs.Device dto, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
+        public ActionResult<dynamic> create([FromBody] DTOs.DevicePayload dto, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
             long ownerId = extraPayload.Id;
             Device rewRecord = DeviceDataservice.Create(_dbContext, ownerId, dto);
@@ -89,7 +85,7 @@ namespace Homo.IotApi
 
         [HttpPatch]
         [Route("{id}")]
-        public ActionResult<dynamic> update([FromRoute] int id, [FromBody] DTOs.Device dto, dynamic extraPayload)
+        public ActionResult<dynamic> update([FromRoute] int id, [FromBody] DTOs.DevicePayload dto, dynamic extraPayload)
         {
             long ownerId = extraPayload.Id;
             DeviceDataservice.Update(_dbContext, ownerId, id, dto);

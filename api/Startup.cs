@@ -80,7 +80,7 @@ namespace Homo.IotApi
             var secrets = (Homo.IotApi.Secrets)appSettings.Secrets;
             services.AddDbContext<IotDbContext>(options => options.UseMySql(secrets.DBConnectionString, serverVersion));
             services.AddDbContext<Homo.AuthApi.DBContext>(options => options.UseMySql(secrets.DBConnectionString, serverVersion));
-            if (_env.EnvironmentName.ToLower() != "dev")
+            if (_env.EnvironmentName.ToLower() != "dev" && _env.EnvironmentName.ToLower() != "migration")
             {
                 StartupOfflineService.OfflineTooLongNoActivityDevice(secrets.DBConnectionString);
             }

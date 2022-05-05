@@ -14,6 +14,7 @@ namespace Homo.IotApi
             public string Info { get; set; }
             [MaxLength(128)]
             public string DeviceId { get; set; }
+            public DTOs.MICROCONTROLLER? Microcontroller { get; set; }
         }
     }
 }

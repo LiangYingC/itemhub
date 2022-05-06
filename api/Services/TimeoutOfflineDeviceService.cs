@@ -32,6 +32,7 @@ namespace Homo.IotApi
 
                 // 15 秒內 device activity log 沒查到資料就當作下線
                 int count = DeviceActivityLogDataservice.GetRowNumThis15Seconds(newDbContext, ownerId, deviceId);
+                System.Console.WriteLine($"device id:{Newtonsoft.Json.JsonConvert.SerializeObject(deviceId, Newtonsoft.Json.Formatting.Indented)}");
                 System.Console.WriteLine($"testing:{Newtonsoft.Json.JsonConvert.SerializeObject(count, Newtonsoft.Json.Formatting.Indented)}");
                 if (count == 0)
                 {

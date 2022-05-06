@@ -244,7 +244,7 @@ const OauthClients = () => {
                                         check(id);
                                     }}
                                 >
-                                    <div className="d-flex d-lg-none col-4 bg-black bg-opacity-5 p-3 align-items-center">
+                                    <div className="d-flex d-lg-none col-4 bg-black bg-opacity-5 p-3 align-items-center text-wrap text-break">
                                         oAuthClient ID
                                     </div>
                                     <div className="col-8 d-flex align-items-center text-wrap text-break">

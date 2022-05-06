@@ -8,11 +8,12 @@ namespace Homo.IotApi
     {
         public static int GetRowNumThis15Seconds(IotDbContext dbContext, long ownerId, long deviceId)
         {
+            var determinOnlinLastDate = DateTime.Now.AddSeconds(-16);
             return dbContext.DeviceActivityLog.Where(x =>
                 x.DeletedAt == null
                 && x.DeviceId == deviceId
                 && x.OwnerId == ownerId
-                && DateTime.Now <= x.CreatedAt.AddSeconds(15)
+                && determinOnlinLastDate <= x.CreatedAt
             ).Count();
         }
 

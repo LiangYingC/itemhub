@@ -118,7 +118,7 @@ export const useUpdateDeviceApi = ({
     let apiPath = `${API_URL}${END_POINT.DEVICE}`;
     apiPath = apiPath.replace(':id', id.toString());
 
-    const { isLoading, error, fetchApi } = useFetchApi<ResponseOK>({
+    const { isLoading, error, fetchApi, data } = useFetchApi<ResponseOK>({
         apiPath,
         method: HTTP_METHOD.PATCH,
         payload: editedData,
@@ -130,6 +130,7 @@ export const useUpdateDeviceApi = ({
         isLoading,
         error,
         updateDeviceApi: fetchApi,
+        data,
     };
 };
 

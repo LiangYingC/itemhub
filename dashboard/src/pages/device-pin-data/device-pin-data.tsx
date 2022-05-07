@@ -12,8 +12,9 @@ import {
     toasterActions,
     ToasterTypeEnum,
 } from '@/redux/reducers/toaster.reducer';
-// import moment from 'moment';
-import semiconductor from '@/assets/images/semiconductor.svg';
+import arduinoNano33Iot from '@/assets/images/arduino-nano-33-iot.svg';
+import particleIoPhoton from '@/assets/images/particle-io-photon.jpeg';
+import esp01s from '@/assets/images/esp-01s.svg';
 import { selectUniversal } from '@/redux/reducers/universal.reducer';
 import refreshPrimaryIcon from '@/assets/images/refresh-primary.svg';
 import {
@@ -39,10 +40,8 @@ const Device = () => {
     const device =
         (devices || []).filter((device) => device.id === Number(id))[0] || null;
 
-    const deviceName = device ? device.name : '';
-    const deviceMicrocontroller = device ? device.microcontroller : '';
     const [name, setName] = useState('');
-    const [microcontroller, setMicrocontroller] = useState('');
+    const [microcontroller, setMicrocontroller] = useState(0);
 
     const oAuthClient =
         (oAuthClients || []).filter(
@@ -57,10 +56,11 @@ const Device = () => {
         Number(id)
     );
 
-    const { firmwareTypes } = useAppSelector(selectUniversal);
+    const { microcontrollers } = useAppSelector(selectUniversal);
     const oAuthId = oAuthClient ? oAuthClient.id : '';
     const oAuthClientId = oAuthClient ? oAuthClient.clientId : '';
     const [clientId, setClientId] = useState(oAuthClientId);
+    const [microcontrollerImg, setMicrocontrollerImg] = useState('');
 
     const {
         fetchApi: revokeSecretApi,
@@ -81,10 +81,10 @@ const Device = () => {
     } = useUpdateDeviceApi({
         id: Number(id),
         editedData: {
-            name: name ? name : device.name,
+            name: name ? name : device?.name,
             microcontroller: microcontroller
                 ? Number(microcontroller)
-                : device.microcontroller,
+                : device?.microcontroller,
         },
     });
 
@@ -95,15 +95,18 @@ const Device = () => {
     useEffect(() => {
         if (device === null) {
             getDeviceApi();
-            return;
         }
-        if (oAuthClient === null) {
-            getOauthClientByDeviceId();
-        }
-    }, [device]);
+    }, []);
 
     useEffect(() => {
         setName(name);
+        setMicrocontroller(microcontroller);
+        if (device !== null) {
+            setMicrocontroller(Number(device.microcontroller));
+        }
+        if (device !== null && oAuthClient === null) {
+            getOauthClientByDeviceId();
+        }
     }, [device]);
 
     useEffect(() => {
@@ -111,8 +114,22 @@ const Device = () => {
     }, [oAuthClient]);
 
     useEffect(() => {
-        setMicrocontroller(microcontroller);
-    }, [device]);
+        const microcontrollerKey = microcontrollers.filter((item) => {
+            return item.value === microcontroller;
+        });
+        if (!microcontrollerKey || microcontrollerKey.length === 0) {
+            return;
+        }
+        if (microcontrollerKey[0].key === 'PARTICLE_IO_PHOTON') {
+            setMicrocontrollerImg(particleIoPhoton);
+        }
+        if (microcontrollerKey[0].key === 'ARDUINO_NANO_33_IOT') {
+            setMicrocontrollerImg(arduinoNano33Iot);
+        }
+        if (microcontrollerKey[0].key === 'ESP_01S') {
+            setMicrocontrollerImg(esp01s);
+        }
+    }, [microcontroller]);
 
     useEffect(() => {
         setRevokeSecret(revokeSecret);
@@ -160,21 +177,23 @@ const Device = () => {
                             <select
                                 defaultValue={device.microcontroller}
                                 onChange={(e) =>
-                                    setMicrocontroller(e.target.value)
+                                    setMicrocontroller(Number(e.target.value))
                                 }
                                 className="form-select"
                             >
-                                {firmwareTypes.map(({ key, value, label }) => {
-                                    return (
-                                        <option key={key} value={value}>
-                                            {label}
-                                        </option>
-                                    );
-                                })}
+                                {microcontrollers.map(
+                                    ({ key, value, label }) => {
+                                        return (
+                                            <option key={key} value={value}>
+                                                {label}
+                                            </option>
+                                        );
+                                    }
+                                )}
                             </select>
                         </div>
                         <div className="mb-4 text-center">
-                            <img src={semiconductor} alt="" />
+                            <img src={microcontrollerImg} alt="" />
                         </div>
                         <div className="row">
                             <div className="col-12 col-lg-6 p-0">

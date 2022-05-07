@@ -192,6 +192,42 @@ const Device = () => {
                                 )}
                             </select>
                         </div>
+                        <div className="mb-4">
+                            <label>選擇 Pin</label>
+                            <div className="d-flex mt-4">
+                                <div className="position-relative pin me-3">
+                                    <div className="text-success text-center pb-1 pin-selector">
+                                        感應器
+                                    </div>
+                                    <div
+                                        className="pin-text mt-25"
+                                        role="button"
+                                    >
+                                        D10
+                                    </div>
+                                    <div className="pin-option">
+                                        <div
+                                            className="lh-1 p-25"
+                                            role="button"
+                                        >
+                                            開關
+                                        </div>
+                                        <div
+                                            className="lh-1 p-25"
+                                            role="button"
+                                        >
+                                            感應器
+                                        </div>
+                                        <div
+                                            className="lh-1 p-25"
+                                            role="button"
+                                        >
+                                            取消
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div className="mb-4 text-center">
                             <img src={microcontrollerImg} alt="" />
                         </div>

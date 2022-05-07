@@ -4,7 +4,7 @@ import { useFetchApi } from '@/hooks/apis/fetch.hook';
 import { universalActions } from '@/redux/reducers/universal.reducer';
 import { API_URL, END_POINT, HTTP_METHOD } from '@/constants/api';
 import { TriggerOerator } from '@/types/universal.type';
-import { FirmwareType } from '@/types/universal.type';
+import { Microcontroller } from '@/types/universal.type';
 
 export const useGetTriggerOperatorsApi = () => {
     const dispatch = useAppDispatch();
@@ -32,29 +32,29 @@ export const useGetTriggerOperatorsApi = () => {
     };
 };
 
-export const useGetFirmwareTypesApi = () => {
+export const useGetMicrocontrollersApi = () => {
     const dispatch = useAppDispatch();
-    const dispatchSetFirmwareTypes = useCallback(
-        (data: FirmwareType[]) => {
+    const dispatchSetMicrocontrollers = useCallback(
+        (data: Microcontroller[]) => {
             if (data) {
-                dispatch(universalActions.setFirmwareTypes(data));
+                dispatch(universalActions.setMicrocontrollers(data));
             }
         },
         [dispatch]
     );
 
-    const apiPath = `${API_URL}${END_POINT.FIRMWARE_TYPES}`;
+    const apiPath = `${API_URL}${END_POINT.MICROCONTROLLER}`;
 
-    const { isLoading, error, fetchApi } = useFetchApi<FirmwareType[]>({
+    const { isLoading, error, fetchApi } = useFetchApi<Microcontroller[]>({
         apiPath,
         method: HTTP_METHOD.GET,
         initialData: null,
-        callbackFunc: dispatchSetFirmwareTypes,
+        callbackFunc: dispatchSetMicrocontrollers,
     });
 
     return {
-        gettingFirmwareTypes: isLoading,
-        gettingFirmwareTypesErr: error,
-        getFirmwareTypesApi: fetchApi,
+        gettingMicrocontrollers: isLoading,
+        gettingMicrocontrollersErr: error,
+        getMicrocontrollersApi: fetchApi,
     };
 };

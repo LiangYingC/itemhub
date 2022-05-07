@@ -62,5 +62,13 @@ namespace Homo.IotApi
         {
             return ConvertHelper.EnumToList(typeof(TRANSACTION_STATUS));
         }
+
+
+        [HttpGet]
+        [Route("microcontroller")]
+        public ActionResult<dynamic> getMicrocontroller()
+        {
+            return ConvertHelper.EnumToList(typeof(MICROCONTROLLER));
+        }
     }
 }

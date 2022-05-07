@@ -1,16 +1,16 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '@/redux/store';
 import { TriggerOerator } from '@/types/universal.type';
-import { FirmwareType } from '@/types/universal.type';
+import { Microcontroller } from '@/types/universal.type';
 
 interface UniversalState {
     triggerOperators: TriggerOerator[];
-    firmwareTypes: FirmwareType[];
+    microcontrollers: Microcontroller[];
 }
 
 const initialState: UniversalState = {
     triggerOperators: [],
-    firmwareTypes: [],
+    microcontrollers: [],
 };
 
 export const universalSlice = createSlice({
@@ -27,11 +27,14 @@ export const universalSlice = createSlice({
                 triggerOperators: newTriggerOerators,
             };
         },
-        setFirmwareTypes: (state, action: PayloadAction<FirmwareType[]>) => {
-            const newFirmwareTypes = action.payload;
+        setMicrocontrollers: (
+            state,
+            action: PayloadAction<Microcontroller[]>
+        ) => {
+            const newMicrocontrollers = action.payload;
             return {
                 ...state,
-                firmwareTypes: newFirmwareTypes,
+                microcontrollers: newMicrocontrollers,
             };
         },
     },

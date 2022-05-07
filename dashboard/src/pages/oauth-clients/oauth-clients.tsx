@@ -221,11 +221,8 @@ const OauthClients = () => {
                                     : 'd-none'
                             }`}
                         >
-                            <div className="row bg-black bg-opacity-5 text-black text-opacity-45 fs-5 py-25 mb-0">
-                                <label
-                                    role="button"
-                                    className="col-8 col-sm-10"
-                                >
+                            <div className="row bg-black bg-opacity-5 text-black text-opacity-45 fs-5 py-25 mb-0 d-none d-lg-flex">
+                                <label role="button" className="col-8">
                                     <div className="d-flex align-items-center">
                                         <input
                                             type="checkbox"
@@ -236,18 +233,21 @@ const OauthClients = () => {
                                         oAuthClient Id
                                     </div>
                                 </label>
-                                <div className="col-4 col-sm-2">操作</div>
+                                <div className="col-4">操作</div>
                             </div>
 
                             {oauthClients.map(({ id, clientId }) => (
                                 <div
                                     key={id}
-                                    className="row list py-4 border-1 border-bottom text-black text-opacity-65"
+                                    className="row py-0 py-lg-4 border-1 border-bottom text-black text-opacity-65 list"
                                     onClick={() => {
                                         check(id);
                                     }}
                                 >
-                                    <div className="col-8 col-sm-10">
+                                    <div className="d-flex d-lg-none col-4 bg-black bg-opacity-5 p-3 align-items-center text-wrap text-break">
+                                        oAuthClient ID
+                                    </div>
+                                    <div className="col-8 d-flex align-items-center text-wrap text-break">
                                         <input
                                             type="checkbox"
                                             onClick={(
@@ -262,27 +262,28 @@ const OauthClients = () => {
                                         />
                                         {clientId}
                                     </div>
-                                    <div className="col-4 col-sm-2">
-                                        <div className="d-flex justify-content-start">
-                                            <Link
-                                                to={`/dashboard/oauth-clients/${id}`}
-                                                className="me-4"
-                                                data-tip="編輯"
-                                            >
-                                                <img src={pencilIcon} />
-                                            </Link>
-                                            <button
-                                                onClick={() => {
-                                                    deleteOne(id);
-                                                }}
-                                                disabled={isDeletingOne}
-                                                className="btn bg-transparent p-0 shadow-none"
-                                                data-tip="刪除"
-                                            >
-                                                <img src={trashIcon} />
-                                            </button>
-                                            <ReactTooltip effect="solid" />
-                                        </div>
+                                    <div className="d-flex d-lg-none col-4 bg-black bg-opacity-5 p-3 align-items-center">
+                                        操作
+                                    </div>
+                                    <div className="col-8 col-lg-4 d-flex align-items-center">
+                                        <Link
+                                            to={`/dashboard/oauth-clients/${id}`}
+                                            className="me-4"
+                                            data-tip="編輯"
+                                        >
+                                            <img src={pencilIcon} />
+                                        </Link>
+                                        <button
+                                            onClick={() => {
+                                                deleteOne(id);
+                                            }}
+                                            disabled={isDeletingOne}
+                                            className="btn bg-transparent p-0"
+                                            data-tip="刪除"
+                                        >
+                                            <img src={trashIcon} />
+                                        </button>
+                                        <ReactTooltip effect="solid" />
                                     </div>
                                 </div>
                             ))}

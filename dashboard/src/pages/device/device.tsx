@@ -40,6 +40,7 @@ const Device = () => {
     const { isLoading: isGetting, fetchApi: getDeviceApi } = useGetDeviceApi(
         Number(id)
     );
+
     const [downloadIcon, setDownloaIcon] = useState<string>(cloudIcon);
     const [isFirmwarePrepare, setIsFirmwarePrepare] = useState(false);
     const [shouldBeBundledId, setShouldBeBundledId] = useState(0);
@@ -48,7 +49,7 @@ const Device = () => {
     const retryDownloadFirmwareLimit = 10;
     const [retryDownloadFirmwareFlag, setRetryDownloadFirmwareFlag] =
         useState(false);
-    const { firmwareTypes } = useAppSelector(selectUniversal);
+    const { microcontrollers } = useAppSelector(selectUniversal);
 
     const { updateDeviceApi, isLoading: isUpdating } = useUpdateDeviceApi({
         id: Number(id),
@@ -257,7 +258,10 @@ const Device = () => {
                                 裝置類型
                             </div>
                             <div className="text-wrap text-black text-opacity-65 py-2 px-25">
-                                {firmwareTypes[device.microcontroller]?.label}
+                                {
+                                    microcontrollers[device.microcontroller]
+                                        ?.label
+                                }
                             </div>
                         </div>
                         <div className="col-12 p-0 item">

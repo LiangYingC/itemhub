@@ -71,10 +71,7 @@ export const devicesSlice = createSlice({
                 ...newDeviceData,
             };
 
-            return {
-                ...state,
-                devices,
-            };
+            return state;
         },
         deleteMultiple: (state, action: PayloadAction<{ ids: number[] }>) => {
             const devices = state.devices;

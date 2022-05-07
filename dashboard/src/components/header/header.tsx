@@ -7,10 +7,22 @@ import deviceIcon from '@/assets/images/device.svg';
 import logoIcon from '@/assets/images/logo.svg';
 import logoWordingIcon from '@/assets/images/logo-wording.svg';
 import shieldIcon from '@/assets/images/shield.svg';
+import { useState, useEffect } from 'react';
 
 const Header = () => {
     const isOpen = useAppSelector(selectMenu).menu.isOpen;
     const dispatch = useAppDispatch();
+    const [menuBlockClassName, setMenuBlockClassName] = useState('d-none');
+
+    useEffect(() => {
+        if (isOpen) {
+            setMenuBlockClassName('');
+        } else {
+            setTimeout(() => {
+                setMenuBlockClassName('d-none');
+            }, 500);
+        }
+    }, [isOpen]);
 
     const closeMenu = () => {
         dispatch(menuActions.close());
@@ -51,7 +63,7 @@ const Header = () => {
                         <div className="bg-white w-100 rounded-pill" />
                     </div>
                 </div>
-                <div className="menu-block py-2">
+                <div className={`${menuBlockClassName} menu-block py-2`}>
                     <Link
                         to="/dashboard/"
                         className="nav-item d-flex align-items-center justify-content-start justify-content-md-center text-white text-opacity-85 rounded-1 py-2 px-3 my-2 mx-3"

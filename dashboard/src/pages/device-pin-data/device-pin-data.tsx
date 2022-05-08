@@ -33,6 +33,7 @@ const Device = () => {
     const { id: idFromUrl, pin } = useParams();
     const { state } = useLocation();
     const id: number | null = idFromUrl ? Number(idFromUrl) : null;
+    const isCreateMode = id === null;
 
     const devices = useAppSelector(selectDevices).devices;
     const oAuthClients = useAppSelector(selectOauthClients).oauthClients;
@@ -60,7 +61,8 @@ const Device = () => {
     const oAuthId = oAuthClient ? oAuthClient.id : '';
     const oAuthClientId = oAuthClient ? oAuthClient.clientId : '';
     const [clientId, setClientId] = useState(oAuthClientId);
-    const [microcontrollerImg, setMicrocontrollerImg] = useState('');
+    const [microcontrollerImg, setMicrocontrollerImg] =
+        useState(particleIoPhoton);
 
     const {
         fetchApi: revokeSecretApi,
@@ -88,14 +90,19 @@ const Device = () => {
         },
     });
 
-    const backToDetail = () => {
+    const back = () => {
+        if (isCreateMode) {
+            navigate(`/dashboard/devices/`);
+            return;
+        }
         navigate(`/dashboard/devices/${id}`);
     };
 
     useEffect(() => {
-        if (device === null) {
-            getDeviceApi();
+        if (isCreateMode) {
+            return;
         }
+        getDeviceApi();
     }, []);
 
     useEffect(() => {
@@ -153,11 +160,11 @@ const Device = () => {
         // UI 結構等設計稿後再重構調整
         <div className="device-pin-data" data-testid="device-pin-data">
             <PageTitle
-                titleClickCallback={backToDetail}
+                titleClickCallback={back}
                 titleBackIconVisible
-                title="編輯裝置"
+                title={isCreateMode ? '新增裝置' : '編輯裝置'}
             />
-            {isGetting || device === null || oAuthClient === null ? (
+            {isGetting ? (
                 <div>Loading</div>
             ) : (
                 <div className="card">
@@ -168,14 +175,16 @@ const Device = () => {
                                 type="text"
                                 className="form-control mt-2"
                                 placeholder="請輸入裝置名稱"
-                                defaultValue={device.name}
+                                defaultValue={device ? device.name : ''}
                                 onChange={(e) => setName(e.target.value)}
                             />
                         </div>
                         <div className="mb-4">
                             <label>裝置類型</label>
                             <select
-                                defaultValue={device.microcontroller}
+                                defaultValue={
+                                    device ? device.microcontroller : 0
+                                }
                                 onChange={(e) =>
                                     setMicrocontroller(Number(e.target.value))
                                 }
@@ -229,7 +238,11 @@ const Device = () => {
                             </div>
                         </div>
                         <div className="mb-4 text-center">
-                            <img src={microcontrollerImg} alt="" />
+                            <img
+                                className="w-100 microcontroller-img"
+                                src={microcontrollerImg}
+                                alt=""
+                            />
                         </div>
                         <div className="row">
                             <div className="col-12 col-lg-6 p-0">
@@ -237,8 +250,11 @@ const Device = () => {
                                 <input
                                     type="text"
                                     className="form-control mt-2"
-                                    value={oAuthClient.clientId}
-                                    disabled
+                                    placeholder="如果不填寫 clientId 系統會自動會幫你隨機產生"
+                                    value={
+                                        oAuthClient ? oAuthClient.clientId : ''
+                                    }
+                                    disabled={!isCreateMode}
                                 />
                             </div>
                             <div className="col-12 col-lg-6 ps-3 pe-0">
@@ -254,43 +270,82 @@ const Device = () => {
                                     }
                                     disabled
                                 />
-                                <div
-                                    className="d-flex pt-1"
-                                    onClick={revokeSecretApi}
-                                    role="button"
-                                >
-                                    <div className="text-primary">
-                                        Revoke Client Secret
+                                {isCreateMode ? (
+                                    <div
+                                        className="d-flex pt-1"
+                                        onClick={revokeSecretApi}
+                                        role="button"
+                                    >
+                                        <div className="text-primary">
+                                            產生 Client Secret
+                                        </div>
+                                        <div className="ps-2">
+                                            <img
+                                                src={refreshPrimaryIcon}
+                                                alt=""
+                                            />
+                                        </div>
                                     </div>
-                                    <div className="ps-2">
-                                        <img src={refreshPrimaryIcon} alt="" />
+                                ) : (
+                                    <div
+                                        className="d-flex pt-1"
+                                        onClick={revokeSecretApi}
+                                        role="button"
+                                    >
+                                        <div className="text-primary">
+                                            重新產生 Client Secret
+                                        </div>
+                                        <div className="ps-2">
+                                            <img
+                                                src={refreshPrimaryIcon}
+                                                alt=""
+                                            />
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="text-warn d-flex align-items-center pt-1 ">
-                                    <div className="bg-warn text-white rounded-circle icon-warm me-1">
+                                )}
+                                <div className="text-warn d-flex pt-1 ">
+                                    <div className="bg-warn text-white rounded-circle icon-warm me-1 flex-shrink-0">
                                         !
                                     </div>
-                                    <div>
-                                        Revoke Client Secret
-                                        需重新打包燒錄程式碼
-                                    </div>
+                                    {isCreateMode ? (
+                                        <div>
+                                            請立即記下 Client
+                                            Secret，為保持安全性，再次查看需重新產生
+                                            Client Secret
+                                        </div>
+                                    ) : (
+                                        <div>
+                                            Revoke Client Secret
+                                            需重新打包燒錄程式碼
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>
                         <div className="d-flex justify-content-end mt-5">
                             <button
                                 className="btn btn-secondary me-3"
-                                onClick={backToDetail}
+                                onClick={back}
                             >
                                 返回
                             </button>
-                            <button
-                                disabled={isRevoking || isUpdating}
-                                className="btn btn-primary"
-                                onClick={updateDeviceApi}
-                            >
-                                儲存編輯
-                            </button>
+                            {isCreateMode ? (
+                                <button
+                                    disabled={!revokeSecretResponse}
+                                    className="btn btn-primary"
+                                    onClick={updateDeviceApi}
+                                >
+                                    儲存編輯
+                                </button>
+                            ) : (
+                                <button
+                                    disabled={isRevoking || isUpdating}
+                                    className="btn btn-primary"
+                                    onClick={updateDeviceApi}
+                                >
+                                    新增
+                                </button>
+                            )}
                         </div>
                     </div>
                 </div>

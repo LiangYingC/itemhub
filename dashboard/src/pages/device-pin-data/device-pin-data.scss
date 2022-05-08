@@ -9,6 +9,10 @@ $pin-option-h: 120px;
         height: $icon-wh;
         line-height: $icon-wh;
         text-align: center;
+        margin-top: 6px;
+    }
+    .microcontroller-img {
+        max-width: 500px;
     }
     .pin {
         width: $pin-wh;

@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link, useLocation } from 'react-router-dom';
-import { useGetDeviceApi, useUpdateDeviceApi } from '@/hooks/apis/devices.hook';
+import {
+    useCreateDeviceApi,
+    useGetDeviceApi,
+    useUpdateDeviceApi,
+} from '@/hooks/apis/devices.hook';
 import { useAppSelector } from '@/hooks/redux.hook';
 import { selectDevices } from '@/redux/reducers/devices.reducer';
 import Pins from '@/components/pins/pins';
@@ -18,6 +22,7 @@ import esp01s from '@/assets/images/esp-01s.svg';
 import { selectUniversal } from '@/redux/reducers/universal.reducer';
 import refreshPrimaryIcon from '@/assets/images/refresh-primary.svg';
 import {
+    useCreateOauthClients,
     useGetOauthClientByDeviceId,
     useRevokeSecretOauthClient,
 } from '@/hooks/apis/oauth-clients.hook';
@@ -90,6 +95,18 @@ const Device = () => {
         },
     });
 
+    const {
+        fetchApi: createSecretApi,
+        isLoading: isCreatSecreting,
+        data: createOAuthClientResponse,
+    } = useCreateOauthClients(clientId);
+
+    const {
+        fetchApi: createDeviceApi,
+        isLoading: isCreating,
+        data: createDeviceResponse,
+    } = useCreateDeviceApi(name, microcontroller);
+
     const back = () => {
         if (isCreateMode) {
             navigate(`/dashboard/devices/`);
@@ -155,6 +172,33 @@ const Device = () => {
             navigate(`/dashboard/devices/${id}`);
         }
     }, [updateDeviceResponse]);
+
+    useEffect(() => {
+        if (createOAuthClientResponse && !isNaN(createOAuthClientResponse.id)) {
+            dispatch(
+                toasterActions.pushOne({
+                    message: '新增 oAuthClient 成功',
+                    duration: 5,
+                    type: ToasterTypeEnum.INFO,
+                })
+            );
+            setClientId(createOAuthClientResponse.clientId);
+            setRevokeSecret(createOAuthClientResponse.clientSecrets);
+        }
+    }, [createOAuthClientResponse]);
+
+    useEffect(() => {
+        if (createDeviceResponse && !isNaN(createDeviceResponse.id)) {
+            dispatch(
+                toasterActions.pushOne({
+                    message: '新增 Device 成功',
+                    duration: 5,
+                    type: ToasterTypeEnum.INFO,
+                })
+            );
+            navigate(`/dashboard/devices/${createDeviceResponse.id}`);
+        }
+    }, [createDeviceResponse]);
 
     return (
         // UI 結構等設計稿後再重構調整
@@ -247,59 +291,88 @@ const Device = () => {
                         <div className="row">
                             <div className="col-12 col-lg-6 p-0">
                                 <label>Client Id</label>
-                                <input
-                                    type="text"
-                                    className="form-control mt-2"
-                                    placeholder="如果不填寫 clientId 系統會自動會幫你隨機產生"
-                                    value={
-                                        oAuthClient ? oAuthClient.clientId : ''
-                                    }
-                                    disabled={!isCreateMode}
-                                />
+                                {isCreateMode ? (
+                                    <input
+                                        type="text"
+                                        className="form-control mt-2"
+                                        placeholder="如果不填寫 clientId 系統會自動會幫你隨機產生"
+                                        defaultValue={clientId}
+                                        onChange={(e) =>
+                                            setClientId(e.target.value)
+                                        }
+                                        disabled={!isCreateMode}
+                                    />
+                                ) : (
+                                    <input
+                                        type="text"
+                                        className="form-control mt-2"
+                                        placeholder="如果不填寫 clientId 系統會自動會幫你隨機產生"
+                                        value={
+                                            oAuthClient
+                                                ? oAuthClient.clientId
+                                                : ''
+                                        }
+                                        disabled={!isCreateMode}
+                                    />
+                                )}
                             </div>
                             <div className="col-12 col-lg-6 ps-3 pe-0">
                                 <label>Client Secret</label>
-                                <input
-                                    type="text"
-                                    className="form-control mt-2"
-                                    placeholder="****************************"
-                                    value={
-                                        revokeSecretResponse?.secret ||
-                                        (state as OauthClientLocationState)
-                                            ?.secret
-                                    }
-                                    disabled
-                                />
                                 {isCreateMode ? (
-                                    <div
-                                        className="d-flex pt-1"
-                                        onClick={revokeSecretApi}
-                                        role="button"
-                                    >
-                                        <div className="text-primary">
-                                            產生 Client Secret
-                                        </div>
-                                        <div className="ps-2">
-                                            <img
-                                                src={refreshPrimaryIcon}
-                                                alt=""
-                                            />
+                                    <div>
+                                        <input
+                                            type="text"
+                                            className="form-control mt-2"
+                                            placeholder="****************************"
+                                            value={
+                                                createOAuthClientResponse?.clientSecrets
+                                            }
+                                            disabled
+                                        />
+                                        <div
+                                            className="d-flex pt-1"
+                                            onClick={createSecretApi}
+                                            role="button"
+                                        >
+                                            <div className="text-primary">
+                                                產生 Client Secret
+                                            </div>
+                                            <div className="ps-2">
+                                                <img
+                                                    src={refreshPrimaryIcon}
+                                                    alt=""
+                                                />
+                                            </div>
                                         </div>
                                     </div>
                                 ) : (
-                                    <div
-                                        className="d-flex pt-1"
-                                        onClick={revokeSecretApi}
-                                        role="button"
-                                    >
-                                        <div className="text-primary">
-                                            重新產生 Client Secret
-                                        </div>
-                                        <div className="ps-2">
-                                            <img
-                                                src={refreshPrimaryIcon}
-                                                alt=""
-                                            />
+                                    <div>
+                                        <input
+                                            type="text"
+                                            className="form-control mt-2"
+                                            placeholder="****************************"
+                                            value={
+                                                revokeSecretResponse?.secret ||
+                                                (
+                                                    state as OauthClientLocationState
+                                                )?.secret
+                                            }
+                                            disabled
+                                        />
+                                        <div
+                                            className="d-flex pt-1"
+                                            onClick={revokeSecretApi}
+                                            role="button"
+                                        >
+                                            <div className="text-primary">
+                                                重新產生 Client Secret
+                                            </div>
+                                            <div className="ps-2">
+                                                <img
+                                                    src={refreshPrimaryIcon}
+                                                    alt=""
+                                                />
+                                            </div>
                                         </div>
                                     </div>
                                 )}
@@ -331,19 +404,23 @@ const Device = () => {
                             </button>
                             {isCreateMode ? (
                                 <button
-                                    disabled={!revokeSecretResponse}
+                                    disabled={isCreating}
+                                    className="btn btn-primary"
+                                    onClick={createDeviceApi}
+                                >
+                                    新增
+                                </button>
+                            ) : (
+                                <button
+                                    disabled={
+                                        isRevoking ||
+                                        isUpdating ||
+                                        !revokeSecretResponse
+                                    }
                                     className="btn btn-primary"
                                     onClick={updateDeviceApi}
                                 >
                                     儲存編輯
-                                </button>
-                            ) : (
-                                <button
-                                    disabled={isRevoking || isUpdating}
-                                    className="btn btn-primary"
-                                    onClick={updateDeviceApi}
-                                >
-                                    新增
                                 </button>
                             )}
                         </div>

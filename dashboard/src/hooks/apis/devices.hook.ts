@@ -289,3 +289,26 @@ export const useBundleFirmwareApi = ({ id }: { id: number }) => {
         data,
     };
 };
+
+export const useCreateDeviceApi = (name: string, microcontroller: number) => {
+    const dispatch = useAppDispatch();
+    const dispatchRefresh = useCallback(
+        (response: DeviceItem) => {
+            dispatch(devicesActions.addOne(response));
+        },
+        [dispatch]
+    );
+
+    const apiPath = `${API_URL}${END_POINT.DEVICES}`;
+
+    return useFetchApi<DeviceItem>({
+        apiPath,
+        method: HTTP_METHOD.POST,
+        payload: {
+            name,
+            microcontroller,
+        },
+        initialData: null,
+        callbackFunc: dispatchRefresh,
+    });
+};

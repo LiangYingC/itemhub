@@ -39,6 +39,7 @@ const Trigger = () => {
             ) : isCreateMode || isEditMode ? (
                 <TriggerForm trigger={trigger} isCreateMode={isCreateMode} />
             ) : (
+                // TODO: implement read mode
                 <PageTitle title={trigger?.name || '尚無觸發名稱'} />
             )}
         </div>

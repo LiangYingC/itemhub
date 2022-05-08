@@ -109,10 +109,10 @@ const TriggerForm = ({
     ];
 
     return (
-        <div className="trigger-form-wrapper px-3 px-md-0 mx-auto mt-4 mt-md-5">
+        <div className="trigger-form-wrapper px-3 px-lg-0 mx-auto mt-4 mt-lg-5">
             <Breadcrumbs breadcrumbs={breadcrumbs} />
-            <h3 className="d-flex align-item-center mb-3 mb-md-4">
-                <img className="me-2 me-md-3" src={leftArrowIcon} alt="Back" />
+            <h3 className="d-flex align-item-center mb-3 mb-lg-4">
+                <img className="me-2 me-lg-3" src={leftArrowIcon} alt="Back" />
                 {isCreateMode ? '新增觸發' : '編輯觸發'}
             </h3>
             <form className="card m-0">

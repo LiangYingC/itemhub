@@ -4,4 +4,8 @@
   @include media-breakpoint-down(lg) {
     width: 100%;
   }
+
+  .title {
+    cursor: pointer;
+  }
 }

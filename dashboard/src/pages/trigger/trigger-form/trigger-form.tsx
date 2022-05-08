@@ -111,7 +111,10 @@ const TriggerForm = ({
     return (
         <div className="trigger-form-wrapper px-3 px-lg-0 mx-auto mt-4 mt-lg-5">
             <Breadcrumbs breadcrumbs={breadcrumbs} />
-            <h3 className="d-flex align-item-center mb-3 mb-lg-4">
+            <h3
+                className="title d-flex align-item-center mb-3 mb-lg-4"
+                onClick={() => navigate('/dashboard/triggers')}
+            >
                 <img className="me-2 me-lg-3" src={leftArrowIcon} alt="Back" />
                 {isCreateMode ? '新增觸發' : '編輯觸發'}
             </h3>

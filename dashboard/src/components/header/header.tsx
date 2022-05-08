@@ -19,7 +19,7 @@ const Header = () => {
             setMenuBlockClassName('');
         } else {
             setTimeout(() => {
-                setMenuBlockClassName('d-none');
+                setMenuBlockClassName('d-none d-md-block');
             }, 500);
         }
     }, [isOpen]);

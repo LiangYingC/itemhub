@@ -71,6 +71,7 @@ namespace Homo.IotApi
         {
             return _dbContext.Microcontroller.Select(x => new
             {
+                x.Id,
                 x.Key,
                 Pins = Newtonsoft.Json.JsonConvert.DeserializeObject<List<DTOs.Pin>>(x.Pins)
             }).ToList();

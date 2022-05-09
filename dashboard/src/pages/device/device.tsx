@@ -36,6 +36,7 @@ const Device = () => {
         (devices || []).filter((device) => device.id === Number(id))[0] || null;
 
     const [deviceName, setDeviceName] = useState<string>('');
+    const [microcontrollerName, setMicrocontrollerName] = useState<string>('');
 
     const { isLoading: isGetting, fetchApi: getDeviceApi } = useGetDeviceApi(
         Number(id)
@@ -119,6 +120,18 @@ const Device = () => {
             bundleFirmwareApi();
         }
     }, [shouldBeBundledId]);
+
+    useEffect(() => {
+        if (microcontrollers) {
+            microcontrollers.filter((item) => {
+                if (item.id === device.microcontroller) {
+                    setMicrocontrollerName(
+                        item.key.replaceAll('_', ' ').toLowerCase()
+                    );
+                }
+            });
+        }
+    }, [microcontrollers, device]);
 
     useEffect(() => {
         if (errorOfBundle && errorOfBundle.message) {
@@ -225,7 +238,7 @@ const Device = () => {
                             <div className="d-flex flex-shrink-0 fs-5 item-title py-2 px-25">
                                 Device Id
                             </div>
-                            <div className="text-wrap text-black text-opacity-65 py-2 px-25 text-wrap">
+                            <div className="text-wrap text-black text-opacity-65 py-2 px-25 ext-wrap">
                                 {device.deviceId}
                             </div>
                         </div>
@@ -258,10 +271,7 @@ const Device = () => {
                                 裝置類型
                             </div>
                             <div className="text-wrap text-black text-opacity-65 py-2 px-25">
-                                {
-                                    microcontrollers[device.microcontroller]
-                                        ?.label
-                                }
+                                {microcontrollerName}
                             </div>
                         </div>
                         <div className="col-12 p-0 item">

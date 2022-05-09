@@ -5,7 +5,12 @@ export interface TriggerOerator {
 }
 
 export interface Microcontroller {
+    id: number;
     key: string;
+    pins: Pins;
+}
+
+export interface Pins {
+    name: string;
     value: number;
-    label: string;
 }

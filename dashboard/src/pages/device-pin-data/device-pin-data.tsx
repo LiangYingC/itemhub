@@ -139,7 +139,7 @@ const Device = () => {
 
     useEffect(() => {
         const microcontrollerKey = microcontrollers.filter((item) => {
-            return item.value === microcontroller;
+            return item.id === microcontroller;
         });
         if (!microcontrollerKey || microcontrollerKey.length === 0) {
             return;
@@ -234,15 +234,15 @@ const Device = () => {
                                 }
                                 className="form-select"
                             >
-                                {microcontrollers.map(
-                                    ({ key, value, label }) => {
-                                        return (
-                                            <option key={key} value={value}>
-                                                {label}
-                                            </option>
-                                        );
-                                    }
-                                )}
+                                {microcontrollers.map(({ id, key }) => {
+                                    return (
+                                        <option key={id} value={id}>
+                                            {key
+                                                .replaceAll('_', ' ')
+                                                .toLowerCase()}
+                                        </option>
+                                    );
+                                })}
                             </select>
                         </div>
                         <div className="mb-4">

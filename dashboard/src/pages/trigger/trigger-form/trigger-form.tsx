@@ -9,7 +9,7 @@ import {
     useCreateTriggerApi,
     useUpdateTriggerApi,
 } from '@/hooks/apis/triggers.hook';
-import DeviceAndPinInputs from '@/components/input/device-and-pin-input/device-and-pin-input';
+import DeviceAndPinInputs from '@/components/inputs/device-and-pin-input/device-and-pin-input';
 import Breadcrumbs from '@/components/breadcrumbs/breadcrumbs';
 import { selectUniversal } from '@/redux/reducers/universal.reducer';
 import { TriggerItem } from '@/types/triggers.type';

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { DeviceItem, PinItem } from '@/types/devices.type';
-import AutocompletedSearch from '@/components/input/autocompleted-search/autocompleted-search';
+import AutocompletedSearch from '@/components/inputs/autocompleted-search/autocompleted-search';
 
 const DeviceAndPinInputs = ({
     allDevices,

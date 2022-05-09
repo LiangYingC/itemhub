@@ -2,4 +2,11 @@
     .card .row:last-child {
         border-bottom: 0 !important;
     }
+
+    @include media-breakpoint-down(md) {
+        .row {
+            margin-left: 0;
+            margin-right: 0;
+        }
+    }
 }

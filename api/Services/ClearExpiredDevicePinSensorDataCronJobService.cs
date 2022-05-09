@@ -42,7 +42,7 @@ namespace Homo.IotApi
             var serverVersion = new MySqlServerVersion(new Version(8, 0, 25));
             iotBuilder.UseMySql(_dbc, serverVersion);
             IotDbContext _iotDbContext = new IotDbContext(iotBuilder.Options);
-            long? currentLatestId = DevicePinSensorDataservice.DeleteExpiredDataAndGetLatestItemId(_iotDbContext, 1, 500, latestId);
+            long? currentLatestId = SensorLogDataservice.DeleteExpiredDataAndGetLatestItemId(_iotDbContext, 1, 500, latestId);
             if (currentLatestId == null)
             {
                 Task task = new Task<dynamic>(() => new { });

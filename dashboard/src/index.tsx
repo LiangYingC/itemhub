@@ -38,6 +38,10 @@ ReactDOM.render(
                 />
                 <Route path="dashboard/triggers" element={<Triggers />} />
                 <Route path="dashboard/triggers/create" element={<Trigger />} />
+                <Route
+                    path="dashboard/triggers/edit/:id"
+                    element={<Trigger />}
+                />
                 <Route path="dashboard/triggers/:id" element={<Trigger />} />
                 <Route
                     path="dashboard/oauth-clients"

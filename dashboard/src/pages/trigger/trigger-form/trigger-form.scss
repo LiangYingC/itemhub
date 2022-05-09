@@ -1,0 +1,11 @@
+.trigger-form-wrapper {
+  width: 720px;
+
+  @include media-breakpoint-down(lg) {
+    width: 100%;
+  }
+
+  .title {
+    cursor: pointer;
+  }
+}

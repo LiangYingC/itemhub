@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { FetchErrorResultData } from '@/types/helpers.type';
 import { ApiHelpers } from '@/helpers/api.helper';
 import { ERROR_KEY } from '@/constants/error-key';
@@ -23,6 +23,8 @@ export const useFetchApi = <T>({
     const [error, setError] = useState<FetchErrorResultData | null>(null);
     const [httpStatus, setHttpStatus] = useState<number | null>(null);
 
+    const controller = new AbortController();
+
     const fetchApi = useCallback(async () => {
         try {
             setIsLoading(true);
@@ -32,15 +34,17 @@ export const useFetchApi = <T>({
                 apiPath,
                 method,
                 payload,
+                signal: controller.signal,
             });
-            setHttpStatus(result.httpStatus);
             const data = result.data;
 
-            if (callbackFunc) {
-                callbackFunc(data);
+            if (!controller.signal.aborted) {
+                if (callbackFunc) {
+                    callbackFunc(data);
+                }
+                setHttpStatus(result.httpStatus);
+                setData(data);
             }
-
-            setData(data);
         } catch (error: any) {
             const errorData: FetchErrorResultData = error?.data || {
                 errorKey: 'UNKNOWN_ERROR',
@@ -50,7 +54,6 @@ export const useFetchApi = <T>({
             };
             const errorKey = errorData.errorKey;
 
-            // TODO: can handle global error ui here, e.g. open global error modal.
             if (errorKey === ERROR_KEY.TOKEN_EXPIRED) {
                 CookieHelpers.EraseCookie({ name: COOKIE_KEY.DASHBOARD_TOKEN });
                 location.href = `${
@@ -58,18 +61,30 @@ export const useFetchApi = <T>({
                 }/auth/two-factor-auth/`;
             }
 
-            // TODO: or just use error data to show on error section.
-            setError(error.data);
+            if (!controller.signal.aborted) {
+                const errorData = error?.data || error;
+                setError(errorData);
+            }
         } finally {
             setIsLoading(false);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [apiPath, method, payload, callbackFunc]);
+
+    const cancelFetch = () => {
+        controller.abort();
+    };
+
+    useEffect(() => {
+        return cancelFetch;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return {
         isLoading,
         error,
         data,
-        fetchApi,
         httpStatus,
+        fetchApi,
     };
 };

@@ -13,6 +13,7 @@ $tag-colors: (
     position: relative;
     padding: 0.3125rem 0.75rem;
     line-height: 1;
+    white-space: nowrap;
 
     &:before {
         display: inline-block;

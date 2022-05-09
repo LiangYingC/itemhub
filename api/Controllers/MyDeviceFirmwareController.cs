@@ -64,7 +64,6 @@ namespace Homo.IotApi
             // pass client id, client secrets and bundle id to asyn bundle firmware function
             var task = System.Threading.Tasks.Task.Run(async () =>
             {
-                await System.Threading.Tasks.Task.Delay(20 * 1000);
                 FirmwareGenerateService.Generate(_dbc, _firmwareTemplatePath, _staticPath, id, extraPayload.Id, randomClientId, clientSecret, randomBundleId, dto.ZipPassword);
             });
 

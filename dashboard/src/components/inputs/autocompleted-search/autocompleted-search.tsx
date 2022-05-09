@@ -1,17 +1,17 @@
 import { useState, useRef } from 'react';
-import useClickOutsideElement from '@/hooks/clickOutsideElement.hook';
 import debounce from 'lodash.debounce';
 
 const AutocompletedSearch = ({
+    placeholder,
     currentValue,
     updateCurrentValue,
     allSuggestions,
 }: {
+    placeholder: string;
     currentValue: string;
     updateCurrentValue: (newValue: string) => void;
     allSuggestions: string[];
 }) => {
-    const [isShowSuggestions, setIsShowSuggestions] = useState(false);
     const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>(
         []
     );
@@ -29,7 +29,6 @@ const AutocompletedSearch = ({
         );
         setActiveSuggestionIndex(0);
         setFilteredSuggestions(newFilteredOptions);
-        setIsShowSuggestions(true);
         updateCurrentValue(currentValue);
     };
     const handleChangeValueWithDebounce = debounce(handleChangeValue, 300);
@@ -43,7 +42,6 @@ const AutocompletedSearch = ({
         updateCurrentValue(currentValue);
         setActiveSuggestionIndex(0);
         setFilteredSuggestions([]);
-        setIsShowSuggestions(false);
     };
 
     const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -54,7 +52,6 @@ const AutocompletedSearch = ({
             }
             updateCurrentValue(currentValue);
             setActiveSuggestionIndex(0);
-            setIsShowSuggestions(false);
         } else if (e.key === 'ArrowUp') {
             return activeSuggestionIndex === 0
                 ? null
@@ -66,18 +63,12 @@ const AutocompletedSearch = ({
         }
     };
 
-    const handleClickOuside = () => {
-        setIsShowSuggestions(false);
-    };
-    useClickOutsideElement({
-        elementRef: wrapperRef,
-        handleClick: handleClickOuside,
-    });
-
     return (
         <div ref={wrapperRef}>
             <input
                 className="form-control"
+                list="datalistOptions"
+                placeholder={placeholder}
                 ref={inputRef}
                 defaultValue={currentValue}
                 onFocus={() =>
@@ -88,31 +79,23 @@ const AutocompletedSearch = ({
                 }
                 onKeyUp={handleKeyUp}
             />
-            {isShowSuggestions ? (
-                filteredSuggestions.length > 0 ? (
-                    <ul className="autocomplete-wrapper">
-                        {filteredSuggestions.map((suggestion, index) => {
-                            let className;
-                            if (index === activeSuggestionIndex) {
-                                className = 'active-suggestion';
-                            }
-                            return (
-                                <li
-                                    key={suggestion}
-                                    className={className}
-                                    onClick={handleClickSuggestion}
-                                >
-                                    {suggestion}
-                                </li>
-                            );
-                        })}
-                    </ul>
-                ) : (
-                    <div className="no-suggestions">
-                        <p>沒有資料，請重新搜尋</p>
-                    </div>
-                )
-            ) : null}
+            <datalist id="datalistOptions">
+                {filteredSuggestions.map((suggestion, index) => {
+                    let className;
+                    if (index === activeSuggestionIndex) {
+                        className = 'active-suggestion';
+                    }
+                    return (
+                        <option
+                            key={suggestion}
+                            className={className}
+                            onClick={handleClickSuggestion}
+                        >
+                            {suggestion}
+                        </option>
+                    );
+                })}
+            </datalist>
         </div>
     );
 };

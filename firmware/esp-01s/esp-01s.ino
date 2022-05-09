@@ -43,9 +43,9 @@ void setup()
 {
   delay(5000);
   Serial.begin(115200);
-  pins.push_back(ItemhubPin(DHTPIN, "TX", SENSOR));
-  pins.push_back(ItemhubPin(2, "D2", SWITCH));
-
+  // pins.push_back(ItemhubPin(DHTPIN, "TX", SENSOR));
+  // pins.push_back(ItemhubPin(2, "D2", SWITCH));
+  {PINS};
   dht.begin();
 
   Serial.println();

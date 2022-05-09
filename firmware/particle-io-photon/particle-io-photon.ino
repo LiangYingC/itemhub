@@ -55,11 +55,11 @@ unsigned char buff[512];
 void setup()
 {
     delay(5000);
-
     Serial.begin(9600);
+    // pins.push_back(ItemhubPin(D0, "D0", SWITCH));
+    // pins.push_back(ItemhubPin(D1, "D1", SENSOR));
+    {PINS};
     dht.begin();
-    pins.push_back(ItemhubPin(D0, "D0", SWITCH));
-    pins.push_back(ItemhubPin(D1, "D1", SENSOR));
 
     // setup Root CA pem.
     client.init(caPem.c_str(), caPem.length() + 1);

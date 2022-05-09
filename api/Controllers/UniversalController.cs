@@ -11,8 +11,10 @@ namespace Homo.IotApi
     public class IotUniversalController : ControllerBase
     {
 
-        public IotUniversalController()
+        private readonly IotDbContext _dbContext;
+        public IotUniversalController(IotDbContext dbContext)
         {
+            _dbContext = dbContext;
         }
 
         [HttpGet]
@@ -63,12 +65,15 @@ namespace Homo.IotApi
             return ConvertHelper.EnumToList(typeof(TRANSACTION_STATUS));
         }
 
-
         [HttpGet]
         [Route("microcontroller")]
         public ActionResult<dynamic> getMicrocontroller()
         {
-            return ConvertHelper.EnumToList(typeof(MICROCONTROLLER));
+            return _dbContext.Microcontroller.Select(x => new
+            {
+                x.Key,
+                Pins = Newtonsoft.Json.JsonConvert.DeserializeObject<List<DTOs.Pin>>(x.Pins)
+            }).ToList();
         }
     }
 }

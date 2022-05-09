@@ -184,8 +184,8 @@ const OauthClient = () => {
                             </div>
                             <div>
                                 請立即記下 Client Secret, 為確保安全性,
-                                伺服器端部會儲存 Secret 明碼, 如果忘記明碼,
-                                只能重新產生 Secret
+                                伺服器端不會儲存 Secret 明碼,
+                                如果忘記明碼只能重新產生
                             </div>
                         </div>
                         <div className="d-flex justify-content-end mt-5">

@@ -63,8 +63,9 @@ DHT dht(DHTPIN, DHTTYPE);
 
 void setup()
 {
-    pins.push_back(ItemhubPin(D0, "D0", SWITCH));
+    // pins.push_back(ItemhubPin(D0, "D0", SWITCH));
     // pins.push_back(ItemhubPin(DHTPIN, "D2", SENSOR));
+    {PINS};
     dht.begin();
 
     connect();

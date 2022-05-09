@@ -34,7 +34,7 @@ const Trigger = () => {
 
     return (
         <div className="trigger" data-testid="trigger">
-            {isGettingTrigger ? (
+            {isGettingTrigger || (trigger === null && !isCreateMode) ? (
                 <div>Loading</div>
             ) : isCreateMode || isEditMode ? (
                 <TriggerForm trigger={trigger} isCreateMode={isCreateMode} />

@@ -14,7 +14,7 @@ import pencilIcon from '@/assets/images/pencil.svg';
 import cloudIcon from '@/assets/images/cloud.svg';
 import trashIcon from '@/assets/images/trash.svg';
 import Pagination from '@/components/pagination/pagination';
-import SearchInput from '@/components/input/search-input/search-input';
+import SearchInput from '@/components/inputs/search-input/search-input';
 import EmptyDataToCreateItem from '@/components/empty-data-to-create-item/empty-data-to-create-item';
 import { useDeleteDevicesApi } from '@/hooks/apis/devices.hook';
 import { RESPONSE_STATUS } from '@/constants/api';
@@ -129,12 +129,15 @@ const Devices = () => {
                     '伺服器目前過於忙碌, 已經超過預期打包的時間, 請稍候再嘗試下載'
                 );
                 retryDownloadFirmwareCountRef.current = 0;
+                setShouldBeBundledId(0);
+                setIsFirmwarePrepare(false);
                 return;
             }
             setTimeout(() => {
                 setRetryDownloadFirmwareFlag(!retryDownloadFirmwareFlag);
             }, 3000);
         } else if (downloadFirmwareHttpStatus === 200) {
+            setShouldBeBundledId(0);
             setIsFirmwarePrepare(false);
             retryDownloadFirmwareCountRef.current = 0;
         }

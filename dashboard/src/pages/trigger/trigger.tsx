@@ -6,6 +6,7 @@ import { selectTriggers } from '@/redux/reducers/triggers.reducer';
 import { TriggerItem } from '@/types/triggers.type';
 import TriggerForm from './trigger-form/trigger-form';
 import PageTitle from '@/components/page-title/page-title';
+import Spinner from '@/components/spinner/spinner';
 
 const Trigger = () => {
     const location = useLocation();
@@ -35,7 +36,9 @@ const Trigger = () => {
     return (
         <div className="trigger" data-testid="trigger">
             {isGettingTrigger || (trigger === null && !isCreateMode) ? (
-                <div>Loading</div>
+                <div className="w-100 d-flex justify-content-center mt-5">
+                    <Spinner />
+                </div>
             ) : isCreateMode || isEditMode ? (
                 <TriggerForm trigger={trigger} isCreateMode={isCreateMode} />
             ) : (

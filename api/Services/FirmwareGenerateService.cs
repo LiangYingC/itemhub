@@ -31,7 +31,7 @@ namespace Homo.IotApi
             IotDbContext dbContext = new IotDbContext(builder.Options);
 
             Device device = DeviceDataservice.GetOne(dbContext, ownerId, deviceId);
-            List<DevicePin> devicePins = DevicePinDataservice.GetList(dbContext, ownerId, deviceId);
+            List<DTOs.DevicePin> devicePins = DevicePinDataservice.GetAll(dbContext, ownerId, new List<long> { deviceId }, null, null);
 
             if (device.Microcontroller == null)
             {

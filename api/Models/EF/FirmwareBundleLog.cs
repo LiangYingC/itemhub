@@ -18,7 +18,7 @@ namespace Homo.IotApi
         public string BundleId { get; set; }
 
         [Required]
-        public DTOs.MICROCONTROLLER Microcontroller { get; set; }
+        public long Microcontroller { get; set; }
 
         public string Filename { get; set; }
     }

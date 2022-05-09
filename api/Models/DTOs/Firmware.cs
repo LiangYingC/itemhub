@@ -9,11 +9,10 @@ namespace Homo.IotApi
         }
 
 
-        public enum MICROCONTROLLER
+        public class Pin
         {
-            PARTICLE_IO_PHOTON,
-            ARDUINO_NANO_33_IOT,
-            ESP_01S
+            public string Name { get; set; }
+            public int Value { get; set; }
         }
     }
 }

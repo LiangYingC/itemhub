@@ -3,14 +3,16 @@ using System;
 using Homo.IotApi;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IotApi.Migrations
 {
     [DbContext(typeof(IotDbContext))]
-    partial class IotDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220509024404_AddMicrocontrollerTable")]
+    partial class AddMicrocontrollerTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,8 +41,8 @@ namespace IotApi.Migrations
                     b.Property<string>("Info")
                         .HasColumnType("longtext");
 
-                    b.Property<long?>("Microcontroller")
-                        .HasColumnType("bigint");
+                    b.Property<int?>("Microcontroller")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -258,8 +260,8 @@ namespace IotApi.Migrations
                     b.Property<string>("Filename")
                         .HasColumnType("longtext");
 
-                    b.Property<long>("Microcontroller")
-                        .HasColumnType("bigint");
+                    b.Property<int>("Microcontroller")
+                        .HasColumnType("int");
 
                     b.Property<long>("OwnerId")
                         .HasColumnType("bigint");
@@ -293,7 +295,7 @@ namespace IotApi.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime?>("EditedAt")
+                    b.Property<DateTime>("EditedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<long?>("EditedBy")

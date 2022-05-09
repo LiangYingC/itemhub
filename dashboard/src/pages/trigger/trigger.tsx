@@ -12,26 +12,28 @@ const Trigger = () => {
     const location = useLocation();
 
     const { id: idFromUrl } = useParams();
-    const id = idFromUrl ? parseInt(idFromUrl) : null;
+    const triggerId = idFromUrl ? parseInt(idFromUrl) : null;
 
-    const isCreateMode = id === null;
-    const isEditMode = location.pathname.includes('edit') && id !== null;
+    const isCreateMode = triggerId === null;
+    const isEditMode = location.pathname.includes('edit') && triggerId !== null;
 
     const createTriggerLocationState = location.state as {
         trigger: TriggerItem;
     } | null;
     const { triggers } = useAppSelector(selectTriggers);
     const trigger =
-        triggers?.filter((trigger) => trigger.id === id)[0] ||
+        triggers?.filter((trigger) => trigger.id === triggerId)[0] ||
         createTriggerLocationState?.trigger ||
         null;
 
-    const { isGettingTrigger, getTriggerApi } = useGetTriggerApi(id || 0);
+    const { isGettingTrigger, getTriggerApi } = useGetTriggerApi(
+        triggerId || 0
+    );
     useEffect(() => {
-        if (trigger === null) {
+        if (trigger === null && triggerId) {
             getTriggerApi();
         }
-    }, [trigger, getTriggerApi]);
+    }, [trigger, triggerId, getTriggerApi]);
 
     return (
         <div className="trigger" data-testid="trigger">

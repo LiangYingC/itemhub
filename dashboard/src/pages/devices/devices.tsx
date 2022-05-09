@@ -14,7 +14,7 @@ import pencilIcon from '@/assets/images/pencil.svg';
 import cloudIcon from '@/assets/images/cloud.svg';
 import trashIcon from '@/assets/images/trash.svg';
 import Pagination from '@/components/pagination/pagination';
-import SearchInput from '@/components/input/search-input/search-input';
+import SearchInput from '@/components/inputs/search-input/search-input';
 import EmptyDataToCreateItem from '@/components/empty-data-to-create-item/empty-data-to-create-item';
 import { useDeleteDevicesApi } from '@/hooks/apis/devices.hook';
 import { RESPONSE_STATUS } from '@/constants/api';

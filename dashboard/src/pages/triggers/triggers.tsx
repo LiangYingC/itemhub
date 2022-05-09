@@ -18,7 +18,7 @@ import { TriggerItem } from '@/types/triggers.type';
 import Pagination from '@/components/pagination/pagination';
 import PageTitle from '@/components/page-title/page-title';
 import { dialogActions, DialogTypeEnum } from '@/redux/reducers/dialog.reducer';
-import SearchInput from '@/components/input/search-input/search-input';
+import SearchInput from '@/components/inputs/search-input/search-input';
 import EmptyDataToCreateItem from '@/components/empty-data-to-create-item/empty-data-to-create-item';
 import lightTrashIcon from '@/assets/images/light-trash.svg';
 import pencilIcon from '@/assets/images/pencil.svg';
@@ -469,12 +469,11 @@ const Triggers = () => {
                                                 <div className="col-8 col-lg-1 py-3 py-lg-0 d-flex justify-content-start flex-wrap">
                                                     <Link
                                                         className="me-3 mb-3"
-                                                        to={`/dashboard/triggers/${id}`}
+                                                        to={`/dashboard/triggers/edit/${id}`}
                                                         data-tip="編輯"
                                                     >
                                                         <img src={pencilIcon} />
                                                     </Link>
-
                                                     <button
                                                         className="btn mb-3 p-0 bg-transparent shadow-none"
                                                         onClick={() => {

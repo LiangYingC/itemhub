@@ -1,12 +1,10 @@
 import { useState, useEffect } from 'react';
 import { DeviceItem, PinItem } from '@/types/devices.type';
-import AutocompletedSearch from '@/components/autocompleted-search/autocompleted-search';
+import AutocompletedSearch from '@/components/inputs/autocompleted-search/autocompleted-search';
 
 const DeviceAndPinInputs = ({
     allDevices,
     initialDeviceName = '',
-    deviceIdLable,
-    deviceIdValue,
     deviceNameLabel,
     pinLabel,
     pinValue,
@@ -16,8 +14,6 @@ const DeviceAndPinInputs = ({
 }: {
     allDevices: DeviceItem[];
     initialDeviceName?: string;
-    deviceIdLable: string;
-    deviceIdValue: number;
     deviceNameLabel: string;
     pinLabel: string;
     pinValue: string;
@@ -36,26 +32,20 @@ const DeviceAndPinInputs = ({
     }, [currentDeviceId]);
 
     return (
-        <>
-            <div className="form-group mt-3">
-                <label>{deviceIdLable}</label>
-                <input
-                    className="form-control"
-                    disabled
-                    value={deviceIdValue}
-                />
-            </div>
-            <div className="form-group mt-3">
-                <label>{deviceNameLabel}</label>
+        <div className="d-flex flex-column flex-md-row w-100 mb-3">
+            <div className="form-group w-100 pe-md-3 mb-3 mb-md-0">
+                <label className="mb-1">{deviceNameLabel}</label>
                 <AutocompletedSearch
+                    placeholder="請輸入裝置名稱搜尋"
                     currentValue={deviceName}
                     updateCurrentValue={(newValue) => setDeviceName(newValue)}
                     allSuggestions={allDevices.map(({ name }) => name)}
                 />
             </div>
-            <div className="form-group mt-3">
-                <label>{pinLabel}</label>
+            <div className="form-group w-100 ps-md-3">
+                <label className="mb-1">{pinLabel}</label>
                 <select
+                    className="form-select"
                     value={pinValue}
                     onChange={(e) => {
                         const newSourcePin = e.target.value;
@@ -81,7 +71,7 @@ const DeviceAndPinInputs = ({
                     )}
                 </select>
             </div>
-        </>
+        </div>
     );
 };
 

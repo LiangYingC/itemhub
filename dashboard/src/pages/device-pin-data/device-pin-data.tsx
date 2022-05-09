@@ -58,9 +58,8 @@ const Device = () => {
         Number(id)
     );
 
-    const { fetchApi: getOauthClientByDeviceId } = useGetOauthClientByDeviceId(
-        Number(id)
-    );
+    const { error: getOauthClientError, fetchApi: getOauthClientByDeviceId } =
+        useGetOauthClientByDeviceId(Number(id));
 
     const { microcontrollers } = useAppSelector(selectUniversal);
     const oAuthId = oAuthClient ? oAuthClient.id : '';
@@ -99,7 +98,7 @@ const Device = () => {
         fetchApi: createSecretApi,
         isLoading: isCreatSecreting,
         data: createOAuthClientResponse,
-    } = useCreateOauthClients(clientId);
+    } = useCreateOauthClients(clientId, Number(id));
 
     const {
         fetchApi: createDeviceApi,
@@ -128,7 +127,7 @@ const Device = () => {
         if (device !== null) {
             setMicrocontroller(Number(device.microcontroller));
         }
-        if (device !== null && oAuthClient === null) {
+        if (device !== null && oAuthClient === null && !isCreateMode) {
             getOauthClientByDeviceId();
         }
     }, [device]);
@@ -136,6 +135,12 @@ const Device = () => {
     useEffect(() => {
         setClientId(clientId);
     }, [oAuthClient]);
+
+    useEffect(() => {
+        if (getOauthClientError?.errorKey === 'DATA_NOT_FOUND') {
+            createSecretApi();
+        }
+    }, [getOauthClientError]);
 
     useEffect(() => {
         const microcontrollerKey = microcontrollers.filter((item) => {
@@ -147,7 +152,7 @@ const Device = () => {
         if (microcontrollerKey[0].key === 'PARTICLE_IO_PHOTON') {
             setMicrocontrollerImg(particleIoPhoton);
         }
-        if (microcontrollerKey[0].key === 'ARDUINO_NANO_33_IOT') {
+        if (microcontrollerKey[0].key === 'ARDUINO_NANO_IOT_33') {
             setMicrocontrollerImg(arduinoNano33Iot);
         }
         if (microcontrollerKey[0].key === 'ESP_01S') {
@@ -196,7 +201,7 @@ const Device = () => {
                     type: ToasterTypeEnum.INFO,
                 })
             );
-            navigate(`/dashboard/devices/${createDeviceResponse.id}`);
+            navigate(`/dashboard/devices/${createDeviceResponse.id}/edit`);
         }
     }, [createDeviceResponse]);
 
@@ -288,21 +293,12 @@ const Device = () => {
                                 alt=""
                             />
                         </div>
-                        <div className="row">
-                            <div className="col-12 col-lg-6 p-0">
-                                <label>Client Id</label>
-                                {isCreateMode ? (
-                                    <input
-                                        type="text"
-                                        className="form-control mt-2"
-                                        placeholder="如果不填寫 clientId 系統會自動會幫你隨機產生"
-                                        defaultValue={clientId}
-                                        onChange={(e) =>
-                                            setClientId(e.target.value)
-                                        }
-                                        disabled={!isCreateMode}
-                                    />
-                                ) : (
+                        {isCreateMode ? (
+                            <div />
+                        ) : (
+                            <div className="row">
+                                <div className="col-12 col-lg-6 p-0">
+                                    <label>Client Id</label>
                                     <input
                                         type="text"
                                         className="form-control mt-2"
@@ -314,38 +310,9 @@ const Device = () => {
                                         }
                                         disabled={!isCreateMode}
                                     />
-                                )}
-                            </div>
-                            <div className="col-12 col-lg-6 ps-3 pe-0">
-                                <label>Client Secret</label>
-                                {isCreateMode ? (
-                                    <div>
-                                        <input
-                                            type="text"
-                                            className="form-control mt-2"
-                                            placeholder="****************************"
-                                            value={
-                                                createOAuthClientResponse?.clientSecrets
-                                            }
-                                            disabled
-                                        />
-                                        <div
-                                            className="d-flex pt-1"
-                                            onClick={createSecretApi}
-                                            role="button"
-                                        >
-                                            <div className="text-primary">
-                                                產生 Client Secret
-                                            </div>
-                                            <div className="ps-2">
-                                                <img
-                                                    src={refreshPrimaryIcon}
-                                                    alt=""
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                ) : (
+                                </div>
+                                <div className="col-12 col-lg-6 ps-3 pe-0">
+                                    <label>Client Secret</label>
                                     <div>
                                         <input
                                             type="text"
@@ -355,7 +322,8 @@ const Device = () => {
                                                 revokeSecretResponse?.secret ||
                                                 (
                                                     state as OauthClientLocationState
-                                                )?.secret
+                                                )?.secret ||
+                                                createOAuthClientResponse?.clientSecrets
                                             }
                                             disabled
                                         />
@@ -375,26 +343,18 @@ const Device = () => {
                                             </div>
                                         </div>
                                     </div>
-                                )}
-                                <div className="text-warn d-flex pt-1 ">
-                                    <div className="bg-warn text-white rounded-circle icon-warm me-1 flex-shrink-0">
-                                        !
-                                    </div>
-                                    {isCreateMode ? (
+                                    <div className="text-warn d-flex pt-1 ">
+                                        <div className="bg-warn text-white rounded-circle icon-warm me-1 flex-shrink-0">
+                                            !
+                                        </div>
                                         <div>
                                             請立即記下 Client
-                                            Secret，為保持安全性，再次查看需重新產生
-                                            Client Secret
+                                            Secret，為保持安全性，再次查看需重新產生並打包燒錄程式碼
                                         </div>
-                                    ) : (
-                                        <div>
-                                            Revoke Client Secret
-                                            需重新打包燒錄程式碼
-                                        </div>
-                                    )}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        )}
                         <div className="d-flex justify-content-end mt-5">
                             <button
                                 className="btn btn-secondary me-3"

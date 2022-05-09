@@ -129,12 +129,15 @@ const Devices = () => {
                     '伺服器目前過於忙碌, 已經超過預期打包的時間, 請稍候再嘗試下載'
                 );
                 retryDownloadFirmwareCountRef.current = 0;
+                setShouldBeBundledId(0);
+                setIsFirmwarePrepare(false);
                 return;
             }
             setTimeout(() => {
                 setRetryDownloadFirmwareFlag(!retryDownloadFirmwareFlag);
             }, 3000);
         } else if (downloadFirmwareHttpStatus === 200) {
+            setShouldBeBundledId(0);
             setIsFirmwarePrepare(false);
             retryDownloadFirmwareCountRef.current = 0;
         }

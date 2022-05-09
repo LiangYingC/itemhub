@@ -77,6 +77,10 @@ namespace Homo.IotApi
                     Devices = devices.Select((x) =>
                     {
                         var deviceState = myDeviceStates.Where(y => y.DeviceId == x.Id).FirstOrDefault();
+                        if (deviceState == null)
+                        {
+                            return null;
+                        }
                         return new
                         {
                             DeviceId = deviceState.DeviceId.ToString(),
@@ -84,7 +88,9 @@ namespace Homo.IotApi
                             Status = "SUCCESS",
                             Online = x.Online
                         };
-                    }).ToDictionary(x => x.DeviceId)
+                    })
+                    .Where(x => x != null)
+                    .ToDictionary(x => x.DeviceId)
                 }
             };
         }

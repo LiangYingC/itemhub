@@ -54,20 +54,24 @@ const DeviceAndPinInputs = ({
                 >
                     {pinOptions.length > 0 ? (
                         <>
-                            {pinValue === '' && <option>請選擇 Pin</option>}
+                            {pinValue === '' && (
+                                <option key="not-yet-choose" value="">
+                                    請選擇 PIN
+                                </option>
+                            )}
                             {pinOptions.map(({ name, pin }, index) => {
                                 return (
                                     <option
                                         key={`${name}-${index}`}
                                         value={pin}
                                     >
-                                        {name}
+                                        {name || 'PIN'}
                                     </option>
                                 );
                             })}
                         </>
                     ) : (
-                        <option>無任何 Pin 資料，請重新選擇裝置</option>
+                        <option>此裝置目前無 Pins，請重新選擇裝置</option>
                     )}
                 </select>
             </div>

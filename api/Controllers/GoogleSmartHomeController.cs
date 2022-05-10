@@ -44,14 +44,27 @@ namespace Homo.IotApi
             List<DeviceInfo> deviceInfos = devicePins
                 .Select(x =>
                 {
+                    string id = $"{x.DeviceId}-{x.Pin}";
                     return new DeviceInfo()
                     {
-                        Name = new DeviceName() { Name = x.Name },
-                        Id = $"{x.DeviceId}-{x.Pin}",
-                        Traits = new List<string>() { "action.devices.traits.OnOff" },
+                        Name = new DeviceName() { Name = x.Name == null ? id : x.Name },
+                        Id = id,
+                        Traits = x.Mode == DEVICE_MODE.SWITCH ? new List<string>() { "action.devices.traits.OnOff" } :
+                        x.Mode == DEVICE_MODE.SENSOR ? new List<string>() { "action.devices.traits.SensorState" } : new List<string>() { "action.devices.traits.OnOff" },
                         Type = x.Mode == DEVICE_MODE.SENSOR ? "action.devices.types.SENSOR" :
                             x.Mode == DEVICE_MODE.SWITCH ? "action.devices.types.SWITCH" : "action.devices.types.SWITCH",
-                        WillReportState = true
+                        WillReportState = true,
+                        Attributes = x.Mode == DEVICE_MODE.SENSOR ? new
+                        {
+                            SensorStateSupported = new List<GoogleSensorStateSupported>() {
+                                new GoogleSensorStateSupported() {
+                                    Name = "Value", // Google 目前不支援 General Sensor
+                                    NumericCapabilities = new GoogleNumericCapabilities() {
+                                        RawValueUnit = "None"
+                                    }
+                                }
+                            }
+                        } : null
                     };
                 })
                 .ToList<DeviceInfo>();
@@ -127,10 +140,20 @@ namespace Homo.IotApi
             {
                 for (int i = 0; i < command.Devices.Count; i++)
                 {
-                    DevicePinDataservice.UpdateValueByDeviceId(_dbContext, ownerId, command.Devices[i].Id, GoogleDevicePin, command.Execution[i].Params.on.Value ? 1 : 0);
+                    List<string> arrayOfSplitId = command.Devices[i].Id.Split("-").ToList();
+                    long deviceId = 0;
+                    string pin = arrayOfSplitId[1];
+                    long.TryParse(arrayOfSplitId[0], out deviceId);
+                    DevicePinDataservice.UpdateValueByDeviceId(_dbContext, ownerId, deviceId, pin, command.Execution[i].Params.On ? 1 : 0);
                 }
             });
-            List<long> myDeviceIds = commands[0].Devices.Select(x => x.Id).ToList<long>();
+            List<long> myDeviceIds = commands[0].Devices.Select(x =>
+            {
+                long deviceId = 0;
+                List<string> arrayOfSplit = x.Id.Split("-").ToList();
+                long.TryParse(arrayOfSplit[0], out deviceId);
+                return deviceId;
+            }).Where(x => x != 0).ToList<long>();
             List<DTOs.DevicePin> states = DevicePinDataservice.GetAll(_dbContext, ownerId, myDeviceIds, DEVICE_MODE.SWITCH, this.GoogleDevicePin);
             List<Device> devices = DeviceDataservice.GetAllByIds(_dbContext, ownerId, states.Select(x => x.DeviceId).ToList<long>());
             List<GoogleDeviceState> statesForGoogle = states
@@ -174,14 +197,19 @@ namespace Homo.IotApi
 
     public class ExecuteDevice
     {
-        public long Id { get; set; }
+        public string Id { get; set; }
 
     }
 
     public class DeviceExecution
     {
         public string Command { get; set; }
-        public dynamic Params { get; set; }
+        public GoogleDeviceOnOffParam Params { get; set; }
+    }
+
+    public class GoogleDeviceOnOffParam
+    {
+        public bool On { get; set; }
     }
 
     public class DeviceInfo
@@ -191,6 +219,7 @@ namespace Homo.IotApi
         public List<string> Traits { get; set; }
         public string Type { get; set; }
         public bool WillReportState { get; set; }
+        public dynamic Attributes { get; set; }
     }
 
     public class DeviceName
@@ -207,5 +236,22 @@ namespace Homo.IotApi
         public string Status { get; set; }
         public bool Online { get; set; }
         public bool On { get; set; }
+    }
+
+    public class GoogleSensorStateSupported
+    {
+        public string Name { get; set; }
+        public GoogleDescriptiveCapabilities DescriptiveCapabilities { get; set; }
+        public GoogleNumericCapabilities NumericCapabilities { get; set; }
+    }
+
+    public class GoogleDescriptiveCapabilities
+    {
+        public List<string> AvailableStates { get; set; }
+    }
+
+    public class GoogleNumericCapabilities
+    {
+        public string RawValueUnit { get; set; }
     }
 }

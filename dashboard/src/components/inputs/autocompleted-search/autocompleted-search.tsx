@@ -2,11 +2,13 @@ import { useState, useRef } from 'react';
 import debounce from 'lodash.debounce';
 
 const AutocompletedSearch = ({
+    datalistId,
     placeholder,
     currentValue,
     updateCurrentValue,
     allSuggestions,
 }: {
+    datalistId: string;
     placeholder: string;
     currentValue: string;
     updateCurrentValue: (newValue: string) => void;
@@ -67,7 +69,7 @@ const AutocompletedSearch = ({
         <div ref={wrapperRef}>
             <input
                 className="form-control"
-                list="datalistOptions"
+                list={datalistId}
                 placeholder={placeholder}
                 ref={inputRef}
                 defaultValue={currentValue}
@@ -79,7 +81,7 @@ const AutocompletedSearch = ({
                 }
                 onKeyUp={handleKeyUp}
             />
-            <datalist id="datalistOptions">
+            <datalist id={datalistId}>
                 {filteredSuggestions.map((suggestion, index) => {
                     let className;
                     if (index === activeSuggestionIndex) {

@@ -306,6 +306,7 @@ const Triggers = () => {
                             </div>
                             <div className="filter-wrapper col-6 col-md-3">
                                 <AutocompletedSearch
+                                    datalistId="dsourceDeviceName"
                                     placeholder="來源裝置篩選"
                                     currentValue={sourceDeviceNameFilter}
                                     updateCurrentValue={(newValue) => {
@@ -316,6 +317,7 @@ const Triggers = () => {
                             </div>
                             <div className="filter-wrapper col-6 col-md-3">
                                 <AutocompletedSearch
+                                    datalistId="destinationDevice"
                                     placeholder="目標裝置篩選"
                                     currentValue={destinationDeviceNameFilter}
                                     updateCurrentValue={(newValue) => {

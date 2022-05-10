@@ -63,8 +63,6 @@ DHT dht(DHTPIN, DHTTYPE);
 
 void setup()
 {
-    // pins.push_back(ItemhubPin(D0, "D0", SWITCH));
-    // pins.push_back(ItemhubPin(DHTPIN, "D2", SENSOR));
     {PINS};
     dht.begin();
 
@@ -149,58 +147,11 @@ void auth()
     client.post("/api/v1/oauth/exchange-token-for-device", "application/json", postData.c_str());
     std::string body = std::string(client.responseBody().c_str());
     token = ItemhubUtilities::Extract(body, "token");
+    remoteDeviceId = ItemhubUtilities::Extract(body, "deviceId");
     if (token.size() == 0)
     {
         delay(1000);
         auth();
-    }
-}
-
-void setupRemoteDeviceId()
-{
-    String deviceId;
-    for (size_t i = 0; i < UniqueIDsize; i++)
-    {
-        String temp(UniqueID[i], HEX);
-        deviceId += temp;
-    }
-
-    std::string byDeviceIdEndPoint = "/api/v1/my/devices/by-device-id/";
-    byDeviceIdEndPoint.append(deviceId.c_str());
-
-    client.beginRequest();
-    client.get(byDeviceIdEndPoint.c_str());
-    std::string tokenHeader = "Authorization: Bearer ";
-    tokenHeader.append(token);
-    client.sendHeader(tokenHeader.c_str());
-    client.endRequest();
-
-    int checkDeviceExistsResponseStatus = client.responseStatusCode();
-    std::string resp = std::string(client.responseBody().c_str());
-    if (checkDeviceExistsResponseStatus == 404)
-    {
-        Serial.println("register new device");
-        std::string registerDeviceBody = "{\"deviceId\":\"";
-        registerDeviceBody.append(deviceId.c_str());
-        registerDeviceBody.append("\",\"name\":\"");
-        registerDeviceBody.append(deviceId.c_str());
-        registerDeviceBody.append("\"}");
-        client.beginRequest();
-        client.post("/api/v1/my/devices");
-        client.sendHeader("Content-Type", "application/json");
-        client.sendHeader("Content-Length", registerDeviceBody.size());
-        client.sendHeader(tokenHeader.c_str());
-        client.beginBody();
-        client.print(registerDeviceBody.c_str());
-        client.endRequest();
-        resp = std::string(client.responseBody().c_str());
-    }
-
-    remoteDeviceId = ItemhubUtilities::Extract(resp, "id");
-    if (remoteDeviceId.size() == 0)
-    {
-        delay(1000);
-        setupRemoteDeviceId();
     }
 }
 
@@ -251,8 +202,6 @@ void checkSwitchState()
             continue;
         }
 
-        bool isExists = false;
-
         for (item = json_getChild(data); item != 0; item = json_getSibling(item))
         {
             if (JSON_OBJ != json_getType(item))
@@ -272,44 +221,12 @@ void checkSwitchState()
 
             if (pins[i].pinString == pin && intValue == 0)
             {
-                isExists = true;
                 digitalWrite(pins[i].pin, LOW);
             }
             else if (pins[i].pinString == pin && intValue == 1)
             {
-                isExists = true;
                 digitalWrite(pins[i].pin, HIGH);
             }
-        }
-        if (isExists == false)
-        {
-            std::string endpoint = "/api/v1/my/devices/";
-            endpoint.append(remoteDeviceId);
-            endpoint.append("/switches");
-
-            std::string postBody = "{\"pin\":\"";
-            postBody.append(pins[i].pinString);
-            postBody.append("\",\"");
-            postBody.append("mode\":");
-            postBody.append("1,");
-            postBody.append("\"value\":");
-            postBody.append("0,");
-            postBody.append("\"online\":");
-            postBody.append("true");
-            postBody.append("}");
-
-            client.beginRequest();
-            client.post(endpoint.c_str());
-            client.sendHeader("Content-Type", "application/json");
-            client.sendHeader("Content-Length", postBody.size());
-            client.sendHeader(tokenHeader.c_str());
-            client.beginBody();
-            client.print(postBody.c_str());
-            client.endRequest();
-            ERROR_THEN_RECONNECT(client);
-
-            Serial.print("register new pin: ");
-            Serial.println(client.responseBody().c_str());
         }
     }
 }

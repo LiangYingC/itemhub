@@ -17,7 +17,7 @@ const DeviceAndPinInputs = ({
     deviceNameLabel: string;
     pinLabel: string;
     pinValue: string;
-    pinOptions: PinItem[];
+    pinOptions: PinItem[] | null;
     updatePin: (pin: string) => void;
     updateDeviceId: (id: number) => void;
 }) => {
@@ -27,7 +27,9 @@ const DeviceAndPinInputs = ({
         allDevices.filter(({ name }) => deviceName === name)[0]?.id || 0;
 
     useEffect(() => {
-        updateDeviceId(currentDeviceId);
+        if (currentDeviceId) {
+            updateDeviceId(currentDeviceId);
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentDeviceId]);
 
@@ -52,22 +54,30 @@ const DeviceAndPinInputs = ({
                         updatePin(newSourcePin);
                     }}
                 >
-                    {pinOptions.length > 0 ? (
+                    {pinOptions === null ? (
+                        <option key="not-yet-fetch-pins" value="" />
+                    ) : pinOptions.length === 0 ? (
+                        <option key="no-pins-data" value="">
+                            此裝置目前無 Pins，請重新選擇裝置
+                        </option>
+                    ) : (
                         <>
-                            {pinValue === '' && <option>請選擇 Pin</option>}
+                            {pinValue === '' && (
+                                <option key="not-yet-choose-pins" value="">
+                                    請選擇 PIN
+                                </option>
+                            )}
                             {pinOptions.map(({ name, pin }, index) => {
                                 return (
                                     <option
                                         key={`${name}-${index}`}
                                         value={pin}
                                     >
-                                        {name}
+                                        {name || 'PIN'}
                                     </option>
                                 );
                             })}
                         </>
-                    ) : (
-                        <option>無任何 Pin 資料，請重新選擇裝置</option>
                     )}
                 </select>
             </div>

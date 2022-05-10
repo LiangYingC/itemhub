@@ -6,36 +6,41 @@ import { selectTriggers } from '@/redux/reducers/triggers.reducer';
 import { TriggerItem } from '@/types/triggers.type';
 import TriggerForm from './trigger-form/trigger-form';
 import PageTitle from '@/components/page-title/page-title';
+import Spinner from '@/components/spinner/spinner';
 
 const Trigger = () => {
     const location = useLocation();
 
     const { id: idFromUrl } = useParams();
-    const id = idFromUrl ? parseInt(idFromUrl) : null;
+    const triggerId = idFromUrl ? parseInt(idFromUrl) : null;
 
-    const isCreateMode = id === null;
-    const isEditMode = location.pathname.includes('edit') && id !== null;
+    const isCreateMode = triggerId === null;
+    const isEditMode = location.pathname.includes('edit') && triggerId !== null;
 
     const createTriggerLocationState = location.state as {
         trigger: TriggerItem;
     } | null;
     const { triggers } = useAppSelector(selectTriggers);
     const trigger =
-        triggers?.filter((trigger) => trigger.id === id)[0] ||
+        triggers?.filter((trigger) => trigger.id === triggerId)[0] ||
         createTriggerLocationState?.trigger ||
         null;
 
-    const { isGettingTrigger, getTriggerApi } = useGetTriggerApi(id || 0);
+    const { isGettingTrigger, getTriggerApi } = useGetTriggerApi(
+        triggerId || 0
+    );
     useEffect(() => {
-        if (trigger === null) {
+        if (trigger === null && triggerId) {
             getTriggerApi();
         }
-    }, [trigger, getTriggerApi]);
+    }, [trigger, triggerId, getTriggerApi]);
 
     return (
         <div className="trigger" data-testid="trigger">
-            {isGettingTrigger ? (
-                <div>Loading</div>
+            {isGettingTrigger || (trigger === null && !isCreateMode) ? (
+                <div className="w-100 d-flex justify-content-center mt-5">
+                    <Spinner />
+                </div>
             ) : isCreateMode || isEditMode ? (
                 <TriggerForm trigger={trigger} isCreateMode={isCreateMode} />
             ) : (

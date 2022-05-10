@@ -136,6 +136,7 @@ namespace Homo.IotApi
             long ownerId = extraPayload.Id;
             List<DeviceCommand> commands = dto.Inputs[0].Payload.Commands;
             List<dynamic> commandResult = new List<dynamic>();
+
             commands.ForEach(command =>
             {
                 for (int i = 0; i < command.Devices.Count; i++)
@@ -145,45 +146,27 @@ namespace Homo.IotApi
                     string pin = arrayOfSplitId[1];
                     long.TryParse(arrayOfSplitId[0], out deviceId);
                     DevicePinDataservice.UpdateValueByDeviceId(_dbContext, ownerId, deviceId, pin, command.Execution[i].Params.On ? 1 : 0);
+                    Device device = DeviceDataservice.GetOne(_dbContext, ownerId, deviceId);
+                    commandResult.Add(new
+                    {
+                        Ids = new List<string>() { command.Devices[i].Id },
+                        Status = "SUCCESS",
+                        States = new List<dynamic>() {new {
+                                DeviceId = command.Devices[i].Id,
+                                On = command.Execution[i].Params.On,
+                                Status = "SUCCESS",
+                                Online = device.Online,
+                            }},
+                    });
                 }
             });
-            List<long> myDeviceIds = commands[0].Devices.Select(x =>
-            {
-                long deviceId = 0;
-                List<string> arrayOfSplit = x.Id.Split("-").ToList();
-                long.TryParse(arrayOfSplit[0], out deviceId);
-                return deviceId;
-            }).Where(x => x != 0).ToList<long>();
-            List<DTOs.DevicePin> states = DevicePinDataservice.GetAll(_dbContext, ownerId, myDeviceIds, DEVICE_MODE.SWITCH, this.GoogleDevicePin);
-            List<Device> devices = DeviceDataservice.GetAllByIds(_dbContext, ownerId, states.Select(x => x.DeviceId).ToList<long>());
-            List<GoogleDeviceState> statesForGoogle = states
-            .Select(x => new GoogleDeviceState()
-            {
-                DeviceId = x.DeviceId,
-                On = x.Value == 1,
-                Status = "SUCCESS",
-                Online = devices.Where(y => y.Id == x.DeviceId).FirstOrDefault().Online,
-            }).ToList();
 
             return new
             {
                 RequestId = dto.RequestId,
                 Payload = new
                 {
-                    Commands = new List<dynamic>()
-                    {
-                        new {
-                            Ids = myDeviceIds.Select(x=> x.ToString()).ToList<string>(),
-                            Status = "SUCCESS",
-                            States = statesForGoogle.Select(x=>new {
-                                DeviceId = x.DeviceId.ToString(),
-                                On = x.On,
-                                Status = x.Status,
-                                Online = x.Online,
-                            }).ToList()
-                        }
-                    }
-
+                    Commands = commandResult
                 }
             };
         }

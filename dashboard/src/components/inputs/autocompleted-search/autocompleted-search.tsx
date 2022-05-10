@@ -47,11 +47,11 @@ const AutocompletedSearch = ({
     const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             const currentValue = filteredSuggestions[activeSuggestionIndex];
-            if (inputRef.current) {
+            if (inputRef.current && currentValue) {
                 inputRef.current.value = currentValue;
+                updateCurrentValue(currentValue);
+                setActiveSuggestionIndex(0);
             }
-            updateCurrentValue(currentValue);
-            setActiveSuggestionIndex(0);
         } else if (e.key === 'ArrowUp') {
             return activeSuggestionIndex === 0
                 ? null

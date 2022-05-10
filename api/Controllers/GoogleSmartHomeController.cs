@@ -40,14 +40,19 @@ namespace Homo.IotApi
         private ActionResult<dynamic> onSync([FromBody] DTOs.GoogleSmartHome dto, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
             long ownerId = extraPayload.Id;
-            List<Device> devices = DeviceDataservice.GetAll(_dbContext, ownerId);
-            List<DeviceInfo> deviceInfos = devices
+            List<DTOs.DevicePin> devicePins = DevicePinDataservice.GetAll(_dbContext, ownerId, null, null, null);
+            List<DeviceInfo> deviceInfos = devicePins
                 .Select(x =>
                 {
-                    var temp = JsonConvert.DeserializeObject<DeviceInfo>(x.Info);
-                    temp.Name = new DeviceName() { Name = x.Name };
-                    temp.Id = x.Id.ToString();
-                    return temp;
+                    return new DeviceInfo()
+                    {
+                        Name = new DeviceName() { Name = x.Name },
+                        Id = $"{x.DeviceId}-{x.Pin}",
+                        Traits = new List<string>() { "action.devices.traits.OnOff" },
+                        Type = x.Mode == DEVICE_MODE.SENSOR ? "action.devices.types.SENSOR" :
+                            x.Mode == DEVICE_MODE.SWITCH ? "action.devices.types.SWITCH" : "action.devices.types.SWITCH",
+                        WillReportState = true
+                    };
                 })
                 .ToList<DeviceInfo>();
             return new
@@ -64,29 +69,47 @@ namespace Homo.IotApi
         private ActionResult<dynamic> onQuery([FromBody] DTOs.GoogleSmartHome dto, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
             long ownerId = extraPayload.Id;
-            List<Device> devices = DeviceDataservice.GetAll(_dbContext, ownerId);
-            List<long> myDeviceIds = devices.Select(x => x.Id).ToList<long>();
-            List<DTOs.DevicePin> myDeviceStates = DevicePinDataservice.GetAll(_dbContext, ownerId, myDeviceIds, DEVICE_MODE.SWITCH, this.GoogleDevicePin);
-            List<long> existsStateDeviceIds = myDeviceStates.Select(x => x.DeviceId).ToList();
+            List<long> deviceIds = dto.Inputs[0].Payload.Devices.Select(x =>
+            {
+                string deviceId = x.Id.Split("-").ToList()[0];
+                long longDeviceId = 0;
+                long.TryParse(deviceId, out longDeviceId);
+                return longDeviceId;
+            }).ToList<long>();
+            List<string> googleSmartHomeIds = dto.Inputs[0].Payload.Devices.Select(x => x.Id).ToList();
+            List<Device> devices = DeviceDataservice.GetAllByIds(_dbContext, ownerId, deviceIds);
+            List<DTOs.DevicePin> myDevicePins = DevicePinDataservice.GetAll(_dbContext, ownerId, deviceIds, null, null);
 
             return new
             {
                 RequestId = dto.RequestId,
                 Payload = new
                 {
-                    Devices = devices.Select((x) =>
+                    Devices = myDevicePins.Where(x =>
                     {
-                        var deviceState = myDeviceStates.Where(y => y.DeviceId == x.Id).FirstOrDefault();
-                        if (deviceState == null)
+                        return googleSmartHomeIds.Where(y =>
                         {
-                            return null;
-                        }
+                            List<string> arrayOfSplitString = y.Split("-").ToList();
+                            long deviceId = 0;
+                            string pin = arrayOfSplitString[1];
+                            long.TryParse(arrayOfSplitString[0], out deviceId);
+                            return x.DeviceId == deviceId && x.Pin == pin;
+                        }).Count() > 0;
+                    }).Select((x) =>
+                    {
+                        var device = devices.Where(device => device.Id == x.DeviceId).FirstOrDefault();
                         return new
                         {
-                            DeviceId = deviceState.DeviceId.ToString(),
-                            On = deviceState.Value == 1,
+                            DeviceId = $"{x.DeviceId}-{x.Pin}",
+                            On = x.Value == 1,
                             Status = "SUCCESS",
-                            Online = x.Online
+                            Online = device == null ? false : device.Online,
+                            CurrentSensorStateData = new List<dynamic>() {
+                                new {
+                                    Name = "Value",
+                                    CurrentSensorState = x.Value
+                                }
+                            }
                         };
                     })
                     .Where(x => x != null)
@@ -98,7 +121,7 @@ namespace Homo.IotApi
         private ActionResult<dynamic> onExecute([FromBody] DTOs.GoogleSmartHome dto, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
             long ownerId = extraPayload.Id;
-            List<DeviceCommand> commands = Newtonsoft.Json.JsonConvert.DeserializeObject<List<DeviceCommand>>(dto.Inputs[0].Payload.GetProperty("commands").ToString());
+            List<DeviceCommand> commands = dto.Inputs[0].Payload.Commands;
             List<dynamic> commandResult = new List<dynamic>();
             commands.ForEach(command =>
             {

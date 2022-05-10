@@ -19,6 +19,7 @@ import Pagination from '@/components/pagination/pagination';
 import PageTitle from '@/components/page-title/page-title';
 import { dialogActions, DialogTypeEnum } from '@/redux/reducers/dialog.reducer';
 import SearchInput from '@/components/inputs/search-input/search-input';
+import AutocompletedSearch from '@/components/inputs/autocompleted-search/autocompleted-search';
 import EmptyDataToCreateItem from '@/components/empty-data-to-create-item/empty-data-to-create-item';
 import lightTrashIcon from '@/assets/images/light-trash.svg';
 import pencilIcon from '@/assets/images/pencil.svg';
@@ -38,15 +39,20 @@ const filterTriggers = ({
     if (triggers === null) {
         return [];
     }
+    if (sourceDeviceNameFilter === '' && destinationDeviceNameFilter === '') {
+        return triggers;
+    }
     const filteredTriggers = triggers.filter(
         ({ sourceDevice, destinationDevice }) => {
             const sourceDeviceName = sourceDevice?.name;
             const destinationDeviceName = destinationDevice?.name;
             const isReserved =
                 (sourceDeviceNameFilter === '' &&
-                    destinationDeviceNameFilter === '') ||
-                sourceDeviceNameFilter === sourceDeviceName ||
-                destinationDeviceNameFilter === destinationDeviceName;
+                    destinationDeviceNameFilter === destinationDeviceName) ||
+                (destinationDeviceNameFilter === '' &&
+                    sourceDeviceNameFilter === sourceDeviceName) ||
+                (sourceDeviceNameFilter === sourceDeviceName &&
+                    destinationDeviceNameFilter === destinationDeviceName);
             return isReserved;
         }
     );
@@ -90,8 +96,8 @@ const Triggers = () => {
             destinationDeviceNameOptions.length === 0
         ) {
             const initialOptions = {
-                sourceDeviceNames: ['來源裝置名稱'],
-                destinationDeviceNames: ['目標裝置名稱'],
+                sourceDeviceNames: [] as string[],
+                destinationDeviceNames: [] as string[],
             };
 
             const options = triggers.reduce((accumOptions, currentTrigger) => {
@@ -288,8 +294,8 @@ const Triggers = () => {
                     <EmptyDataToCreateItem itemName="觸發" />
                 ) : (
                     <>
-                        <div className="d-flex flex-column flex-sm-row flex-wrap">
-                            <div className="me-3 mb-2">
+                        <div className="row justify-content-start">
+                            <div className="search-wrapper col-12 col-md-6 mb-3 mb-md-0">
                                 <SearchInput
                                     placeholder="搜尋觸發"
                                     onChangeValue={(value) =>
@@ -298,61 +304,30 @@ const Triggers = () => {
                                     onSearch={getTriggersApi}
                                 />
                             </div>
-                            {/* TODO: 來源裝置、目標裝置的 filter，接著要等設計稿改動再調整，應該會改成 autocompeleted input search，現在先不動 */}
-                            <label className="me-3 mb-2">
-                                <select
-                                    value={sourceDeviceNameFilter}
-                                    onChange={(e) => {
-                                        setSourceDeviceNameFilter(
-                                            e.target.value
-                                        );
+                            <div className="filter-wrapper col-6 col-md-3">
+                                <AutocompletedSearch
+                                    placeholder="來源裝置篩選"
+                                    currentValue={sourceDeviceNameFilter}
+                                    updateCurrentValue={(newValue) => {
+                                        setSourceDeviceNameFilter(newValue);
                                     }}
-                                >
-                                    {sourceDeviceNameOptions.map(
-                                        (name, index) => {
-                                            const value =
-                                                name === '來源裝置名稱'
-                                                    ? ''
-                                                    : name;
-                                            return (
-                                                <option
-                                                    key={`${name}-${index}`}
-                                                    value={value}
-                                                >
-                                                    {name}
-                                                </option>
-                                            );
-                                        }
-                                    )}
-                                </select>
-                            </label>
-                            <label className="me-3 mb-2">
-                                <select
-                                    value={destinationDeviceNameFilter}
-                                    onChange={(e) => {
+                                    allSuggestions={sourceDeviceNameOptions}
+                                />
+                            </div>
+                            <div className="filter-wrapper col-6 col-md-3">
+                                <AutocompletedSearch
+                                    placeholder="目標裝置篩選"
+                                    currentValue={destinationDeviceNameFilter}
+                                    updateCurrentValue={(newValue) => {
                                         setDestinationDeviceNameFilter(
-                                            e.target.value
+                                            newValue
                                         );
                                     }}
-                                >
-                                    {destinationDeviceNameOptions.map(
-                                        (name, index) => {
-                                            const value =
-                                                name === '目標裝置名稱'
-                                                    ? ''
-                                                    : name;
-                                            return (
-                                                <option
-                                                    key={`${name}-${index}`}
-                                                    value={value}
-                                                >
-                                                    {name}
-                                                </option>
-                                            );
-                                        }
-                                    )}
-                                </select>
-                            </label>
+                                    allSuggestions={
+                                        destinationDeviceNameOptions
+                                    }
+                                />
+                            </div>
                         </div>
                         {isGettingTriggers || triggers === null ? (
                             <div className="w-100 d-flex justify-content-center my-4">

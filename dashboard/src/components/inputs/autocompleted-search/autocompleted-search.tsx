@@ -83,7 +83,6 @@ const AutocompletedSearch = ({
                 onKeyUp={handleKeyUp}
                 onChange={(e) => {
                     const nativeEvent = e.nativeEvent as InputEvent;
-                    console.log({ nativeEvent });
                     handleChangeValueWithDebounce({
                         currentValue: inputRef.current?.value || '',
                         nativeEvent,

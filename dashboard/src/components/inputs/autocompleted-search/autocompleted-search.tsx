@@ -4,15 +4,19 @@ import debounce from 'lodash.debounce';
 const AutocompletedSearch = ({
     datalistId,
     placeholder,
+    allSuggestions,
     currentValue,
     updateCurrentValue,
-    allSuggestions,
+    onEnterKeyUp,
+    onClickOption,
 }: {
     datalistId: string;
     placeholder: string;
+    allSuggestions: string[];
     currentValue: string;
     updateCurrentValue: (newValue: string) => void;
-    allSuggestions: string[];
+    onEnterKeyUp?: () => void;
+    onClickOption?: () => void;
 }) => {
     const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>(
         []
@@ -22,7 +26,13 @@ const AutocompletedSearch = ({
     const inputRef = useRef<HTMLInputElement>(null);
     const wrapperRef = useRef<HTMLDivElement>(null);
 
-    const handleChangeValue = (currentValue: string) => {
+    const handleChangeValue = ({
+        currentValue,
+        nativeEvent,
+    }: {
+        currentValue: string;
+        nativeEvent: InputEvent;
+    }) => {
         const newFilteredOptions = allSuggestions.filter(
             (suggestion) =>
                 suggestion
@@ -32,19 +42,13 @@ const AutocompletedSearch = ({
         setActiveSuggestionIndex(0);
         setFilteredSuggestions(newFilteredOptions);
         updateCurrentValue(currentValue);
+
+        const isClickOption = !('inputType' in nativeEvent);
+        if (isClickOption && onClickOption) {
+            onClickOption();
+        }
     };
     const handleChangeValueWithDebounce = debounce(handleChangeValue, 300);
-
-    const handleClickSuggestion = (e: React.MouseEvent<HTMLElement>) => {
-        const target = e.target as HTMLElement;
-        const currentValue = target.innerText;
-        if (inputRef.current) {
-            inputRef.current.value = currentValue;
-        }
-        updateCurrentValue(currentValue);
-        setActiveSuggestionIndex(0);
-        setFilteredSuggestions([]);
-    };
 
     const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
@@ -53,6 +57,9 @@ const AutocompletedSearch = ({
                 inputRef.current.value = currentValue;
                 updateCurrentValue(currentValue);
                 setActiveSuggestionIndex(0);
+            }
+            if (onEnterKeyUp) {
+                onEnterKeyUp();
             }
         } else if (e.key === 'ArrowUp') {
             return activeSuggestionIndex === 0
@@ -73,13 +80,15 @@ const AutocompletedSearch = ({
                 placeholder={placeholder}
                 ref={inputRef}
                 defaultValue={currentValue}
-                onFocus={() =>
-                    handleChangeValueWithDebounce(inputRef.current?.value || '')
-                }
-                onChange={() =>
-                    handleChangeValueWithDebounce(inputRef.current?.value || '')
-                }
                 onKeyUp={handleKeyUp}
+                onChange={(e) => {
+                    const nativeEvent = e.nativeEvent as InputEvent;
+                    console.log({ nativeEvent });
+                    handleChangeValueWithDebounce({
+                        currentValue: inputRef.current?.value || '',
+                        nativeEvent,
+                    });
+                }}
             />
             <datalist id={datalistId}>
                 {filteredSuggestions.map((suggestion, index) => {
@@ -88,11 +97,7 @@ const AutocompletedSearch = ({
                         className = 'active-suggestion';
                     }
                     return (
-                        <option
-                            key={suggestion}
-                            className={className}
-                            onClick={handleClickSuggestion}
-                        >
+                        <option key={suggestion} className={className}>
                             {suggestion}
                         </option>
                     );

@@ -27,38 +27,6 @@ import trashIcon from '@/assets/images/trash.svg';
 import ReactTooltip from 'react-tooltip';
 import Spinner from '@/components/spinner/spinner';
 
-const filterTriggers = ({
-    triggers,
-    sourceDeviceNameFilter,
-    destinationDeviceNameFilter,
-}: {
-    triggers: TriggerItem[] | null;
-    sourceDeviceNameFilter: string;
-    destinationDeviceNameFilter: string;
-}) => {
-    if (triggers === null) {
-        return [];
-    }
-    if (sourceDeviceNameFilter === '' && destinationDeviceNameFilter === '') {
-        return triggers;
-    }
-    const filteredTriggers = triggers.filter(
-        ({ sourceDevice, destinationDevice }) => {
-            const sourceDeviceName = sourceDevice?.name;
-            const destinationDeviceName = destinationDevice?.name;
-            const isReserved =
-                (sourceDeviceNameFilter === '' &&
-                    destinationDeviceNameFilter === destinationDeviceName) ||
-                (destinationDeviceNameFilter === '' &&
-                    sourceDeviceNameFilter === sourceDeviceName) ||
-                (sourceDeviceNameFilter === sourceDeviceName &&
-                    destinationDeviceNameFilter === destinationDeviceName);
-            return isReserved;
-        }
-    );
-    return filteredTriggers;
-};
-
 const Triggers = () => {
     const navigate = useNavigate();
     const query = useQuery();
@@ -131,13 +99,6 @@ const Triggers = () => {
     const [destinationDeviceNameFilter, setDestinationDeviceNameFilter] =
         useState('');
 
-    const filteredTriggers = filterTriggers({
-        triggers,
-        sourceDeviceNameFilter,
-        destinationDeviceNameFilter,
-    });
-    const filterTriggersLength = filteredTriggers.length;
-
     const { isGettingTriggers, getTriggersApi } = useGetTriggersApi({
         page,
         limit,
@@ -155,14 +116,16 @@ const Triggers = () => {
     const [selectedIds, setSelectedIds] = useState(Array<number>());
 
     const isSelectAll =
-        filterTriggersLength !== 0 &&
-        selectedIds.length === filterTriggersLength;
+        triggers?.length !== 0 && selectedIds.length === triggers?.length;
 
     const toggleSelectAll = () => {
-        if (selectedIds.length === filterTriggersLength) {
+        if (triggers === null) {
+            return;
+        }
+        if (selectedIds.length === triggers.length) {
             setSelectedIds([]);
         } else {
-            setSelectedIds(filteredTriggers.map(({ id }) => id));
+            setSelectedIds(triggers.map(({ id }) => id));
         }
     };
 
@@ -306,13 +269,15 @@ const Triggers = () => {
                             </div>
                             <div className="filter-wrapper col-6 col-md-3">
                                 <AutocompletedSearch
-                                    datalistId="sourceDeviceName"
+                                    datalistId="sourceDevice"
                                     placeholder="來源裝置篩選"
                                     currentValue={sourceDeviceNameFilter}
                                     updateCurrentValue={(newValue) => {
                                         setSourceDeviceNameFilter(newValue);
                                     }}
                                     allSuggestions={sourceDeviceNameOptions}
+                                    onEnterKeyUp={getTriggersApi}
+                                    onClickOption={getTriggersApi}
                                 />
                             </div>
                             <div className="filter-wrapper col-6 col-md-3">
@@ -328,6 +293,8 @@ const Triggers = () => {
                                     allSuggestions={
                                         destinationDeviceNameOptions
                                     }
+                                    onEnterKeyUp={getTriggersApi}
+                                    onClickOption={getTriggersApi}
                                 />
                             </div>
                         </div>
@@ -357,7 +324,7 @@ const Triggers = () => {
                                     <div className="col-1">操作</div>
                                 </div>
                                 <div className="triggers-list">
-                                    {filteredTriggers.map(
+                                    {triggers.map(
                                         (
                                             {
                                                 id,

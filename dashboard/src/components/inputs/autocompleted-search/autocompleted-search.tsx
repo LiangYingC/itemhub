@@ -18,9 +18,8 @@ const AutocompletedSearch = ({
     onEnterKeyUp?: () => void;
     onClickOption?: () => void;
 }) => {
-    const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>(
-        []
-    );
+    const [filteredSuggestions, setFilteredSuggestions] =
+        useState<string[]>(allSuggestions);
     const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(0);
 
     const inputRef = useRef<HTMLInputElement>(null);

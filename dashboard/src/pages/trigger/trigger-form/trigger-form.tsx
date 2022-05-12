@@ -44,7 +44,7 @@ const TriggerForm = ({
         id: editedTriggerData.sourceDeviceId,
     });
     const sourceDeviecePinsOptions =
-        editedTriggerData.sourceDeviceId === 0 ? [] : saurceDeviecePins || [];
+        editedTriggerData.sourceDeviceId === 0 ? [] : saurceDeviecePins;
     useEffect(() => {
         if (editedTriggerData.sourceDeviceId) {
             getSourceDevicePinsApi();
@@ -60,7 +60,7 @@ const TriggerForm = ({
     const destinationDeviecePinsOptions =
         editedTriggerData.destinationDeviceId === 0
             ? []
-            : destinationDeviecePins || [];
+            : destinationDeviecePins;
     useEffect(() => {
         if (editedTriggerData.destinationDeviceId) {
             getDestinationDevicePinsApi();
@@ -222,6 +222,7 @@ const TriggerForm = ({
                 />
                 <div className="d-flex justify-content-end">
                     <button
+                        type="button"
                         className="btn btn-secondary mt-3 me-3"
                         onClick={() => navigate('/dashboard/triggers')}
                         disabled={isCreatingTrigger}

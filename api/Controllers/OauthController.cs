@@ -166,7 +166,8 @@ namespace Homo.IotApi
 
             return new
             {
-                token = token
+                token = token,
+                deviceId = client.DeviceId
             };
         }
     }

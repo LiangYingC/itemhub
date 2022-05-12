@@ -278,7 +278,7 @@ const OauthClients = () => {
                                                 deleteOne(id);
                                             }}
                                             disabled={isDeletingOne}
-                                            className="btn bg-transparent p-0"
+                                            className="btn bg-transparent p-0 shadow-none"
                                             data-tip="刪除"
                                         >
                                             <img src={trashIcon} />

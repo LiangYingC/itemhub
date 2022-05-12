@@ -38,6 +38,18 @@ public:
     std::string value;
 };
 
+class AuthResponse
+{
+public:
+    AuthResponse(std::string token, std::string remoteDeviceId)
+    {
+        this->token = token;
+        this->remoteDeviceId = remoteDeviceId;
+    }
+    std::string token;
+    std::string remoteDeviceId;
+};
+
 class ItemhubUtilities
 {
 public:
@@ -50,43 +62,16 @@ public:
         std::string resp = ItemhubUtilities::Send(client, ca, host, "POST", deviceOnlineEndpoint, emptyString, token);
         return resp;
     }
-    static std::string Auth(WiFiClientSecure &client, X509List &ca, std::string &host, std::string &postBody)
+
+    static AuthResponse Auth(WiFiClientSecure &client, X509List &ca, std::string &host, std::string &postBody)
     {
         std::string authEndpoint = "/api/v1/oauth/exchange-token-for-device";
         std::string emptyToken = "";
         std::string resp = Send(client, ca, host, "POST", authEndpoint, postBody, emptyToken);
         std::string token = ItemhubUtilities::Extract(resp, "token");
-        return token;
-    }
+        std::string remoteDeviceId = ItemhubUtilities::Extract(resp, "deviceId");
 
-    static std::string GetRemoteDeviceId(WiFiClientSecure &client, X509List &ca, std::string &host, std::string &token)
-    {
-        String deviceId;
-        for (size_t i = 0; i < UniqueIDsize; i++)
-        {
-            String temp(UniqueID[i], HEX);
-            deviceId += temp;
-        }
-
-        std::string deviceIdEndPoint = "/api/v1/my/devices/by-device-id/";
-        deviceIdEndPoint.append(deviceId.c_str());
-        std::string emptyBody = "";
-        std::string resp = Send(client, ca, host, "GET", deviceIdEndPoint, emptyBody, token);
-        int checkDeviceExistsResponseStatus = GetHttpStatus(resp);
-
-        if (checkDeviceExistsResponseStatus == 404)
-        {
-            std::string registerDeviceBody = "{\"deviceId\":\"";
-            registerDeviceBody.append(deviceId.c_str());
-            registerDeviceBody.append("\",\"name\":\"");
-            registerDeviceBody.append(deviceId.c_str());
-            registerDeviceBody.append("\"}");
-            std::string endPoint = "/api/v1/my/devices";
-            resp = Send(client, ca, host, "POST", endPoint, registerDeviceBody, token);
-        }
-
-        std::string remoteId = ItemhubUtilities::Extract(resp, "id");
-        return remoteId;
+        return AuthResponse(token, remoteDeviceId);
     }
 
     static void CheckSwitchState(WiFiClientSecure &client, X509List &ca, std::string &host, std::string &token, std::string &remoteDeviceId, std::vector<ItemhubPin> &pins)

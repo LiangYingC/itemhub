@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import debounce from 'lodash.debounce';
 
 const AutocompletedSearch = ({
@@ -26,6 +26,23 @@ const AutocompletedSearch = ({
     const inputRef = useRef<HTMLInputElement>(null);
     const wrapperRef = useRef<HTMLDivElement>(null);
 
+    const isTriggerOnClickOption = useRef(false);
+    const [isTriggerOnEnterKeyUp, setIsTriggerOnEnterKeyUp] = useState(false);
+
+    useEffect(() => {
+        if (isTriggerOnClickOption.current && onClickOption) {
+            onClickOption();
+            isTriggerOnClickOption.current = false;
+        }
+    }, [currentValue, onClickOption]);
+
+    useEffect(() => {
+        if (isTriggerOnEnterKeyUp && onEnterKeyUp) {
+            onEnterKeyUp();
+            setIsTriggerOnEnterKeyUp(false);
+        }
+    }, [currentValue, isTriggerOnEnterKeyUp, onEnterKeyUp]);
+
     const handleChangeValue = ({
         currentValue,
         nativeEvent,
@@ -33,6 +50,11 @@ const AutocompletedSearch = ({
         currentValue: string;
         nativeEvent: InputEvent;
     }) => {
+        const isClickOption = !('inputType' in nativeEvent);
+        if (isClickOption) {
+            isTriggerOnClickOption.current = true;
+        }
+
         const newFilteredOptions = allSuggestions.filter(
             (suggestion) =>
                 suggestion
@@ -42,24 +64,19 @@ const AutocompletedSearch = ({
         setActiveSuggestionIndex(0);
         setFilteredSuggestions(newFilteredOptions);
         updateCurrentValue(currentValue);
-
-        const isClickOption = !('inputType' in nativeEvent);
-        if (isClickOption && onClickOption) {
-            onClickOption();
-        }
     };
     const handleChangeValueWithDebounce = debounce(handleChangeValue, 300);
 
     const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             const currentValue = filteredSuggestions[activeSuggestionIndex];
-            if (inputRef.current && currentValue) {
+            if (inputRef.current?.value && currentValue) {
                 inputRef.current.value = currentValue;
                 updateCurrentValue(currentValue);
                 setActiveSuggestionIndex(0);
             }
             if (onEnterKeyUp) {
-                onEnterKeyUp();
+                setIsTriggerOnEnterKeyUp(true);
             }
         } else if (e.key === 'ArrowUp') {
             return activeSuggestionIndex === 0

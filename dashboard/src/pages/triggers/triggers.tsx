@@ -353,10 +353,8 @@ const Triggers = () => {
                                                     <input
                                                         className="me-3 mt-2"
                                                         type="checkbox"
-                                                        onClick={(
-                                                            event: React.MouseEvent<HTMLInputElement>
-                                                        ) => {
-                                                            event.stopPropagation();
+                                                        onChange={(e) => {
+                                                            e.stopPropagation();
                                                             updateSelectedIds(
                                                                 id
                                                             );

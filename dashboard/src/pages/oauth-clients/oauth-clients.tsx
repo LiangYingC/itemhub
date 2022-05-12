@@ -250,10 +250,8 @@ const OauthClients = () => {
                                     <div className="col-8 d-flex align-items-center text-wrap text-break">
                                         <input
                                             type="checkbox"
-                                            onClick={(
-                                                event: React.MouseEvent<HTMLInputElement>
-                                            ) => {
-                                                event.stopPropagation();
+                                            onChange={(e) => {
+                                                e.stopPropagation();
                                                 check(id);
                                             }}
                                             value={id}

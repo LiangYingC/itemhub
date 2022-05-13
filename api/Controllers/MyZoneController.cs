@@ -36,7 +36,7 @@ namespace Homo.IotApi
         }
 
         [HttpPost]
-        public ActionResult<dynamic> create([FromBody] DTOs.Zone dto, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
+        public ActionResult<dynamic> create([FromBody] DTOs.ZonePayload dto, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
             Zone rewRecord = ZoneDataservice.Create(_dbContext, extraPayload.Id, dto);
             return rewRecord;
@@ -63,7 +63,7 @@ namespace Homo.IotApi
 
         [HttpPatch]
         [Route("{id}")]
-        public ActionResult<dynamic> update([FromRoute] int id, [FromBody] DTOs.Zone dto, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
+        public ActionResult<dynamic> update([FromRoute] int id, [FromBody] DTOs.ZonePayload dto, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
             ZoneDataservice.Update(_dbContext, extraPayload.Id, id, dto);
             return new { status = CUSTOM_RESPONSE.OK };

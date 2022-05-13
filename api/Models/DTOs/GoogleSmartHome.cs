@@ -17,7 +17,20 @@ namespace Homo.IotApi
         public partial class GoogleSmartHomeIntents : DTOs
         {
             public string Intent { get; set; }
-            public dynamic Payload { get; set; }
+            public GoogleSmartHomeRequestPayload Payload { get; set; }
+
+        }
+
+        public partial class GoogleSmartHomeRequestPayload : DTOs
+        {
+            public List<GoogleSmartHomeRequestDevice> Devices { get; set; }
+            public List<DeviceCommand> Commands { get; set; }
+        }
+
+        public partial class GoogleSmartHomeRequestDevice : DTOs
+        {
+            public string Id { get; set; }
+            public dynamic CustomData { get; set; }
         }
     }
 }

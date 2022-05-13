@@ -18,39 +18,14 @@ import { TriggerItem } from '@/types/triggers.type';
 import Pagination from '@/components/pagination/pagination';
 import PageTitle from '@/components/page-title/page-title';
 import { dialogActions, DialogTypeEnum } from '@/redux/reducers/dialog.reducer';
-import SearchInput from '@/components/input/search-input/search-input';
+import SearchInput from '@/components/inputs/search-input/search-input';
+import AutocompletedSearch from '@/components/inputs/autocompleted-search/autocompleted-search';
 import EmptyDataToCreateItem from '@/components/empty-data-to-create-item/empty-data-to-create-item';
 import lightTrashIcon from '@/assets/images/light-trash.svg';
 import pencilIcon from '@/assets/images/pencil.svg';
 import trashIcon from '@/assets/images/trash.svg';
 import ReactTooltip from 'react-tooltip';
-
-const filterTriggers = ({
-    triggers,
-    sourceDeviceNameFilter,
-    destinationDeviceNameFilter,
-}: {
-    triggers: TriggerItem[] | null;
-    sourceDeviceNameFilter: string;
-    destinationDeviceNameFilter: string;
-}) => {
-    if (triggers === null) {
-        return [];
-    }
-    const filteredTriggers = triggers.filter(
-        ({ sourceDevice, destinationDevice }) => {
-            const sourceDeviceName = sourceDevice?.name;
-            const destinationDeviceName = destinationDevice?.name;
-            const isReserved =
-                (sourceDeviceNameFilter === '' &&
-                    destinationDeviceNameFilter === '') ||
-                sourceDeviceNameFilter === sourceDeviceName ||
-                destinationDeviceNameFilter === destinationDeviceName;
-            return isReserved;
-        }
-    );
-    return filteredTriggers;
-};
+import Spinner from '@/components/spinner/spinner';
 
 const Triggers = () => {
     const navigate = useNavigate();
@@ -89,8 +64,8 @@ const Triggers = () => {
             destinationDeviceNameOptions.length === 0
         ) {
             const initialOptions = {
-                sourceDeviceNames: ['來源裝置名稱'],
-                destinationDeviceNames: ['目標裝置名稱'],
+                sourceDeviceNames: [] as string[],
+                destinationDeviceNames: [] as string[],
             };
 
             const options = triggers.reduce((accumOptions, currentTrigger) => {
@@ -124,13 +99,6 @@ const Triggers = () => {
     const [destinationDeviceNameFilter, setDestinationDeviceNameFilter] =
         useState('');
 
-    const filteredTriggers = filterTriggers({
-        triggers,
-        sourceDeviceNameFilter,
-        destinationDeviceNameFilter,
-    });
-    const filterTriggersLength = filteredTriggers.length;
-
     const { isGettingTriggers, getTriggersApi } = useGetTriggersApi({
         page,
         limit,
@@ -148,29 +116,27 @@ const Triggers = () => {
     const [selectedIds, setSelectedIds] = useState(Array<number>());
 
     const isSelectAll =
-        filterTriggersLength !== 0 &&
-        selectedIds.length === filterTriggersLength;
+        triggers?.length !== 0 && selectedIds.length === triggers?.length;
 
     const toggleSelectAll = () => {
-        if (selectedIds.length === filterTriggersLength) {
+        if (triggers === null) {
+            return;
+        }
+        if (selectedIds.length === triggers.length) {
             setSelectedIds([]);
         } else {
-            setSelectedIds(filteredTriggers.map(({ id }) => id));
+            setSelectedIds(triggers.map(({ id }) => id));
         }
     };
 
-    const updateSelectedIds = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const updateSelectedIds = (id: number) => {
         setSelectedIds((previous) => {
-            const id = e.target.value;
             const newSelectedIds = [...previous];
-
-            if (e.target.checked) {
-                newSelectedIds.push(Number(id));
+            const targetIndex = newSelectedIds.indexOf(id);
+            if (targetIndex !== -1) {
+                newSelectedIds.splice(targetIndex, 1);
             } else {
-                const index = newSelectedIds.findIndex(
-                    (item) => item === Number(id)
-                );
-                newSelectedIds.splice(index, 1);
+                newSelectedIds.push(id);
             }
             return newSelectedIds;
         });
@@ -291,95 +257,74 @@ const Triggers = () => {
                     <EmptyDataToCreateItem itemName="觸發" />
                 ) : (
                     <>
-                        <div className="d-flex flex-column flex-sm-row">
-                            <SearchInput
-                                placeholder="搜尋觸發"
-                                onChangeValue={(value) => setTriggerName(value)}
-                                onSearch={getTriggersApi}
-                            />
-                            {/* TODO: 來源裝置、目標裝置的 filter，接著要等設計稿改動再調整，應該會改成 autocompeleted input search，現在先不動 */}
-                            <label className="ms-3">
-                                <select
-                                    value={sourceDeviceNameFilter}
-                                    onChange={(e) => {
-                                        setSourceDeviceNameFilter(
-                                            e.target.value
-                                        );
+                        <div className="row justify-content-start">
+                            <div className="search-wrapper col-12 col-md-6 mb-3 mb-md-0">
+                                <SearchInput
+                                    placeholder="搜尋觸發"
+                                    onChangeValue={(value) =>
+                                        setTriggerName(value)
+                                    }
+                                    onSearch={getTriggersApi}
+                                />
+                            </div>
+                            <div className="filter-wrapper col-6 col-md-3">
+                                <AutocompletedSearch
+                                    datalistId="sourceDevice"
+                                    placeholder="來源裝置篩選"
+                                    currentValue={sourceDeviceNameFilter}
+                                    updateCurrentValue={(newValue) => {
+                                        setSourceDeviceNameFilter(newValue);
                                     }}
-                                >
-                                    {sourceDeviceNameOptions.map(
-                                        (name, index) => {
-                                            const value =
-                                                name === '來源裝置名稱'
-                                                    ? ''
-                                                    : name;
-                                            return (
-                                                <option
-                                                    key={`${name}-${index}`}
-                                                    value={value}
-                                                >
-                                                    {name}
-                                                </option>
-                                            );
-                                        }
-                                    )}
-                                </select>
-                            </label>
-                            <label className="ms-3">
-                                <select
-                                    value={destinationDeviceNameFilter}
-                                    onChange={(e) => {
+                                    allSuggestions={sourceDeviceNameOptions}
+                                    onEnterKeyUp={getTriggersApi}
+                                    onClickOption={getTriggersApi}
+                                />
+                            </div>
+                            <div className="filter-wrapper col-6 col-md-3">
+                                <AutocompletedSearch
+                                    datalistId="destinationDevice"
+                                    placeholder="目標裝置篩選"
+                                    currentValue={destinationDeviceNameFilter}
+                                    updateCurrentValue={(newValue) => {
                                         setDestinationDeviceNameFilter(
-                                            e.target.value
+                                            newValue
                                         );
                                     }}
-                                >
-                                    {destinationDeviceNameOptions.map(
-                                        (name, index) => {
-                                            const value =
-                                                name === '目標裝置名稱'
-                                                    ? ''
-                                                    : name;
-                                            return (
-                                                <option
-                                                    key={`${name}-${index}`}
-                                                    value={value}
-                                                >
-                                                    {name}
-                                                </option>
-                                            );
-                                        }
-                                    )}
-                                </select>
-                            </label>
+                                    allSuggestions={
+                                        destinationDeviceNameOptions
+                                    }
+                                    onEnterKeyUp={getTriggersApi}
+                                    onClickOption={getTriggersApi}
+                                />
+                            </div>
                         </div>
                         {isGettingTriggers || triggers === null ? (
-                            <div>Loading</div>
+                            <div className="w-100 d-flex justify-content-center my-4">
+                                <Spinner />
+                            </div>
                         ) : (
                             <div className="mt-3 mt-sm-45">
-                                <div className="d-none d-sm-block">
-                                    <div className="row py-25 px-3 m-0 bg-black bg-opacity-5 fs-5 text-black text-opacity-45">
-                                        <label className="col-3" role="button">
-                                            <div className="d-flex align-items-center">
-                                                <input
-                                                    type="checkbox"
-                                                    className="me-3"
-                                                    checked={isSelectAll}
-                                                    onChange={toggleSelectAll}
-                                                />
-                                                <span>觸發名稱</span>
-                                            </div>
-                                        </label>
-                                        <div className="col-2">來源裝置</div>
-                                        <div className="col-1">來源 Pin</div>
-                                        <div className="col-2">條件</div>
-                                        <div className="col-2">目標裝置</div>
-                                        <div className="col-1">目標 Pin</div>
-                                        <div className="col-1">操作</div>
-                                    </div>
+                                <div className="row py-25 px-3 m-0 bg-black bg-opacity-5 fs-5 text-black text-opacity-45 d-none d-lg-flex">
+                                    <label className="col-3" role="button">
+                                        <div className="d-flex align-items-center">
+                                            <input
+                                                type="checkbox"
+                                                className="me-3"
+                                                checked={isSelectAll}
+                                                onChange={toggleSelectAll}
+                                            />
+                                            <span>觸發名稱</span>
+                                        </div>
+                                    </label>
+                                    <div className="col-2">來源裝置</div>
+                                    <div className="col-1">來源 Pin</div>
+                                    <div className="col-2">條件</div>
+                                    <div className="col-2">目標裝置</div>
+                                    <div className="col-1">目標 Pin</div>
+                                    <div className="col-1">操作</div>
                                 </div>
                                 <div className="triggers-list">
-                                    {filteredTriggers.map(
+                                    {triggers.map(
                                         (
                                             {
                                                 id,
@@ -395,111 +340,97 @@ const Triggers = () => {
                                         ) => (
                                             <div
                                                 key={`${id}-${index}`}
-                                                className="row border-bottom border-black border-opacity-10 p-0 m-0 py-sm-4 px-sm-3"
+                                                role="button"
+                                                className="row list border-bottom border-black border-opacity-10 p-0 m-0 py-lg-4 px-lg-3"
+                                                onClick={() => {
+                                                    updateSelectedIds(id);
+                                                }}
                                             >
-                                                <div className="row col-12 col-sm-3 text-black text-opacity-65 fs-5 mx-0 mb-0 px-0 px-sm-25">
-                                                    <div className="d-block d-sm-none col-4 p-3 bg-black bg-opacity-5 text-black text-opacity-45">
-                                                        觸發名稱
-                                                    </div>
-                                                    <label className="col-8 col-sm-12 p-3 p-sm-0 d-flex flex-column flex-sm-row align-items-start">
-                                                        <input
-                                                            className="me-3 mb-3"
-                                                            type="checkbox"
-                                                            onChange={
-                                                                updateSelectedIds
-                                                            }
-                                                            value={id}
-                                                            checked={selectedIds.includes(
+                                                <div className="d-block d-lg-none py-3 col-4 bg-black bg-opacity-5 text-black text-opacity-45">
+                                                    觸發名稱
+                                                </div>
+                                                <div className="col-8 col-lg-3 py-3 py-lg-0 d-flex flex-column flex-lg-row align-items-start">
+                                                    <input
+                                                        className="me-3 mt-2"
+                                                        type="checkbox"
+                                                        onChange={(e) => {
+                                                            e.stopPropagation();
+                                                            updateSelectedIds(
                                                                 id
-                                                            )}
-                                                        />
-                                                        {name || '--'}
-                                                    </label>
+                                                            );
+                                                        }}
+                                                        value={id}
+                                                        checked={selectedIds.includes(
+                                                            id
+                                                        )}
+                                                    />
+                                                    <div>{name || '--'}</div>
                                                 </div>
-                                                <div className="row col-12 col-sm-2 mx-0 mb-0 px-0 px-sm-25">
-                                                    <div className="d-block d-sm-none col-4 p-3 bg-black bg-opacity-5 text-black text-opacity-45">
-                                                        來源裝置名稱
-                                                    </div>
-                                                    <div className="col-8 col-sm-12 p-3 p-sm-0 lh-base">
-                                                        {sourceDevice?.name}
-                                                    </div>
+                                                <div className="d-block d-lg-none col-4 py-3 bg-black bg-opacity-5 text-black text-opacity-45">
+                                                    來源裝置名稱
                                                 </div>
-                                                <div className="row col-12 col-sm-1 mx-0 mb-0 px-0 px-sm-25">
-                                                    <div className="d-block d-sm-none col-4 p-3 bg-black bg-opacity-5 text-black text-opacity-45">
-                                                        來源 Pin
-                                                    </div>
-                                                    <div className="col-8 col-sm-12 p-3 p-sm-0 lh-base">
-                                                        {sourcePin}
-                                                    </div>
+                                                <div className="col-8 col-lg-2 py-3 py-lg-0 lh-base">
+                                                    {sourceDevice?.name}
                                                 </div>
-                                                <div className="row col-12 col-sm-2 mx-0 mb-0 px-0 px-sm-25">
-                                                    <div className="d-block d-sm-none col-4 p-3 bg-black bg-opacity-5 text-black text-opacity-45">
-                                                        條件
-                                                    </div>
-                                                    <div className="d-flex col-8 col-sm-12 p-3 p-sm-0 lh-base">
-                                                        <span className="pe-1">
-                                                            {
-                                                                triggerOperators[
-                                                                    operator
-                                                                ]?.label
-                                                            }
-                                                        </span>
-                                                        <span>
-                                                            {sourceThreshold}
-                                                        </span>
-                                                    </div>
+                                                <div className="d-block d-lg-none col-4 py-3 bg-black bg-opacity-5 text-black text-opacity-45">
+                                                    來源 Pin
                                                 </div>
-                                                <div className="row col-12 col-sm-2 mx-0 mb-0 px-0 px-sm-25">
-                                                    <div className="d-block d-sm-none col-4 p-3 bg-black bg-opacity-5 text-black text-opacity-45">
-                                                        目標裝置名稱
-                                                    </div>
-                                                    <div className="col-8 col-sm-12 p-3 p-sm-0 lh-base">
+                                                <div className="col-8 col-lg-1 py-3 py-lg-0 lh-base">
+                                                    {sourcePin}
+                                                </div>
+                                                <div className="d-block d-lg-none col-4 py-3 bg-black bg-opacity-5 text-black text-opacity-45">
+                                                    條件
+                                                </div>
+                                                <div className="d-flex col-8 col-lg-2 py-3 py-lg-0 lh-base">
+                                                    <span className="pe-1">
                                                         {
-                                                            destinationDevice?.name
+                                                            triggerOperators[
+                                                                operator
+                                                            ]?.label
                                                         }
-                                                    </div>
+                                                    </span>
+                                                    <span>
+                                                        {sourceThreshold}
+                                                    </span>
                                                 </div>
-                                                <div className="row col-12 col-sm-1 mx-0 mb-0 px-0 px-sm-25">
-                                                    <div className="d-block d-sm-none col-4 p-3 bg-black bg-opacity-5 text-black text-opacity-45">
-                                                        目標 Pin
-                                                    </div>
-                                                    <div className="col-8 col-sm-12 p-3 p-sm-0 lh-base">
-                                                        {destinationPin}
-                                                    </div>
+                                                <div className="d-block d-lg-none col-4 py-3 bg-black bg-opacity-5 text-black text-opacity-45">
+                                                    目標裝置名稱
                                                 </div>
-                                                <div className="row col-12 col-sm-1 mx-0 mb-0 px-0 px-sm-25">
-                                                    <div className="d-block d-sm-none col-4 p-3 bg-black bg-opacity-5 text-black text-opacity-45">
-                                                        操作
-                                                    </div>
-                                                    <div className="col-8 col-sm-12 p-3 p-sm-0 d-flex justify-content-start flex-wrap">
-                                                        <Link
-                                                            className="me-3 mb-3"
-                                                            to={`/dashboard/triggers/${id}`}
-                                                            data-tip="編輯"
-                                                        >
-                                                            <img
-                                                                src={pencilIcon}
-                                                            />
-                                                        </Link>
-
-                                                        <button
-                                                            className="btn mb-3 p-0 bg-transparent shadow-none"
-                                                            onClick={() => {
-                                                                confirmToDeleteOneTrigger(
-                                                                    { id, name }
-                                                                );
-                                                            }}
-                                                            disabled={
-                                                                isDeletingOneTrigger
-                                                            }
-                                                            data-tip="刪除"
-                                                        >
-                                                            <img
-                                                                src={trashIcon}
-                                                            />
-                                                        </button>
-                                                        <ReactTooltip effect="solid" />
-                                                    </div>
+                                                <div className="col-8 col-lg-2 lh-base py-3 py-lg-0">
+                                                    {destinationDevice?.name}
+                                                </div>
+                                                <div className="d-block d-lg-none col-4 py-3 bg-black bg-opacity-5 text-black text-opacity-45">
+                                                    目標 Pin
+                                                </div>
+                                                <div className="col-8 col-lg-1 lh-base py-3 py-lg-0">
+                                                    {destinationPin}
+                                                </div>
+                                                <div className="d-block d-lg-none col-4 py-3 bg-black bg-opacity-5 text-black text-opacity-45">
+                                                    操作
+                                                </div>
+                                                <div className="col-8 col-lg-1 py-3 py-lg-0 d-flex justify-content-start flex-wrap">
+                                                    <Link
+                                                        className="me-3 mb-3"
+                                                        to={`/dashboard/triggers/edit/${id}`}
+                                                        data-tip="編輯"
+                                                    >
+                                                        <img src={pencilIcon} />
+                                                    </Link>
+                                                    <button
+                                                        className="btn mb-3 p-0 bg-transparent shadow-none"
+                                                        onClick={() => {
+                                                            confirmToDeleteOneTrigger(
+                                                                { id, name }
+                                                            );
+                                                        }}
+                                                        disabled={
+                                                            isDeletingOneTrigger
+                                                        }
+                                                        data-tip="刪除"
+                                                    >
+                                                        <img src={trashIcon} />
+                                                    </button>
+                                                    <ReactTooltip effect="solid" />
                                                 </div>
                                             </div>
                                         )

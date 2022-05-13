@@ -55,11 +55,11 @@ unsigned char buff[512];
 void setup()
 {
     delay(5000);
-
     Serial.begin(9600);
+    // pins.push_back(ItemhubPin(D0, "D0", SWITCH));
+    // pins.push_back(ItemhubPin(D1, "D1", SENSOR));
+    {PINS};
     dht.begin();
-    pins.push_back(ItemhubPin(D0, "D0", SWITCH));
-    pins.push_back(ItemhubPin(D1, "D1", SENSOR));
 
     // setup Root CA pem.
     client.init(caPem.c_str(), caPem.length() + 1);
@@ -73,11 +73,6 @@ void setup()
     // itemhub authorize
     auth();
     Serial.println("authorized");
-
-    // itemhub check device exists in remote server
-    setupRemoteDeviceId();
-    Serial.print("remote device id: ");
-    Serial.println(remoteDeviceId.c_str());
 }
 
 void loop()
@@ -110,27 +105,7 @@ void auth()
 {
     std::string resp = ItemhubUtilities::Send(client, apiEndpoint, caPem, POST, authApiEndpoint, authPostBody, emptyString);
     token = ItemhubUtilities::Extract(resp, "token");
-}
-
-void setupRemoteDeviceId()
-{
-    String deviceId = System.deviceID();
-    std::string byDeviceIdEndPoint = "/api/v1/my/devices/by-device-id/";
-    byDeviceIdEndPoint.append(deviceId);
-    std::string respOfGetDevice = ItemhubUtilities::Send(client, apiEndpoint, caPem, GET, byDeviceIdEndPoint, emptyString, token);
-    int status = ItemhubUtilities::GetHttpStatus(respOfGetDevice);
-    // if device not exists register new one
-    if (status == 404)
-    {
-        Serial.println("register new device");
-        std::string postBodyOfRegisterDevice("{\"deviceId\": \"\", \"name\": \"\"}");
-        postBodyOfRegisterDevice.replace(14, 0, deviceId);
-        postBodyOfRegisterDevice.replace(26 + deviceId.length(), 0, deviceId);
-        std::string deviceApiEndpoint = "/api/v1/my/devices";
-        respOfGetDevice = ItemhubUtilities::Send(client, apiEndpoint, caPem, POST, deviceApiEndpoint, postBodyOfRegisterDevice, token);
-    }
-    // assign remoteDeviceId
-    remoteDeviceId = ItemhubUtilities::Extract(respOfGetDevice, "id");
+    remoteDeviceId = ItemhubUtilities::Extract(resp, "deviceId");
 }
 
 void online()
@@ -169,8 +144,6 @@ void checkSwitchState()
             continue;
         }
 
-        bool isExists = false;
-
         for (item = json_getChild(data); item != 0; item = json_getSibling(item))
         {
             if (JSON_OBJ != json_getType(item))
@@ -190,12 +163,10 @@ void checkSwitchState()
 
             if (pins[i].pinString == pin && intValue == 0)
             {
-                isExists = true;
                 digitalWrite(pins[i].pin, LOW);
             }
             else if (pins[i].pinString == pin && intValue == 1)
             {
-                isExists = true;
                 digitalWrite(pins[i].pin, HIGH);
             }
         }

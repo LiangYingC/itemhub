@@ -1,7 +1,17 @@
 .triggers {
-    .triggers-list {
-        > .row:hover {
-            background: rgba($primary, 0.04);
-        }
+  .search-wrapper {
+    max-width: 480px;
+    
+    @include media-breakpoint-down(md) {
+      max-width: none;
     }
+  }
+
+  .filter-wrapper {
+    max-width: 400px;
+    
+    @include media-breakpoint-down(md) {
+      max-width: none;
+    }
+  }
 }

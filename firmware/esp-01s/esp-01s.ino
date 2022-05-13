@@ -43,9 +43,7 @@ void setup()
 {
   delay(5000);
   Serial.begin(115200);
-  pins.push_back(ItemhubPin(DHTPIN, "TX", SENSOR));
-  pins.push_back(ItemhubPin(2, "D2", SWITCH));
-
+  {PINS};
   dht.begin();
 
   Serial.println();
@@ -81,13 +79,11 @@ void setup()
 
   client.setTimeout(15 * 1000);
 
-  token = ItemhubUtilities::Auth(client, ca, host, postBody);
+  AuthResponse authResponse = ItemhubUtilities::Auth(client, ca, host, postBody);
+  token = authResponse.token;
+  remoteDeviceId = authResponse.remoteDeviceId;
   Serial.print("token: ");
   Serial.println(token.c_str());
-
-  remoteDeviceId = ItemhubUtilities::GetRemoteDeviceId(client, ca, host, token);
-  Serial.print("remote device id: ");
-  Serial.println(remoteDeviceId.c_str());
 }
 
 void loop()

@@ -5,7 +5,7 @@ namespace Homo.IotApi
 {
     public abstract partial class DTOs
     {
-        public partial class Zone : DTOs
+        public partial class ZonePayload : DTOs
         {
             [Required]
             [MaxLength(64)]

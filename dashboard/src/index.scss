@@ -22,6 +22,7 @@
 @import './pages/oauth-client/oauth-client.scss';
 @import './pages/triggers/triggers.scss';
 @import './pages/trigger/trigger.scss';
+@import './pages/trigger/trigger-form/trigger-form.scss';
 @import './pages/not-found/not-found.scss';
 
 @import './components/footer/footer.scss';
@@ -32,4 +33,6 @@
 @import './components/page-title/page-title.scss';
 @import './components/toaster/toaster.scss';
 @import './components/dialog/dialog.scss';
-@import './components/input/search-input/search-input.scss';
+@import './components/spinner/spinner.scss';
+@import './components/inputs/search-input/search-input.scss';
+@import './components/breadcrumbs/breadcrumbs.scss';

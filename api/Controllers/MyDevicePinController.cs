@@ -26,6 +26,22 @@ namespace Homo.IotApi
             return DevicePinDataservice.GetAll(_dbContext, ownerId, new List<long>() { id }, null, null);
         }
 
+        [HttpPost]
+        public ActionResult<dynamic> batchedCreate([FromRoute] long id, [FromBody] List<DTOs.DevicePinsData> dto, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
+        {
+            long ownerId = extraPayload.Id;
+            DevicePinDataservice.BatchedCreate(_dbContext, id, ownerId, dto);
+            return new { status = CUSTOM_RESPONSE.OK };
+        }
+
+        [HttpPatch]
+        public ActionResult<dynamic> updatePins([FromRoute] long id, [FromBody] List<DTOs.DevicePinsData> dto, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
+        {
+            long ownerId = extraPayload.Id;
+            DevicePinDataservice.BatchedUpdate(_dbContext, id, ownerId, dto);
+            return new { status = CUSTOM_RESPONSE.OK };
+        }
+
         [HttpDelete]
         public ActionResult<dynamic> removeUnusedPins([FromRoute] long id, [FromQuery] string usedPins, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {

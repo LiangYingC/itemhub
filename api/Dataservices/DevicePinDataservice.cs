@@ -45,6 +45,43 @@ namespace Homo.IotApi
             return record;
         }
 
+        public static void BatchedCreate(IotDbContext dbContext, long deviceId, long ownerId, List<DTOs.DevicePinsData> dto)
+        {
+            dto.ForEach(item =>
+            {
+                DevicePin record = new DevicePin();
+                foreach (var propOfDTO in dto.GetType().GetProperties())
+                {
+                    var value = propOfDTO.GetValue(dto);
+                    var prop = record.GetType().GetProperty(propOfDTO.Name);
+                    prop.SetValue(record, value);
+                }
+                record.CreatedAt = DateTime.Now;
+                record.OwnerId = ownerId;
+                record.DeviceId = deviceId;
+                dbContext.DevicePin.Add(record);
+            });
+            dbContext.SaveChanges();
+        }
+
+        public static void BatchedUpdate(IotDbContext dbContext, long deviceId, long ownerId, List<DTOs.DevicePinsData> dto)
+        {
+            dto.ForEach(item =>
+            {
+                dbContext.DevicePin.Where(x =>
+                    x.DeviceId == deviceId
+                    && x.OwnerId == ownerId
+                    && x.Pin == item.Pin
+                ).UpdateFromQuery(x => new DevicePin()
+                {
+                    Name = item.Name,
+                    Value = item.Value,
+                    Mode = item.Mode,
+                    EditedAt = DateTime.Now
+                });
+            });
+        }
+
         public static DevicePin GetOne(IotDbContext dbContext, long id, long ownerId, long deviceId, DEVICE_MODE? mode, string pin)
         {
             return dbContext.DevicePin

@@ -1,2 +1,11 @@
+$item-title-w: 120px;
+
 .device {
+    .item {
+        margin-bottom: 2px;
+    }
+
+    .item-title {
+        width: $item-title-w;
+    }
 }

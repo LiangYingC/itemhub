@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import { useQuery } from './hooks/query.hook';
 import { useGetTriggerOperatorsApi } from '@/hooks/apis/universal.hook';
+import { useGetMicrocontrollersApi } from '@/hooks/apis/universal.hook';
 import { CookieHelpers } from './helpers/cookie.helper';
 import { COOKIE_KEY } from './constants/cookie-key';
 import Header from './components/header/header';
@@ -32,6 +33,11 @@ const App = () => {
     const { getTriggerOperatorsApi } = useGetTriggerOperatorsApi();
     useEffect(() => {
         getTriggerOperatorsApi();
+    }, []);
+
+    const { getMicrocontrollersApi } = useGetMicrocontrollersApi();
+    useEffect(() => {
+        getMicrocontrollersApi();
     }, []);
 
     return token ? (

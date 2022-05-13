@@ -19,39 +19,13 @@ import Pagination from '@/components/pagination/pagination';
 import PageTitle from '@/components/page-title/page-title';
 import { dialogActions, DialogTypeEnum } from '@/redux/reducers/dialog.reducer';
 import SearchInput from '@/components/inputs/search-input/search-input';
+import AutocompletedSearch from '@/components/inputs/autocompleted-search/autocompleted-search';
 import EmptyDataToCreateItem from '@/components/empty-data-to-create-item/empty-data-to-create-item';
 import lightTrashIcon from '@/assets/images/light-trash.svg';
 import pencilIcon from '@/assets/images/pencil.svg';
 import trashIcon from '@/assets/images/trash.svg';
 import ReactTooltip from 'react-tooltip';
 import Spinner from '@/components/spinner/spinner';
-
-const filterTriggers = ({
-    triggers,
-    sourceDeviceNameFilter,
-    destinationDeviceNameFilter,
-}: {
-    triggers: TriggerItem[] | null;
-    sourceDeviceNameFilter: string;
-    destinationDeviceNameFilter: string;
-}) => {
-    if (triggers === null) {
-        return [];
-    }
-    const filteredTriggers = triggers.filter(
-        ({ sourceDevice, destinationDevice }) => {
-            const sourceDeviceName = sourceDevice?.name;
-            const destinationDeviceName = destinationDevice?.name;
-            const isReserved =
-                (sourceDeviceNameFilter === '' &&
-                    destinationDeviceNameFilter === '') ||
-                sourceDeviceNameFilter === sourceDeviceName ||
-                destinationDeviceNameFilter === destinationDeviceName;
-            return isReserved;
-        }
-    );
-    return filteredTriggers;
-};
 
 const Triggers = () => {
     const navigate = useNavigate();
@@ -90,8 +64,8 @@ const Triggers = () => {
             destinationDeviceNameOptions.length === 0
         ) {
             const initialOptions = {
-                sourceDeviceNames: ['來源裝置名稱'],
-                destinationDeviceNames: ['目標裝置名稱'],
+                sourceDeviceNames: [] as string[],
+                destinationDeviceNames: [] as string[],
             };
 
             const options = triggers.reduce((accumOptions, currentTrigger) => {
@@ -125,13 +99,6 @@ const Triggers = () => {
     const [destinationDeviceNameFilter, setDestinationDeviceNameFilter] =
         useState('');
 
-    const filteredTriggers = filterTriggers({
-        triggers,
-        sourceDeviceNameFilter,
-        destinationDeviceNameFilter,
-    });
-    const filterTriggersLength = filteredTriggers.length;
-
     const { isGettingTriggers, getTriggersApi } = useGetTriggersApi({
         page,
         limit,
@@ -149,14 +116,16 @@ const Triggers = () => {
     const [selectedIds, setSelectedIds] = useState(Array<number>());
 
     const isSelectAll =
-        filterTriggersLength !== 0 &&
-        selectedIds.length === filterTriggersLength;
+        triggers?.length !== 0 && selectedIds.length === triggers?.length;
 
     const toggleSelectAll = () => {
-        if (selectedIds.length === filterTriggersLength) {
+        if (triggers === null) {
+            return;
+        }
+        if (selectedIds.length === triggers.length) {
             setSelectedIds([]);
         } else {
-            setSelectedIds(filteredTriggers.map(({ id }) => id));
+            setSelectedIds(triggers.map(({ id }) => id));
         }
     };
 
@@ -288,8 +257,8 @@ const Triggers = () => {
                     <EmptyDataToCreateItem itemName="觸發" />
                 ) : (
                     <>
-                        <div className="d-flex flex-column flex-sm-row flex-wrap">
-                            <div className="me-3 mb-2">
+                        <div className="row justify-content-start">
+                            <div className="search-wrapper col-12 col-md-6 mb-3 mb-md-0">
                                 <SearchInput
                                     placeholder="搜尋觸發"
                                     onChangeValue={(value) =>
@@ -298,61 +267,36 @@ const Triggers = () => {
                                     onSearch={getTriggersApi}
                                 />
                             </div>
-                            {/* TODO: 來源裝置、目標裝置的 filter，接著要等設計稿改動再調整，應該會改成 autocompeleted input search，現在先不動 */}
-                            <label className="me-3 mb-2">
-                                <select
-                                    value={sourceDeviceNameFilter}
-                                    onChange={(e) => {
-                                        setSourceDeviceNameFilter(
-                                            e.target.value
-                                        );
+                            <div className="filter-wrapper col-6 col-md-3">
+                                <AutocompletedSearch
+                                    datalistId="sourceDevice"
+                                    placeholder="來源裝置篩選"
+                                    currentValue={sourceDeviceNameFilter}
+                                    updateCurrentValue={(newValue) => {
+                                        setSourceDeviceNameFilter(newValue);
                                     }}
-                                >
-                                    {sourceDeviceNameOptions.map(
-                                        (name, index) => {
-                                            const value =
-                                                name === '來源裝置名稱'
-                                                    ? ''
-                                                    : name;
-                                            return (
-                                                <option
-                                                    key={`${name}-${index}`}
-                                                    value={value}
-                                                >
-                                                    {name}
-                                                </option>
-                                            );
-                                        }
-                                    )}
-                                </select>
-                            </label>
-                            <label className="me-3 mb-2">
-                                <select
-                                    value={destinationDeviceNameFilter}
-                                    onChange={(e) => {
+                                    allSuggestions={sourceDeviceNameOptions}
+                                    onEnterKeyUp={getTriggersApi}
+                                    onClickOption={getTriggersApi}
+                                />
+                            </div>
+                            <div className="filter-wrapper col-6 col-md-3">
+                                <AutocompletedSearch
+                                    datalistId="destinationDevice"
+                                    placeholder="目標裝置篩選"
+                                    currentValue={destinationDeviceNameFilter}
+                                    updateCurrentValue={(newValue) => {
                                         setDestinationDeviceNameFilter(
-                                            e.target.value
+                                            newValue
                                         );
                                     }}
-                                >
-                                    {destinationDeviceNameOptions.map(
-                                        (name, index) => {
-                                            const value =
-                                                name === '目標裝置名稱'
-                                                    ? ''
-                                                    : name;
-                                            return (
-                                                <option
-                                                    key={`${name}-${index}`}
-                                                    value={value}
-                                                >
-                                                    {name}
-                                                </option>
-                                            );
-                                        }
-                                    )}
-                                </select>
-                            </label>
+                                    allSuggestions={
+                                        destinationDeviceNameOptions
+                                    }
+                                    onEnterKeyUp={getTriggersApi}
+                                    onClickOption={getTriggersApi}
+                                />
+                            </div>
                         </div>
                         {isGettingTriggers || triggers === null ? (
                             <div className="w-100 d-flex justify-content-center my-4">
@@ -380,7 +324,7 @@ const Triggers = () => {
                                     <div className="col-1">操作</div>
                                 </div>
                                 <div className="triggers-list">
-                                    {filteredTriggers.map(
+                                    {triggers.map(
                                         (
                                             {
                                                 id,
@@ -409,10 +353,8 @@ const Triggers = () => {
                                                     <input
                                                         className="me-3 mt-2"
                                                         type="checkbox"
-                                                        onClick={(
-                                                            event: React.MouseEvent<HTMLInputElement>
-                                                        ) => {
-                                                            event.stopPropagation();
+                                                        onChange={(e) => {
+                                                            e.stopPropagation();
                                                             updateSelectedIds(
                                                                 id
                                                             );

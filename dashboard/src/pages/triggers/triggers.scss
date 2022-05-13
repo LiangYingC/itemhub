@@ -1,2 +1,17 @@
 .triggers {
+  .search-wrapper {
+    max-width: 480px;
+    
+    @include media-breakpoint-down(md) {
+      max-width: none;
+    }
+  }
+
+  .filter-wrapper {
+    max-width: 400px;
+    
+    @include media-breakpoint-down(md) {
+      max-width: none;
+    }
+  }
 }

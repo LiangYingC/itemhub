@@ -3,3 +3,9 @@ export interface TriggerOerator {
     value: 0 | 1 | 2 | 3 | 4;
     label: string;
 }
+
+export interface Microcontroller {
+    key: string;
+    value: number;
+    label: string;
+}

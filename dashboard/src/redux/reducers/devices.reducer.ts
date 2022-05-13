@@ -19,6 +19,29 @@ export const devicesSlice = createSlice({
         refresh: (state, action: PayloadAction<DeviceState>) => {
             return action.payload;
         },
+        refreshOne: (state, action: PayloadAction<DeviceItem>) => {
+            const list = state.devices;
+            const newOne = action.payload;
+
+            if (list === null) {
+                return {
+                    ...state,
+                    devices: [newOne],
+                };
+            }
+
+            const targetIndex = list.findIndex(
+                (oldOne) => oldOne.id === newOne.id
+            );
+            list[targetIndex] = {
+                ...newOne,
+            };
+
+            return {
+                ...state,
+                devices: list,
+            };
+        },
         append: (state, action: PayloadAction<DeviceItem>) => {
             const deviceInState = state.devices?.find(
                 (item) => item.id === action.payload.id

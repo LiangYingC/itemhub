@@ -10,6 +10,7 @@ export interface DeviceItem {
     online: boolean;
     zone: null | string;
     zoneId: null | number;
+    microcontroller: number;
 }
 
 export interface PinItem {

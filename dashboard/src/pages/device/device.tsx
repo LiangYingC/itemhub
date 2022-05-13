@@ -122,7 +122,7 @@ const Device = () => {
     }, [shouldBeBundledId]);
 
     useEffect(() => {
-        if (microcontrollers) {
+        if (microcontrollers && device) {
             microcontrollers.filter((item) => {
                 if (item.id === device.microcontroller) {
                     setMicrocontrollerName(

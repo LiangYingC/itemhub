@@ -220,15 +220,15 @@ const Device = () => {
             ) : (
                 <div className="card">
                     <div className="row m-0">
-                        <div className="col-12 col-md-6 d-flex p-0 item">
+                        <div className="col-12 col-lg-6 d-flex p-0 item">
                             <div className="d-flex flex-shrink-0 fs-5 item-title py-2 px-25">
                                 Device Id
                             </div>
-                            <div className="text-wrap text-black text-opacity-65 py-2 px-25">
+                            <div className="text-break text-black text-opacity-65 py-2 px-25">
                                 {device.deviceId}
                             </div>
                         </div>
-                        <div className="col-12 col-md-6 d-flex p-0 item">
+                        <div className="col-12 col-lg-6 d-flex p-0 item">
                             <div className="d-flex flex-shrink-0 fs-5 item-title py-2 px-25">
                                 狀態
                             </div>
@@ -242,7 +242,7 @@ const Device = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-12 col-md-6 d-flex p-0 item">
+                        <div className="col-12 col-lg-6 d-flex p-0 item">
                             <div className="d-flex flex-shrink-0 fs-5 item-title py-2 px-25">
                                 建立時間
                             </div>
@@ -252,7 +252,7 @@ const Device = () => {
                                 )}`}
                             </div>
                         </div>
-                        <div className="col-12 col-md-6 d-flex p-0 item">
+                        <div className="col-12 col-lg-6 d-flex p-0 item">
                             <div className="d-flex flex-shrink-0 fs-5 item-title py-2 px-25">
                                 裝置類型
                             </div>
@@ -261,7 +261,7 @@ const Device = () => {
                             </div>
                         </div>
                         <div className="col-12 p-0 item">
-                            <div className="col-12 col-md-6 d-flex p-0">
+                            <div className="col-12 col-lg-6 d-flex p-0">
                                 <div className="d-flex flex-shrink-0 fs-5 item-title py-2 px-25">
                                     Pins Data
                                 </div>

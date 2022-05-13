@@ -16,8 +16,7 @@ export interface DeviceItem {
 export interface PinItem {
     pin: string;
     deviceId: number;
-    value: number;
+    value: number | null;
     mode: number;
-    createdAt: string | null;
     name: string | null;
 }

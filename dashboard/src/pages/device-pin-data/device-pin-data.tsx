@@ -2,7 +2,9 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link, useLocation } from 'react-router-dom';
 import {
     useCreateDeviceApi,
+    useCreatePinsApi,
     useGetDeviceApi,
+    useGetDevicePinsApi,
     useUpdateDeviceApi,
 } from '@/hooks/apis/devices.hook';
 import { useAppSelector } from '@/hooks/redux.hook';
@@ -27,6 +29,8 @@ import {
     useRevokeSecretOauthClient,
 } from '@/hooks/apis/oauth-clients.hook';
 import { selectOauthClients } from '@/redux/reducers/oauth-clients.reducer';
+import { PinItem } from '@/types/devices.type';
+import moment from 'moment';
 interface OauthClientLocationState {
     secret: string;
 }
@@ -35,7 +39,7 @@ const Device = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const { id: idFromUrl, pin } = useParams();
+    const { id: idFromUrl } = useParams();
     const { state } = useLocation();
     const id: number | null = idFromUrl ? Number(idFromUrl) : null;
     const isCreateMode = id === null;
@@ -47,7 +51,7 @@ const Device = () => {
         (devices || []).filter((device) => device.id === Number(id))[0] || null;
 
     const [name, setName] = useState('');
-    const [microcontroller, setMicrocontroller] = useState(0);
+    const [microcontrollerId, setMicrocontrollerId] = useState(0);
 
     const oAuthClient =
         (oAuthClients || []).filter(
@@ -61,12 +65,24 @@ const Device = () => {
     const { error: getOauthClientError, fetchApi: getOauthClientByDeviceId } =
         useGetOauthClientByDeviceId(Number(id));
 
+    const {
+        isLoading: isDevicePinLoading,
+        devicePins,
+        getDevicePinsApi,
+    } = useGetDevicePinsApi({
+        id: Number(id),
+    });
+
     const { microcontrollers } = useAppSelector(selectUniversal);
     const oAuthId = oAuthClient ? oAuthClient.id : '';
     const oAuthClientId = oAuthClient ? oAuthClient.clientId : '';
     const [clientId, setClientId] = useState(oAuthClientId);
-    const [microcontrollerImg, setMicrocontrollerImg] =
-        useState(particleIoPhoton);
+    const [selectedPins, setSelectedPins] = useState(devicePins);
+    const microcontrollerItem = (microcontrollers || []).filter((item) => {
+        return item.id === microcontrollerId;
+    });
+
+    const [microcontrollerImg, setMicrocontrollerIdImg] = useState('');
 
     const {
         fetchApi: revokeSecretApi,
@@ -88,8 +104,8 @@ const Device = () => {
         id: Number(id),
         editedData: {
             name: name ? name : device?.name,
-            microcontroller: microcontroller
-                ? Number(microcontroller)
+            microcontroller: microcontrollerId
+                ? Number(microcontrollerId)
                 : device?.microcontroller,
         },
     });
@@ -104,7 +120,12 @@ const Device = () => {
         fetchApi: createDeviceApi,
         isLoading: isCreating,
         data: createDeviceResponse,
-    } = useCreateDeviceApi(name, microcontroller);
+    } = useCreateDeviceApi(name, microcontrollerId);
+
+    const { fetchApi: createDevicePinsApi } = useCreatePinsApi(
+        Number(createDeviceResponse?.id),
+        selectedPins || []
+    );
 
     const back = () => {
         if (isCreateMode) {
@@ -112,6 +133,43 @@ const Device = () => {
             return;
         }
         navigate(`/dashboard/devices/${id}`);
+    };
+    const isSwitch = 1;
+    const isSensor = 0;
+
+    const selectPins = (
+        pin: string,
+        mode: number,
+        name: string,
+        action: string,
+        value: number | null
+    ) => {
+        setSelectedPins((previous) => {
+            const newSelected = [...(selectedPins || [])];
+            const targetIndex = newSelected
+                ?.map((item) => {
+                    return item.pin;
+                })
+                .indexOf(pin);
+
+            if (targetIndex !== -1) {
+                newSelected?.splice(Number(targetIndex));
+            }
+            if (action === 'CANCEL') {
+                return newSelected;
+            }
+
+            const pushData: PinItem = {
+                deviceId: Number(id),
+                pin,
+                mode,
+                name,
+                value,
+            };
+
+            newSelected.push({ ...pushData });
+            return newSelected;
+        });
     };
 
     useEffect(() => {
@@ -123,9 +181,10 @@ const Device = () => {
 
     useEffect(() => {
         setName(name);
-        setMicrocontroller(microcontroller);
+        setMicrocontrollerId(microcontrollerId);
         if (device !== null) {
-            setMicrocontroller(Number(device.microcontroller));
+            setMicrocontrollerId(Number(device.microcontroller));
+            getDevicePinsApi();
         }
         if (device !== null && oAuthClient === null && !isCreateMode) {
             getOauthClientByDeviceId();
@@ -137,28 +196,35 @@ const Device = () => {
     }, [oAuthClient]);
 
     useEffect(() => {
+        setSelectedPins(devicePins);
+    }, [devicePins]);
+
+    useEffect(() => {
         if (getOauthClientError?.errorKey === 'DATA_NOT_FOUND') {
             createSecretApi();
         }
     }, [getOauthClientError]);
 
     useEffect(() => {
-        const microcontrollerKey = microcontrollers.filter((item) => {
-            return item.id === microcontroller;
-        });
-        if (!microcontrollerKey || microcontrollerKey.length === 0) {
+        let targetKey = '';
+        if (!microcontrollers || microcontrollers.length === 0) {
             return;
         }
-        if (microcontrollerKey[0].key === 'PARTICLE_IO_PHOTON') {
-            setMicrocontrollerImg(particleIoPhoton);
+        if (!microcontrollerItem || microcontrollerItem.length === 0) {
+            targetKey = microcontrollers[0].key;
+            setMicrocontrollerId(microcontrollers[0].id);
+        } else {
+            targetKey = microcontrollerItem[0].key;
         }
-        if (microcontrollerKey[0].key === 'ARDUINO_NANO_IOT_33') {
-            setMicrocontrollerImg(arduinoNano33Iot);
+
+        if (targetKey === 'PARTICLE_IO_PHOTON') {
+            setMicrocontrollerIdImg(particleIoPhoton);
+        } else if (targetKey === 'ARDUINO_NANO_IOT_33') {
+            setMicrocontrollerIdImg(arduinoNano33Iot);
+        } else if (targetKey === 'ESP_01S') {
+            setMicrocontrollerIdImg(esp01s);
         }
-        if (microcontrollerKey[0].key === 'ESP_01S') {
-            setMicrocontrollerImg(esp01s);
-        }
-    }, [microcontroller]);
+    }, [microcontrollers, microcontrollerId]);
 
     useEffect(() => {
         setRevokeSecret(revokeSecret);
@@ -166,6 +232,8 @@ const Device = () => {
 
     useEffect(() => {
         if (updateDeviceResponse?.status === RESPONSE_STATUS.OK) {
+            // create pins
+            // update pins
             dispatch(
                 toasterActions.pushOne({
                     message:
@@ -194,6 +262,10 @@ const Device = () => {
 
     useEffect(() => {
         if (createDeviceResponse && !isNaN(createDeviceResponse.id)) {
+            console.log('AA');
+            console.log(selectedPins);
+            createDevicePinsApi();
+
             dispatch(
                 toasterActions.pushOne({
                     message: '新增 Device 成功',
@@ -235,7 +307,7 @@ const Device = () => {
                                     device ? device.microcontroller : 0
                                 }
                                 onChange={(e) =>
-                                    setMicrocontroller(Number(e.target.value))
+                                    setMicrocontrollerId(Number(e.target.value))
                                 }
                                 className="form-select"
                             >
@@ -252,38 +324,91 @@ const Device = () => {
                         </div>
                         <div className="mb-4">
                             <label>選擇 Pin</label>
-                            <div className="d-flex mt-4">
-                                <div className="position-relative pin me-3">
-                                    <div className="text-success text-center pb-1 pin-selector">
-                                        感應器
-                                    </div>
-                                    <div
-                                        className="pin-text mt-25"
-                                        role="button"
-                                    >
-                                        D10
-                                    </div>
-                                    <div className="pin-option">
-                                        <div
-                                            className="lh-1 p-25"
-                                            role="button"
-                                        >
-                                            開關
-                                        </div>
-                                        <div
-                                            className="lh-1 p-25"
-                                            role="button"
-                                        >
-                                            感應器
-                                        </div>
-                                        <div
-                                            className="lh-1 p-25"
-                                            role="button"
-                                        >
-                                            取消
-                                        </div>
-                                    </div>
-                                </div>
+                            <div className="d-flex flex-wrap mt-5">
+                                {microcontrollerItem[0]?.pins.map(
+                                    (pin, index) => {
+                                        return (
+                                            <div
+                                                className={`${
+                                                    selectedPins
+                                                        ?.map((pins) => {
+                                                            return pins.pin;
+                                                        })
+                                                        .includes(pin.name)
+                                                        ? 'selected'
+                                                        : ''
+                                                } position-relative pin p-2 m-1 mb-4`}
+                                                role="button"
+                                                key={index}
+                                            >
+                                                <div className="text-center pin-selector">
+                                                    {selectedPins?.filter(
+                                                        (pins) => {
+                                                            return (
+                                                                pins.pin ===
+                                                                pin.name
+                                                            );
+                                                        }
+                                                    )[0]?.mode === isSwitch ? (
+                                                        <div>開關</div>
+                                                    ) : (
+                                                        <div>感應器</div>
+                                                    )}
+                                                </div>
+                                                <div className="pin-text">
+                                                    {pin.name}
+                                                </div>
+                                                <div className="pin-option">
+                                                    <div
+                                                        className={`lh-1 p-25`} //${devicePins.includes() ? '': 'd-none'}
+                                                        role="button"
+                                                        onClick={() => {
+                                                            selectPins(
+                                                                pin.name,
+                                                                isSwitch,
+                                                                pin.name,
+                                                                'ADD',
+                                                                0
+                                                            );
+                                                        }}
+                                                    >
+                                                        開關
+                                                    </div>
+                                                    <div
+                                                        className="lh-1 p-25"
+                                                        role="button"
+                                                        onClick={() => {
+                                                            selectPins(
+                                                                pin.name,
+                                                                isSensor,
+                                                                pin.name,
+                                                                'ADD',
+                                                                null
+                                                            );
+                                                        }}
+                                                    >
+                                                        感應器
+                                                    </div>
+                                                    <div
+                                                        className="lh-1 p-25"
+                                                        role="button"
+                                                        onClick={() => {
+                                                            selectPins(
+                                                                pin.name,
+                                                                -1,
+                                                                '',
+                                                                'CANCEL',
+                                                                -1
+                                                            );
+                                                        }}
+                                                    >
+                                                        取消
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        );
+                                    }
+                                )}
                             </div>
                         </div>
                         <div className="mb-4 text-center">

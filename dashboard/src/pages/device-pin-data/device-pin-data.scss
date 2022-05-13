@@ -15,11 +15,28 @@ $pin-option-h: 120px;
         max-width: 500px;
     }
     .pin {
-        width: $pin-wh;
+        &:hover {
+            .pin-option {
+                height: $pin-option-h;
+            }
+        }
+        &.selected {
+            .pin-text {
+                background: $success;
+                color: $white;
+            }
+            .pin-selector {
+                display: block;
+            }
+        }
     }
     .pin-selector {
+        display: none;
+        width: 100%;
         position: absolute;
-        top: -1rem;
+        top: -1.5rem;
+        left: 0;
+        color: $success;
     }
     .pin-text {
         width: $pin-wh;
@@ -36,18 +53,14 @@ $pin-option-h: 120px;
     .pin-option {
         position: absolute;
         height: 0;
-        bottom: calc(0% - (-1rem - #{$pin-wh}));
-        left: -25%;
+        bottom: calc(0% + 1rem + #{$pin-wh});
+        left: -15%;
         box-shadow: 0px 4px 12px rgba($black, 0.09);
         border-radius: 8px;
         z-index: $device-option-z-index;
         transition: 0.3s ease-in-out;
         overflow: hidden;
         background: $white;
-        &.active {
-            height: $pin-option-h;
-            transition: 0.3s ease-in-out;
-        }
         > div {
             width: $pin-option-w;
             &:hover {

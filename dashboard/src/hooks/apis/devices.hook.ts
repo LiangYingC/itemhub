@@ -312,3 +312,26 @@ export const useCreateDeviceApi = (name: string, microcontroller: number) => {
         callbackFunc: dispatchRefresh,
     });
 };
+
+export const useCreatePinsApi = (id: number, pins: PinItem[]) => {
+    const dispatch = useAppDispatch();
+    const dispatchRefresh = useCallback(
+        (response: PinItem[]) => {
+            dispatch(pinsActions.refreshPins(response));
+        },
+        [dispatch]
+    );
+
+    let apiPath = `${API_URL}${END_POINT.DEVICE_PINS}`;
+    apiPath = apiPath.replace(':id', id.toString());
+
+    return useFetchApi<PinItem[]>({
+        apiPath,
+        method: HTTP_METHOD.POST,
+        payload: {
+            ...pins,
+        },
+        initialData: null,
+        callbackFunc: dispatchRefresh,
+    });
+};

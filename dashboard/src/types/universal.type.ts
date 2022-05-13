@@ -7,7 +7,7 @@ export interface TriggerOerator {
 export interface Microcontroller {
     id: number;
     key: string;
-    pins: Pins;
+    pins: Pins[];
 }
 
 export interface Pins {

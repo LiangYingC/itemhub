@@ -25,7 +25,7 @@ import { selectUniversal } from '@/redux/reducers/universal.reducer';
 import { PinItem } from '@/types/devices.type';
 import { selectDevicePins } from '@/redux/reducers/pins.reducer';
 
-const Device = () => {
+const DevicePinData = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -461,4 +461,4 @@ const Device = () => {
     );
 };
 
-export default Device;
+export default DevicePinData;

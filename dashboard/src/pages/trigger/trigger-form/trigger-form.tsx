@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAppSelector } from '@/hooks/redux.hook';
-import {
-    useGetAllDevicesApi,
-    useGetDevicePinsApi,
-} from '@/hooks/apis/devices.hook';
+import { useGetAllDevicesApi } from '@/hooks/apis/devices.hook';
+import { useGetDevicePinsApi } from '@/hooks/apis/device.pin.hook';
 import {
     useCreateTriggerApi,
     useUpdateTriggerApi,

@@ -45,9 +45,9 @@ namespace Homo.IotApi
             return record;
         }
 
-        public static void BatchedCreate(IotDbContext dbContext, long deviceId, long ownerId, List<DTOs.DevicePinsData> dto)
+        public static void BatchedCreate(IotDbContext dbContext, long deviceId, long ownerId, List<DTOs.DevicePinsData> listOfDto)
         {
-            dto.ForEach(item =>
+            listOfDto.ForEach(dto =>
             {
                 DevicePin record = new DevicePin();
                 foreach (var propOfDTO in dto.GetType().GetProperties())
@@ -95,15 +95,16 @@ namespace Homo.IotApi
                 ).FirstOrDefault();
         }
 
-        public static void RemoveUnusePins(IotDbContext dbContext, long ownerId, long deviceId, List<string> usedPins)
+        public static void RemoveUnusePins(IotDbContext dbContext, long ownerId, long deviceId, List<string> unusedPins)
         {
             dbContext.DevicePin.Where(x =>
                 x.OwnerId == ownerId
                 && x.DeviceId == deviceId
-                && !usedPins.Contains(x.Pin)).UpdateFromQuery(x => new DevicePinSwitch()
-                {
-                    DeletedAt = DateTime.Now
-                });
+                && unusedPins.Contains(x.Pin))
+            .UpdateFromQuery(x => new DevicePin()
+            {
+                DeletedAt = DateTime.Now
+            });
         }
 
         public static void UpdatePinName(IotDbContext dbContext, long ownerId, long deviceId, string pin, string name)

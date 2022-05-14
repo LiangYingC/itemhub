@@ -43,11 +43,11 @@ namespace Homo.IotApi
         }
 
         [HttpDelete]
-        public ActionResult<dynamic> removeUnusedPins([FromRoute] long id, [FromQuery] string usedPins, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
+        public ActionResult<dynamic> removeUnusedPins([FromRoute] long id, [FromQuery] string pins, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
             long ownerId = extraPayload.Id;
-            List<string> pins = usedPins.Split(",").ToList<string>();
-            DevicePinDataservice.RemoveUnusePins(_dbContext, ownerId, id, pins);
+            List<string> listOfPins = pins.Split(",").ToList<string>();
+            DevicePinDataservice.RemoveUnusePins(_dbContext, ownerId, id, listOfPins);
             return new { status = CUSTOM_RESPONSE.OK };
         }
 

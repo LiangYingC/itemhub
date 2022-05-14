@@ -54,7 +54,7 @@ namespace Homo.IotApi
             string pinTemplate = "pins.push_back(ItemhubPin({PIN_NUMBER}, \"{PIN_STRING}\", {PIN_MODE}))";
             List<string> pins = new List<string>();
             var targetMcu = dbContext.Microcontroller.Where(x => x.Id == device.Microcontroller).FirstOrDefault();
-            var McuPins = Newtonsoft.Json.JsonConvert.DeserializeObject<List<DTOs.Pin>>(targetMcu.Pins);
+            var McuPins = Newtonsoft.Json.JsonConvert.DeserializeObject<List<DTOs.McuPin>>(targetMcu.Pins);
             devicePins.ForEach(item =>
             {
                 string pinString = item.Pin;

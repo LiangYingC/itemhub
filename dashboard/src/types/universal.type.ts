@@ -14,3 +14,8 @@ export interface Pins {
     name: string;
     value: number;
 }
+export interface DeviceMode {
+    key: string;
+    value: number;
+    label: string;
+}

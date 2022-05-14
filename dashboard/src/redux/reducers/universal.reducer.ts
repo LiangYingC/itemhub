@@ -1,16 +1,21 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '@/redux/store';
-import { TriggerOerator } from '@/types/universal.type';
-import { Microcontroller } from '@/types/universal.type';
+import {
+    Microcontroller,
+    DeviceMode,
+    TriggerOerator,
+} from '@/types/universal.type';
 
 interface UniversalState {
     triggerOperators: TriggerOerator[];
     microcontrollers: Microcontroller[];
+    deviceModes: DeviceMode[];
 }
 
 const initialState: UniversalState = {
     triggerOperators: [],
     microcontrollers: [],
+    deviceModes: [],
 };
 
 export const universalSlice = createSlice({
@@ -35,6 +40,13 @@ export const universalSlice = createSlice({
             return {
                 ...state,
                 microcontrollers: newMicrocontrollers,
+            };
+        },
+        setDeviceModes: (state, action: PayloadAction<DeviceMode[]>) => {
+            const newDeviceModes = action.payload;
+            return {
+                ...state,
+                deviceModes: newDeviceModes,
             };
         },
     },

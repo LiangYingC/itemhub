@@ -45,6 +45,7 @@ const DevicePinData = () => {
 
     const [selectedPins, setSelectedPins] = useState(devicePins);
     const { microcontrollers } = useAppSelector(selectUniversal);
+    const { deviceModes } = useAppSelector(selectUniversal);
     const [microcontrollerImg, setMicrocontrollerIdImg] = useState(String);
 
     const microcontrollerItem = (microcontrollers || []).filter((item) => {
@@ -149,8 +150,13 @@ const DevicePinData = () => {
         updateDeviceApi();
     };
 
-    const isSwitch = 1;
-    const isSensor = 0;
+    const isSwitch = deviceModes.filter((item) => {
+        return item.key === 'SWITCH';
+    })[0]?.value;
+
+    const isSensor = deviceModes.filter((item) => {
+        return item.key === 'SENSOR';
+    })[0]?.value;
 
     const selectPins = (
         pin: string,

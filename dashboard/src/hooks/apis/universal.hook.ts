@@ -3,8 +3,11 @@ import { useAppDispatch } from '@/hooks/redux.hook';
 import { useFetchApi } from '@/hooks/apis/fetch.hook';
 import { universalActions } from '@/redux/reducers/universal.reducer';
 import { API_URL, END_POINT, HTTP_METHOD } from '@/constants/api';
-import { TriggerOerator } from '@/types/universal.type';
-import { Microcontroller } from '@/types/universal.type';
+import {
+    DeviceMode,
+    TriggerOerator,
+    Microcontroller,
+} from '@/types/universal.type';
 
 export const useGetTriggerOperatorsApi = () => {
     const dispatch = useAppDispatch();
@@ -56,5 +59,32 @@ export const useGetMicrocontrollersApi = () => {
         gettingMicrocontrollers: isLoading,
         gettingMicrocontrollersErr: error,
         getMicrocontrollersApi: fetchApi,
+    };
+};
+
+export const useGetDeviceModesApi = () => {
+    const dispatch = useAppDispatch();
+    const dispatchSetDeviceModes = useCallback(
+        (data: DeviceMode[]) => {
+            if (data) {
+                dispatch(universalActions.setDeviceModes(data));
+            }
+        },
+        [dispatch]
+    );
+
+    const apiPath = `${API_URL}${END_POINT.DEVICE_MODE}`;
+
+    const { isLoading, error, fetchApi } = useFetchApi<DeviceMode[]>({
+        apiPath,
+        method: HTTP_METHOD.GET,
+        initialData: null,
+        callbackFunc: dispatchSetDeviceModes,
+    });
+
+    return {
+        gettingDeviceModes: isLoading,
+        gettingDeviceModesErr: error,
+        getDeviceModesApi: fetchApi,
     };
 };

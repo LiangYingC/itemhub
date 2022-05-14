@@ -2,13 +2,15 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
     useCreateDeviceApi,
+    useGetDeviceApi,
+    useUpdateDeviceApi,
+} from '@/hooks/apis/devices.hook';
+import {
     useCreatePinsApi,
     useDeletePinsApi,
-    useGetDeviceApi,
     useGetDevicePinsApi,
-    useUpdateDeviceApi,
     useUpdatePinsApi,
-} from '@/hooks/apis/devices.hook';
+} from '@/hooks/apis/device.pin.hook';
 import { useAppSelector } from '@/hooks/redux.hook';
 import { selectDevices } from '@/redux/reducers/devices.reducer';
 import { RESPONSE_STATUS } from '@/constants/api';

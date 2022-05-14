@@ -19,4 +19,5 @@ export interface PinItem {
     value: number | null;
     mode: number;
     name: string | null;
+    createdAt?: string;
 }

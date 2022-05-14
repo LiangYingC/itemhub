@@ -142,10 +142,11 @@ export const useRevokeSecretOauthClient = (id: number) => {
     const dispatch = useAppDispatch();
     const dispatchRefresh = useCallback(
         (data: { status: string; secret: string }) => {
-            if (data.status === RESPONSE_STATUS.OK) {
+            if (data.secret) {
                 dispatch(
                     oauthClientsActions.updateOne({
                         id,
+                        clientSecrets: data.secret,
                     })
                 );
             }

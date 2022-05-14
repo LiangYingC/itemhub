@@ -25,7 +25,7 @@ const Pin = (props: { pinItem: PinItem; isEditMode: boolean }) => {
         useUpdateDeviceSwitchPinApi({
             deviceId,
             pin,
-            value,
+            value: value || 0,
         });
 
     const { updateDevicePinNameApi, isLoading: isNameUpdating } =

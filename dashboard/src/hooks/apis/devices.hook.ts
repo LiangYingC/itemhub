@@ -316,21 +316,71 @@ export const useCreateDeviceApi = (name: string, microcontroller: number) => {
 export const useCreatePinsApi = (id: number, pins: PinItem[]) => {
     const dispatch = useAppDispatch();
     const dispatchRefresh = useCallback(
-        (response: PinItem[]) => {
-            dispatch(pinsActions.refreshPins(response));
+        (data: ResponseOK) => {
+            if (data.status === RESPONSE_STATUS.OK) {
+                dispatch(pinsActions.refreshPins(pins));
+            }
         },
-        [dispatch]
+        [dispatch, pins]
     );
 
     let apiPath = `${API_URL}${END_POINT.DEVICE_PINS}`;
     apiPath = apiPath.replace(':id', id.toString());
 
-    return useFetchApi<PinItem[]>({
+    return useFetchApi<ResponseOK>({
         apiPath,
         method: HTTP_METHOD.POST,
-        payload: {
-            ...pins,
+        payload: pins,
+        initialData: null,
+        callbackFunc: dispatchRefresh,
+    });
+};
+
+export const useUpdatePinsApi = (id: number, pins: PinItem[]) => {
+    const dispatch = useAppDispatch();
+    const dispatchRefresh = useCallback(
+        (data: ResponseOK) => {
+            if (data.status === RESPONSE_STATUS.OK) {
+                dispatch(pinsActions.refreshPins(pins));
+            }
         },
+        [dispatch, pins]
+    );
+
+    let apiPath = `${API_URL}${END_POINT.DEVICE_PINS}`;
+    apiPath = apiPath.replace(':id', id.toString());
+
+    return useFetchApi<ResponseOK>({
+        apiPath,
+        method: HTTP_METHOD.PATCH,
+        payload: pins,
+        initialData: null,
+        callbackFunc: dispatchRefresh,
+    });
+};
+
+export const useDeletePinsApi = (id: number, pins: PinItem[]) => {
+    const dispatch = useAppDispatch();
+    const dispatchRefresh = useCallback(
+        (data: ResponseOK) => {
+            if (data.status === RESPONSE_STATUS.OK) {
+                dispatch(
+                    pinsActions.deleteMultiple({
+                        pins: pins.map((item) => item.pin),
+                    })
+                );
+            }
+        },
+        [dispatch, pins]
+    );
+    let apiPath = `${API_URL}${END_POINT.DEVICE_PINS}?pins=${pins
+        .map((item) => item.pin)
+        .join(',')}`;
+    apiPath = apiPath.replace(':id', id.toString());
+
+    return useFetchApi<ResponseOK>({
+        apiPath,
+        method: HTTP_METHOD.DELETE,
         initialData: null,
         callbackFunc: dispatchRefresh,
     });

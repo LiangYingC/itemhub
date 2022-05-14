@@ -1,19 +1,19 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useParams, Link, useLocation } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
     useCreateDeviceApi,
     useCreatePinsApi,
+    useDeletePinsApi,
     useGetDeviceApi,
     useGetDevicePinsApi,
     useUpdateDeviceApi,
+    useUpdatePinsApi,
 } from '@/hooks/apis/devices.hook';
 import { useAppSelector } from '@/hooks/redux.hook';
 import { selectDevices } from '@/redux/reducers/devices.reducer';
-import Pins from '@/components/pins/pins';
 import { RESPONSE_STATUS } from '@/constants/api';
 import PageTitle from '@/components/page-title/page-title';
 import { useDispatch } from 'react-redux';
-import { dialogActions, DialogTypeEnum } from '@/redux/reducers/dialog.reducer';
 import {
     toasterActions,
     ToasterTypeEnum,
@@ -22,79 +22,52 @@ import arduinoNano33Iot from '@/assets/images/arduino-nano-33-iot.svg';
 import particleIoPhoton from '@/assets/images/particle-io-photon.jpeg';
 import esp01s from '@/assets/images/esp-01s.svg';
 import { selectUniversal } from '@/redux/reducers/universal.reducer';
-import refreshPrimaryIcon from '@/assets/images/refresh-primary.svg';
-import {
-    useCreateOauthClients,
-    useGetOauthClientByDeviceId,
-    useRevokeSecretOauthClient,
-} from '@/hooks/apis/oauth-clients.hook';
-import { selectOauthClients } from '@/redux/reducers/oauth-clients.reducer';
 import { PinItem } from '@/types/devices.type';
-import moment from 'moment';
-interface OauthClientLocationState {
-    secret: string;
-}
+import { selectDevicePins } from '@/redux/reducers/pins.reducer';
 
 const Device = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const { id: idFromUrl } = useParams();
-    const { state } = useLocation();
     const id: number | null = idFromUrl ? Number(idFromUrl) : null;
     const isCreateMode = id === null;
 
     const devices = useAppSelector(selectDevices).devices;
-    const oAuthClients = useAppSelector(selectOauthClients).oauthClients;
-
     const device =
         (devices || []).filter((device) => device.id === Number(id))[0] || null;
+    const devicePins = useAppSelector(selectDevicePins);
 
-    const [name, setName] = useState('');
-    const [microcontrollerId, setMicrocontrollerId] = useState(0);
+    const [name, setName] = useState(String);
+    const [microcontrollerId, setMicrocontrollerId] = useState(Number);
 
-    const oAuthClient =
-        (oAuthClients || []).filter(
-            (client) => client.deviceId === device?.id
-        )[0] || null;
+    const [selectedPins, setSelectedPins] = useState(devicePins);
+    const { microcontrollers } = useAppSelector(selectUniversal);
+    const [microcontrollerImg, setMicrocontrollerIdImg] = useState(String);
+
+    const microcontrollerItem = (microcontrollers || []).filter((item) => {
+        return item.id === microcontrollerId;
+    });
+
+    const [shouldBeAddedPins, setShouldBeAddedPins] = useState<
+        PinItem[] | null
+    >([]);
+
+    const [shouldBeUpdatedPins, setShouldBeUpdatedPins] = useState<
+        PinItem[] | null
+    >([]);
+
+    const [shouldBeDeletedPins, setShouldBeDeletedPins] = useState<
+        PinItem[] | null
+    >([]);
 
     const { isLoading: isGetting, fetchApi: getDeviceApi } = useGetDeviceApi(
         Number(id)
     );
 
-    const { error: getOauthClientError, fetchApi: getOauthClientByDeviceId } =
-        useGetOauthClientByDeviceId(Number(id));
-
-    const {
-        isLoading: isDevicePinLoading,
-        devicePins,
-        getDevicePinsApi,
-    } = useGetDevicePinsApi({
+    const { getDevicePinsApi } = useGetDevicePinsApi({
         id: Number(id),
     });
-
-    const { microcontrollers } = useAppSelector(selectUniversal);
-    const oAuthId = oAuthClient ? oAuthClient.id : '';
-    const oAuthClientId = oAuthClient ? oAuthClient.clientId : '';
-    const [clientId, setClientId] = useState(oAuthClientId);
-    const [selectedPins, setSelectedPins] = useState(devicePins);
-    const microcontrollerItem = (microcontrollers || []).filter((item) => {
-        return item.id === microcontrollerId;
-    });
-
-    const [microcontrollerImg, setMicrocontrollerIdImg] = useState('');
-
-    const {
-        fetchApi: revokeSecretApi,
-        isLoading: isRevoking,
-        data: revokeSecretResponse,
-    } = useRevokeSecretOauthClient(Number(oAuthId));
-
-    const revokeSecretData =
-        revokeSecretResponse?.secret ||
-        (state as OauthClientLocationState)?.secret;
-
-    const [revokeSecret, setRevokeSecret] = useState(revokeSecretData);
 
     const {
         isLoading: isUpdating,
@@ -111,20 +84,25 @@ const Device = () => {
     });
 
     const {
-        fetchApi: createSecretApi,
-        isLoading: isCreatSecreting,
-        data: createOAuthClientResponse,
-    } = useCreateOauthClients(clientId, Number(id));
-
-    const {
         fetchApi: createDeviceApi,
         isLoading: isCreating,
         data: createDeviceResponse,
     } = useCreateDeviceApi(name, microcontrollerId);
 
-    const { fetchApi: createDevicePinsApi } = useCreatePinsApi(
-        Number(createDeviceResponse?.id),
-        selectedPins || []
+    const { data: createDevicePinResponse, fetchApi: createDevicePinsApi } =
+        useCreatePinsApi(
+            Number(createDeviceResponse?.id) || Number(id),
+            shouldBeAddedPins || []
+        );
+
+    const { fetchApi: updateDevicePinsApi } = useUpdatePinsApi(
+        Number(createDeviceResponse?.id) || Number(id),
+        shouldBeUpdatedPins || []
+    );
+
+    const { fetchApi: deleteDevicePinsApi } = useDeletePinsApi(
+        Number(createDeviceResponse?.id) || Number(id),
+        shouldBeDeletedPins || []
     );
 
     const back = () => {
@@ -134,6 +112,41 @@ const Device = () => {
         }
         navigate(`/dashboard/devices/${id}`);
     };
+
+    const updateDevice = () => {
+        const shouldBeUpdatedPins = selectedPins?.filter((item) =>
+            devicePins?.map((devicePin) => devicePin.pin).includes(item.pin)
+        );
+
+        const shouldBeAddedPins = selectedPins?.filter(
+            (item) =>
+                !devicePins
+                    ?.map((devicePin) => devicePin.pin)
+                    .includes(item.pin)
+        );
+
+        const shouldBeDeletedPins = devicePins?.filter(
+            (devicePin) =>
+                !selectedPins
+                    ?.map((selectedPin) => selectedPin.pin)
+                    .includes(devicePin.pin)
+        );
+
+        if (shouldBeUpdatedPins && shouldBeUpdatedPins.length > 0) {
+            setShouldBeUpdatedPins(shouldBeUpdatedPins);
+        }
+
+        if (shouldBeAddedPins && shouldBeAddedPins.length > 0) {
+            setShouldBeAddedPins(shouldBeAddedPins);
+        }
+
+        if (shouldBeDeletedPins && shouldBeDeletedPins.length > 0) {
+            setShouldBeDeletedPins(shouldBeDeletedPins);
+        }
+
+        updateDeviceApi();
+    };
+
     const isSwitch = 1;
     const isSensor = 0;
 
@@ -144,7 +157,7 @@ const Device = () => {
         action: string,
         value: number | null
     ) => {
-        setSelectedPins((previous) => {
+        setSelectedPins(() => {
             const newSelected = [...(selectedPins || [])];
             const targetIndex = newSelected
                 ?.map((item) => {
@@ -153,10 +166,7 @@ const Device = () => {
                 .indexOf(pin);
 
             if (targetIndex !== -1) {
-                newSelected?.splice(Number(targetIndex));
-            }
-            if (action === 'CANCEL') {
-                return newSelected;
+                newSelected?.splice(Number(targetIndex), 1);
             }
 
             const pushData: PinItem = {
@@ -180,37 +190,29 @@ const Device = () => {
     }, []);
 
     useEffect(() => {
-        setName(name);
-        setMicrocontrollerId(microcontrollerId);
         if (device !== null) {
             setMicrocontrollerId(Number(device.microcontroller));
             getDevicePinsApi();
         }
-        if (device !== null && oAuthClient === null && !isCreateMode) {
-            getOauthClientByDeviceId();
-        }
     }, [device]);
-
-    useEffect(() => {
-        setClientId(clientId);
-    }, [oAuthClient]);
 
     useEffect(() => {
         setSelectedPins(devicePins);
     }, [devicePins]);
 
     useEffect(() => {
-        if (getOauthClientError?.errorKey === 'DATA_NOT_FOUND') {
-            createSecretApi();
-        }
-    }, [getOauthClientError]);
+        // 切換裝置類型的時候 把選取的 PIN 都清空
+        setSelectedPins([]);
 
-    useEffect(() => {
         let targetKey = '';
+
         if (!microcontrollers || microcontrollers.length === 0) {
             return;
         }
-        if (!microcontrollerItem || microcontrollerItem.length === 0) {
+        if (!isCreateMode && microcontrollerItem.length === 0) {
+            return;
+        }
+        if (microcontrollerId === 0) {
             targetKey = microcontrollers[0].key;
             setMicrocontrollerId(microcontrollers[0].id);
         } else {
@@ -227,13 +229,7 @@ const Device = () => {
     }, [microcontrollers, microcontrollerId]);
 
     useEffect(() => {
-        setRevokeSecret(revokeSecret);
-    }, [revokeSecretData]);
-
-    useEffect(() => {
         if (updateDeviceResponse?.status === RESPONSE_STATUS.OK) {
-            // create pins
-            // update pins
             dispatch(
                 toasterActions.pushOne({
                     message:
@@ -247,25 +243,8 @@ const Device = () => {
     }, [updateDeviceResponse]);
 
     useEffect(() => {
-        if (createOAuthClientResponse && !isNaN(createOAuthClientResponse.id)) {
-            dispatch(
-                toasterActions.pushOne({
-                    message: '新增 oAuthClient 成功',
-                    duration: 5,
-                    type: ToasterTypeEnum.INFO,
-                })
-            );
-            setClientId(createOAuthClientResponse.clientId);
-            setRevokeSecret(createOAuthClientResponse.clientSecrets);
-        }
-    }, [createOAuthClientResponse]);
-
-    useEffect(() => {
         if (createDeviceResponse && !isNaN(createDeviceResponse.id)) {
-            console.log('AA');
-            console.log(selectedPins);
-            createDevicePinsApi();
-
+            setShouldBeAddedPins(selectedPins);
             dispatch(
                 toasterActions.pushOne({
                     message: '新增 Device 成功',
@@ -276,6 +255,33 @@ const Device = () => {
             navigate(`/dashboard/devices/${createDeviceResponse.id}/edit`);
         }
     }, [createDeviceResponse]);
+
+    useEffect(() => {
+        if (!shouldBeUpdatedPins || shouldBeUpdatedPins.length === 0) {
+            return;
+        }
+        updateDevicePinsApi();
+    }, [shouldBeUpdatedPins]);
+
+    useEffect(() => {
+        if (!shouldBeAddedPins || shouldBeAddedPins.length === 0) {
+            return;
+        }
+        createDevicePinsApi();
+    }, [shouldBeAddedPins]);
+
+    useEffect(() => {
+        if (!shouldBeDeletedPins || shouldBeDeletedPins.length === 0) {
+            return;
+        }
+        deleteDevicePinsApi();
+    }, [shouldBeDeletedPins]);
+
+    useEffect(() => {
+        if (createDevicePinResponse?.status === 'OK') {
+            getDevicePinsApi();
+        }
+    }, [createDevicePinResponse]);
 
     return (
         // UI 結構等設計稿後再重構調整
@@ -301,6 +307,7 @@ const Device = () => {
                             />
                         </div>
                         <div className="mb-4">
+                            {device ? device.microcontroller : 0}
                             <label>裝置類型</label>
                             <select
                                 defaultValue={
@@ -360,7 +367,7 @@ const Device = () => {
                                                 </div>
                                                 <div className="pin-option">
                                                     <div
-                                                        className={`lh-1 p-25`} //${devicePins.includes() ? '': 'd-none'}
+                                                        className={`lh-1 p-25`}
                                                         role="button"
                                                         onClick={() => {
                                                             selectPins(
@@ -393,12 +400,16 @@ const Device = () => {
                                                         className="lh-1 p-25"
                                                         role="button"
                                                         onClick={() => {
-                                                            selectPins(
-                                                                pin.name,
-                                                                -1,
-                                                                '',
-                                                                'CANCEL',
-                                                                -1
+                                                            setSelectedPins(
+                                                                selectedPins
+                                                                    ? selectedPins.filter(
+                                                                          (
+                                                                              item
+                                                                          ) =>
+                                                                              item.pin !==
+                                                                              pin.name
+                                                                      )
+                                                                    : []
                                                             );
                                                         }}
                                                     >
@@ -418,68 +429,6 @@ const Device = () => {
                                 alt=""
                             />
                         </div>
-                        {isCreateMode ? (
-                            <div />
-                        ) : (
-                            <div className="row">
-                                <div className="col-12 col-lg-6 p-0">
-                                    <label>Client Id</label>
-                                    <input
-                                        type="text"
-                                        className="form-control mt-2"
-                                        placeholder="如果不填寫 clientId 系統會自動會幫你隨機產生"
-                                        value={
-                                            oAuthClient
-                                                ? oAuthClient.clientId
-                                                : ''
-                                        }
-                                        disabled={!isCreateMode}
-                                    />
-                                </div>
-                                <div className="col-12 col-lg-6 ps-3 pe-0">
-                                    <label>Client Secret</label>
-                                    <div>
-                                        <input
-                                            type="text"
-                                            className="form-control mt-2"
-                                            placeholder="****************************"
-                                            value={
-                                                revokeSecretResponse?.secret ||
-                                                (
-                                                    state as OauthClientLocationState
-                                                )?.secret ||
-                                                createOAuthClientResponse?.clientSecrets
-                                            }
-                                            disabled
-                                        />
-                                        <div
-                                            className="d-flex pt-1"
-                                            onClick={revokeSecretApi}
-                                            role="button"
-                                        >
-                                            <div className="text-primary">
-                                                重新產生 Client Secret
-                                            </div>
-                                            <div className="ps-2">
-                                                <img
-                                                    src={refreshPrimaryIcon}
-                                                    alt=""
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="text-warn d-flex pt-1 ">
-                                        <div className="bg-warn text-white rounded-circle icon-warm me-1 flex-shrink-0">
-                                            !
-                                        </div>
-                                        <div>
-                                            請立即記下 Client
-                                            Secret，為保持安全性，再次查看需重新產生並打包燒錄程式碼
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
                         <div className="d-flex justify-content-end mt-5">
                             <button
                                 className="btn btn-secondary me-3"
@@ -497,13 +446,9 @@ const Device = () => {
                                 </button>
                             ) : (
                                 <button
-                                    disabled={
-                                        isRevoking ||
-                                        isUpdating ||
-                                        !revokeSecretResponse
-                                    }
+                                    disabled={isUpdating}
                                     className="btn btn-primary"
-                                    onClick={updateDeviceApi}
+                                    onClick={updateDevice}
                                 >
                                     儲存編輯
                                 </button>

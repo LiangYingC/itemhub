@@ -1,16 +1,9 @@
-$icon-wh: 16px;
 $pin-wh: 48px;
 $pin-option-w: 88px;
 $pin-option-h: 120px;
+$device-option-z-index: 2;
 
 .device-pin-data {
-    .icon-warm {
-        width: $icon-wh;
-        height: $icon-wh;
-        line-height: $icon-wh;
-        text-align: center;
-        margin-top: 6px;
-    }
     .microcontroller-img {
         max-width: 500px;
     }
@@ -42,10 +35,6 @@ $pin-option-h: 120px;
         width: $pin-wh;
         height: $pin-wh;
         line-height: $pin-wh;
-        text-align: center;
-        background: rgba($black, 0.04);
-        border: 1px solid rgba($black, 0.09);
-        border-radius: 100%;
         &:hover {
             background: rgba($black, 0.09);
         }
@@ -55,16 +44,12 @@ $pin-option-h: 120px;
         height: 0;
         bottom: calc(0% + 1rem + #{$pin-wh});
         left: -15%;
-        box-shadow: 0px 4px 12px rgba($black, 0.09);
-        border-radius: 8px;
         z-index: $device-option-z-index;
         transition: 0.3s ease-in-out;
-        overflow: hidden;
-        background: $white;
         > div {
             width: $pin-option-w;
             &:hover {
-                background: rgba(74, 197, 255, 0.09);
+                background: rgba($primary, 0.09);
             }
         }
     }

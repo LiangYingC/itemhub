@@ -362,10 +362,10 @@ const Device = () => {
                                                         <div>感應器</div>
                                                     )}
                                                 </div>
-                                                <div className="pin-text">
+                                                <div className="text-center rounded-circle bg-black bg-opacity-5 border-black border-opacity-10 pin-text">
                                                     {pin.name}
                                                 </div>
-                                                <div className="pin-option">
+                                                <div className="rounded-2 shadow-lg overflow-hidden bg-white pin-option">
                                                     <div
                                                         className={`lh-1 p-25`}
                                                         role="button"

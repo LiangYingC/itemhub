@@ -1,6 +1,6 @@
 import './app.scss';
 import { useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { useQuery } from './hooks/query.hook';
 import { useGetTriggerOperatorsApi } from '@/hooks/apis/universal.hook';
 import { useGetMicrocontrollersApi } from '@/hooks/apis/universal.hook';
@@ -10,11 +10,15 @@ import Header from './components/header/header';
 import Footer from './components/footer/footer';
 import Dialog from './components/dialog/dialog';
 import Toaster from './components/toaster/toaster';
+import { useAppDispatch } from './hooks/redux.hook';
+import { menuActions } from './redux/reducers/menu.reducer';
 
 const isDev = import.meta.env.VITE_ENV === 'dev';
 
 const App = () => {
     const query = useQuery();
+    const location = useLocation();
+    const dispatch = useAppDispatch();
     const dashboardTokenFromQueryString =
         query.get(COOKIE_KEY.DASHBOARD_TOKEN) || '';
 
@@ -27,7 +31,7 @@ const App = () => {
 
     const token = CookieHelpers.GetCookie({ name: COOKIE_KEY.DASHBOARD_TOKEN });
     if (!token) {
-        location.href = import.meta.env.VITE_WEBSITE_URL;
+        window.location.href = import.meta.env.VITE_WEBSITE_URL;
     }
 
     const { getTriggerOperatorsApi } = useGetTriggerOperatorsApi();
@@ -39,6 +43,12 @@ const App = () => {
     useEffect(() => {
         getMicrocontrollersApi();
     }, []);
+
+    useEffect(() => {
+        if (document.body.clientWidth <= 767) {
+            dispatch(menuActions.close());
+        }
+    }, [location]);
 
     return token ? (
         <div className="dashboard" data-testid="Dashboard">

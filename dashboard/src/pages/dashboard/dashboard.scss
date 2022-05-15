@@ -1,4 +1,5 @@
 .dashboard {
+    min-height: 100vh;
     .content {
         @include media-breakpoint-down(md) {
             padding-top: $mobile-header-h;

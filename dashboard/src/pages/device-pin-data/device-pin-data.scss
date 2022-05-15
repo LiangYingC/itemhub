@@ -1,7 +1,6 @@
 $pin-wh: 48px;
 $pin-option-w: 88px;
 $pin-option-h: 120px;
-$device-option-z-index: 2;
 
 .device-pin-data {
     .microcontroller-img {
@@ -44,7 +43,7 @@ $device-option-z-index: 2;
         height: 0;
         bottom: calc(0% + 1rem + #{$pin-wh});
         left: -15%;
-        z-index: $device-option-z-index;
+        z-index: 1;
         transition: 0.3s ease-in-out;
         > div {
             width: $pin-option-w;

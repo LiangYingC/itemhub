@@ -26,6 +26,7 @@ import esp01s from '@/assets/images/esp-01s.svg';
 import { selectUniversal } from '@/redux/reducers/universal.reducer';
 import { PinItem } from '@/types/devices.type';
 import { selectDevicePins } from '@/redux/reducers/pins.reducer';
+import { DEVICE_MODE } from '@/constants/device-mode';
 
 const DevicePinData = () => {
     const navigate = useNavigate();
@@ -151,11 +152,11 @@ const DevicePinData = () => {
     };
 
     const isSwitch = deviceModes.filter((item) => {
-        return item.key === 'SWITCH';
+        return item.key === DEVICE_MODE.SWITCH;
     })[0]?.value;
 
     const isSensor = deviceModes.filter((item) => {
-        return item.key === 'SENSOR';
+        return item.key === DEVICE_MODE.SENSOR;
     })[0]?.value;
 
     const selectPins = (

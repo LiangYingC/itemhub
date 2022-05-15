@@ -83,8 +83,8 @@ export const useGetDeviceModesApi = () => {
     });
 
     return {
-        gettingDeviceModes: isLoading,
-        gettingDeviceModesErr: error,
+        isLoading,
+        error,
         getDeviceModesApi: fetchApi,
     };
 };

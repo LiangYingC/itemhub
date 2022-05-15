@@ -77,6 +77,7 @@ namespace Homo.IotApi
                     Name = item.Name,
                     Value = item.Value,
                     Mode = item.Mode,
+                    EditedBy = ownerId,
                     EditedAt = DateTime.Now
                 });
             });
@@ -103,6 +104,7 @@ namespace Homo.IotApi
                 && unusedPins.Contains(x.Pin))
             .UpdateFromQuery(x => new DevicePin()
             {
+                EditedBy = ownerId,
                 DeletedAt = DateTime.Now
             });
         }

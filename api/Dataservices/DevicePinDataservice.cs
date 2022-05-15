@@ -106,7 +106,22 @@ namespace Homo.IotApi
                 && x.OwnerId == ownerId
                 && (mode == null || x.Mode == mode)
                 && (pin == null || x.Pin == pin)
-            ).ToList().GroupJoin(
+            )
+            .Join(dbContext.Device, pin => pin.DeviceId, device => device.Id, (pin, device) => new DevicePin()
+            {
+                Id = pin.Id,
+                CreatedAt = pin.CreatedAt,
+                EditedAt = pin.EditedAt,
+                OwnerId = pin.OwnerId,
+                DeletedAt = pin.DeletedAt,
+                Pin = pin.Pin,
+                Mode = pin.Mode,
+                Name = pin.Name,
+                Value = pin.Value,
+                DeviceId = pin.DeviceId,
+                Device = device
+            })
+            .ToList().GroupJoin(
                 dbContext.SensorLog,
                 pin => new { pin.DeviceId, pin.OwnerId, pin.Pin },
                 log => new { log.DeviceId, log.OwnerId, log.Pin },

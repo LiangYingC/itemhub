@@ -15,7 +15,7 @@ $device-option-z-index: 2;
         }
         &.selected {
             .pin-text {
-                background: $success;
+                background: $success !important;
                 color: $white;
             }
             .pin-selector {

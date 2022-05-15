@@ -316,12 +316,10 @@ const Triggers = () => {
                                             <span>觸發名稱</span>
                                         </div>
                                     </label>
-                                    <div className="col-2">來源裝置</div>
-                                    <div className="col-1">來源 Pin</div>
-                                    <div className="col-2">條件</div>
-                                    <div className="col-2">目標裝置</div>
-                                    <div className="col-1">目標 Pin</div>
-                                    <div className="col-1">操作</div>
+                                    <div className="col-3">事件</div>
+                                    <div className="col-3">目標</div>
+                                    <div className="col-1">目標狀態</div>
+                                    <div className="col-2">操作</div>
                                 </div>
                                 <div className="triggers-list">
                                     {triggers.map(
@@ -332,6 +330,7 @@ const Triggers = () => {
                                                 sourceDevice,
                                                 sourcePin,
                                                 destinationDevice,
+                                                destinationDeviceTargetState,
                                                 destinationPin,
                                                 operator,
                                                 sourceThreshold,
@@ -367,10 +366,12 @@ const Triggers = () => {
                                                     <div>{name || '--'}</div>
                                                 </div>
                                                 <div className="d-block d-lg-none col-4 py-3 bg-black bg-opacity-5 text-black text-opacity-45">
-                                                    來源裝置名稱
+                                                    事件
                                                 </div>
-                                                <div className="col-8 col-lg-2 py-3 py-lg-0 lh-base">
-                                                    {sourceDevice?.name}
+                                                <div className="col-8 col-lg-3 py-3 py-lg-0 lh-base">
+                                                    <div>
+                                                        {sourceDevice?.name}
+                                                    </div>
                                                     <div className="mt-2">
                                                         <OnlineStatusTag
                                                             isOnline={
@@ -379,33 +380,32 @@ const Triggers = () => {
                                                             }
                                                         />
                                                     </div>
+                                                    <div className="mt-2">
+                                                        Pin: {sourcePin}
+                                                    </div>
+                                                    <div className="mt-2">
+                                                        條件:{' '}
+                                                        <span className="pe-1">
+                                                            {
+                                                                triggerOperators[
+                                                                    operator
+                                                                ]?.symbol
+                                                            }
+                                                        </span>
+                                                        <span>
+                                                            {sourceThreshold}
+                                                        </span>
+                                                    </div>
                                                 </div>
                                                 <div className="d-block d-lg-none col-4 py-3 bg-black bg-opacity-5 text-black text-opacity-45">
-                                                    來源 Pin
+                                                    目標
                                                 </div>
-                                                <div className="col-8 col-lg-1 py-3 py-lg-0 lh-base">
-                                                    {sourcePin}
-                                                </div>
-                                                <div className="d-block d-lg-none col-4 py-3 bg-black bg-opacity-5 text-black text-opacity-45">
-                                                    條件
-                                                </div>
-                                                <div className="d-flex col-8 col-lg-2 py-3 py-lg-0 lh-base">
-                                                    <span className="pe-1">
+                                                <div className="col-8 col-lg-3 lh-base py-3 py-lg-0">
+                                                    <div>
                                                         {
-                                                            triggerOperators[
-                                                                operator
-                                                            ]?.label
-                                                        }
-                                                    </span>
-                                                    <span>
-                                                        {sourceThreshold}
-                                                    </span>
-                                                </div>
-                                                <div className="d-block d-lg-none col-4 py-3 bg-black bg-opacity-5 text-black text-opacity-45">
-                                                    目標裝置名稱
-                                                </div>
-                                                <div className="col-8 col-lg-2 lh-base py-3 py-lg-0">
-                                                    {destinationDevice?.name}
+                                                            destinationDevice?.name
+                                                        }{' '}
+                                                    </div>
                                                     <div className="mt-2">
                                                         <OnlineStatusTag
                                                             isOnline={
@@ -414,26 +414,35 @@ const Triggers = () => {
                                                             }
                                                         />
                                                     </div>
+
+                                                    <div className="mt-2">
+                                                        Pin: {destinationPin}{' '}
+                                                    </div>
                                                 </div>
+
                                                 <div className="d-block d-lg-none col-4 py-3 bg-black bg-opacity-5 text-black text-opacity-45">
-                                                    目標 Pin
+                                                    目標狀態
                                                 </div>
                                                 <div className="col-8 col-lg-1 lh-base py-3 py-lg-0">
-                                                    {destinationPin}
+                                                    {destinationDeviceTargetState ===
+                                                    1
+                                                        ? '開'
+                                                        : '關'}
                                                 </div>
+
                                                 <div className="d-block d-lg-none col-4 py-3 bg-black bg-opacity-5 text-black text-opacity-45">
                                                     操作
                                                 </div>
-                                                <div className="col-8 col-lg-1 py-3 py-lg-0 d-flex justify-content-start flex-wrap">
+                                                <div className="col-8 col-lg-2 py-3 py-lg-0 d-flex justify-content-start flex-wrap">
                                                     <Link
-                                                        className="me-3 mb-3"
+                                                        className="me-3 mb-3 align-items-start d-flex"
                                                         to={`/dashboard/triggers/edit/${id}`}
                                                         data-tip="編輯"
                                                     >
                                                         <img src={pencilIcon} />
                                                     </Link>
                                                     <button
-                                                        className="btn mb-3 p-0 bg-transparent shadow-none"
+                                                        className="btn mb-3 align-items-start d-flex p-0 bg-transparent shadow-none"
                                                         onClick={() => {
                                                             confirmToDeleteOneTrigger(
                                                                 { id, name }

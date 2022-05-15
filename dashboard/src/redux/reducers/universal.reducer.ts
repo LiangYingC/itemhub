@@ -21,7 +21,25 @@ export const universalSlice = createSlice({
             state,
             action: PayloadAction<TriggerOerator[]>
         ) => {
-            const newTriggerOerators = action.payload;
+            const newTriggerOerators = action.payload.map<TriggerOerator>(
+                (item) => {
+                    return {
+                        ...item,
+                        symbol:
+                            item.key === 'B'
+                                ? '>'
+                                : item.key === 'BE'
+                                ? '>='
+                                : item.key === 'L'
+                                ? '<'
+                                : item.key === 'LE'
+                                ? '<='
+                                : item.key === 'E'
+                                ? '='
+                                : null,
+                    };
+                }
+            );
             return {
                 ...state,
                 triggerOperators: newTriggerOerators,

@@ -14,18 +14,18 @@ import {
     ToasterTypeEnum,
 } from '@/redux/reducers/toaster.reducer';
 import { ArrayHelpers } from '@/helpers/array.helper';
-import { TriggerItem } from '@/types/triggers.type';
+import ReactTooltip from 'react-tooltip';
 import Pagination from '@/components/pagination/pagination';
 import PageTitle from '@/components/page-title/page-title';
 import { dialogActions, DialogTypeEnum } from '@/redux/reducers/dialog.reducer';
 import SearchInput from '@/components/inputs/search-input/search-input';
 import AutocompletedSearch from '@/components/inputs/autocompleted-search/autocompleted-search';
 import EmptyDataToCreateItem from '@/components/empty-data-to-create-item/empty-data-to-create-item';
+import OnlineStatusTag from '@/components/online-status-tag/online-status-tag';
+import Spinner from '@/components/spinner/spinner';
 import lightTrashIcon from '@/assets/images/light-trash.svg';
 import pencilIcon from '@/assets/images/pencil.svg';
 import trashIcon from '@/assets/images/trash.svg';
-import ReactTooltip from 'react-tooltip';
-import Spinner from '@/components/spinner/spinner';
 
 const Triggers = () => {
     const navigate = useNavigate();
@@ -371,6 +371,14 @@ const Triggers = () => {
                                                 </div>
                                                 <div className="col-8 col-lg-2 py-3 py-lg-0 lh-base">
                                                     {sourceDevice?.name}
+                                                    <div className="mt-2">
+                                                        <OnlineStatusTag
+                                                            isOnline={
+                                                                sourceDevice?.online ||
+                                                                false
+                                                            }
+                                                        />
+                                                    </div>
                                                 </div>
                                                 <div className="d-block d-lg-none col-4 py-3 bg-black bg-opacity-5 text-black text-opacity-45">
                                                     來源 Pin
@@ -398,6 +406,14 @@ const Triggers = () => {
                                                 </div>
                                                 <div className="col-8 col-lg-2 lh-base py-3 py-lg-0">
                                                     {destinationDevice?.name}
+                                                    <div className="mt-2">
+                                                        <OnlineStatusTag
+                                                            isOnline={
+                                                                destinationDevice?.online ||
+                                                                false
+                                                            }
+                                                        />
+                                                    </div>
                                                 </div>
                                                 <div className="d-block d-lg-none col-4 py-3 bg-black bg-opacity-5 text-black text-opacity-45">
                                                     目標 Pin

@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { useRef, useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
@@ -10,19 +11,19 @@ import { useDownloadFirmwareApi } from '@/hooks/apis/firmware.hook';
 import { useAppSelector } from '@/hooks/redux.hook';
 import { selectDevices } from '@/redux/reducers/devices.reducer';
 import Pins from '@/components/pins/pins';
-import { RESPONSE_STATUS } from '@/constants/api';
 import PageTitle from '@/components/page-title/page-title';
+import OnlineStatusTag from '@/components/online-status-tag/online-status-tag';
+import { RESPONSE_STATUS } from '@/constants/api';
 import { useDispatch } from 'react-redux';
 import { dialogActions, DialogTypeEnum } from '@/redux/reducers/dialog.reducer';
-import trashIcon from '@/assets/images/trash.svg';
+import { selectUniversal } from '@/redux/reducers/universal.reducer';
 import {
     toasterActions,
     ToasterTypeEnum,
 } from '@/redux/reducers/toaster.reducer';
-import moment from 'moment';
+import trashIcon from '@/assets/images/trash.svg';
 import cloudIcon from '@/assets/images/cloud.svg';
 import compassIcon from '@/assets/images/compass.svg';
-import { selectUniversal } from '@/redux/reducers/universal.reducer';
 
 const Device = () => {
     const { id: idFromUrl } = useParams();
@@ -234,13 +235,7 @@ const Device = () => {
                                 狀態
                             </div>
                             <div className="py-2 px-25">
-                                <div
-                                    className={`tag fs-5 ${
-                                        device.online ? 'tag-green' : 'tag-grey'
-                                    }`}
-                                >
-                                    <div>{device.online ? '上線' : '離線'}</div>
-                                </div>
+                                <OnlineStatusTag isOnline={device.online} />
                             </div>
                         </div>
                         <div className="col-12 col-lg-6 d-flex p-0 item">

@@ -48,7 +48,7 @@ namespace Homo.IotApi
                     return new DeviceInfo()
                     {
                         Name = new DeviceName() { Name = x.Name ?? $"{x.Device.Name} - {x.Pin}" },
-                        Id = $"{x.DeviceId}-{x.Pin}",
+                        Id = id,
                         Traits = x.Mode == DEVICE_MODE.SWITCH ? new List<string>() { "action.devices.traits.OnOff" } :
                             x.Mode == DEVICE_MODE.SENSOR ? new List<string>() { "action.devices.traits.SensorState" } : new List<string>() { "action.devices.traits.OnOff" },
                         Type = x.Mode == DEVICE_MODE.SENSOR ? "action.devices.types.SENSOR" :

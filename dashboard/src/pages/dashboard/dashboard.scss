@@ -1,5 +1,5 @@
 .dashboard {
-    min-height: 100vh;
+    min-height: -webkit-fill-available;
     .content {
         @include media-breakpoint-down(md) {
             padding-top: $mobile-header-h;

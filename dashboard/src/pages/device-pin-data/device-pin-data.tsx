@@ -316,7 +316,6 @@ const DevicePinData = () => {
                             />
                         </div>
                         <div className="mb-4">
-                            {device ? device.microcontroller : 0}
                             <label>裝置類型</label>
                             <select
                                 defaultValue={
@@ -325,7 +324,7 @@ const DevicePinData = () => {
                                 onChange={(e) =>
                                     setMicrocontrollerId(Number(e.target.value))
                                 }
-                                className="form-select"
+                                className="form-select mt-2"
                             >
                                 {microcontrollers.map(({ id, key }) => {
                                     return (

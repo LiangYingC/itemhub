@@ -37,6 +37,7 @@ const Device = () => {
         (devices || []).filter((device) => device.id === Number(id))[0] || null;
 
     const [deviceName, setDeviceName] = useState<string>('');
+    const [microcontrollerName, setMicrocontrollerName] = useState<string>('');
 
     const { isLoading: isGetting, fetchApi: getDeviceApi } = useGetDeviceApi(
         Number(id)
@@ -120,6 +121,18 @@ const Device = () => {
             bundleFirmwareApi();
         }
     }, [shouldBeBundledId]);
+
+    useEffect(() => {
+        if (microcontrollers && device) {
+            microcontrollers.filter((item) => {
+                if (item.id === device.microcontroller) {
+                    setMicrocontrollerName(
+                        item.key.replaceAll('_', ' ').toLowerCase()
+                    );
+                }
+            });
+        }
+    }, [microcontrollers, device]);
 
     useEffect(() => {
         if (errorOfBundle && errorOfBundle.message) {
@@ -242,7 +255,7 @@ const Device = () => {
                             <div className="d-flex fs-5 bg-black bg-opacity-5 text-black text-opacity-45 item-title py-2 px-25">
                                 建立時間
                             </div>
-                            <div className="text-wrap text-black text-opacity-65 py-2 px-25">
+                            <div className="text-break text-black text-opacity-65 py-2 px-25">
                                 {` ${moment(device.createdAt).format(
                                     'YYYY-MM-DD HH:mm'
                                 )}`}
@@ -252,18 +265,15 @@ const Device = () => {
                             <div className="d-flex fs-5 bg-black bg-opacity-5 text-black text-opacity-45 item-title py-2 px-25">
                                 裝置類型
                             </div>
-                            <div className="text-wrap text-black text-opacity-65 py-2 px-25">
-                                {
-                                    microcontrollers[device.microcontroller]
-                                        ?.label
-                                }
+                            <div className="text-break text-black text-opacity-65 py-2 px-25">
+                                {microcontrollerName}
                             </div>
                         </div>
                         <div className="col-12 col-lg-6 d-flex p-0 item">
                             <div className="d-flex fs-5 bg-black bg-opacity-5 text-black text-opacity-45 item-title py-2 px-25">
                                 Pins Data
                             </div>
-                            <div className="text-wrap text-black text-opacity-65 py-2 px-25">
+                            <div className="text-break text-black text-opacity-65 py-2 px-25">
                                 <Pins
                                     deviceId={Number(id)}
                                     isEditMode={false}

@@ -52,5 +52,14 @@ namespace Homo.IotApi
             public string Name { get; set; }
         }
 
+        public partial class DevicePinsData : DTOs
+        {
+            public string Pin { get; set; }
+            public decimal? Value { get; set; }
+            public DEVICE_MODE Mode { get; set; }
+            public string Name { get; set; }
+
+        }
+
     }
 }

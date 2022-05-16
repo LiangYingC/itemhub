@@ -26,12 +26,28 @@ namespace Homo.IotApi
             return DevicePinDataservice.GetAll(_dbContext, ownerId, new List<long>() { id }, null, null);
         }
 
-        [HttpDelete]
-        public ActionResult<dynamic> removeUnusedPins([FromRoute] long id, [FromQuery] string usedPins, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
+        [HttpPost]
+        public ActionResult<dynamic> batchedCreate([FromRoute] long id, [FromBody] List<DTOs.DevicePinsData> dto, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
             long ownerId = extraPayload.Id;
-            List<string> pins = usedPins.Split(",").ToList<string>();
-            DevicePinDataservice.RemoveUnusePins(_dbContext, ownerId, id, pins);
+            DevicePinDataservice.BatchedCreate(_dbContext, id, ownerId, dto);
+            return new { status = CUSTOM_RESPONSE.OK };
+        }
+
+        [HttpPatch]
+        public ActionResult<dynamic> updatePins([FromRoute] long id, [FromBody] List<DTOs.DevicePinsData> dto, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
+        {
+            long ownerId = extraPayload.Id;
+            DevicePinDataservice.BatchedUpdate(_dbContext, id, ownerId, dto);
+            return new { status = CUSTOM_RESPONSE.OK };
+        }
+
+        [HttpDelete]
+        public ActionResult<dynamic> removeUnusedPins([FromRoute] long id, [FromQuery] string pins, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
+        {
+            long ownerId = extraPayload.Id;
+            List<string> listOfPins = pins.Split(",").ToList<string>();
+            DevicePinDataservice.RemoveUnusePins(_dbContext, ownerId, id, listOfPins);
             return new { status = CUSTOM_RESPONSE.OK };
         }
 

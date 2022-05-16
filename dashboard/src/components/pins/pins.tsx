@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useGetDevicePinsApi } from '@/hooks/apis/devices.hook';
+import { useGetDevicePinsApi } from '@/hooks/apis/device.pin.hook';
 import Pin from '@/components/pin/pin';
 
 const Pins = (props: { deviceId: number; isEditMode: boolean }) => {

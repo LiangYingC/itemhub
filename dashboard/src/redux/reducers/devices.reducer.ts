@@ -55,6 +55,19 @@ export const devicesSlice = createSlice({
                 devices,
             };
         },
+        addOne: (state, action: PayloadAction<DeviceItem>) => {
+            let list = state.devices;
+            const newOne = action.payload;
+
+            if (list === null) {
+                list = [];
+            }
+
+            return {
+                ...state,
+                devices: [newOne, ...list],
+            };
+        },
         update: (state, action: PayloadAction<Partial<DeviceItem>>) => {
             const devices = state.devices;
             const newDeviceData = action.payload;
@@ -71,10 +84,7 @@ export const devicesSlice = createSlice({
                 ...newDeviceData,
             };
 
-            return {
-                ...state,
-                devices,
-            };
+            return state;
         },
         deleteMultiple: (state, action: PayloadAction<{ ids: number[] }>) => {
             const devices = state.devices;

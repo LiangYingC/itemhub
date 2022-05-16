@@ -1,6 +1,8 @@
-import { useUpdateDeviceSwitchPinApi } from '@/hooks/apis/devices.hook';
+import {
+    useUpdateDevicePinNameApi,
+    useUpdateDeviceSwitchPinApi,
+} from '@/hooks/apis/device.pin.hook';
 import { useEffect, useState, useRef } from 'react';
-import { useUpdateDevicePinNameApi } from '@/hooks/apis/devices.hook';
 import { useDebounce } from '@/hooks/debounce.hook';
 import { PinItem } from '@/types/devices.type';
 import moment from 'moment';
@@ -25,7 +27,7 @@ const Pin = (props: { pinItem: PinItem; isEditMode: boolean }) => {
         useUpdateDeviceSwitchPinApi({
             deviceId,
             pin,
-            value,
+            value: value || 0,
         });
 
     const { updateDevicePinNameApi, isLoading: isNameUpdating } =

@@ -45,6 +45,44 @@ namespace Homo.IotApi
             return record;
         }
 
+        public static void BatchedCreate(IotDbContext dbContext, long deviceId, long ownerId, List<DTOs.DevicePinsData> listOfDto)
+        {
+            listOfDto.ForEach(dto =>
+            {
+                DevicePin record = new DevicePin();
+                foreach (var propOfDTO in dto.GetType().GetProperties())
+                {
+                    var value = propOfDTO.GetValue(dto);
+                    var prop = record.GetType().GetProperty(propOfDTO.Name);
+                    prop.SetValue(record, value);
+                }
+                record.CreatedAt = DateTime.Now;
+                record.OwnerId = ownerId;
+                record.DeviceId = deviceId;
+                dbContext.DevicePin.Add(record);
+            });
+            dbContext.SaveChanges();
+        }
+
+        public static void BatchedUpdate(IotDbContext dbContext, long deviceId, long ownerId, List<DTOs.DevicePinsData> dto)
+        {
+            dto.ForEach(item =>
+            {
+                dbContext.DevicePin.Where(x =>
+                    x.DeviceId == deviceId
+                    && x.OwnerId == ownerId
+                    && x.Pin == item.Pin
+                ).UpdateFromQuery(x => new DevicePin()
+                {
+                    Name = item.Name,
+                    Value = item.Value,
+                    Mode = item.Mode,
+                    EditedBy = ownerId,
+                    EditedAt = DateTime.Now
+                });
+            });
+        }
+
         public static DevicePin GetOne(IotDbContext dbContext, long id, long ownerId, long deviceId, DEVICE_MODE? mode, string pin)
         {
             return dbContext.DevicePin
@@ -58,15 +96,17 @@ namespace Homo.IotApi
                 ).FirstOrDefault();
         }
 
-        public static void RemoveUnusePins(IotDbContext dbContext, long ownerId, long deviceId, List<string> usedPins)
+        public static void RemoveUnusePins(IotDbContext dbContext, long ownerId, long deviceId, List<string> unusedPins)
         {
             dbContext.DevicePin.Where(x =>
                 x.OwnerId == ownerId
                 && x.DeviceId == deviceId
-                && !usedPins.Contains(x.Pin)).UpdateFromQuery(x => new DevicePinSwitch()
-                {
-                    DeletedAt = DateTime.Now
-                });
+                && unusedPins.Contains(x.Pin))
+            .UpdateFromQuery(x => new DevicePin()
+            {
+                EditedBy = ownerId,
+                DeletedAt = DateTime.Now
+            });
         }
 
         public static void UpdatePinName(IotDbContext dbContext, long ownerId, long deviceId, string pin, string name)

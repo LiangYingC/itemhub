@@ -1,6 +1,8 @@
-import { useUpdateDeviceSwitchPinApi } from '@/hooks/apis/device.pin.hook';
+import {
+    useUpdateDevicePinNameApi,
+    useUpdateDeviceSwitchPinApi,
+} from '@/hooks/apis/device.pin.hook';
 import { useEffect, useState, useRef } from 'react';
-import { useUpdateDevicePinNameApi } from '@/hooks/apis/device.pin.hook';
 import { useDebounce } from '@/hooks/debounce.hook';
 import { PinItem } from '@/types/devices.type';
 import moment from 'moment';

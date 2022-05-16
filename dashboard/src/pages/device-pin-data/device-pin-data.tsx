@@ -243,7 +243,7 @@ const DevicePinData = () => {
                 toasterActions.pushOne({
                     message:
                         '裝置編輯已儲存，請重新打包程式碼並燒錄至裝置內以正常運作',
-                    duration: 10,
+                    duration: 100,
                     type: ToasterTypeEnum.INFO,
                 })
             );

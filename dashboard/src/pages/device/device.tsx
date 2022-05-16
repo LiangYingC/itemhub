@@ -69,7 +69,7 @@ const Device = () => {
     };
 
     const jumpToEditPage = () => {
-        navigate('edit');
+        navigate(`/dashboard/devices/edit/${Number(id)}`);
     };
 
     const bundleFirmware = () => {

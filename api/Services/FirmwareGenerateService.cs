@@ -40,7 +40,9 @@ namespace Homo.IotApi
                 // todo: manually throw a error to error platform
             }
 
-            string mcuName = device.Microcontroller.ToString().ToLower().Replace("_", "-");
+            Microcontroller mcu = MicrocontrollerDataservice.GetOne(dbContext, device.Microcontroller.GetValueOrDefault());
+            string mcuName = mcu.Key.ToString().ToLower().Replace("_", "-");
+
             string microcontrollerFirmwareTemplatePath = $"{firmwareTemplatePath}/{mcuName}";
             string folderName = CryptographicHelper.GetSpecificLengthRandomString(32, true, false);
             string firmwareZipPath = $"{staticPath}/firmware/{folderName}.zip";

@@ -191,10 +191,13 @@ export const useDeleteOauthClients = (ids: number[]) => {
     });
 };
 
-export const useCreateOauthClients = (
-    clientId: string,
-    deviceId: number | null
-) => {
+export const useCreateOauthClients = ({
+    clientId,
+    deviceId,
+}: {
+    clientId: string;
+    deviceId: number | null;
+}) => {
     const dispatch = useAppDispatch();
     const dispatchRefresh = useCallback(
         (response: OauthClient) => {

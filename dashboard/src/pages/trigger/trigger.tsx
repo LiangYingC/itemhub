@@ -99,6 +99,16 @@ const Trigger = () => {
 
     const isLoading = isGettingTrigger || (trigger === null && !isCreateMode);
     const isReadMode = !isCreateMode && !isEditMode && trigger !== null;
+    const breadcrumbsForReadMode = [
+        {
+            label: '觸發列表',
+            pathName: '/dashboard/triggers',
+        },
+        {
+            label: '觸發詳細頁',
+            pathName: location.pathname,
+        },
+    ];
 
     return (
         <div className="trigger" data-testid="trigger">
@@ -109,9 +119,10 @@ const Trigger = () => {
             ) : isReadMode ? (
                 <>
                     <PageTitle
+                        title={triggerName}
+                        breadcrumbs={breadcrumbsForReadMode}
                         titleClickCallback={jumpToListPage}
                         titleBackIconVisible
-                        title={triggerName}
                         primaryButtonVisible
                         primaryButtonWording="編輯"
                         primaryButtonCallback={jumpToEditPage}

@@ -56,7 +56,7 @@ const PageTitle = ({
                         <h3
                             role={titleClickCallback ? 'button' : ''}
                             onClick={titleClickCallback}
-                            className="text-break text-black text-opacity-85 mb-3 mb-sm-0"
+                            className="d-flex align-items-center text-break text-black text-opacity-85 mb-3 mb-sm-0"
                         >
                             <img
                                 className={`icon me-3 ${

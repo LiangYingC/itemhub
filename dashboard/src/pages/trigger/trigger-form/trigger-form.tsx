@@ -107,7 +107,7 @@ const TriggerForm = ({
     ];
 
     return (
-        <div className="trigger-form-wrapper px-3 px-lg-0 mx-auto mt-4 mt-lg-5">
+        <div className="trigger-form-wrapper px-3 px-lg-0 mx-auto mt-4 mt-lg-4">
             <Breadcrumbs breadcrumbs={breadcrumbs} />
             <h3
                 className="title d-flex align-item-center mb-3 mb-lg-4"

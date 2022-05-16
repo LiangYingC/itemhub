@@ -36,6 +36,10 @@ ReactDOM.render(
                     path="dashboard/devices/create"
                     element={<DevicePinData />}
                 />
+                <Route
+                    path="dashboard/devices/edit/:id"
+                    element={<DevicePinData />}
+                />
                 <Route path="dashboard/triggers" element={<Triggers />} />
                 <Route path="dashboard/triggers/create" element={<Trigger />} />
                 <Route

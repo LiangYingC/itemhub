@@ -133,12 +133,24 @@ const OauthClient = () => {
         );
     };
 
+    const breadcrumbs = [
+        {
+            label: 'oAuthClient 列表',
+            pathName: '/dashboard/oauth-clients',
+        },
+        {
+            label: isCreateMode ? '新增' : '編輯',
+            pathName: useLocation().pathname,
+        },
+    ];
+
     return (
         <div className="oauth-client" data-testid="oauth-client">
             <PageTitle
+                title="oAuthClient 詳細內容"
+                breadcrumbs={breadcrumbs}
                 titleClickCallback={backToList}
                 titleBackIconVisible
-                title="oAuthClient 詳細內容"
                 primaryButtonVisible={!isCreateMode}
                 primaryButtonWording="刪除"
                 primaryButtonCallback={deleteClient}

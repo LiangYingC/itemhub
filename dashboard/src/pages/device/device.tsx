@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { useRef, useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import {
     useDeleteDevicesApi,
     useGetDeviceApi,
@@ -211,13 +211,24 @@ const Device = () => {
         );
     };
 
+    const breadcrumbs = [
+        {
+            label: '裝置列表',
+            pathName: '/dashboard/devices',
+        },
+        {
+            label: '裝置詳細頁',
+            pathName: useLocation().pathname,
+        },
+    ];
+
     return (
-        // UI 結構等設計稿後再重構調整
         <div className="device" data-testid="device">
             <PageTitle
+                title={`${deviceName}詳細內容`}
+                breadcrumbs={breadcrumbs}
                 titleClickCallback={backToList}
                 titleBackIconVisible
-                title={`${deviceName}詳細內容`}
                 primaryButtonVisible
                 primaryButtonWording="編輯"
                 primaryButtonCallback={jumpToEditPage}

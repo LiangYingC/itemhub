@@ -342,13 +342,21 @@ const Triggers = () => {
                                                 role="button"
                                                 className="row list border-bottom border-black border-opacity-10 p-0 m-0 py-lg-4 px-lg-3"
                                                 onClick={() => {
-                                                    updateSelectedIds(id);
+                                                    navigate(
+                                                        `/dashboard/triggers/${id}`
+                                                    );
                                                 }}
                                             >
                                                 <div className="d-block d-lg-none py-3 col-4 bg-black bg-opacity-5 text-black text-opacity-45">
                                                     觸發名稱
                                                 </div>
-                                                <div className="col-8 col-lg-3 py-3 py-lg-0 d-flex flex-column flex-lg-row align-items-start">
+                                                <div
+                                                    className="col-8 col-lg-3 py-3 py-lg-0 d-flex flex-column flex-lg-row align-items-start"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        updateSelectedIds(id);
+                                                    }}
+                                                >
                                                     <input
                                                         className="me-3 mt-2"
                                                         type="checkbox"

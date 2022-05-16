@@ -31,7 +31,7 @@ const App = () => {
 
     const token = CookieHelpers.GetCookie({ name: COOKIE_KEY.DASHBOARD_TOKEN });
     if (!token) {
-        location.href = import.meta.env.VITE_WEBSITE_URL;
+        window.location.href = import.meta.env.VITE_WEBSITE_URL;
     }
 
     const { getTriggerOperatorsApi } = useGetTriggerOperatorsApi();

@@ -56,7 +56,7 @@ const PageTitle = ({
                         <h3
                             role={titleClickCallback ? 'button' : ''}
                             onClick={titleClickCallback}
-                            className="text-break text-black text-opacity-85 mb-0"
+                            className="text-break text-black text-opacity-85 mb-3 mb-sm-0"
                         >
                             <img
                                 className={`icon me-3 ${
@@ -67,10 +67,10 @@ const PageTitle = ({
                             {title}
                         </h3>
 
-                        <div className="d-flex">
+                        <div className="d-flex flex-wrap">
                             <button
                                 onClick={thirdlyButtonCallback}
-                                className={`${
+                                className={`mb-3 mb-sm-0 ${
                                     thirdlyButtonVisible ? ' me-3' : 'd-none'
                                 } ${
                                     thirdlyButtonClassName ||
@@ -85,7 +85,7 @@ const PageTitle = ({
                             </button>
                             <button
                                 onClick={secondaryButtonCallback}
-                                className={`${
+                                className={`mb-3 mb-sm-0 ${
                                     secondaryButtonVisible ? ' me-3' : 'd-none'
                                 } ${
                                     secondaryButtonClassName ||
@@ -100,7 +100,7 @@ const PageTitle = ({
                             </button>
                             <button
                                 onClick={primaryButtonCallback}
-                                className={`${
+                                className={`mb-3 mb-sm-0 ${
                                     primaryButtonVisible ? '' : 'd-none'
                                 } ${
                                     primaryButtonClassName || 'btn btn-primary'

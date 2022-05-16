@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '@/hooks/redux.hook';
 import { menuActions, selectMenu } from '@/redux/reducers/menu.reducer';
 import triggerIcon from '@/assets/images/trigger.svg';
@@ -13,6 +13,7 @@ const Header = () => {
     const isOpen = useAppSelector(selectMenu).menu.isOpen;
     const dispatch = useAppDispatch();
     const [menuBlockClassName, setMenuBlockClassName] = useState('d-none');
+    const location = useLocation();
 
     useEffect(() => {
         if (isOpen) {
@@ -23,6 +24,12 @@ const Header = () => {
             }, 500);
         }
     }, [isOpen]);
+
+    useEffect(() => {
+        if (document.body.clientWidth <= 767) {
+            dispatch(menuActions.close());
+        }
+    }, [location]);
 
     const closeMenu = () => {
         dispatch(menuActions.close());

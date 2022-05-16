@@ -11,7 +11,6 @@ export const menuSlice = createSlice({
             return { isOpen: true };
         },
         close: () => {
-            console.log('testing');
             return { isOpen: false };
         },
     },

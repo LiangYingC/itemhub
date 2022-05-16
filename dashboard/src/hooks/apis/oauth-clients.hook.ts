@@ -196,7 +196,7 @@ export const useCreateOauthClients = ({
     deviceId,
 }: {
     clientId: string;
-    deviceId: number | null;
+    deviceId?: number;
 }) => {
     const dispatch = useAppDispatch();
     const dispatchRefresh = useCallback(

@@ -69,7 +69,7 @@ const OauthClient = () => {
         fetchApi: createApi,
         isLoading: isCreating,
         data: createOAuthClientResponse,
-    } = useCreateOauthClients({ clientId, deviceId: null });
+    } = useCreateOauthClients({ clientId });
 
     useEffect(() => {
         if (oauthClient || isDeleting || isCreateMode) {

@@ -23,11 +23,6 @@ namespace Homo.IotApi
         public virtual DbSet<OauthClient> OauthClient { get; set; }
 
         public virtual DbSet<OauthClientRedirectUri> OauthClientRedirectUri { get; set; }
-        /* deprecated start */
-        public virtual DbSet<DevicePinSwitch> DevicePinSwitch { get; set; }
-        public virtual DbSet<DevicePinSensor> DevicePinSensor { get; set; }
-        public virtual DbSet<DevicePinName> DevicePinName { get; set; }
-        /* deprecated end */
 
         public virtual DbSet<DevicePin> DevicePin { get; set; }
         public virtual DbSet<Trigger> Trigger { get; set; }
@@ -70,33 +65,6 @@ namespace Homo.IotApi
                 entity.HasIndex(p => new { p.CreatedAt });
                 entity.HasIndex(p => new { p.DeletedAt });
             });
-
-            /* deprecated start */
-            modelBuilder.Entity<DevicePinSwitch>(entity =>
-            {
-                entity.HasIndex(p => new { p.Pin });
-                entity.HasIndex(p => new { p.Mode });
-                entity.HasIndex(p => new { p.DeviceId });
-                entity.HasIndex(p => new { p.OwnerId });
-                entity.HasOne(p => p.Device).WithMany().HasForeignKey(p => p.DeviceId);
-            });
-
-            modelBuilder.Entity<DevicePinSensor>(entity =>
-            {
-                entity.HasIndex(p => new { p.Pin });
-                entity.HasIndex(p => new { p.Mode });
-                entity.HasIndex(p => new { p.DeviceId });
-                entity.HasIndex(p => new { p.OwnerId });
-                entity.HasOne(p => p.Device).WithMany().HasForeignKey(p => p.DeviceId);
-            });
-
-            modelBuilder.Entity<DevicePinName>(entity =>
-            {
-                entity.HasIndex(p => new { p.Pin });
-                entity.HasIndex(p => new { p.DeviceId });
-                entity.HasIndex(p => new { p.OwnerId });
-            });
-            /* deprecated end */
 
             modelBuilder.Entity<Trigger>(entity =>
             {

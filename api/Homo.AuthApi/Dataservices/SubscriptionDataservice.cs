@@ -39,6 +39,16 @@ namespace Homo.IotApi
             ).OrderByDescending(x => x.Id).FirstOrDefault();
         }
 
+        public static Subscription GetCurrnetOne(IotDbContext dbContext, long? ownerId)
+        {
+            return dbContext.Subscription.Where(x =>
+                (ownerId == null || x.OwnerId == ownerId)
+                && x.DeletedAt == null
+                && x.StartAt <= DateTime.Now
+                && x.EndAt >= DateTime.Now
+            ).OrderByDescending(x => x.Id).FirstOrDefault();
+        }
+
         public static List<Subscription> GetShouldBeAutoPayNextPeriod(IotDbContext dbContext, DateTime nextStartAt)
         {
             DateTime filterStartAt = nextStartAt.AddMonths(-1);

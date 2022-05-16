@@ -16,5 +16,6 @@ namespace Homo.IotApi
         public static string TOO_MANY_REQUEST = "TOO_MANY_REQUEST";
         public static string DEVICE_NOT_FOUND = "DEVICE_NOT_FOUND";
         public static string DEIVCE_WITHOUT_MCU = "DEIVCE_WITHOUT_MCU";
+        public static string OVER_PRICING_PLAN = "OVER_PRICING_PLAN";
     }
 }

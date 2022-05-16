@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAppSelector } from '@/hooks/redux.hook';
-import {
-    useGetAllDevicesApi,
-    useGetDevicePinsApi,
-} from '@/hooks/apis/devices.hook';
+import { useGetAllDevicesApi } from '@/hooks/apis/devices.hook';
+import { useGetDevicePinsApi } from '@/hooks/apis/device.pin.hook';
 import {
     useCreateTriggerApi,
     useUpdateTriggerApi,
@@ -128,6 +126,15 @@ const TriggerForm = ({
                         type="text"
                         id="trigger-name"
                         placeholder="輸入名稱"
+                        value={trigger?.name}
+                        onChange={(e) => {
+                            setEditedTriggerData((prev) => {
+                                return {
+                                    ...prev,
+                                    name: e.target.value,
+                                };
+                            });
+                        }}
                     />
                 </div>
                 <DeviceAndPinInputs
@@ -169,13 +176,15 @@ const TriggerForm = ({
                                 });
                             }}
                         >
-                            {triggerOperators.map(({ key, value, label }) => {
-                                return (
-                                    <option key={key} value={value}>
-                                        {label}
-                                    </option>
-                                );
-                            })}
+                            {triggerOperators.map(
+                                ({ key, value, label, symbol }) => {
+                                    return (
+                                        <option key={key} value={value}>
+                                            {symbol || label}
+                                        </option>
+                                    );
+                                }
+                            )}
                         </select>
                     </div>
                     <div className="form-group w-100 mb-3 ps-md-3">
@@ -220,6 +229,30 @@ const TriggerForm = ({
                         })
                     }
                 />
+                <div className="row">
+                    <label className="col-6">
+                        <div className="mb-1">目標狀態</div>
+                        <select
+                            className="form-select"
+                            value={
+                                editedTriggerData.destinationDeviceTargetState
+                            }
+                            onChange={(e) => {
+                                setEditedTriggerData((prev) => {
+                                    return {
+                                        ...prev,
+                                        destinationDeviceTargetState: parseInt(
+                                            e.target.value
+                                        ),
+                                    };
+                                });
+                            }}
+                        >
+                            <option value="1">開</option>
+                            <option value="0">關</option>
+                        </select>
+                    </label>
+                </div>
                 <div className="d-flex justify-content-end">
                     <button
                         type="button"

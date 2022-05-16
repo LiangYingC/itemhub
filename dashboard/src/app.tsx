@@ -2,8 +2,12 @@ import './app.scss';
 import { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import { useQuery } from './hooks/query.hook';
-import { useGetTriggerOperatorsApi } from '@/hooks/apis/universal.hook';
-import { useGetMicrocontrollersApi } from '@/hooks/apis/universal.hook';
+import {
+    useGetTriggerOperatorsApi,
+    useGetMicrocontrollersApi,
+    useGetDeviceModesApi,
+} from '@/hooks/apis/universal.hook';
+
 import { CookieHelpers } from './helpers/cookie.helper';
 import { COOKIE_KEY } from './constants/cookie-key';
 import Header from './components/header/header';
@@ -27,7 +31,7 @@ const App = () => {
 
     const token = CookieHelpers.GetCookie({ name: COOKIE_KEY.DASHBOARD_TOKEN });
     if (!token) {
-        location.href = import.meta.env.VITE_WEBSITE_URL;
+        window.location.href = import.meta.env.VITE_WEBSITE_URL;
     }
 
     const { getTriggerOperatorsApi } = useGetTriggerOperatorsApi();
@@ -38,6 +42,11 @@ const App = () => {
     const { getMicrocontrollersApi } = useGetMicrocontrollersApi();
     useEffect(() => {
         getMicrocontrollersApi();
+    }, []);
+
+    const { getDeviceModesApi } = useGetDeviceModesApi();
+    useEffect(() => {
+        getDeviceModesApi();
     }, []);
 
     return token ? (

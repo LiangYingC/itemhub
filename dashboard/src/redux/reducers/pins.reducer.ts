@@ -46,11 +46,23 @@ export const pinsSlice = createSlice({
 
             return pins;
         },
+        deleteMultiple: (state, action: PayloadAction<{ pins: string[] }>) => {
+            const deletePayload = action.payload;
+
+            if (state === null) {
+                throw new Error('Can not delete when pins is null.');
+            }
+
+            const newList = state.filter(
+                (item) => deletePayload.pins.indexOf(item.pin) === -1
+            );
+            return newList;
+        },
     },
 });
 
 export const pinsActions = pinsSlice.actions;
 
-export const selectPins = (state: RootState) => state.pins;
+export const selectDevicePins = (state: RootState) => state.pins;
 
 export default pinsSlice.reducer;

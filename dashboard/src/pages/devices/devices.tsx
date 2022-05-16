@@ -21,9 +21,10 @@ import { RESPONSE_STATUS } from '@/constants/api';
 import { useDownloadFirmwareApi } from '@/hooks/apis/firmware.hook';
 import compassIcon from '@/assets/images/compass.svg';
 import stopIcon from '@/assets/images/stop.svg';
-import { dialogActions, DialogTypeEnum } from '@/redux/reducers/dialog.reducer';
 import { useDispatch } from 'react-redux';
+import { dialogActions, DialogTypeEnum } from '@/redux/reducers/dialog.reducer';
 import ReactTooltip from 'react-tooltip';
+import OnlineStatusTag from '@/components/online-status-tag/online-status-tag';
 import Spinner from '@/components/spinner/spinner';
 
 const Devices = () => {
@@ -241,19 +242,9 @@ const Devices = () => {
                                                     狀態
                                                 </div>
                                                 <div className="col-8 col-lg-2 p-3 p-lg-0">
-                                                    <div
-                                                        className={`tag fs-5 ${
-                                                            online
-                                                                ? 'tag-green'
-                                                                : 'tag-grey'
-                                                        }`}
-                                                    >
-                                                        <div>
-                                                            {online
-                                                                ? '上線'
-                                                                : '離線'}
-                                                        </div>
-                                                    </div>
+                                                    <OnlineStatusTag
+                                                        isOnline={online}
+                                                    />
                                                 </div>
                                                 <div className="col-4 d-lg-none bg-black bg-opacity-5 text-black text-opacity-45 p-3">
                                                     建立時間

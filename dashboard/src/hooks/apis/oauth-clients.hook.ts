@@ -87,12 +87,19 @@ export const useGetOauthClientByDeviceId = (deviceId: number) => {
     let apiPath = `${API_URL}${END_POINT.OAUTH_CLIENT_BY_DEVICE_ID}`;
     apiPath = apiPath.replace(':deviceId', deviceId.toString());
 
-    return useFetchApi<OauthClient>({
+    const { isLoading, error, fetchApi, data } = useFetchApi<OauthClient>({
         apiPath,
         method: HTTP_METHOD.GET,
         initialData: null,
         callbackFunc: dispatchRefresh,
     });
+
+    return {
+        isLoading,
+        error,
+        fetchApi,
+        data,
+    };
 };
 
 export const useUpdateOauthClient = ({
@@ -135,10 +142,11 @@ export const useRevokeSecretOauthClient = (id: number) => {
     const dispatch = useAppDispatch();
     const dispatchRefresh = useCallback(
         (data: { status: string; secret: string }) => {
-            if (data.status === RESPONSE_STATUS.OK) {
+            if (data.secret) {
                 dispatch(
                     oauthClientsActions.updateOne({
                         id,
+                        clientSecrets: data.secret,
                     })
                 );
             }
@@ -183,7 +191,10 @@ export const useDeleteOauthClients = (ids: number[]) => {
     });
 };
 
-export const useCreateOauthClients = (clientId: string) => {
+export const useCreateOauthClients = (
+    clientId: string,
+    deviceId: number | null
+) => {
     const dispatch = useAppDispatch();
     const dispatchRefresh = useCallback(
         (response: OauthClient) => {
@@ -199,6 +210,7 @@ export const useCreateOauthClients = (clientId: string) => {
         method: HTTP_METHOD.POST,
         payload: {
             clientId,
+            deviceId,
         },
         initialData: null,
         callbackFunc: dispatchRefresh,

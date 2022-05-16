@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { useRef, useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
@@ -10,19 +11,19 @@ import { useDownloadFirmwareApi } from '@/hooks/apis/firmware.hook';
 import { useAppSelector } from '@/hooks/redux.hook';
 import { selectDevices } from '@/redux/reducers/devices.reducer';
 import Pins from '@/components/pins/pins';
-import { RESPONSE_STATUS } from '@/constants/api';
 import PageTitle from '@/components/page-title/page-title';
+import OnlineStatusTag from '@/components/online-status-tag/online-status-tag';
+import { RESPONSE_STATUS } from '@/constants/api';
 import { useDispatch } from 'react-redux';
 import { dialogActions, DialogTypeEnum } from '@/redux/reducers/dialog.reducer';
-import trashIcon from '@/assets/images/trash.svg';
+import { selectUniversal } from '@/redux/reducers/universal.reducer';
 import {
     toasterActions,
     ToasterTypeEnum,
 } from '@/redux/reducers/toaster.reducer';
-import moment from 'moment';
+import trashIcon from '@/assets/images/trash.svg';
 import cloudIcon from '@/assets/images/cloud.svg';
 import compassIcon from '@/assets/images/compass.svg';
-import { selectUniversal } from '@/redux/reducers/universal.reducer';
 
 const Device = () => {
     const { id: idFromUrl } = useParams();
@@ -36,6 +37,7 @@ const Device = () => {
         (devices || []).filter((device) => device.id === Number(id))[0] || null;
 
     const [deviceName, setDeviceName] = useState<string>('');
+    const [microcontrollerName, setMicrocontrollerName] = useState<string>('');
 
     const { isLoading: isGetting, fetchApi: getDeviceApi } = useGetDeviceApi(
         Number(id)
@@ -119,6 +121,18 @@ const Device = () => {
             bundleFirmwareApi();
         }
     }, [shouldBeBundledId]);
+
+    useEffect(() => {
+        if (microcontrollers && device) {
+            microcontrollers.filter((item) => {
+                if (item.id === device.microcontroller) {
+                    setMicrocontrollerName(
+                        item.key.replaceAll('_', ' ').toLowerCase()
+                    );
+                }
+            });
+        }
+    }, [microcontrollers, device]);
 
     useEffect(() => {
         if (errorOfBundle && errorOfBundle.message) {
@@ -234,20 +248,14 @@ const Device = () => {
                                 狀態
                             </div>
                             <div className="py-2 px-25">
-                                <div
-                                    className={`tag fs-5 ${
-                                        device.online ? 'tag-green' : 'tag-grey'
-                                    }`}
-                                >
-                                    <div>{device.online ? '上線' : '離線'}</div>
-                                </div>
+                                <OnlineStatusTag isOnline={device.online} />
                             </div>
                         </div>
                         <div className="col-12 col-lg-6 d-flex p-0 item">
                             <div className="d-flex fs-5 bg-black bg-opacity-5 text-black text-opacity-45 item-title py-2 px-25">
                                 建立時間
                             </div>
-                            <div className="text-wrap text-black text-opacity-65 py-2 px-25">
+                            <div className="text-break text-black text-opacity-65 py-2 px-25">
                                 {` ${moment(device.createdAt).format(
                                     'YYYY-MM-DD HH:mm'
                                 )}`}
@@ -257,18 +265,15 @@ const Device = () => {
                             <div className="d-flex fs-5 bg-black bg-opacity-5 text-black text-opacity-45 item-title py-2 px-25">
                                 裝置類型
                             </div>
-                            <div className="text-wrap text-black text-opacity-65 py-2 px-25">
-                                {
-                                    microcontrollers[device.microcontroller]
-                                        ?.label
-                                }
+                            <div className="text-break text-black text-opacity-65 py-2 px-25">
+                                {microcontrollerName}
                             </div>
                         </div>
                         <div className="col-12 col-lg-6 d-flex p-0 item">
                             <div className="d-flex fs-5 bg-black bg-opacity-5 text-black text-opacity-45 item-title py-2 px-25">
                                 Pins Data
                             </div>
-                            <div className="text-wrap text-black text-opacity-65 py-2 px-25">
+                            <div className="text-break text-black text-opacity-65 py-2 px-25">
                                 <Pins
                                     deviceId={Number(id)}
                                     isEditMode={false}

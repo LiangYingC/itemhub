@@ -47,10 +47,10 @@ namespace Homo.IotApi
                     string id = $"{x.DeviceId}-{x.Pin}";
                     return new DeviceInfo()
                     {
-                        Name = new DeviceName() { Name = x.Name == null ? id : x.Name },
+                        Name = new DeviceName() { Name = x.Name ?? $"{x.Device.Name} - {x.Pin}" },
                         Id = id,
                         Traits = x.Mode == DEVICE_MODE.SWITCH ? new List<string>() { "action.devices.traits.OnOff" } :
-                        x.Mode == DEVICE_MODE.SENSOR ? new List<string>() { "action.devices.traits.SensorState" } : new List<string>() { "action.devices.traits.OnOff" },
+                            x.Mode == DEVICE_MODE.SENSOR ? new List<string>() { "action.devices.traits.SensorState" } : new List<string>() { "action.devices.traits.OnOff" },
                         Type = x.Mode == DEVICE_MODE.SENSOR ? "action.devices.types.SENSOR" :
                             x.Mode == DEVICE_MODE.SWITCH ? "action.devices.types.SWITCH" : "action.devices.types.SWITCH",
                         WillReportState = true,

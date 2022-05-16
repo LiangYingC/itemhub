@@ -71,9 +71,17 @@ namespace Homo.IotApi
         {
             return _dbContext.Microcontroller.Select(x => new
             {
+                x.Id,
                 x.Key,
-                Pins = Newtonsoft.Json.JsonConvert.DeserializeObject<List<DTOs.Pin>>(x.Pins)
+                Pins = Newtonsoft.Json.JsonConvert.DeserializeObject<List<DTOs.McuPin>>(x.Pins)
             }).ToList();
+        }
+
+        [HttpGet]
+        [Route("device-mode")]
+        public ActionResult<dynamic> getDeviceMode()
+        {
+            return ConvertHelper.EnumToList(typeof(DEVICE_MODE));
         }
     }
 }

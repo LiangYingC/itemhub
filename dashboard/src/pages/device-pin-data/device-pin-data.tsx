@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import {
     useCreateDeviceApi,
     useGetDeviceApi,
@@ -292,10 +292,21 @@ const DevicePinData = () => {
         }
     }, [createDevicePinResponse]);
 
+    const breadcrumbs = [
+        {
+            label: '裝置列表',
+            pathName: '/dashboard/devices',
+        },
+        {
+            label: isCreateMode ? '新增' : '編輯',
+            pathName: useLocation().pathname,
+        },
+    ];
+
     return (
-        // UI 結構等設計稿後再重構調整
         <div className="device-pin-data" data-testid="device-pin-data">
             <PageTitle
+                breadcrumbs={breadcrumbs}
                 titleClickCallback={back}
                 titleBackIconVisible
                 title={isCreateMode ? '新增裝置' : '編輯裝置'}

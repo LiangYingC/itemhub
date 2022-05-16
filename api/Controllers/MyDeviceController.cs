@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using System;
 using Homo.Api;
 using Homo.Core.Constants;
+using Homo.AuthApi;
 
 
 namespace Homo.IotApi
@@ -15,10 +16,15 @@ namespace Homo.IotApi
     {
         private readonly IotDbContext _dbContext;
         private readonly string _dbConnectionString;
-        public MyDeviceController(IotDbContext dbContext, IOptions<AppSettings> appSettings)
+        private readonly Homo.Api.CommonLocalizer _commonLocalizer;
+        private readonly string _adminEmail;
+        public MyDeviceController(IotDbContext dbContext, IOptions<AppSettings> appSettings, Homo.Api.CommonLocalizer commonLocalizer)
         {
             _dbContext = dbContext;
             _dbConnectionString = appSettings.Value.Secrets.DBConnectionString;
+            _commonLocalizer = commonLocalizer;
+            _adminEmail = appSettings.Value.Common.AdminEmail;
+
         }
 
         [HttpGet]
@@ -45,6 +51,30 @@ namespace Homo.IotApi
         public ActionResult<dynamic> create([FromBody] DTOs.DevicePayload dto, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
             long ownerId = extraPayload.Id;
+            Subscription subscription = SubscriptionDataservice.GetCurrnetOne(_dbContext, ownerId);
+            decimal deviceCountInPricingPlan = SubscriptionHelper.GetDeviceCount((PRICING_PLAN)subscription.PricingPlan);
+            decimal currentDeviceCount = DeviceDataservice.GetRowNum(_dbContext, ownerId, null);
+
+
+            if (currentDeviceCount + 1 > deviceCountInPricingPlan)
+            {
+                var pricingPlans = ConvertHelper.EnumToList(typeof(PRICING_PLAN));
+                string reason = "";
+                if (subscription.PricingPlan + 1 > pricingPlans.Count)
+                {
+                    reason = _commonLocalizer.Get("moreThanMaxNumberOfDeviceInAnyPlan", null, new Dictionary<string, string>() { { "adminEmail", _adminEmail } });
+                }
+                else
+                {
+                    decimal deviceCountInNextLevelPricingPlan = SubscriptionHelper.GetDeviceCount((PRICING_PLAN)subscription.PricingPlan + 1);
+                    reason = _commonLocalizer.Get("moreThanMaxNumberOfDevice", null, new Dictionary<string, string>() { { "deviceCountInNextLevelPricingPlan", deviceCountInNextLevelPricingPlan.ToString() } });
+                }
+
+                throw new CustomException(ERROR_CODE.OVER_PRICING_PLAN, System.Net.HttpStatusCode.Forbidden, new Dictionary<string, string>(){{
+                    "reason", reason
+                }});
+            }
+
             Device rewRecord = DeviceDataservice.Create(_dbContext, ownerId, dto);
             return rewRecord;
         }

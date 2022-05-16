@@ -33,9 +33,7 @@ namespace Homo.IotApi
             IotDbContext _iotDbContext = new IotDbContext(iotBuilder.Options);
             DBContext dbContext = new DBContext(dbContextBuilder.Options);
 
-
-
-            var checkData = _iotDbContext.DevicePinSensor
+            var checkData = _iotDbContext.DevicePin
                 .Where(x => x.DeletedAt == null && x.DeviceId == deviceId)
                 .OrderByDescending(x => x.CreatedAt)
                 .Take(1)

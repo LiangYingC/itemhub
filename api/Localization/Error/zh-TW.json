@@ -33,5 +33,6 @@
     "TOO_MANY_REQUEST": "送 Request 頻率太高, 已經超越你所訂閱的方案",
     "DEVICE_OAUTH_CLIENT_EXISTS": "你新增的 Client 已經存在, 請先將裝置的 Client 刪除再重新新增",
     "DEVICE_NOT_FOUND": "找不到裝置",
-    "DEIVCE_WITHOUT_MCU": "裝置未設定是哪種類型的 MCU"
+    "DEIVCE_WITHOUT_MCU": "裝置未設定是哪種類型的 MCU",
+    "OVER_PRICING_PLAN": "超過訂閱方案: {reason}"
 }

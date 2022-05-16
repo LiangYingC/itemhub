@@ -1,11 +1,34 @@
-import { useAppDispatch, useAppSelector } from '@/hooks/redux.hook';
-import { menuActions, selectMenu } from '@/redux/reducers/menu.reducer';
+import Breadcrumbs from '@/components/breadcrumbs/breadcrumbs';
 import refreshIcon from '/src/assets/images/icon-refresh.svg';
 import plusIcon from '/src/assets/images/icon-plus.svg';
 import leftArrowIcon from '/src/assets/images/left-arrow.svg';
 
-const PageTitle = (props: {
+const PageTitle = ({
+    title,
+    breadcrumbs,
+    titleClickCallback,
+    titleBackIconVisible,
+    primaryButtonVisible,
+    secondaryButtonVisible,
+    thirdlyButtonVisible,
+    primaryButtonCallback,
+    primaryButtonWording,
+    secondaryButtonCallback,
+    secondaryButtonWording,
+    thirdlyButtonCallback,
+    thirdlyButtonWording,
+    primaryButtonIcon,
+    primaryButtonClassName,
+    secondaryButtonClassName,
+    secondaryButtonIcon,
+    thirdlyButtonClassName,
+    thirdlyButtonIcon,
+}: {
     title: string;
+    breadcrumbs?: {
+        label: string;
+        pathName: string;
+    }[];
     titleClickCallback?: () => void;
     titleBackIconVisible?: boolean;
     primaryButtonVisible?: boolean;
@@ -24,36 +47,16 @@ const PageTitle = (props: {
     thirdlyButtonIcon?: string;
     thirdlyButtonClassName?: string;
 }) => {
-    const {
-        title,
-        titleClickCallback,
-        titleBackIconVisible,
-        primaryButtonVisible,
-        secondaryButtonVisible,
-        thirdlyButtonVisible,
-        primaryButtonCallback,
-        primaryButtonWording,
-        secondaryButtonCallback,
-        secondaryButtonWording,
-        thirdlyButtonCallback,
-        thirdlyButtonWording,
-        primaryButtonIcon,
-        primaryButtonClassName,
-        secondaryButtonClassName,
-        secondaryButtonIcon,
-        thirdlyButtonClassName,
-        thirdlyButtonIcon,
-    } = props;
-
     return (
         <div className="page-title" data-testid="page-title">
             <div className="w-100 px-45 pt-45 mb-45">
                 <div className="flex-fill">
+                    {breadcrumbs && <Breadcrumbs breadcrumbs={breadcrumbs} />}
                     <div className="d-flex align-items-start justify-content-between flex-wrap">
                         <h3
                             role={titleClickCallback ? 'button' : ''}
                             onClick={titleClickCallback}
-                            className="text-break text-black text-opacity-85 mb-3 mb-sm-0"
+                            className="d-flex align-items-center text-break text-black text-opacity-85 mb-3 mb-sm-0"
                         >
                             <img
                                 className={`icon me-3 ${

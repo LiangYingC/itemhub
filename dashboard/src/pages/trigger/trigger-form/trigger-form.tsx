@@ -25,6 +25,7 @@ const TriggerForm = ({
     const { triggerOperators } = useAppSelector(selectUniversal);
 
     const [editedTriggerData, setEditedTriggerData] = useState({
+        name: trigger?.name || '',
         sourceDeviceId: trigger?.sourceDeviceId || 0,
         sourcePin: trigger?.sourcePin || '',
         sourceThreshold: trigger?.sourceThreshold || '',

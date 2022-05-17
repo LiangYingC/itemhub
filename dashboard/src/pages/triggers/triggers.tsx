@@ -341,11 +341,6 @@ const Triggers = () => {
                                                 key={`${id}-${index}`}
                                                 role="button"
                                                 className="row list border-bottom border-black border-opacity-10 p-0 m-0 py-lg-4 px-lg-3"
-                                                onClick={() => {
-                                                    navigate(
-                                                        `/dashboard/triggers/${id}`
-                                                    );
-                                                }}
                                             >
                                                 <div className="d-block d-lg-none py-3 col-4 bg-black bg-opacity-5 text-black text-opacity-45">
                                                     觸發名稱
@@ -446,7 +441,7 @@ const Triggers = () => {
                                                     onClick={(e) => {
                                                         e.stopPropagation();
                                                         navigate(
-                                                            `/dashboard/triggers/edit/${id}`
+                                                            `/dashboard/triggers/${id}`
                                                         );
                                                     }}
                                                     data-tip="編輯"

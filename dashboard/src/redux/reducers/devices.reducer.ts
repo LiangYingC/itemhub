@@ -70,21 +70,26 @@ export const devicesSlice = createSlice({
         },
         update: (state, action: PayloadAction<Partial<DeviceItem>>) => {
             const devices = state.devices;
+
             const newDeviceData = action.payload;
 
             if (devices === null) {
                 throw new Error('Can not updateDevice when devices is null.');
             }
 
-            const targetIndex = devices.findIndex(
+            const newDevices = [...devices];
+            const targetIndex = newDevices.findIndex(
                 ({ id }) => id === newDeviceData.id
             );
-            devices[targetIndex] = {
-                ...devices[targetIndex],
+            newDevices[targetIndex] = {
+                ...newDevices[targetIndex],
                 ...newDeviceData,
             };
 
-            return state;
+            return {
+                ...state,
+                devices: newDevices,
+            };
         },
         deleteMultiple: (state, action: PayloadAction<{ ids: number[] }>) => {
             const devices = state.devices;

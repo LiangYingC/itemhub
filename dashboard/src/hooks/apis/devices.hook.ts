@@ -166,7 +166,7 @@ export const useBundleFirmwareApi = ({ id }: { id: number }) => {
     let apiPath = `${API_URL}${END_POINT.DEVICE_BUNDLE_FIRMWARE}`;
     apiPath = apiPath.replace(':id', id.toString());
 
-    const { isLoading, error, data, fetchApi } = useFetchApi<{
+    const { isLoading, error, data, fetchApi, httpStatus } = useFetchApi<{
         bundleId: string;
     }>({
         apiPath,
@@ -179,6 +179,7 @@ export const useBundleFirmwareApi = ({ id }: { id: number }) => {
         error,
         fetchApi,
         data,
+        httpStatus,
     };
 };
 

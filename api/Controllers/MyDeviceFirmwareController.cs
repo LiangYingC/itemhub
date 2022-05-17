@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using System;
+using Microsoft.Net.Http.Headers;
+using System.IO;
 using Homo.Api;
 using Homo.Core.Constants;
 using Homo.Core.Helpers;
@@ -62,12 +63,16 @@ namespace Homo.IotApi
             FirmwareBundleLogDataservice.Create(_dbContext, extraPayload.Id, id, randomBundleId);
 
             // pass client id, client secrets and bundle id to asyn bundle firmware function
-            var task = System.Threading.Tasks.Task.Run(async () =>
-            {
-                FirmwareGenerateService.Generate(_dbc, _firmwareTemplatePath, _staticPath, id, extraPayload.Id, randomClientId, clientSecret, randomBundleId, dto.ZipPassword);
-            });
+            string bundleName = FirmwareGenerateService.Generate(_dbc, _firmwareTemplatePath, _staticPath, id, extraPayload.Id, randomClientId, clientSecret, randomBundleId, dto.ZipPassword);
 
-            return new { bundleId = randomBundleId };
+            Response.Headers.Add("Access-Control-Expose-Headers", "Content-Disposition");
+            var buffer = System.IO.File.ReadAllBytes($"{_staticPath}/firmware/{bundleName}.zip");
+            MemoryStream stream = new MemoryStream(buffer);
+            stream.Seek(0, SeekOrigin.Begin);
+            FileStreamResult result;
+            result = new FileStreamResult(stream, new MediaTypeHeaderValue("application/zip"));
+            result.FileDownloadName = $"{device.Name ?? randomBundleId}.zip";
+            return result;
         }
 
     }

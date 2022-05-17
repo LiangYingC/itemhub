@@ -14,7 +14,7 @@ namespace Homo.IotApi
     public class FirmwareController : ControllerBase
     {
         private readonly IotDbContext _dbContext;
-        readonly string _staticPath;
+        private readonly string _staticPath;
         public FirmwareController(IotDbContext dbContext, IOptions<AppSettings> appSettings, Homo.Api.CommonLocalizer commonLocalizer)
         {
             _dbContext = dbContext;

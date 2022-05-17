@@ -36,15 +36,16 @@ export const triggersSlice = createSlice({
                 };
             }
 
-            const targetIndex = triggers.findIndex(
+            const newTriggers = [...triggers];
+            const targetIndex = newTriggers.findIndex(
                 (trigger) => trigger.id === newTrigger.id
             );
-            triggers[targetIndex] = {
+            newTriggers[targetIndex] = {
                 ...newTrigger,
             };
             return {
                 ...state,
-                triggers,
+                triggers: newTriggers,
             };
         },
         addTrigger: (state, action: PayloadAction<TriggerItem>) => {
@@ -57,7 +58,7 @@ export const triggersSlice = createSlice({
 
             return {
                 ...state,
-                oauthClients: [newTrigger, ...triggers],
+                triggers: [newTrigger, ...triggers],
             };
         },
         updateTrigger: (state, action: PayloadAction<Partial<TriggerItem>>) => {
@@ -68,15 +69,19 @@ export const triggersSlice = createSlice({
                 throw new Error('Can not updateTrigger when triggers is null.');
             }
 
-            const targetIndex = triggers.findIndex(
+            const newTriggers = [...triggers];
+            const targetIndex = newTriggers.findIndex(
                 (trigger) => trigger.id === newTrigger.id
             );
-            triggers[targetIndex] = {
+            newTriggers[targetIndex] = {
                 ...triggers[targetIndex],
                 ...newTrigger,
             };
 
-            return state;
+            return {
+                ...state,
+                triggers: newTriggers,
+            };
         },
         deleteTriggers: (state, action: PayloadAction<number[]>) => {
             const triggers = state.triggers;

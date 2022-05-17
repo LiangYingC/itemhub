@@ -62,7 +62,7 @@ const Toaster = () => {
                             item.isShow ? 'mt-3' : 'mt-0'
                         } rounded-2 px-3 overflow-hidden toaster position-relative text-white d-flex justify-content-between align-items-center ${
                             item.type === ToasterTypeEnum.INFO
-                                ? 'bg-success'
+                                ? 'bg-dark-green'
                                 : item.type === ToasterTypeEnum.WARN
                                 ? 'bg-warn'
                                 : item.type === ToasterTypeEnum.ERROR
@@ -71,11 +71,12 @@ const Toaster = () => {
                         } ${item.isShow ? 'show' : ''}`}
                         key={item.id}
                     >
-                        <div className="py-2">{item.message}</div>
+                        <div className="py-2 pe-4">{item.message}</div>
                         <div
                             onClick={() => {
                                 close(item);
                             }}
+                            className="position-absolute top-0 end-0 me-3 mt-2"
                         >
                             <img src={iconCloseSrc} />
                         </div>

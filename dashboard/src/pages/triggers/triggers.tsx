@@ -271,6 +271,7 @@ const Triggers = () => {
                                 <AutocompletedSearch
                                     datalistId="sourceDevice"
                                     placeholder="來源裝置篩選"
+                                    disabled={false}
                                     currentValue={sourceDeviceNameFilter}
                                     updateCurrentValue={(newValue) => {
                                         setSourceDeviceNameFilter(newValue);
@@ -284,6 +285,7 @@ const Triggers = () => {
                                 <AutocompletedSearch
                                     datalistId="destinationDevice"
                                     placeholder="目標裝置篩選"
+                                    disabled={false}
                                     currentValue={destinationDeviceNameFilter}
                                     updateCurrentValue={(newValue) => {
                                         setDestinationDeviceNameFilter(
@@ -305,7 +307,7 @@ const Triggers = () => {
                         ) : (
                             <div className="mt-3 mt-sm-45">
                                 <div className="row py-25 px-3 m-0 bg-black bg-opacity-5 fs-5 text-black text-opacity-45 d-none d-lg-flex">
-                                    <label className="col-3" role="button">
+                                    <label className="col-4" role="button">
                                         <div className="d-flex align-items-center">
                                             <input
                                                 type="checkbox"
@@ -318,7 +320,6 @@ const Triggers = () => {
                                     </label>
                                     <div className="col-3">事件</div>
                                     <div className="col-3">目標</div>
-                                    <div className="col-1">目標狀態</div>
                                     <div className="col-2">操作</div>
                                 </div>
                                 <div className="triggers-list">
@@ -346,7 +347,7 @@ const Triggers = () => {
                                                     觸發名稱
                                                 </div>
                                                 <div
-                                                    className="col-8 col-lg-3 py-3 py-lg-0 d-flex flex-column flex-lg-row align-items-start"
+                                                    className="col-8 col-lg-4 py-3 py-lg-0 d-flex flex-column flex-lg-row align-items-start"
                                                     onClick={(e) => {
                                                         e.stopPropagation();
                                                         updateSelectedIds(id);
@@ -421,16 +422,14 @@ const Triggers = () => {
                                                     <div className="mt-2">
                                                         Pin: {destinationPin}{' '}
                                                     </div>
-                                                </div>
 
-                                                <div className="d-block d-lg-none col-4 py-3 bg-black bg-opacity-5 text-black text-opacity-45">
-                                                    目標狀態
-                                                </div>
-                                                <div className="col-8 col-lg-1 lh-base py-3 py-lg-0">
-                                                    {destinationDeviceTargetState ===
-                                                    1
-                                                        ? '開'
-                                                        : '關'}
+                                                    <div className="mt-2">
+                                                        目標狀態:{' '}
+                                                        {destinationDeviceTargetState ===
+                                                        1
+                                                            ? '開'
+                                                            : '關'}
+                                                    </div>
                                                 </div>
 
                                                 <div className="d-block d-lg-none col-4 py-3 bg-black bg-opacity-5 text-black text-opacity-45">

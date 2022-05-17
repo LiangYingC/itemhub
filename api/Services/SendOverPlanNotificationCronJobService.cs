@@ -21,6 +21,8 @@ namespace Homo.IotApi
         private readonly string _websiteUrl;
         private readonly string _adminEmail;
 
+        private readonly string _staticPath;
+
         public SendOverPlanNotificationCronJobService(IScheduleConfig<SendOverPlanNotificationCronJobService> config, IServiceProvider serviceProvider, Microsoft.AspNetCore.Hosting.IWebHostEnvironment env, IOptions<AppSettings> appSettings, Homo.Api.CommonLocalizer commonLocalizer)
             : base(config.CronExpression, config.TimeZoneInfo, serviceProvider)
         {
@@ -31,6 +33,7 @@ namespace Homo.IotApi
             _sendGridApiKey = appSettings.Value.Secrets.SendGridApiKey;
             _websiteUrl = appSettings.Value.Common.WebsiteUrl;
             _adminEmail = appSettings.Value.Common.AdminEmail;
+            _staticPath = appSettings.Value.Common.StaticPath;
         }
 
         public override Task StartAsync(CancellationToken cancellationToken)
@@ -97,7 +100,7 @@ namespace Homo.IotApi
                         btn = "mailContentOverPlanBtn";
                     }
 
-                    MailTemplate template = MailTemplateHelper.Get(MAIL_TEMPLATE.OVER_SUBSCRIPTION);
+                    MailTemplate template = MailTemplateHelper.Get(MAIL_TEMPLATE.OVER_SUBSCRIPTION, _staticPath);
                     template = MailTemplateHelper.ReplaceVariable(template, new
                     {
                         websiteUrl = _websiteUrl,

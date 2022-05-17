@@ -33,6 +33,7 @@ namespace Homo.AuthApi
         private readonly string _googleClientSecret;
         private readonly string _lineClientSecret;
         private readonly string _adminEmail;
+        private readonly string _staticPath;
         public AuthVerifyEmailController(DBContext dbContext, IOptions<AppSettings> appSettings, Microsoft.AspNetCore.Hosting.IWebHostEnvironment env, Homo.Api.CommonLocalizer commonLocalizer)
         {
             Secrets secrets = (Secrets)appSettings.Value.Secrets;
@@ -51,6 +52,7 @@ namespace Homo.AuthApi
             _googleClientSecret = secrets.GoogleClientSecret;
             _lineClientSecret = secrets.LineClientSecret;
             _adminEmail = common.AdminEmail;
+            _staticPath = common.StaticPath;
         }
 
 
@@ -90,7 +92,7 @@ namespace Homo.AuthApi
                 Ip = ip
             });
 
-            MailTemplate template = MailTemplateHelper.Get(MAIL_TEMPLATE.VERIFY_EMAIL);
+            MailTemplate template = MailTemplateHelper.Get(MAIL_TEMPLATE.VERIFY_EMAIL, _staticPath);
             template = MailTemplateHelper.ReplaceVariable(template, new
             {
                 websiteUrl = _websiteUrl,
@@ -121,7 +123,7 @@ namespace Homo.AuthApi
             string token = JWTHelper.GenerateToken(_verifyPhoneJwtKey, 60 * 24 * 7, new { Id = user.Id, Email = user.Email, IsEarlyBird = true }, null);
 
             DateTime expirationTime = DateTime.Now.ToUniversalTime().AddMinutes(60 * 24 * 7);
-            MailTemplate template = MailTemplateHelper.Get(MAIL_TEMPLATE.EARLY_BIRD_REGISTER);
+            MailTemplate template = MailTemplateHelper.Get(MAIL_TEMPLATE.EARLY_BIRD_REGISTER, _staticPath);
             template = MailTemplateHelper.ReplaceVariable(template, new
             {
                 websiteUrl = _websiteUrl,

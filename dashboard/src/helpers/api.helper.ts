@@ -7,6 +7,13 @@ import {
     FetchErrorResult,
 } from '@/types/helpers.type';
 import { COOKIE_KEY } from '@/constants/cookie-key';
+import {
+    toasterActions,
+    ToasterTypeEnum,
+} from '@/redux/reducers/toaster.reducer';
+import { useDispatch } from 'react-redux';
+import store, { AppDispatch } from '@/redux/store';
+import { configureStore } from '@reduxjs/toolkit';
 
 export const ApiHelpers = {
     SendRequestWithToken: <T>({
@@ -111,6 +118,15 @@ export const ApiHelpers = {
                         },
                     };
                 }
+
+                store.dispatch(
+                    toasterActions.pushOne({
+                        message: errorResult.data.message,
+                        duration: 10,
+                        type: ToasterTypeEnum.ERROR,
+                    })
+                );
+
                 return reject(errorResult);
             }
 

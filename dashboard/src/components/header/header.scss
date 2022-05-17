@@ -97,6 +97,10 @@ $nav-item-height: 20px;
         background-color: transparent;
         z-index: $nav-z-index;
 
+        &.close {
+            width: 0;
+        }
+
         .logo-block {
             position: fixed;
             width: 100%;

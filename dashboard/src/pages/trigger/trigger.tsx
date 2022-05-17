@@ -257,7 +257,7 @@ const Trigger = () => {
                         <label className="mb-1">來源裝置門檻</label>
                         <input
                             className="form-control"
-                            type="text"
+                            type="number"
                             disabled={isReadMode}
                             placeholder="設定裝置條件"
                             value={editedTriggerData.sourceThreshold}

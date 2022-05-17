@@ -109,7 +109,7 @@ const TriggerForm = ({
             dispatch(
                 toasterActions.pushOne({
                     message: '編輯成功',
-                    duration: 10,
+                    duration: 5,
                     type: ToasterTypeEnum.INFO,
                 })
             );

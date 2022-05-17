@@ -7,7 +7,6 @@ import {
     useUpdateDeviceApi,
     useBundleFirmwareApi,
 } from '@/hooks/apis/devices.hook';
-import { useDownloadFirmwareApi } from '@/hooks/apis/firmware.hook';
 import { useAppSelector } from '@/hooks/redux.hook';
 import { selectDevices } from '@/redux/reducers/devices.reducer';
 import Pins from '@/components/pins/pins';
@@ -46,11 +45,6 @@ const Device = () => {
     const [downloadIcon, setDownloaIcon] = useState<string>(cloudIcon);
     const [isFirmwarePrepare, setIsFirmwarePrepare] = useState(false);
     const [shouldBeBundledId, setShouldBeBundledId] = useState(0);
-    const [downloadBundleId, setDownloadBundleId] = useState('');
-    const retryDownloadFirmwareCountRef = useRef(0);
-    const retryDownloadFirmwareLimit = 10;
-    const [retryDownloadFirmwareFlag, setRetryDownloadFirmwareFlag] =
-        useState(false);
     const { microcontrollers } = useAppSelector(selectUniversal);
 
     const { updateDeviceApi, isLoading: isUpdating } = useUpdateDeviceApi({
@@ -83,14 +77,9 @@ const Device = () => {
     const {
         fetchApi: bundleFirmwareApi,
         error: errorOfBundle,
+        httpStatus: bundleFirmwareHttpStatus,
         data: responseOfBundle,
     } = useBundleFirmwareApi({ id: shouldBeBundledId });
-
-    const {
-        fetchApi: downloadFirmwareApi,
-        httpStatus: downloadFirmwareHttpStatus,
-        data: responseOfDownloadFirmware,
-    } = useDownloadFirmwareApi({ bundleId: downloadBundleId });
 
     useEffect(() => {
         if (device === null) {
@@ -135,57 +124,8 @@ const Device = () => {
     }, [microcontrollers, device]);
 
     useEffect(() => {
-        if (errorOfBundle && errorOfBundle.message) {
-            alert(errorOfBundle.message);
-            setIsFirmwarePrepare(false);
-            return;
-        }
-        if (responseOfBundle?.bundleId) {
-            setIsFirmwarePrepare(true);
-            setDownloadBundleId(responseOfBundle.bundleId);
-        }
+        setIsFirmwarePrepare(false);
     }, [responseOfBundle, errorOfBundle]);
-
-    useEffect(() => {
-        if (downloadBundleId) {
-            downloadFirmwareApi();
-        }
-    }, [downloadBundleId, retryDownloadFirmwareFlag]);
-
-    useEffect(() => {
-        if (downloadFirmwareHttpStatus === 204) {
-            retryDownloadFirmwareCountRef.current += 1;
-            if (
-                retryDownloadFirmwareCountRef.current >
-                retryDownloadFirmwareLimit
-            ) {
-                alert(
-                    '伺服器目前過於忙碌, 已經超過預期打包的時間, 請稍候再嘗試下載'
-                );
-                retryDownloadFirmwareCountRef.current = 0;
-                setIsFirmwarePrepare(false);
-                setDownloaIcon(cloudIcon);
-                setShouldBeBundledId(0);
-                return;
-            }
-            setTimeout(() => {
-                setRetryDownloadFirmwareFlag(!retryDownloadFirmwareFlag);
-            }, 3000);
-        } else if (downloadFirmwareHttpStatus === 200) {
-            setIsFirmwarePrepare(false);
-            setDownloaIcon(cloudIcon);
-            setShouldBeBundledId(0);
-            retryDownloadFirmwareCountRef.current = 0;
-
-            dispatch(
-                toasterActions.pushOne({
-                    message: '程式碼已成功打包下載',
-                    duration: 5,
-                    type: ToasterTypeEnum.INFO,
-                })
-            );
-        }
-    }, [responseOfDownloadFirmware]);
 
     const deleteDevice = () => {
         dispatch(

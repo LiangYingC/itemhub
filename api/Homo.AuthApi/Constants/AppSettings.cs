@@ -23,7 +23,6 @@ namespace Homo.AuthApi
         public string SmsPassword { get; set; }
         public string DashboardJwtKey { get; set; }
 
-
     }
 
     public class Common : Homo.Api.ICommon
@@ -39,5 +38,6 @@ namespace Homo.AuthApi
         public string Pkcs1PublicKeyPath { get; set; }
         public string SmsClientUrl { get; set; }
         public string AdminEmail { get; set; }
+        public string StaticPath { get; set; }
     }
 }

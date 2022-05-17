@@ -23,6 +23,7 @@ namespace Homo.AuthApi
         private readonly string _sendGridApiKey;
         private readonly string _websiteUrl;
         private readonly string _adminEmail;
+        private readonly string _staticPath;
 
         public AuthTwoFactorController(
             DBContext dbContext
@@ -38,6 +39,7 @@ namespace Homo.AuthApi
             _sendGridApiKey = secrets.SendGridApiKey;
             _websiteUrl = appSettings.Value.Common.WebsiteUrl;
             _adminEmail = appSettings.Value.Common.AdminEmail;
+            _staticPath = appSettings.Value.Common.StaticPath;
         }
 
         [Route("send-two-factor-auth-mail")]
@@ -60,7 +62,7 @@ namespace Homo.AuthApi
                 Expiration = System.DateTime.Now.AddMinutes(5)
             });
 
-            MailTemplate template = MailTemplateHelper.Get(MAIL_TEMPLATE.TWO_FACTOR_AUTH);
+            MailTemplate template = MailTemplateHelper.Get(MAIL_TEMPLATE.TWO_FACTOR_AUTH, _staticPath);
             template = MailTemplateHelper.ReplaceVariable(template, new
             {
                 websiteUrl = _websiteUrl,

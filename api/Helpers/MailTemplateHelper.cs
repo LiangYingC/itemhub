@@ -6,43 +6,43 @@ namespace api.Helpers
 {
     public class MailTemplateHelper
     {
-        public static MailTemplate Get(MAIL_TEMPLATE key)
+        public static MailTemplate Get(MAIL_TEMPLATE key, string staticPath)
         {
             string filePath = "";
             string subject = "";
             if (key == MAIL_TEMPLATE.VERIFY_EMAIL)
             {
-                filePath = "static/email/verify-email.html";
+                filePath = $"{staticPath}/email/verify-email.html";
                 subject = "mailSubjectVerifyEmail";
             }
             else if (key == MAIL_TEMPLATE.TWO_FACTOR_AUTH)
             {
-                filePath = "static/email/two-factor-auth.html";
+                filePath = $"{staticPath}/email/two-factor-auth.html";
                 subject = "mailSubjectTwoFactorAuth";
             }
             else if (key == MAIL_TEMPLATE.RESET_PASSWORD)
             {
-                filePath = "static/email/reset-password.html";
+                filePath = $"{staticPath}/email/reset-password.html";
                 subject = "mailSubjectResetPasword";
             }
             else if (key == MAIL_TEMPLATE.OVER_SUBSCRIPTION)
             {
-                filePath = "static/email/over-subscription.html";
+                filePath = $"{staticPath}/email/over-subscription.html";
                 subject = "mailSubjectOverPlan";
             }
             else if (key == MAIL_TEMPLATE.CONTACT_US)
             {
-                filePath = "static/email/contact-us.html";
+                filePath = $"{staticPath}/email/contact-us.html";
                 subject = "mailSubjectContactUs";
             }
             else if (key == MAIL_TEMPLATE.EARLY_BIRD_REGISTER)
             {
-                filePath = "static/email/early-bird-register.html";
+                filePath = $"{staticPath}/email/early-bird-register.html";
                 subject = "mailSubjectEarlyBirdRegister";
             }
             else if (key == MAIL_TEMPLATE.NEW_PREIUM_USER)
             {
-                filePath = "static/email/new-premium-user.html";
+                filePath = $"{staticPath}/email/new-premium-user.html";
                 subject = "mailSubjectGetNewPremiumUser";
             }
 

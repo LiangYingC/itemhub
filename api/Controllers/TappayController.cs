@@ -24,6 +24,7 @@ namespace Homo.IotApi
         private readonly string _adminEmail;
         private readonly string _sendGridApiKey;
         private readonly string _websiteUrl;
+        private readonly string _staticPath;
         public TappayController(IotDbContext dbContext, IOptions<AppSettings> appSettings, Homo.Api.CommonLocalizer commonLocalizer)
         {
             _commonLocalizer = commonLocalizer;
@@ -32,6 +33,7 @@ namespace Homo.IotApi
             _adminEmail = appSettings.Value.Common.AdminEmail;
             _sendGridApiKey = appSettings.Value.Secrets.SendGridApiKey;
             _websiteUrl = appSettings.Value.Common.WebsiteUrl;
+            _staticPath = appSettings.Value.Common.StaticPath;
         }
 
         [HttpPost]
@@ -46,7 +48,7 @@ namespace Homo.IotApi
             if (dto.status == 0)
             {
                 // 發信給管理員
-                MailTemplate template = MailTemplateHelper.Get(MAIL_TEMPLATE.NEW_PREIUM_USER);
+                MailTemplate template = MailTemplateHelper.Get(MAIL_TEMPLATE.NEW_PREIUM_USER, _staticPath);
                 template = MailTemplateHelper.ReplaceVariable(template, new
                 {
                     websiteUrl = _websiteUrl,

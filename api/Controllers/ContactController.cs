@@ -22,6 +22,7 @@ namespace Homo.IotApi
         private readonly string _adminEmail;
         private readonly string _webSiteUrl;
         private readonly string _sendGridApiKey;
+        private readonly string _staticPath;
         public ContactController(IotDbContext dbContext, IOptions<AppSettings> optionAppSettings, Homo.Api.CommonLocalizer commonLocalizer)
         {
             _commonLocalizer = commonLocalizer;
@@ -31,12 +32,13 @@ namespace Homo.IotApi
             _sendGridApiKey = optionAppSettings.Value.Secrets.SendGridApiKey;
             _webSiteUrl = optionAppSettings.Value.Common.WebsiteUrl;
             _adminEmail = optionAppSettings.Value.Common.AdminEmail;
+            _staticPath = optionAppSettings.Value.Common.StaticPath;
         }
 
         [HttpPost]
         public async Task<dynamic> sendEmailToUs([FromBody] DTOs.ContactUs dto)
         {
-            MailTemplate template = MailTemplateHelper.Get(MAIL_TEMPLATE.CONTACT_US);
+            MailTemplate template = MailTemplateHelper.Get(MAIL_TEMPLATE.CONTACT_US, _staticPath);
             template = MailTemplateHelper.ReplaceVariable(template, new
             {
                 webSiteUrl = _webSiteUrl,

@@ -24,6 +24,7 @@ namespace Homo.AuthApi
         private readonly string _systemEmail;
         private readonly string _sendGridApiKey;
         private readonly string _adminEmail;
+        private readonly string _staticPath;
         public AuthResetPasswordController(DBContext dbContext, IOptions<AppSettings> appSettings, Microsoft.AspNetCore.Hosting.IWebHostEnvironment env, Homo.Api.CommonLocalizer commonLocalizer)
         {
             Secrets secrets = (Secrets)appSettings.Value.Secrets;
@@ -35,6 +36,7 @@ namespace Homo.AuthApi
             _sendGridApiKey = secrets.SendGridApiKey;
             _dbContext = dbContext;
             _adminEmail = common.AdminEmail;
+            _staticPath = common.StaticPath;
         }
 
         [Route("send-reset-password-mail")]
@@ -58,7 +60,7 @@ namespace Homo.AuthApi
             UserDataservice.SetUserToForgotPasswordState(_dbContext, user.Id);
             string resetPasswordToken = JWTHelper.GenerateToken(_resetPasswordJwtKey, 10, new { Id = user.Id });
 
-            MailTemplate template = MailTemplateHelper.Get(MAIL_TEMPLATE.RESET_PASSWORD);
+            MailTemplate template = MailTemplateHelper.Get(MAIL_TEMPLATE.RESET_PASSWORD, _staticPath);
             template = MailTemplateHelper.ReplaceVariable(template, new
             {
                 websiteUrl = _websiteUrl,

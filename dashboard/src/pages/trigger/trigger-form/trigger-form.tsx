@@ -147,7 +147,7 @@ const TriggerForm = ({
                         type="text"
                         id="trigger-name"
                         placeholder="輸入名稱"
-                        value={trigger?.name}
+                        defaultValue={trigger?.name}
                         onChange={(e) => {
                             setEditedTriggerData((prev) => {
                                 return {

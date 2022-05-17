@@ -86,10 +86,6 @@ namespace Homo.IotApi
                 zipFile.Save(firmwareZipPath);
 
                 // archived source firmware
-
-                System.Console.WriteLine($"testing:{Newtonsoft.Json.JsonConvert.SerializeObject($"{staticPath}/archived/{folderName}", Newtonsoft.Json.Formatting.Indented)}");
-                System.Console.WriteLine($"testing:{Newtonsoft.Json.JsonConvert.SerializeObject(zipSourcePath, Newtonsoft.Json.Formatting.Indented)}");
-                System.IO.Directory.CreateDirectory($"{staticPath}/archived/{folderName}");
                 System.IO.Directory.Move(zipSourcePath, $"{staticPath}/archived/{folderName}");
 
                 // countdown 10 mins then remove zip file

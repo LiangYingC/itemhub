@@ -12,6 +12,12 @@ import Breadcrumbs from '@/components/breadcrumbs/breadcrumbs';
 import { selectUniversal } from '@/redux/reducers/universal.reducer';
 import { TriggerItem } from '@/types/triggers.type';
 import leftArrowIcon from '@/assets/images/left-arrow.svg';
+import { useDispatch } from 'react-redux';
+import { RESPONSE_STATUS } from '@/constants/api';
+import {
+    toasterActions,
+    ToasterTypeEnum,
+} from '@/redux/reducers/toaster.reducer';
 
 const TriggerForm = ({
     trigger,
@@ -21,6 +27,7 @@ const TriggerForm = ({
     isCreateMode: boolean;
 }) => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const { triggerOperators } = useAppSelector(selectUniversal);
 
@@ -82,19 +89,32 @@ const TriggerForm = ({
         }
     }, [navigate, createTriggerResponse]);
 
-    const { isUpdatingTrigger, updateTriggerApi } = useUpdateTriggerApi({
-        trigerId: trigger?.id || 0,
-        updatedData: {
-            ...editedTriggerData,
-            sourceThreshold: Number(editedTriggerData.sourceThreshold),
-        },
-    });
+    const { isUpdatingTrigger, updateTriggerResponse, updateTriggerApi } =
+        useUpdateTriggerApi({
+            trigerId: trigger?.id || 0,
+            updatedData: {
+                ...editedTriggerData,
+                sourceThreshold: Number(editedTriggerData.sourceThreshold),
+            },
+        });
 
     // TODO: 可改用 pagination api，用 name query 去讓 sever 就篩選好我們要的 options，不用在 client 端 filter
     const { allDevices, getAllDevicesApi } = useGetAllDevicesApi();
     useEffect(() => {
         getAllDevicesApi();
     }, []);
+
+    useEffect(() => {
+        if (updateTriggerResponse?.status === RESPONSE_STATUS.OK) {
+            dispatch(
+                toasterActions.pushOne({
+                    message: '編輯成功',
+                    duration: 10,
+                    type: ToasterTypeEnum.INFO,
+                })
+            );
+        }
+    }, [updateTriggerResponse]);
 
     const breadcrumbs = [
         {

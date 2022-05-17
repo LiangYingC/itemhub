@@ -76,10 +76,7 @@ export const triggersSlice = createSlice({
                 ...newTrigger,
             };
 
-            return {
-                ...state,
-                triggers,
-            };
+            return state;
         },
         deleteTriggers: (state, action: PayloadAction<number[]>) => {
             const triggers = state.triggers;

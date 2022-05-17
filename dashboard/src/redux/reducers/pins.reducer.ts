@@ -18,14 +18,16 @@ export const pinsSlice = createSlice({
                 return [newPin];
             }
 
-            const targetIndex = pins.findIndex(
+            const newPins = [...pins];
+
+            const targetIndex = newPins.findIndex(
                 (pin) =>
                     pin.deviceId === newPin.deviceId && pin.pin === newPin.pin
             );
-            pins[targetIndex] = {
+            newPins[targetIndex] = {
                 ...newPin,
             };
-            return pins;
+            return newPins;
         },
         updatePin: (state, action: PayloadAction<Partial<PinItem>>) => {
             const pins = state;
@@ -35,16 +37,18 @@ export const pinsSlice = createSlice({
                 throw new Error('Can not updatePin when pins is null.');
             }
 
-            const targetIndex = pins.findIndex(
+            const newPins = [...pins];
+
+            const targetIndex = newPins.findIndex(
                 (pin) =>
                     pin.deviceId === newPin.deviceId && pin.pin === newPin.pin
             );
-            pins[targetIndex] = {
-                ...pins[targetIndex],
+            newPins[targetIndex] = {
+                ...newPins[targetIndex],
                 ...newPin,
             };
 
-            return pins;
+            return newPins;
         },
         deleteMultiple: (state, action: PayloadAction<{ pins: string[] }>) => {
             const deletePayload = action.payload;

@@ -18,7 +18,6 @@ import SearchInput from '@/components/inputs/search-input/search-input';
 import EmptyDataToCreateItem from '@/components/empty-data-to-create-item/empty-data-to-create-item';
 import { useDeleteDevicesApi } from '@/hooks/apis/devices.hook';
 import { RESPONSE_STATUS } from '@/constants/api';
-import { useDownloadFirmwareApi } from '@/hooks/apis/firmware.hook';
 import compassIcon from '@/assets/images/compass.svg';
 import stopIcon from '@/assets/images/stop.svg';
 import { useDispatch } from 'react-redux';
@@ -29,23 +28,17 @@ import Spinner from '@/components/spinner/spinner';
 
 const Devices = () => {
     const query = useQuery();
-    const retryDownloadFirmwareLimit = 10;
-
     const page = Number(query.get('page') || 1);
     const limit = Number(query.get('limit') || 10);
 
     const [deviceName, setDeviceName] = useState(query.get('deviceName') || '');
     const [shouldBeDeleteId, setShouldBeDeleteId] = useState(0);
     const [shouldBeBundledId, setShouldBeBundledId] = useState(0);
-    const [downloadBundleId, setDownloadBundleId] = useState('');
-    const [retryDownloadFirmwareFlag, setRetryDownloadFirmwareFlag] =
-        useState(false);
     const [refreshFlag, setRefreshFlag] = useState(false);
     const [isFirmwarePrepare, setIsFirmwarePrepare] = useState(false);
     const devicesState = useAppSelector(selectDevices);
     const dispatch = useDispatch();
     const hasDevicesRef = useRef(false);
-    const retryDownloadFirmwareCountRef = useRef(0);
     const devices = devicesState.devices;
     const rowNum = devicesState.rowNum;
 
@@ -65,12 +58,6 @@ const Devices = () => {
         error: errorOfBundle,
         data: responseOfBundle,
     } = useBundleFirmwareApi({ id: shouldBeBundledId });
-
-    const {
-        fetchApi: downloadFirmwareApi,
-        httpStatus: downloadFirmwareHttpStatus,
-        data: responseOfDownloadFirmware,
-    } = useDownloadFirmwareApi({ bundleId: downloadBundleId });
 
     useEffect(() => {
         if (devices && devices.length > 0) {
@@ -102,47 +89,8 @@ const Devices = () => {
     }, [shouldBeBundledId]);
 
     useEffect(() => {
-        if (errorOfBundle && errorOfBundle.message) {
-            alert(errorOfBundle.message);
-            setIsFirmwarePrepare(false);
-            return;
-        }
-        if (responseOfBundle?.bundleId) {
-            setIsFirmwarePrepare(true);
-            setDownloadBundleId(responseOfBundle.bundleId);
-        }
+        setIsFirmwarePrepare(false);
     }, [responseOfBundle, errorOfBundle]);
-
-    useEffect(() => {
-        if (downloadBundleId) {
-            downloadFirmwareApi();
-        }
-    }, [downloadBundleId, retryDownloadFirmwareFlag]);
-
-    useEffect(() => {
-        if (downloadFirmwareHttpStatus === 204) {
-            retryDownloadFirmwareCountRef.current += 1;
-            if (
-                retryDownloadFirmwareCountRef.current >
-                retryDownloadFirmwareLimit
-            ) {
-                alert(
-                    '伺服器目前過於忙碌, 已經超過預期打包的時間, 請稍候再嘗試下載'
-                );
-                retryDownloadFirmwareCountRef.current = 0;
-                setShouldBeBundledId(0);
-                setIsFirmwarePrepare(false);
-                return;
-            }
-            setTimeout(() => {
-                setRetryDownloadFirmwareFlag(!retryDownloadFirmwareFlag);
-            }, 3000);
-        } else if (downloadFirmwareHttpStatus === 200) {
-            setShouldBeBundledId(0);
-            setIsFirmwarePrepare(false);
-            retryDownloadFirmwareCountRef.current = 0;
-        }
-    }, [responseOfDownloadFirmware]);
 
     const refresh = () => {
         getDevicesApi();

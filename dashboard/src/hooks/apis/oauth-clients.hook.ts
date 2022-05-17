@@ -141,7 +141,7 @@ export const useUpdateOauthClient = ({
 export const useRevokeSecretOauthClient = (id: number) => {
     const dispatch = useAppDispatch();
     const dispatchRefresh = useCallback(
-        (data: { status: string; secret: string }) => {
+        (data: { secret: string }) => {
             if (data.secret) {
                 dispatch(
                     oauthClientsActions.updateOne({
@@ -157,7 +157,7 @@ export const useRevokeSecretOauthClient = (id: number) => {
     let apiPath = `${API_URL}${END_POINT.OAUTH_CLIENT_REVOKE_SECRET}`;
     apiPath = apiPath.replace(':id', id.toString());
 
-    return useFetchApi<{ status: string; secret: string }>({
+    return useFetchApi<{ secret: string }>({
         apiPath,
         method: HTTP_METHOD.POST,
         initialData: null,

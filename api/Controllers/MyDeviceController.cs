@@ -52,7 +52,8 @@ namespace Homo.IotApi
         {
             long ownerId = extraPayload.Id;
             Subscription subscription = SubscriptionDataservice.GetCurrnetOne(_dbContext, ownerId);
-            decimal deviceCountInPricingPlan = SubscriptionHelper.GetDeviceCount((PRICING_PLAN)subscription.PricingPlan);
+            int subscriptionLevel = subscription == null ? -1 : subscription.PricingPlan;
+            decimal deviceCountInPricingPlan = subscriptionLevel == -1 ? 2 : SubscriptionHelper.GetDeviceCount((PRICING_PLAN)subscription.PricingPlan);
             decimal currentDeviceCount = DeviceDataservice.GetRowNum(_dbContext, ownerId, null);
 
 
@@ -60,7 +61,7 @@ namespace Homo.IotApi
             {
                 var pricingPlans = ConvertHelper.EnumToList(typeof(PRICING_PLAN));
                 string reason = "";
-                if (subscription.PricingPlan + 1 > pricingPlans.Count)
+                if (subscriptionLevel + 1 > pricingPlans.Count - 1)
                 {
                     reason = _commonLocalizer.Get("moreThanMaxNumberOfDeviceInAnyPlan", null, new Dictionary<string, string>() { { "adminEmail", _adminEmail } });
                 }

@@ -48,7 +48,7 @@ export const devicesSlice = createSlice({
                 devices = [];
             }
 
-            const deviceInState = devices?.find(
+            const deviceInState = devices.find(
                 (item) => item.id === action.payload.id
             );
             if (!deviceInState) {

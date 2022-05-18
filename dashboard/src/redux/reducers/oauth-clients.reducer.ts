@@ -34,16 +34,17 @@ export const oauthClientsSlice = createSlice({
                 };
             }
 
-            const targetIndex = list.findIndex(
+            const newList = [...list];
+            const targetIndex = newList.findIndex(
                 (oldOne) => oldOne.id === newOne.id
             );
-            list[targetIndex] = {
+            newList[targetIndex] = {
                 ...newOne,
             };
 
             return {
                 ...state,
-                oauthClients: list,
+                oauthClients: newList,
             };
         },
         updateOne: (state, action: PayloadAction<Partial<OauthClient>>) => {
@@ -56,15 +57,16 @@ export const oauthClientsSlice = createSlice({
                 );
             }
 
-            const targetIndex = list.findIndex(({ id }) => id === newOne.id);
-            list[targetIndex] = {
-                ...list[targetIndex],
+            const newList = [...list];
+            const targetIndex = newList.findIndex(({ id }) => id === newOne.id);
+            newList[targetIndex] = {
+                ...newList[targetIndex],
                 ...newOne,
             };
 
             return {
                 ...state,
-                oauthClients: list,
+                oauthClients: newList,
             };
         },
         addOne: (state, action: PayloadAction<OauthClient>) => {

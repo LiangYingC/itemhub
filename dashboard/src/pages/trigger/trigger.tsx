@@ -136,20 +136,10 @@ const Trigger = () => {
     }, [trigger]);
 
     useEffect(() => {
-        console.log(editedTriggerData);
-    }, [editedTriggerData]);
-
-    useEffect(() => {
         if (editedTriggerData.sourceDeviceId) {
             getSourceDevicePinsApi();
         }
     }, [editedTriggerData.sourceDeviceId, getSourceDevicePinsApi]);
-
-    useEffect(() => {
-        if (editedTriggerData.destinationDeviceId) {
-            getDestinationDevicePinsApi();
-        }
-    }, [editedTriggerData.destinationDeviceId, getDestinationDevicePinsApi]);
 
     useEffect(() => {
         if (editedTriggerData.destinationDeviceId) {

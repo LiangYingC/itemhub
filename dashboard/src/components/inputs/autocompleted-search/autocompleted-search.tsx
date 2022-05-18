@@ -9,7 +9,7 @@ const AutocompletedSearch = ({
     updateCurrentValue,
     onEnterKeyUp,
     onClickOption,
-    disabled,
+    isDisabled,
 }: {
     datalistId: string;
     placeholder: string;
@@ -18,7 +18,7 @@ const AutocompletedSearch = ({
     updateCurrentValue: (newValue: string) => void;
     onEnterKeyUp?: () => void;
     onClickOption?: () => void;
-    disabled: boolean;
+    isDisabled: boolean;
 }) => {
     const [filteredSuggestions, setFilteredSuggestions] =
         useState<string[]>(allSuggestions);
@@ -98,7 +98,7 @@ const AutocompletedSearch = ({
                 list={datalistId}
                 placeholder={placeholder}
                 ref={inputRef}
-                disabled={disabled}
+                disabled={isDisabled}
                 defaultValue={currentValue}
                 onKeyUp={handleKeyUp}
                 onChange={(e) => {

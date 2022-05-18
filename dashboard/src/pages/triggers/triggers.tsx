@@ -271,7 +271,7 @@ const Triggers = () => {
                                 <AutocompletedSearch
                                     datalistId="sourceDevice"
                                     placeholder="來源裝置篩選"
-                                    disabled={false}
+                                    isDisabled={false}
                                     currentValue={sourceDeviceNameFilter}
                                     updateCurrentValue={(newValue) => {
                                         setSourceDeviceNameFilter(newValue);
@@ -285,7 +285,7 @@ const Triggers = () => {
                                 <AutocompletedSearch
                                     datalistId="destinationDevice"
                                     placeholder="目標裝置篩選"
-                                    disabled={false}
+                                    isDisabled={false}
                                     currentValue={destinationDeviceNameFilter}
                                     updateCurrentValue={(newValue) => {
                                         setDestinationDeviceNameFilter(
@@ -341,23 +341,19 @@ const Triggers = () => {
                                             <div
                                                 key={`${id}-${index}`}
                                                 role="button"
+                                                onClick={(e) => {
+                                                    updateSelectedIds(id);
+                                                }}
                                                 className="row list border-bottom border-black border-opacity-10 p-0 m-0 py-lg-4 px-lg-3"
                                             >
                                                 <div className="d-block d-lg-none py-3 col-4 bg-black bg-opacity-5 text-black text-opacity-45">
                                                     觸發名稱
                                                 </div>
-                                                <div
-                                                    className="col-8 col-lg-4 py-3 py-lg-0 d-flex flex-column flex-lg-row align-items-start"
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        updateSelectedIds(id);
-                                                    }}
-                                                >
+                                                <div className="col-8 col-lg-4 py-3 py-lg-0 d-flex flex-column flex-lg-row align-items-start">
                                                     <input
                                                         className="me-3 mt-2"
                                                         type="checkbox"
                                                         onChange={(e) => {
-                                                            e.stopPropagation();
                                                             updateSelectedIds(
                                                                 id
                                                             );
@@ -438,7 +434,6 @@ const Triggers = () => {
                                                 <div
                                                     className="col-8 col-lg-2 py-3 py-lg-0 d-flex justify-content-start flex-wrap"
                                                     onClick={(e) => {
-                                                        e.stopPropagation();
                                                         navigate(
                                                             `/dashboard/triggers/${id}`
                                                         );
@@ -454,7 +449,6 @@ const Triggers = () => {
                                                     <button
                                                         className="btn mb-3 align-items-start d-flex p-0 bg-transparent shadow-none"
                                                         onClick={(e) => {
-                                                            e.stopPropagation();
                                                             confirmToDeleteOneTrigger(
                                                                 { id, name }
                                                             );

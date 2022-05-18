@@ -98,7 +98,7 @@ const Trigger = () => {
     // TODO: 可改用 pagination api，用 name query 去讓 sever 就篩選好我們要的 options，不用在 client 端 filter
     const { allDevices, getAllDevicesApi } = useGetAllDevicesApi();
 
-    const { getTriggerApi } = useGetTriggerApi(Number(idFromUrl));
+    const { getTriggerApi } = useGetTriggerApi(triggerId || 0);
 
     const { isUpdatingTrigger, updateTriggerResponse, updateTriggerApi } =
         useUpdateTriggerApi({
@@ -111,8 +111,15 @@ const Trigger = () => {
 
     useEffect(() => {
         getAllDevicesApi();
-        getTriggerApi();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    useEffect(() => {
+        if (triggerId) {
+            getTriggerApi();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [triggerId]);
 
     useEffect(() => {
         setEditedTriggerData({
@@ -127,6 +134,10 @@ const Trigger = () => {
             operator: trigger?.operator || 0,
         });
     }, [trigger]);
+
+    useEffect(() => {
+        console.log(editedTriggerData);
+    }, [editedTriggerData]);
 
     useEffect(() => {
         if (editedTriggerData.sourceDeviceId) {
@@ -208,7 +219,7 @@ const Trigger = () => {
                     pinLabel="來源裝置 Pin"
                     pinValue={editedTriggerData.sourcePin}
                     pinOptions={sourceDeviecePinsOptions}
-                    disabled={isReadMode}
+                    isDisabled={isReadMode}
                     updatePin={(newPin) =>
                         setEditedTriggerData((prev) => {
                             return {
@@ -279,7 +290,7 @@ const Trigger = () => {
                     pinLabel="目標裝置 Pin"
                     pinValue={editedTriggerData.destinationPin}
                     pinOptions={destinationDeviecePinsOptions}
-                    disabled={isReadMode}
+                    isDisabled={isReadMode}
                     updatePin={(newPin) =>
                         setEditedTriggerData((prev) => {
                             return {

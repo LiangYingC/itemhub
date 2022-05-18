@@ -11,7 +11,7 @@ const DeviceAndPinInputs = ({
     pinOptions,
     updatePin,
     updateDeviceId,
-    disabled,
+    isDisabled,
 }: {
     allDevices: DeviceItem[];
     initialDeviceName?: string;
@@ -21,7 +21,7 @@ const DeviceAndPinInputs = ({
     pinOptions: PinItem[] | null;
     updatePin: (pin: string) => void;
     updateDeviceId: (id: number) => void;
-    disabled: boolean;
+    isDisabled: boolean;
 }) => {
     const [deviceName, setDeviceName] = useState(initialDeviceName);
 
@@ -47,17 +47,20 @@ const DeviceAndPinInputs = ({
                     datalistId="deviceAndPin"
                     placeholder="請輸入裝置名稱搜尋"
                     currentValue={deviceName}
-                    disabled={disabled}
+                    isDisabled={isDisabled}
                     updateCurrentValue={(newValue) => setDeviceName(newValue)}
                     allSuggestions={allDevices.map(({ name }) => name)}
                 />
             </div>
             <div className="form-group w-100 ps-md-3">
-                <label className="mb-1">{pinLabel}</label>
+                <label className="mb-1">
+                    {pinLabel} {pinValue}
+                </label>
+
                 <select
                     className="form-select"
                     value={pinValue}
-                    disabled={disabled}
+                    disabled={isDisabled}
                     onChange={(e) => {
                         const newSourcePin = e.target.value;
                         updatePin(newSourcePin);

@@ -117,7 +117,7 @@ const DevicePinData = () => {
         navigate(`/dashboard/devices/${id}`);
     };
 
-    const checkDeviceData = () => {
+    const validate = () => {
         const validationMessage = [];
         if (name.length === 0) {
             validationMessage.push('請輸入裝置名稱');
@@ -486,7 +486,7 @@ const DevicePinData = () => {
                             <button
                                 disabled={isCreating || isUpdating}
                                 className="btn btn-primary"
-                                onClick={checkDeviceData}
+                                onClick={validate}
                             >
                                 {isCreateMode ? (
                                     <div>新增</div>

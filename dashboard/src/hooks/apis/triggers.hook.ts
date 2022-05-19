@@ -101,6 +101,7 @@ export const useCreateTriggerApi = ({
     destinationPin,
     destinationDeviceTargetState,
     operator,
+    name,
 }: {
     sourceDeviceId: number;
     sourcePin: string;
@@ -109,6 +110,7 @@ export const useCreateTriggerApi = ({
     destinationPin: string;
     destinationDeviceTargetState: number;
     operator: number;
+    name: string;
 }) => {
     const dispatch = useAppDispatch();
     const dispatchAddTrigger = useCallback(
@@ -125,6 +127,7 @@ export const useCreateTriggerApi = ({
         apiPath,
         method: HTTP_METHOD.POST,
         payload: {
+            name,
             sourceDeviceId,
             sourcePin,
             sourceThreshold,

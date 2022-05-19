@@ -205,6 +205,10 @@ const Trigger = () => {
                         }}
                     />
                 </div>
+
+                <div className="d-flex mt-4 mb-3">
+                    事件條件 <hr className="bg-gray flex-grow-1 ms-3" />
+                </div>
                 <DeviceAndPinInputs
                     allDevices={allDevices}
                     initialDeviceName={trigger?.sourceDevice?.name || ''}
@@ -275,6 +279,10 @@ const Trigger = () => {
                             }}
                         />
                     </div>
+                </div>
+
+                <div className="d-flex mt-4 mb-3">
+                    目標設定 <hr className="bg-gray flex-grow-1 ms-3" />
                 </div>
                 <DeviceAndPinInputs
                     allDevices={allDevices}

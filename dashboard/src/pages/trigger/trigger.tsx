@@ -122,6 +122,9 @@ const Trigger = () => {
     }, [triggerId]);
 
     useEffect(() => {
+        if (!trigger) {
+            return;
+        }
         setEditedTriggerData({
             name: trigger?.name || '',
             sourceDeviceId: trigger?.sourceDeviceId || 0,

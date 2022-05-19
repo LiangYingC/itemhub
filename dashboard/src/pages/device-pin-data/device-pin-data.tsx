@@ -117,6 +117,32 @@ const DevicePinData = () => {
         navigate(`/dashboard/devices/${id}`);
     };
 
+    const validate = () => {
+        const validationMessage = [];
+        if (name.length === 0) {
+            validationMessage.push('請輸入裝置名稱');
+        }
+        if (selectedPins?.length === 0) {
+            validationMessage.push('請至少選擇一個 PIN');
+        }
+        if (validationMessage.length > 0) {
+            dispatch(
+                toasterActions.pushOne({
+                    message: validationMessage.join(', '),
+                    duration: 5,
+                    type: ToasterTypeEnum.WARN,
+                })
+            );
+            return;
+        }
+
+        if (isCreateMode) {
+            createDeviceApi();
+        } else {
+            updateDevice();
+        }
+    };
+
     const updateDevice = () => {
         const shouldBeUpdatedPins = selectedPins?.filter((item) =>
             devicePins?.map((devicePin) => devicePin.pin).includes(item.pin)
@@ -201,6 +227,7 @@ const DevicePinData = () => {
     useEffect(() => {
         if (device !== null) {
             setMicrocontrollerId(Number(device.microcontroller));
+            setName(device.name);
             getDevicePinsApi();
         }
     }, [device]);
@@ -455,23 +482,18 @@ const DevicePinData = () => {
                             >
                                 返回
                             </button>
-                            {isCreateMode ? (
-                                <button
-                                    disabled={isCreating}
-                                    className="btn btn-primary"
-                                    onClick={createDeviceApi}
-                                >
-                                    新增
-                                </button>
-                            ) : (
-                                <button
-                                    disabled={isUpdating}
-                                    className="btn btn-primary"
-                                    onClick={updateDevice}
-                                >
-                                    儲存編輯
-                                </button>
-                            )}
+
+                            <button
+                                disabled={isCreating || isUpdating}
+                                className="btn btn-primary"
+                                onClick={validate}
+                            >
+                                {isCreateMode ? (
+                                    <div>新增</div>
+                                ) : (
+                                    <div>儲存編輯</div>
+                                )}
+                            </button>
                         </div>
                     </div>
                 </div>

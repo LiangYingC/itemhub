@@ -117,7 +117,7 @@ const DevicePinData = () => {
         navigate(`/dashboard/devices/${id}`);
     };
 
-    const createDevice = () => {
+    const checkDeviceData = () => {
         const validationMessage = [];
         if (name.length === 0) {
             validationMessage.push('請輸入裝置名稱');
@@ -136,7 +136,11 @@ const DevicePinData = () => {
             return;
         }
 
-        createDeviceApi();
+        if (isCreateMode) {
+            createDeviceApi();
+        } else {
+            updateDevice();
+        }
     };
 
     const updateDevice = () => {
@@ -223,6 +227,7 @@ const DevicePinData = () => {
     useEffect(() => {
         if (device !== null) {
             setMicrocontrollerId(Number(device.microcontroller));
+            setName(device.name);
             getDevicePinsApi();
         }
     }, [device]);
@@ -477,23 +482,18 @@ const DevicePinData = () => {
                             >
                                 返回
                             </button>
-                            {isCreateMode ? (
-                                <button
-                                    disabled={isCreating}
-                                    className="btn btn-primary"
-                                    onClick={createDevice}
-                                >
-                                    新增
-                                </button>
-                            ) : (
-                                <button
-                                    disabled={isUpdating}
-                                    className="btn btn-primary"
-                                    onClick={updateDevice}
-                                >
-                                    儲存編輯
-                                </button>
-                            )}
+
+                            <button
+                                disabled={isCreating || isUpdating}
+                                className="btn btn-primary"
+                                onClick={checkDeviceData}
+                            >
+                                {isCreateMode ? (
+                                    <div>新增</div>
+                                ) : (
+                                    <div>儲存編輯</div>
+                                )}
+                            </button>
                         </div>
                     </div>
                 </div>

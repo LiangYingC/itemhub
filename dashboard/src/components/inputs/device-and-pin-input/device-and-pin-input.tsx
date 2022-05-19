@@ -44,7 +44,7 @@ const DeviceAndPinInputs = ({
             <div className="form-group w-100 pe-md-3 mb-3 mb-md-0">
                 <label className="mb-1">{deviceNameLabel}</label>
                 <AutocompletedSearch
-                    datalistId="deviceAndPin"
+                    datalistId={deviceNameLabel}
                     placeholder="請輸入裝置名稱搜尋"
                     currentValue={deviceName}
                     isDisabled={isDisabled}

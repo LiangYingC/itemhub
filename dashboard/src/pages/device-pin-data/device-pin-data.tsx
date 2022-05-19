@@ -117,6 +117,28 @@ const DevicePinData = () => {
         navigate(`/dashboard/devices/${id}`);
     };
 
+    const createDevice = () => {
+        const validationMessage = [];
+        if (name.length === 0) {
+            validationMessage.push('請輸入裝置名稱');
+        }
+        if (selectedPins?.length === 0) {
+            validationMessage.push('請至少選擇一個 PIN');
+        }
+        if (validationMessage.length > 0) {
+            dispatch(
+                toasterActions.pushOne({
+                    message: validationMessage.join(', '),
+                    duration: 5,
+                    type: ToasterTypeEnum.WARN,
+                })
+            );
+            return;
+        }
+
+        createDeviceApi();
+    };
+
     const updateDevice = () => {
         const shouldBeUpdatedPins = selectedPins?.filter((item) =>
             devicePins?.map((devicePin) => devicePin.pin).includes(item.pin)
@@ -459,7 +481,7 @@ const DevicePinData = () => {
                                 <button
                                     disabled={isCreating}
                                     className="btn btn-primary"
-                                    onClick={createDeviceApi}
+                                    onClick={createDevice}
                                 >
                                     新增
                                 </button>

@@ -69,14 +69,14 @@ namespace Homo.Api
                 {
                     dynamic extraPayload = JWTHelper.GetExtraPayload(appSetting.Secrets.JwtKey, token);
                     userId = extraPayload.Id;
-                    SendErrorToSentry(ex, context.Request.Body, context.Request.QueryString, userId);
                 }
                 catch (System.Exception parseTokenEx)
                 {
                     SendErrorToSentry(parseTokenEx, context.Request.Body, context.Request.QueryString, null);
-                    SendErrorToSentry(ex, context.Request.Body, context.Request.QueryString, null);
                 }
             }
+
+            SendErrorToSentry(ex, context.Request.Body, context.Request.QueryString, userId);
 
             Dictionary<string, dynamic> payload = null;
             if (ex.GetType() == typeof(Homo.Core.Constants.CustomException))
@@ -116,7 +116,6 @@ namespace Homo.Api
 
         private async Task SendErrorToSentry(Exception ex, System.IO.Stream reqBody = null, QueryString queryString = default(QueryString), long? userId = null)
         {
-
             await SentrySdk.ConfigureScopeAsync(async scope =>
             {
                 string body = "";

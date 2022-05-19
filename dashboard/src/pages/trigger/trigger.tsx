@@ -206,7 +206,7 @@ const Trigger = () => {
                     />
                 </div>
 
-                <div className="d-flex mt-4 mb-3">
+                <div className="d-flex mt-4 mb-3 fs-5">
                     事件條件 <hr className="bg-gray flex-grow-1 ms-3" />
                 </div>
                 <DeviceAndPinInputs
@@ -281,7 +281,7 @@ const Trigger = () => {
                     </div>
                 </div>
 
-                <div className="d-flex mt-4 mb-3">
+                <div className="d-flex mt-4 mb-3 fs-5">
                     目標設定 <hr className="bg-gray flex-grow-1 ms-3" />
                 </div>
                 <DeviceAndPinInputs

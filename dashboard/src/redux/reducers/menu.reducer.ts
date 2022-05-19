@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '@/redux/store';
 
 const defaultMenuState = document.body.clientWidth > 767 ? true : false;

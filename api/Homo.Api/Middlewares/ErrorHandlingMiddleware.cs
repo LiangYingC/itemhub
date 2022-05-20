@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
-using Sentry;
 using Homo.Core.Constants;
 using Homo.AuthApi;
 
@@ -91,33 +90,6 @@ namespace Homo.Api
                 throw new Exception(ex.ToString() + exInner.ToString());
             }
             return context.Response.WriteAsync(JsonConvert.SerializeObject(result));
-        }
-
-        private async Task SendErrorToSentry(Exception ex, System.IO.Stream reqBody = null, QueryString queryString = default(QueryString), long? userId = null)
-        {
-            await SentrySdk.ConfigureScopeAsync(async scope =>
-            {
-                string body = "";
-                using (var reader = new System.IO.StreamReader(reqBody, System.Text.Encoding.UTF8))
-                {
-                    body = await reader.ReadToEndAsync();
-                    scope.SetExtra("request-body", body);
-                }
-                scope.SetExtra("userId", userId);
-                scope.SetExtra("query-string", queryString.ToString());
-            });
-
-            if (ex.GetType() == typeof(CustomException))
-            {
-                var customEx = (CustomException)ex;
-                string internalErrorMessage = customEx.errorCode;
-                Exception newEx = new Exception(internalErrorMessage, customEx);
-                SentrySdk.CaptureException(newEx);
-            }
-            else
-            {
-                SentrySdk.CaptureException(ex);
-            }
         }
     }
 }

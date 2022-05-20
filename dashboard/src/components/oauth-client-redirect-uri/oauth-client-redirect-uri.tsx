@@ -31,6 +31,16 @@ const OauthClientRedirectUri = (props: { oauthClientId: number | null }) => {
 
     const [tags, setTags] = useState<Tag[]>(initialTags);
 
+    const isNotChange =
+        oauthClientRedirectUris
+            .map((item) => item.uri)
+            .sort()
+            .join(',') ===
+        tags
+            .map((item) => item.text)
+            .sort()
+            .join(',');
+
     const [shouldBeAddedUris, setShouldBeAddedUris] = useState<string[]>([]);
     const [shouldBeDeletedIds, setShouldBeDeletedIds] = useState<number[]>([]);
 
@@ -173,33 +183,14 @@ const OauthClientRedirectUri = (props: { oauthClientId: number | null }) => {
                     <div className="d-flex">
                         <button
                             className="btn btn-warn ms-3"
-                            disabled={
-                                oauthClientRedirectUris
-                                    .map((item) => item.uri)
-                                    .sort()
-                                    .join(',') ===
-                                tags
-                                    .map((item) => item.text)
-                                    .sort()
-                                    .join(',')
-                            }
+                            disabled={isNotChange}
                             onClick={revertRedirectUris}
                         >
                             還原
                         </button>
                         <button
                             className="btn btn-primary ms-3"
-                            disabled={
-                                tags.length === 0 ||
-                                oauthClientRedirectUris
-                                    .map((item) => item.uri)
-                                    .sort()
-                                    .join(',') ===
-                                    tags
-                                        .map((item) => item.text)
-                                        .sort()
-                                        .join(',')
-                            }
+                            disabled={tags.length === 0 || isNotChange}
                             onClick={updateRedirectUris}
                         >
                             儲存

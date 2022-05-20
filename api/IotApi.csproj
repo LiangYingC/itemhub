@@ -26,7 +26,6 @@
     <PackageReference Include="Microsoft.Extensions.Localization" Version="5.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.Localization" Version="2.2.0" />
     <PackageReference Include="Homo.Core" Version="5.0.9" />
-    <PackageReference Include="Sentry.AspNetCore" Version="3.17.1" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.11.1" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.11.1" />
     <PackageReference Include="SendGrid" Version="9.24.0" />

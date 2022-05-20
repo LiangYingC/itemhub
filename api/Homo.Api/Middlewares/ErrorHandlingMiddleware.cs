@@ -57,27 +57,6 @@ namespace Homo.Api
                 internalErrorMessage = System.Web.HttpUtility.JavaScriptStringEncode(ex.ToString());
             }
 
-            long? userId = null;
-            string token = "";
-            string authorization = context.Request.Headers["Authorization"];
-            token = authorization == null ? "" : authorization.Substring("Bearer ".Length).Trim();
-            var appSetting = (dynamic)config.Value;
-
-            if (token != null && token.Length > 0 && appSetting.Secrets != null && appSetting.Secrets.JwtKey != null)
-            {
-                try
-                {
-                    dynamic extraPayload = JWTHelper.GetExtraPayload(appSetting.Secrets.JwtKey, token);
-                    userId = extraPayload.Id;
-                }
-                catch (System.Exception parseTokenEx)
-                {
-                    SendErrorToSentry(parseTokenEx, context.Request.Body, context.Request.QueryString, null);
-                }
-            }
-
-            SendErrorToSentry(ex, context.Request.Body, context.Request.QueryString, userId);
-
             Dictionary<string, dynamic> payload = null;
             if (ex.GetType() == typeof(Homo.Core.Constants.CustomException))
             {

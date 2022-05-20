@@ -43,6 +43,8 @@ const OauthClientRedirectUri = (props: { oauthClientId: number | null }) => {
 
     const [shouldBeAddedUris, setShouldBeAddedUris] = useState<string[]>([]);
     const [shouldBeDeletedIds, setShouldBeDeletedIds] = useState<number[]>([]);
+    const [previousAddedUris, setPreviousAddedUris] = useState<string[]>([]);
+    const [previousDeletedIds, setPreviousDeletedIds] = useState<number[]>([]);
 
     const {
         fetchApi: getOauthClientRedirectUris,
@@ -98,6 +100,31 @@ const OauthClientRedirectUri = (props: { oauthClientId: number | null }) => {
         }
         deleteOauthClientRedirectUris();
     }, [shouldBeDeletedIds]);
+
+    useEffect(() => {
+        if (
+            shouldBeAddedUris.join(',') === previousAddedUris.join(',') &&
+            shouldBeDeletedIds.join(',') === previousDeletedIds.join(',')
+        ) {
+            return;
+        }
+
+        if (shouldBeAddedUris.join(',') !== previousAddedUris.join(',')) {
+            setPreviousAddedUris(shouldBeAddedUris);
+        }
+
+        if (shouldBeDeletedIds.join(',') !== previousDeletedIds.join(',')) {
+            setPreviousDeletedIds(shouldBeDeletedIds);
+        }
+
+        dispatch(
+            toasterActions.pushOne({
+                message: '更新成功',
+                duration: 5,
+                type: ToasterTypeEnum.INFO,
+            })
+        );
+    }, [responseOfDeleteRedirectUris, responseOfCreateRedirectUris]);
 
     const handleAddition = (tag: Tag) => {
         if (!tag.text.startsWith('https://')) {

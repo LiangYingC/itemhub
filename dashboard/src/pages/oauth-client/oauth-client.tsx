@@ -22,6 +22,7 @@ import {
     toasterActions,
     ToasterTypeEnum,
 } from '@/redux/reducers/toaster.reducer';
+import OauthClientRedirectUri from '@/components/oauth-client-redirect-uri/oauth-client-redirect-uri';
 
 interface OauthClientLocationState {
     secret: string;
@@ -241,6 +242,8 @@ const OauthClient = () => {
                     </div>
                 )}
             </div>
+
+            <OauthClientRedirectUri oauthClientId={id} />
         </div>
     );
 };

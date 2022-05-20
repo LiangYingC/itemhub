@@ -22,14 +22,14 @@ const OauthClientRedirectUri = (props: { oauthClientId: number | null }) => {
         selectOauthClientRedirectUris
     );
 
-    const [tags, setTags] = useState<Tag[]>(
-        oauthClientRedirectUris.map((redirectUri) => {
-            return {
-                id: redirectUri.id.toString(),
-                text: redirectUri.uri,
-            };
-        })
-    );
+    const initialTags = oauthClientRedirectUris.map((redirectUri) => {
+        return {
+            id: redirectUri.id.toString(),
+            text: redirectUri.uri,
+        };
+    });
+
+    const [tags, setTags] = useState<Tag[]>(initialTags);
 
     const [shouldBeAddedUris, setShouldBeAddedUris] = useState<string[]>([]);
     const [shouldBeDeletedIds, setShouldBeDeletedIds] = useState<number[]>([]);
@@ -39,17 +39,21 @@ const OauthClientRedirectUri = (props: { oauthClientId: number | null }) => {
         data: responseOfRedirectUris,
     } = useGetOauthClientRedirectUris(oauthClientId || 0);
 
-    const { fetchApi: createOauthClientRedirectUris } =
-        useCreateOauthClientRedirectUris({
-            oauthClientId: oauthClientId || 0,
-            uris: shouldBeAddedUris,
-        });
+    const {
+        fetchApi: createOauthClientRedirectUris,
+        data: responseOfCreateRedirectUris,
+    } = useCreateOauthClientRedirectUris({
+        oauthClientId: oauthClientId || 0,
+        uris: shouldBeAddedUris,
+    });
 
-    const { fetchApi: deleteOauthClientRedirectUris } =
-        useDeleteOauthClientRedirectUris({
-            oauthClientId: oauthClientId || 0,
-            ids: shouldBeDeletedIds,
-        });
+    const {
+        fetchApi: deleteOauthClientRedirectUris,
+        data: responseOfDeleteRedirectUris,
+    } = useDeleteOauthClientRedirectUris({
+        oauthClientId: oauthClientId || 0,
+        ids: shouldBeDeletedIds,
+    });
 
     useEffect(() => {
         if (!oauthClientRedirectUris) {
@@ -137,14 +141,7 @@ const OauthClientRedirectUri = (props: { oauthClientId: number | null }) => {
     const revertRedirectUris = () => {
         setShouldBeAddedUris([]);
         setShouldBeDeletedIds([]);
-        setTags(
-            oauthClientRedirectUris.map((redirectUri) => {
-                return {
-                    id: redirectUri.id.toString(),
-                    text: redirectUri.uri,
-                };
-            })
-        );
+        setTags(initialTags);
     };
 
     return (

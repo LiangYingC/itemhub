@@ -9,7 +9,7 @@ import {
     toasterActions,
     ToasterTypeEnum,
 } from '@/redux/reducers/toaster.reducer';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { WithContext as ReactTagInput, Tag } from 'react-tag-input';
 
@@ -43,8 +43,7 @@ const OauthClientRedirectUri = (props: { oauthClientId: number | null }) => {
 
     const [shouldBeAddedUris, setShouldBeAddedUris] = useState<string[]>([]);
     const [shouldBeDeletedIds, setShouldBeDeletedIds] = useState<number[]>([]);
-    const [previousAddedUris, setPreviousAddedUris] = useState<string[]>([]);
-    const [previousDeletedIds, setPreviousDeletedIds] = useState<number[]>([]);
+    const isShowUpdateSuccessfully = useRef(true);
 
     const {
         fetchApi: getOauthClientRedirectUris,
@@ -102,28 +101,20 @@ const OauthClientRedirectUri = (props: { oauthClientId: number | null }) => {
     }, [shouldBeDeletedIds]);
 
     useEffect(() => {
-        if (
-            shouldBeAddedUris.join(',') === previousAddedUris.join(',') &&
-            shouldBeDeletedIds.join(',') === previousDeletedIds.join(',')
-        ) {
+        if (!isShowUpdateSuccessfully.current) {
             return;
         }
 
-        if (shouldBeAddedUris.join(',') !== previousAddedUris.join(',')) {
-            setPreviousAddedUris(shouldBeAddedUris);
+        if (responseOfDeleteRedirectUris || responseOfCreateRedirectUris) {
+            dispatch(
+                toasterActions.pushOne({
+                    message: '更新成功',
+                    duration: 5,
+                    type: ToasterTypeEnum.INFO,
+                })
+            );
+            isShowUpdateSuccessfully.current = false;
         }
-
-        if (shouldBeDeletedIds.join(',') !== previousDeletedIds.join(',')) {
-            setPreviousDeletedIds(shouldBeDeletedIds);
-        }
-
-        dispatch(
-            toasterActions.pushOne({
-                message: '更新成功',
-                duration: 5,
-                type: ToasterTypeEnum.INFO,
-            })
-        );
     }, [responseOfDeleteRedirectUris, responseOfCreateRedirectUris]);
 
     const handleAddition = (tag: Tag) => {
@@ -173,6 +164,7 @@ const OauthClientRedirectUri = (props: { oauthClientId: number | null }) => {
 
         setShouldBeAddedUris(shouldAddedItems);
         setShouldBeDeletedIds(shouldDeletedItemIds);
+        isShowUpdateSuccessfully.current = true;
     };
 
     const revertRedirectUris = () => {
@@ -217,7 +209,7 @@ const OauthClientRedirectUri = (props: { oauthClientId: number | null }) => {
                         </button>
                         <button
                             className="btn btn-primary ms-3"
-                            disabled={tags.length === 0 || isNotChange}
+                            disabled={isNotChange}
                             onClick={updateRedirectUris}
                         >
                             儲存

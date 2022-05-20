@@ -18,7 +18,6 @@ namespace Homo.Api
         private readonly RequestDelegate next;
         private string envName;
         protected IServiceProvider _serviceProvider;
-        protected string _jwtKey;
         public ErrorHandlingMiddleware(RequestDelegate next)
         {
             this.next = next;

@@ -288,7 +288,7 @@ const DevicePinData = () => {
                     type: ToasterTypeEnum.INFO,
                 })
             );
-            navigate(`/dashboard/devices/${createDeviceResponse.id}/edit`);
+            navigate(`/dashboard/devices/${createDeviceResponse.id}`);
         }
     }, [createDeviceResponse]);
 

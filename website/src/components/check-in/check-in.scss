@@ -9,12 +9,4 @@
     .check-in-btn {
         border-radius: 152px;
     }
-
-    @include media-breakpoint-up(sm) {
-        .check-in-btn {
-            top: 4px;
-            right: 4px;
-            position: absolute;
-        }
-    }
 }

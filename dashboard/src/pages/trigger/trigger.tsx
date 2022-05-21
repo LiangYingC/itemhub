@@ -9,7 +9,6 @@ import {
 } from '@/redux/reducers/toaster.reducer';
 import { selectUniversal } from '@/redux/reducers/universal.reducer';
 import { selectTriggers } from '@/redux/reducers/triggers.reducer';
-import { TriggerItem } from '@/types/triggers.type';
 import { useGetDevicePinsApi } from '@/hooks/apis/device.pin.hook';
 import {
     useCreateTriggerApi,

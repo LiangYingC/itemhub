@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Homo.AuthApi;
 using Homo.Api;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 

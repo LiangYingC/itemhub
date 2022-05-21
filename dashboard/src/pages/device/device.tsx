@@ -143,8 +143,8 @@ const Device = () => {
     const bundleDevice = () => {
         dispatch(
             dialogActions.open({
-                message: `Client ID 會被重新建立，舊有程式碼將無法使用，請確認是否重新下載？`,
-                title: '重新下載程式碼',
+                message: `下載後舊有程式碼將無法使用，請確認是否下載？`,
+                title: '下載程式碼',
                 type: DialogTypeEnum.CONFIRM,
                 callback: bundleFirmware,
             })

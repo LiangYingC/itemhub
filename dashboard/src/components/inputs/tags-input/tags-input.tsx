@@ -9,7 +9,7 @@ export interface Tag {
 
 const TagsInput = ({
     placeholder,
-    tags = [],
+    tags,
     handleAddition,
     handleDelete,
 }: {

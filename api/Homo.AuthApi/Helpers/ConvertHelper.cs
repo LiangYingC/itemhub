@@ -39,5 +39,10 @@ namespace Homo.AuthApi
             public string Label { get; set; }
             public object Value { get; set; }
         }
+
+        public class EnumListWithSymbol: EnumList
+        {
+            public object Symbol { get; set; }
+        }
     }
 }

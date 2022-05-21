@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Homo.AuthApi;
+using Homo.Api;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Homo.Api;
+
 
 namespace Homo.IotApi
 {
@@ -55,7 +57,75 @@ namespace Homo.IotApi
         [Route("trigger-operators")]
         public ActionResult<dynamic> getTriggerOperators()
         {
-            return ConvertHelper.EnumToList(typeof(TRIGGER_OPERATOR));
+            List<ConvertHelper.EnumList> triggerOperators= ConvertHelper.EnumToList(typeof(TRIGGER_OPERATOR));
+            List<ConvertHelper.EnumListWithSymbol> triggerWithSignOperators = new List<ConvertHelper.EnumListWithSymbol>();
+            triggerOperators.ForEach(triggerOperator => 
+                {
+                    if (triggerOperator.Key == TRIGGER_OPERATOR.B.ToString()) 
+                    {
+                        triggerWithSignOperators.Add(new ConvertHelper.EnumListWithSymbol()
+                        {
+                            Key = triggerOperator.Key,
+                            Label = triggerOperator.Label,
+                            Value = triggerOperator.Value,
+                            Symbol = ">"
+                        });
+                        return;
+                    } 
+                    if (triggerOperator.Key == TRIGGER_OPERATOR.BE.ToString()) 
+                    {
+                        triggerWithSignOperators.Add(new ConvertHelper.EnumListWithSymbol()
+                        {
+                            Key = triggerOperator.Key,
+                            Label = triggerOperator.Label,
+                            Value = triggerOperator.Value,
+                            Symbol = ">="
+                        });
+                        return;
+                    }
+                    if (triggerOperator.Key == TRIGGER_OPERATOR.L.ToString())
+                    {
+                        triggerWithSignOperators.Add(new ConvertHelper.EnumListWithSymbol()
+                        {
+                            Key = triggerOperator.Key,
+                            Label = triggerOperator.Label,
+                            Value = triggerOperator.Value,
+                            Symbol = "<"
+                        });
+                        return;
+                    }
+                    if (triggerOperator.Key == TRIGGER_OPERATOR.LE.ToString())
+                    {
+                        triggerWithSignOperators.Add(new ConvertHelper.EnumListWithSymbol()
+                        {
+                            Key = triggerOperator.Key,
+                            Label = triggerOperator.Label,
+                            Value = triggerOperator.Value,
+                            Symbol = "<="
+                        });
+                        return;
+                    }
+                    if (triggerOperator.Key == TRIGGER_OPERATOR.E.ToString())
+                    {
+                        triggerWithSignOperators.Add(new ConvertHelper.EnumListWithSymbol()
+                        {
+                            Key = triggerOperator.Key,
+                            Label = triggerOperator.Label,
+                            Value = triggerOperator.Value,
+                            Symbol = "="
+                        });
+                        return;
+                    }
+                    triggerWithSignOperators.Add(new ConvertHelper.EnumListWithSymbol()
+                    {
+                        Key = triggerOperator.Key,
+                        Label = triggerOperator.Label,
+                        Value = triggerOperator.Value,
+                        Symbol = null
+                    });
+                }
+            );
+            return triggerWithSignOperators;
         }
 
         [HttpGet]

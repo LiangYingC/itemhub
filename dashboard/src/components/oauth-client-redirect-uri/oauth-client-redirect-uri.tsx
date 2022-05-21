@@ -11,7 +11,7 @@ import {
 } from '@/redux/reducers/toaster.reducer';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { WithContext as ReactTagInput, Tag } from 'react-tag-input';
+import TagsInput, { Tag } from '../inputs/tags-input/tags-input';
 
 const OauthClientRedirectUri = (props: { oauthClientId: number | null }) => {
     const { oauthClientId } = props;
@@ -143,8 +143,8 @@ const OauthClientRedirectUri = (props: { oauthClientId: number | null }) => {
         setTags([...tags, tag]);
     };
 
-    const handleDelete = (i: number) => {
-        setTags(tags.filter((tag, index) => index !== i));
+    const handleDelete = (id: string) => {
+        setTags(tags.filter((tag) => tag.id !== id));
     };
 
     const updateRedirectUris = () => {
@@ -179,22 +179,15 @@ const OauthClientRedirectUri = (props: { oauthClientId: number | null }) => {
                 <label className="w-100">
                     Redirect Uris
                     <div className="mt-2 form-control d-flex">
-                        <ReactTagInput
+                        <TagsInput
+                            tags={tags}
+                            placeholder="請輸入授權網址"
                             handleDelete={handleDelete}
                             handleAddition={handleAddition}
-                            tags={tags}
-                            inputFieldPosition="bottom"
-                            placeholder=""
-                            classNames={{
-                                tags: 'd-flex flex-wrap align-items-center my-n2',
-                                tag: 'd-flex flex-nowrap align-items-center bg-grey-500 text-grey-400 bg-opacity-15 rounded-pill px-3 me-3 text-sm justify-content-between my-2 border-grey-800',
-                                remove: 'tag-remvoe border-0 shadow-none ms-3 text-grey-500 text-opacity-25 mb-1',
-                                selected: 'd-flex align-items-center flex-wrap',
-                                tagInput: 'tag-input border-0 text-sm w-100',
-                                tagInputField:
-                                    'tag-input-field border-0 w-100 pb-3',
-                            }}
                         />
+                    </div>
+                    <div className="text-sm text-grey-300">
+                        輸入 uri 後，按下 enter 或是 tab，就能成功輸入一項 uri
                     </div>
                 </label>
 

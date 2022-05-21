@@ -51,7 +51,7 @@ const TagsInput = ({
     };
 
     return (
-        <div className="tag-input d-flex flex-wrap my-n2">
+        <div className="tags-input d-flex flex-wrap my-n2">
             {tags.map((tag) => (
                 <div
                     key={tag.id}

@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import closeIcon from '@/assets/images/dark-close.svg';
 
-const TagInput = ({
+const TagsInput = ({
     placeholder,
     tags = [],
     handleAddition,
@@ -82,7 +82,7 @@ const TagInput = ({
     );
 };
 
-export default TagInput;
+export default TagsInput;
 
 export interface Tag {
     id: string;

@@ -11,7 +11,7 @@ import {
 } from '@/redux/reducers/toaster.reducer';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import TagInput, { Tag } from '../inputs/tag-input/tag-input';
+import TagsInput, { Tag } from '../inputs/tags-input/tags-input';
 
 const OauthClientRedirectUri = (props: { oauthClientId: number | null }) => {
     const { oauthClientId } = props;
@@ -144,7 +144,7 @@ const OauthClientRedirectUri = (props: { oauthClientId: number | null }) => {
     };
 
     const handleDelete = (id: string) => {
-        setTags(tags.filter((tag, index) => tag.id !== id));
+        setTags(tags.filter((tag) => tag.id !== id));
     };
 
     const updateRedirectUris = () => {
@@ -179,7 +179,7 @@ const OauthClientRedirectUri = (props: { oauthClientId: number | null }) => {
                 <label className="w-100">
                     Redirect Uris
                     <div className="mt-2 form-control d-flex">
-                        <TagInput
+                        <TagsInput
                             tags={tags}
                             placeholder="請輸入授權網址"
                             handleDelete={handleDelete}

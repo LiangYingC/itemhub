@@ -137,8 +137,13 @@ module.exports = {
             use: [{
                 loader: 'string-replace-loader',
                 options: {
-                    search: '{GA_PROPERTY_ID}',
-                    replace: config.APP_CONFIG.GA_PROPERTY_ID
+                    multiple: [
+                        {
+                            search: '{GA_PROPERTY_ID}',
+                            replace: config.APP_CONFIG.GA_PROPERTY_ID
+                        },
+                        { search: '{FRESH_CHAT_TOKEN}', replace: 'window.lodash' }
+                    ]
                 }
             }]
         }, {

@@ -17,37 +17,27 @@
     <script type="module">
         APP.run(true);
     </script>
-    <!-- Messenger Chat Plugin Code -->
-    <div id="fb-root" class="d-none"></div>
-
-    <!-- Your Chat Plugin code -->
-    <div id="fb-customer-chat" class="fb-customerchat">
-    </div>
 
     <script>
-        var chatbox = document.getElementById('fb-customer-chat');
-        chatbox.setAttribute("page_id", "101641039036677");
-        chatbox.setAttribute("attribution", "biz_inbox");
-        document.body.addEventListener("CHECKIN", () => {
-            document.querySelector('#fb-root').classList.remove('d-none');
-        });
-
-        window.fbAsyncInit = function () {
-            FB.init({
-                xfbml: true,
-                version: 'v12.0'
+        function initFreshChat() {
+            window.fcWidget.init({
+                token: "{FRESH_CHAT_TOKEN}",
+                host: "https://wchat.freshchat.com"
             });
-        };
-        setTimeout(() => {
-            (function (d, s, id) {
-                var js, fjs = d.getElementsByTagName(s)[0];
-                if (d.getElementById(id)) return;
-                js = d.createElement(s);
-                js.id = id;
-                js.src = 'https://connect.facebook.net/zh_TW/sdk/xfbml.customerchat.js';
-                fjs.parentNode.insertBefore(js, fjs);
-            }(document, 'script', 'facebook-jssdk'));
-        }, 3000)
+        }
+
+        function initialize(i, t) {
+            var e;
+            i.getElementById(t) ? initFreshChat() : ((e = i.createElement("script")).id = t, e.async = !0, e.src =
+                "https://wchat.freshchat.com/js/widget.js", e.onload = initFreshChat, i.head.appendChild(e))
+        }
+
+        function initiateCall() {
+            initialize(document, "Freshdesk Messaging-js-sdk")
+        }
+
+        window.addEventListener ? window.addEventListener("load", initiateCall, !1) : window.attachEvent("load",
+            initiateCall, !1);
 
     </script>
 </body>

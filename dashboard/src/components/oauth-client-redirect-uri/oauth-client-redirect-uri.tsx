@@ -186,6 +186,9 @@ const OauthClientRedirectUri = (props: { oauthClientId: number | null }) => {
                             handleAddition={handleAddition}
                         />
                     </div>
+                    <div className="text-sm text-grey-300">
+                        輸入 uri 後，按下 enter 或是 tab，就能成功輸入一項 uri
+                    </div>
                 </label>
 
                 <div className="d-flex justify-content-end mt-5 ">

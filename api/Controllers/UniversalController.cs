@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Homo.AuthApi;
+using Homo.Api;
 using System.Collections.Generic;
 using System.Linq;
-using Homo.Api;
+
 
 namespace Homo.IotApi
 {
@@ -55,7 +56,15 @@ namespace Homo.IotApi
         [Route("trigger-operators")]
         public ActionResult<dynamic> getTriggerOperators()
         {
-            return ConvertHelper.EnumToList(typeof(TRIGGER_OPERATOR));
+            List<ConvertHelper.EnumList> triggerOperators= ConvertHelper.EnumToList(typeof(TRIGGER_OPERATOR));
+            Dictionary<string, string> symbolMapping = new Dictionary<string, string>() { { "B", ">" }, { "BE", ">=" }, { "E", "=" }, { "LE", "<=" }, { "L", "<" } };
+            return triggerOperators.Select(x => new
+            {
+                x.Key,
+                x.Label,
+                x.Value,
+                Symbol = symbolMapping.GetValueOrDefault(x.Key)
+            }).ToList<dynamic>();
         }
 
         [HttpGet]

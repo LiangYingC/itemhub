@@ -178,7 +178,7 @@ const OauthClient = () => {
                             />
                         </div>
                         <div className="text-warn mt-3 d-flex">
-                            <div className="mt-1 me-1 bg-warn text-white rounded-circle">
+                            <div className="mt-1 me-1 bg-warn text-white rounded-circle flex-shrink-0">
                                 !
                             </div>
                             <div>

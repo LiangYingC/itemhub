@@ -143,8 +143,8 @@ const Device = () => {
     const bundleDevice = () => {
         dispatch(
             dialogActions.open({
-                message: `Client ID 會被重新建立，舊有程式碼將無法使用，請確認是否重新打包？`,
-                title: '重新打包程式碼',
+                message: `Client ID 會被重新建立，舊有程式碼將無法使用，請確認是否重新下載？`,
+                title: '重新下載程式碼',
                 type: DialogTypeEnum.CONFIRM,
                 callback: bundleFirmware,
             })
@@ -174,7 +174,7 @@ const Device = () => {
                 primaryButtonCallback={jumpToEditPage}
                 secondaryButtonIcon={downloadIcon}
                 secondaryButtonVisible
-                secondaryButtonWording="打包程式碼"
+                secondaryButtonWording="下載程式碼"
                 secondaryButtonCallback={bundleDevice}
                 thirdlyButtonIcon={trashIcon}
                 thirdlyButtonVisible

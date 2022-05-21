@@ -11,23 +11,6 @@ import {
 import { ResponseOK } from '@/types/response.type';
 import { pinsActions } from '@/redux/reducers/pins.reducer';
 
-export const useGetAllDevicesApi = () => {
-    const apiPath = `${API_URL}${END_POINT.All_DEVICES}`;
-
-    const { isLoading, data, error, fetchApi } = useFetchApi<DeviceItem[]>({
-        apiPath,
-        method: HTTP_METHOD.GET,
-        initialData: null,
-    });
-
-    return {
-        isGetingAllDevices: isLoading,
-        getAllDevicesError: error,
-        allDevices: data || [],
-        getAllDevicesApi: fetchApi,
-    };
-};
-
 export const useGetDevicePinsApi = ({ id }: { id: number }) => {
     const dispatch = useAppDispatch();
     const dispatchRefreshPins = useCallback(

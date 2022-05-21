@@ -1,203 +1,371 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
-import { useAppSelector, useAppDispatch } from '@/hooks/redux.hook';
-import {
-    useGetTriggerApi,
-    useDeleteTriggersApi,
-} from '@/hooks/apis/triggers.hook';
+import { useAppSelector } from '@/hooks/redux.hook';
 import { Link } from 'react-router-dom';
 import { RESPONSE_STATUS } from '@/constants/api';
-import { dialogActions, DialogTypeEnum } from '@/redux/reducers/dialog.reducer';
 import {
     toasterActions,
     ToasterTypeEnum,
 } from '@/redux/reducers/toaster.reducer';
 import { selectUniversal } from '@/redux/reducers/universal.reducer';
 import { selectTriggers } from '@/redux/reducers/triggers.reducer';
-import { TriggerItem } from '@/types/triggers.type';
-import TriggerForm from './trigger-form/trigger-form';
-import PageTitle from '@/components/page-title/page-title';
-import Spinner from '@/components/spinner/spinner';
-import OnlineStatusTag from '@/components/online-status-tag/online-status-tag';
-import trashIcon from '@/assets/images/trash.svg';
+import { useGetDevicePinsApi } from '@/hooks/apis/device.pin.hook';
+import {
+    useCreateTriggerApi,
+    useGetTriggerApi,
+    useUpdateTriggerApi,
+} from '@/hooks/apis/triggers.hook';
+import DeviceAndPinInputs from '@/components/inputs/device-and-pin-input/device-and-pin-input';
+import Breadcrumbs from '@/components/breadcrumbs/breadcrumbs';
+import leftArrowIcon from '@/assets/images/left-arrow.svg';
+import { useDispatch } from 'react-redux';
+import { useGetAllDevicesApi } from '@/hooks/apis/devices.hook';
 
 const Trigger = () => {
-    const location = useLocation();
     const navigate = useNavigate();
-    const dispatch = useAppDispatch();
-    const { triggerOperators } = useAppSelector(selectUniversal);
+    const dispatch = useDispatch();
+    const location = useLocation();
 
     const { id: idFromUrl } = useParams();
     const triggerId = idFromUrl ? parseInt(idFromUrl) : null;
 
-    const isCreateMode = triggerId === null;
-    const isEditMode = location.pathname.includes('edit') && triggerId !== null;
-
-    const createTriggerLocationState = location.state as {
-        trigger: TriggerItem;
-    } | null;
+    const { triggerOperators } = useAppSelector(selectUniversal);
     const { triggers } = useAppSelector(selectTriggers);
     const trigger =
-        triggers?.filter((trigger) => trigger.id === triggerId)[0] ||
-        createTriggerLocationState?.trigger ||
-        null;
-    const triggerName = trigger?.name || '--';
+        triggers?.filter((trigger) => trigger.id === triggerId)[0] || null;
 
-    const { isGettingTrigger, getTriggerApi } = useGetTriggerApi(
-        triggerId || 0
-    );
-
-    const { isDeletingTriggers, deleteTriggersApi, deleteTriggersResponse } =
-        useDeleteTriggersApi([triggerId || 0]);
-
-    const jumpToEditPage = () => {
-        navigate(`/dashboard/triggers/edit/${triggerId}`);
-    };
-
-    const jumpToListPage = () => {
-        navigate('/dashboard/triggers');
-    };
-
-    const confirmToDeleteTrigger = () => {
-        if (!isDeletingTriggers) {
-            dispatch(
-                dialogActions.open({
-                    message: '刪除後將無法復原, 請輸入 DELETE 完成刪除',
-                    title: `確認刪除 "${triggerName}" ?`,
-                    type: DialogTypeEnum.PROMPT,
-                    checkedMessage: 'DELETE',
-                    callback: deleteTriggersApi,
-                    promptInvalidMessage: '輸入錯誤，請再次嘗試',
-                })
-            );
-        }
-    };
-
-    useEffect(() => {
-        if (trigger === null && triggerId) {
-            getTriggerApi();
-        }
-    }, [trigger, triggerId, getTriggerApi]);
-
-    useEffect(() => {
-        if (
-            triggerId &&
-            deleteTriggersResponse &&
-            deleteTriggersResponse.status === RESPONSE_STATUS.OK
-        ) {
-            dispatch(
-                toasterActions.pushOne({
-                    message: `${triggerName} 已經成功刪除`,
-                    duration: 5,
-                    type: ToasterTypeEnum.INFO,
-                })
-            );
-            jumpToListPage();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [deleteTriggersResponse, dispatch]);
-
-    const isLoading = isGettingTrigger || (trigger === null && !isCreateMode);
+    const isCreateMode = !idFromUrl;
+    const isEditMode = location.pathname.includes('edit') && triggerId !== null;
     const isReadMode = !isCreateMode && !isEditMode && trigger !== null;
-    const breadcrumbsForReadMode = [
+
+    const breadcrumbs = [
         {
             label: '觸發列表',
             pathName: '/dashboard/triggers',
         },
         {
-            label: '觸發詳細頁',
-            pathName: location.pathname,
+            label: isCreateMode ? '新增' : '編輯',
+            pathName: useLocation().pathname,
         },
     ];
 
+    const [editedTriggerData, setEditedTriggerData] = useState({
+        name: trigger?.name || '',
+        sourceDeviceId: trigger?.sourceDeviceId || 0,
+        sourcePin: trigger?.sourcePin || '',
+        sourceThreshold: trigger?.sourceThreshold || '',
+        destinationDeviceId: trigger?.destinationDeviceId || 0,
+        destinationPin: trigger?.destinationPin || '',
+        destinationDeviceTargetState:
+            trigger?.destinationDeviceTargetState || 0,
+        operator: trigger?.operator || 0,
+    });
+
+    const {
+        devicePins: saurceDeviecePins,
+        getDevicePinsApi: getSourceDevicePinsApi,
+    } = useGetDevicePinsApi({
+        id: editedTriggerData.sourceDeviceId,
+    });
+
+    const {
+        devicePins: destinationDeviecePins,
+        getDevicePinsApi: getDestinationDevicePinsApi,
+    } = useGetDevicePinsApi({
+        id: editedTriggerData.destinationDeviceId,
+    });
+
+    const { isCreatingTrigger, createTriggerResponse, createTriggerApi } =
+        useCreateTriggerApi({
+            ...editedTriggerData,
+            sourceThreshold: Number(editedTriggerData.sourceThreshold),
+        });
+
+    const sourceDeviecePinsOptions =
+        editedTriggerData.sourceDeviceId === 0 ? [] : saurceDeviecePins;
+
+    const destinationDeviecePinsOptions =
+        editedTriggerData.destinationDeviceId === 0
+            ? []
+            : destinationDeviecePins;
+
+    // TODO: 可改用 pagination api，用 name query 去讓 sever 就篩選好我們要的 options，不用在 client 端 filter
+    const { allDevices, getAllDevicesApi } = useGetAllDevicesApi();
+
+    const { getTriggerApi } = useGetTriggerApi(triggerId || 0);
+
+    const { isUpdatingTrigger, updateTriggerResponse, updateTriggerApi } =
+        useUpdateTriggerApi({
+            trigerId: trigger?.id || 0,
+            updatedData: {
+                ...editedTriggerData,
+                sourceThreshold: Number(editedTriggerData.sourceThreshold),
+            },
+        });
+
+    useEffect(() => {
+        getAllDevicesApi();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+        if (triggerId) {
+            getTriggerApi();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [triggerId]);
+
+    useEffect(() => {
+        if (!trigger) {
+            return;
+        }
+        setEditedTriggerData({
+            name: trigger?.name || '',
+            sourceDeviceId: trigger?.sourceDeviceId || 0,
+            sourcePin: trigger?.sourcePin || '',
+            sourceThreshold: trigger?.sourceThreshold || '',
+            destinationDeviceId: trigger?.destinationDeviceId || 0,
+            destinationPin: trigger?.destinationPin || '',
+            destinationDeviceTargetState:
+                trigger?.destinationDeviceTargetState || 0,
+            operator: trigger?.operator || 0,
+        });
+    }, [trigger]);
+
+    useEffect(() => {
+        if (editedTriggerData.sourceDeviceId) {
+            getSourceDevicePinsApi();
+        }
+    }, [editedTriggerData.sourceDeviceId, getSourceDevicePinsApi]);
+
+    useEffect(() => {
+        if (editedTriggerData.destinationDeviceId) {
+            getDestinationDevicePinsApi();
+        }
+    }, [editedTriggerData.destinationDeviceId, getDestinationDevicePinsApi]);
+
+    useEffect(() => {
+        if (createTriggerResponse && createTriggerResponse.id) {
+            navigate(`/dashboard/triggers/${createTriggerResponse.id}`);
+        }
+    }, [navigate, createTriggerResponse]);
+
+    useEffect(() => {
+        if (updateTriggerResponse?.status === RESPONSE_STATUS.OK) {
+            dispatch(
+                toasterActions.pushOne({
+                    message: '編輯成功',
+                    duration: 5,
+                    type: ToasterTypeEnum.INFO,
+                })
+            );
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [updateTriggerResponse]);
+
     return (
-        <div className="trigger" data-testid="trigger">
-            {isLoading ? (
-                <div className="w-100 d-flex justify-content-center mt-5">
-                    <Spinner />
-                </div>
-            ) : isReadMode ? (
-                <>
-                    <PageTitle
-                        title={triggerName}
-                        breadcrumbs={breadcrumbsForReadMode}
-                        titleClickCallback={jumpToListPage}
-                        titleBackIconVisible
-                        primaryButtonVisible
-                        primaryButtonWording="編輯"
-                        primaryButtonCallback={jumpToEditPage}
-                        secondaryButtonVisible
-                        secondaryButtonIcon={trashIcon}
-                        secondaryButtonWording="刪除"
-                        secondaryButtonCallback={confirmToDeleteTrigger}
+        <div className="trigger px-3 px-lg-0 mx-auto mt-4 mt-lg-4">
+            <Breadcrumbs breadcrumbs={breadcrumbs} />
+            <h3
+                className="title d-flex align-item-center mb-3 mb-lg-4"
+                onClick={() => navigate('/dashboard/triggers')}
+            >
+                <img className="me-2 me-lg-3" src={leftArrowIcon} alt="Back" />
+                {isCreateMode ? '新增觸發' : '編輯觸發'}
+            </h3>
+            <form className="card m-0">
+                <div className="mb-3">
+                    <label className="form-label" htmlFor="trigger-name">
+                        觸發名稱
+                    </label>
+                    <input
+                        className="form-control"
+                        disabled={isReadMode}
+                        type="text"
+                        id="trigger-name"
+                        placeholder="輸入名稱"
+                        defaultValue={trigger?.name}
+                        onChange={(e) => {
+                            setEditedTriggerData((prev) => {
+                                return {
+                                    ...prev,
+                                    name: e.target.value,
+                                };
+                            });
+                        }}
                     />
-                    <div className="card">
-                        <div className="row m-0 border border-white">
-                            <div className="col-4 col-md-2 col-lg-2 py-2 bg-black bg-opacity-5 text-black text-opacity-45">
-                                事件
-                            </div>
-                            <div className="col-8 col-md-10 col-lg-4 py-2">
-                                <div className="d-flex">
-                                    <div className="me-2">
-                                        <Link
-                                            to={`/dashboard/devices/${trigger.sourceDeviceId}`}
-                                        >
-                                            {trigger.sourceDevice?.name}
-                                        </Link>
-                                    </div>
-                                    <OnlineStatusTag
-                                        isOnline={
-                                            trigger.sourceDevice?.online ||
-                                            false
-                                        }
-                                    />
-                                </div>
-                                <div>Pin: {trigger.sourcePin}</div>
-                            </div>
-                            <div className="col-4 col-md-2 col-lg-2 py-2 bg-black bg-opacity-5 text-black text-opacity-45">
-                                條件
-                            </div>
-                            <div className="col-8 col-md-10 col-lg-4 py-2">
-                                {triggerOperators[trigger.operator]?.label}{' '}
-                                {trigger.sourceThreshold}
-                            </div>
-                        </div>
-                        <div className="row m-0 border border-white">
-                            <div className="col-4 col-md-2 col-lg-2 py-2 bg-black bg-opacity-5 text-black text-opacity-45">
-                                目標
-                            </div>
-                            <div className="col-8 col-md-10 col-lg-4 py-2">
-                                <div className="d-flex">
-                                    <div className="me-2">
-                                        <Link
-                                            to={`/dashboard/devices/${trigger.destinationDeviceId}`}
-                                        >
-                                            {trigger.destinationDevice?.name}
-                                        </Link>
-                                    </div>
-                                    <OnlineStatusTag
-                                        isOnline={
-                                            trigger.destinationDevice?.online ||
-                                            false
-                                        }
-                                    />
-                                </div>
-                                <div>Pin: {trigger.destinationPin}</div>
-                            </div>
-                            <div className="col-4 col-md-2 col-lg-2 py-2 bg-black bg-opacity-5 text-black text-opacity-45">
-                                目標狀態
-                            </div>
-                            <div className="col-8 col-md-10 col-lg-4 py-2">
-                                {trigger.destinationDeviceTargetState === 1
-                                    ? '開'
-                                    : '關'}
-                            </div>
-                        </div>
+                </div>
+
+                <div className="d-flex mt-4 mb-3 fs-5">
+                    事件條件 <hr className="bg-gray flex-grow-1 ms-3" />
+                </div>
+                <DeviceAndPinInputs
+                    allDevices={allDevices}
+                    initialDeviceName={trigger?.sourceDevice?.name || ''}
+                    deviceNameLabel="來源裝置"
+                    pinLabel="來源裝置 Pin"
+                    pinValue={editedTriggerData.sourcePin}
+                    pinOptions={sourceDeviecePinsOptions}
+                    isDisabled={isReadMode}
+                    updatePin={(newPin) =>
+                        setEditedTriggerData((prev) => {
+                            return {
+                                ...prev,
+                                sourcePin: newPin,
+                            };
+                        })
+                    }
+                    updateDeviceId={(newDeviceId) =>
+                        setEditedTriggerData((prev) => {
+                            return {
+                                ...prev,
+                                sourceDeviceId: newDeviceId,
+                            };
+                        })
+                    }
+                />
+                <div className="w-100 d-flex flex-column flex-md-row">
+                    <div className="form-group w-100 mb-3 pe-md-3">
+                        <label className="mb-1">運算子</label>
+                        <select
+                            className="form-select"
+                            disabled={isReadMode}
+                            value={editedTriggerData.operator}
+                            onChange={(e) => {
+                                setEditedTriggerData((prev) => {
+                                    return {
+                                        ...prev,
+                                        operator: parseInt(e.target.value),
+                                    };
+                                });
+                            }}
+                        >
+                            {triggerOperators.map(
+                                ({ key, value, label, symbol }) => {
+                                    return (
+                                        <option key={key} value={value}>
+                                            {symbol || label}
+                                        </option>
+                                    );
+                                }
+                            )}
+                        </select>
                     </div>
-                </>
-            ) : (
-                <TriggerForm trigger={trigger} isCreateMode={isCreateMode} />
-            )}
+                    <div className="form-group w-100 mb-3 ps-md-3">
+                        <label className="mb-1">來源裝置門檻</label>
+                        <input
+                            className="form-control"
+                            type="number"
+                            disabled={isReadMode}
+                            placeholder="設定裝置條件"
+                            value={editedTriggerData.sourceThreshold}
+                            onChange={(e) => {
+                                setEditedTriggerData((prev) => {
+                                    return {
+                                        ...prev,
+                                        sourceThreshold: e.target.value,
+                                    };
+                                });
+                            }}
+                        />
+                    </div>
+                </div>
+
+                <div className="d-flex mt-4 mb-3 fs-5">
+                    目標設定 <hr className="bg-gray flex-grow-1 ms-3" />
+                </div>
+                <DeviceAndPinInputs
+                    allDevices={allDevices}
+                    initialDeviceName={trigger?.destinationDevice?.name || ''}
+                    deviceNameLabel="目標裝置"
+                    pinLabel="目標裝置 Pin"
+                    pinValue={editedTriggerData.destinationPin}
+                    pinOptions={destinationDeviecePinsOptions}
+                    isDisabled={isReadMode}
+                    updatePin={(newPin) =>
+                        setEditedTriggerData((prev) => {
+                            return {
+                                ...prev,
+                                destinationPin: newPin,
+                            };
+                        })
+                    }
+                    updateDeviceId={(newDeviceId) =>
+                        setEditedTriggerData((prev) => {
+                            return {
+                                ...prev,
+                                destinationDeviceId: newDeviceId,
+                            };
+                        })
+                    }
+                />
+                <div className="row">
+                    <label className="col-6">
+                        <div className="mb-1">目標狀態</div>
+                        <select
+                            className="form-select"
+                            disabled={isReadMode}
+                            value={
+                                editedTriggerData.destinationDeviceTargetState
+                            }
+                            onChange={(e) => {
+                                setEditedTriggerData((prev) => {
+                                    return {
+                                        ...prev,
+                                        destinationDeviceTargetState: parseInt(
+                                            e.target.value
+                                        ),
+                                    };
+                                });
+                            }}
+                        >
+                            <option value="1">開</option>
+                            <option value="0">關</option>
+                        </select>
+                    </label>
+                </div>
+                <div className="d-flex justify-content-end">
+                    <button
+                        type="button"
+                        className="btn btn-secondary mt-3 me-3"
+                        onClick={() => {
+                            isCreateMode || isReadMode
+                                ? navigate(`/dashboard/triggers`)
+                                : navigate(`/dashboard/triggers/${idFromUrl}`);
+                        }}
+                        disabled={isCreatingTrigger}
+                    >
+                        返回
+                    </button>
+                    {isReadMode ? (
+                        <Link
+                            type="submit"
+                            className="btn btn-primary mt-3"
+                            to={`/dashboard/triggers/edit/${idFromUrl}`}
+                        >
+                            編輯觸發
+                        </Link>
+                    ) : isCreateMode ? (
+                        <button
+                            type="submit"
+                            className="btn btn-primary mt-3"
+                            onClick={createTriggerApi}
+                            disabled={isCreatingTrigger}
+                        >
+                            {isCreatingTrigger ? '新增中' : '確定新增'}
+                        </button>
+                    ) : (
+                        <button
+                            type="submit"
+                            className="btn btn-primary mt-3"
+                            onClick={updateTriggerApi}
+                            disabled={isUpdatingTrigger}
+                        >
+                            {isUpdatingTrigger ? '儲存中' : '儲存編輯'}
+                        </button>
+                    )}
+                </div>
+            </form>
         </div>
     );
 };

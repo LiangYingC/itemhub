@@ -236,7 +236,7 @@ const Devices = () => {
                                                             }
                                                             bundleFirmware(id);
                                                         }}
-                                                        data-tip="打包程式碼"
+                                                        data-tip="下載程式碼"
                                                     >
                                                         {isFirmwarePrepare &&
                                                         shouldBeBundledId ===

@@ -43,16 +43,22 @@ export const devicesSlice = createSlice({
             };
         },
         append: (state, action: PayloadAction<DeviceItem>) => {
-            const deviceInState = state.devices?.find(
+            let devices = state.devices;
+            if (devices === null) {
+                devices = [];
+            }
+
+            const deviceInState = devices.find(
                 (item) => item.id === action.payload.id
             );
-            const devices = state.devices;
             if (!deviceInState) {
-                (devices || []).push(action.payload);
+                devices.push(action.payload);
             }
+
+            const newDevices = [...devices];
             return {
                 ...state,
-                devices,
+                devices: newDevices,
             };
         },
         addOne: (state, action: PayloadAction<DeviceItem>) => {

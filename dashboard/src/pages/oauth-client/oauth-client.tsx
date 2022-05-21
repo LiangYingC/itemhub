@@ -22,14 +22,10 @@ import {
     toasterActions,
     ToasterTypeEnum,
 } from '@/redux/reducers/toaster.reducer';
-
-interface OauthClientLocationState {
-    secret: string;
-}
+import OauthClientRedirectUri from '@/components/oauth-client-redirect-uri/oauth-client-redirect-uri';
 
 const OauthClient = () => {
     const { id: idFromUrl } = useParams();
-    const { state } = useLocation();
     const id: number | null = idFromUrl ? Number(idFromUrl) : null;
     const isCreateMode = id === null;
 
@@ -105,13 +101,7 @@ const OauthClient = () => {
                 })
             );
             navigate(
-                `/dashboard/oauth-clients/${createOAuthClientResponse?.id}`,
-                {
-                    replace: false,
-                    state: {
-                        secret: createOAuthClientResponse.clientSecrets,
-                    },
-                }
+                `/dashboard/oauth-clients/${createOAuthClientResponse?.id}`
             );
         }
     }, [createOAuthClientResponse]);
@@ -183,15 +173,12 @@ const OauthClient = () => {
                                         ? ''
                                         : '****************************'
                                 }
-                                value={
-                                    revokeSecretResponse?.secret ||
-                                    (state as OauthClientLocationState)?.secret
-                                }
+                                value={revokeSecretResponse?.secret}
                                 disabled
                             />
                         </div>
                         <div className="text-warn mt-3 d-flex">
-                            <div className="mt-1 me-1 bg-warn text-white rounded-circle">
+                            <div className="mt-1 me-1 bg-warn text-white rounded-circle flex-shrink-0">
                                 !
                             </div>
                             <div>
@@ -241,6 +228,8 @@ const OauthClient = () => {
                     </div>
                 )}
             </div>
+
+            <OauthClientRedirectUri oauthClientId={id} />
         </div>
     );
 };

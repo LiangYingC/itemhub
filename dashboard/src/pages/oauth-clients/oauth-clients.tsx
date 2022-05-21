@@ -138,8 +138,10 @@ const OauthClients = () => {
     const checkAllOrNot = () => {
         if (selectedIds.length === oauthClients?.length) {
             setSelectedIds([]);
+            setPageTitlePrimaryButtonClassName('btn btn-danger disabled');
         } else {
             setSelectedIds((oauthClients || []).map((item) => item.id));
+            setPageTitlePrimaryButtonClassName('btn btn-danger');
         }
     };
 

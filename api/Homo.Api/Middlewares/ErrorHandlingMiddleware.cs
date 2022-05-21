@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using Homo.Core.Constants;
+using Homo.AuthApi;
 
 namespace Homo.Api
 {
@@ -76,7 +78,7 @@ namespace Homo.Api
                 }
                 payload = customEx.payload;
             }
-            var result = new { message = internalErrorMessage, errorKey = errorKey, stackTrace = ex.StackTrace, payload = payload };
+            var result = new { message = internalErrorMessage, errorKey = errorKey, payload = payload };
             try
             {
                 context.Response.ContentType = "application/json";

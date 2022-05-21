@@ -11,6 +11,7 @@ const DeviceAndPinInputs = ({
     pinOptions,
     updatePin,
     updateDeviceId,
+    isDisabled,
 }: {
     allDevices: DeviceItem[];
     initialDeviceName?: string;
@@ -20,6 +21,7 @@ const DeviceAndPinInputs = ({
     pinOptions: PinItem[] | null;
     updatePin: (pin: string) => void;
     updateDeviceId: (id: number) => void;
+    isDisabled: boolean;
 }) => {
     const [deviceName, setDeviceName] = useState(initialDeviceName);
 
@@ -33,23 +35,32 @@ const DeviceAndPinInputs = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentDeviceId]);
 
+    useEffect(() => {
+        setDeviceName(initialDeviceName);
+    }, [initialDeviceName]);
+
     return (
         <div className="d-flex flex-column flex-md-row w-100 mb-3">
             <div className="form-group w-100 pe-md-3 mb-3 mb-md-0">
                 <label className="mb-1">{deviceNameLabel}</label>
                 <AutocompletedSearch
-                    datalistId="deviceAndPin"
+                    datalistId={deviceNameLabel}
                     placeholder="請輸入裝置名稱搜尋"
                     currentValue={deviceName}
+                    isDisabled={isDisabled}
                     updateCurrentValue={(newValue) => setDeviceName(newValue)}
                     allSuggestions={allDevices.map(({ name }) => name)}
                 />
             </div>
             <div className="form-group w-100 ps-md-3">
-                <label className="mb-1">{pinLabel}</label>
+                <label className="mb-1">
+                    {pinLabel} {pinValue}
+                </label>
+
                 <select
                     className="form-select"
                     value={pinValue}
+                    disabled={isDisabled}
                     onChange={(e) => {
                         const newSourcePin = e.target.value;
                         updatePin(newSourcePin);

@@ -9,6 +9,7 @@ const AutocompletedSearch = ({
     updateCurrentValue,
     onEnterKeyUp,
     onClickOption,
+    isDisabled,
 }: {
     datalistId: string;
     placeholder: string;
@@ -17,6 +18,7 @@ const AutocompletedSearch = ({
     updateCurrentValue: (newValue: string) => void;
     onEnterKeyUp?: () => void;
     onClickOption?: () => void;
+    isDisabled: boolean;
 }) => {
     const [filteredSuggestions, setFilteredSuggestions] =
         useState<string[]>(allSuggestions);
@@ -54,12 +56,13 @@ const AutocompletedSearch = ({
             isTriggerOnClickOption.current = true;
         }
 
-        const newFilteredOptions = allSuggestions.filter(
-            (suggestion) =>
+        const newFilteredOptions = allSuggestions.filter((suggestion) => {
+            return (
                 suggestion
                     .toLowerCase()
                     .indexOf(currentValue.toString().toLowerCase()) > -1
-        );
+            );
+        });
         setActiveSuggestionIndex(0);
         setFilteredSuggestions(newFilteredOptions);
         updateCurrentValue(currentValue);
@@ -95,6 +98,7 @@ const AutocompletedSearch = ({
                 list={datalistId}
                 placeholder={placeholder}
                 ref={inputRef}
+                disabled={isDisabled}
                 defaultValue={currentValue}
                 onKeyUp={handleKeyUp}
                 onChange={(e) => {
@@ -112,7 +116,10 @@ const AutocompletedSearch = ({
                         className = 'active-suggestion';
                     }
                     return (
-                        <option key={suggestion} className={className}>
+                        <option
+                            key={`${suggestion}-${index}`}
+                            className={className}
+                        >
                             {suggestion}
                         </option>
                     );

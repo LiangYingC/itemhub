@@ -29,16 +29,11 @@ const Trigger = () => {
 
     const { id: idFromUrl } = useParams();
     const triggerId = idFromUrl ? parseInt(idFromUrl) : null;
-    const createTriggerLocationState = location.state as {
-        trigger: TriggerItem;
-    } | null;
 
     const { triggerOperators } = useAppSelector(selectUniversal);
     const { triggers } = useAppSelector(selectTriggers);
     const trigger =
-        triggers?.filter((trigger) => trigger.id === triggerId)[0] ||
-        createTriggerLocationState?.trigger ||
-        null;
+        triggers?.filter((trigger) => trigger.id === triggerId)[0] || null;
 
     const isCreateMode = !idFromUrl;
     const isEditMode = location.pathname.includes('edit') && triggerId !== null;
@@ -152,12 +147,7 @@ const Trigger = () => {
 
     useEffect(() => {
         if (createTriggerResponse && createTriggerResponse.id) {
-            navigate(`/dashboard/triggers/${createTriggerResponse.id}`, {
-                replace: false,
-                state: {
-                    trigger: createTriggerResponse,
-                },
-            });
+            navigate(`/dashboard/triggers/${createTriggerResponse.id}`);
         }
     }, [navigate, createTriggerResponse]);
 

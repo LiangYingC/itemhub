@@ -9,7 +9,6 @@ import {
 } from '@/redux/reducers/toaster.reducer';
 import { selectUniversal } from '@/redux/reducers/universal.reducer';
 import { selectTriggers } from '@/redux/reducers/triggers.reducer';
-import { TriggerItem } from '@/types/triggers.type';
 import { useGetDevicePinsApi } from '@/hooks/apis/device.pin.hook';
 import {
     useCreateTriggerApi,
@@ -29,16 +28,11 @@ const Trigger = () => {
 
     const { id: idFromUrl } = useParams();
     const triggerId = idFromUrl ? parseInt(idFromUrl) : null;
-    const createTriggerLocationState = location.state as {
-        trigger: TriggerItem;
-    } | null;
 
     const { triggerOperators } = useAppSelector(selectUniversal);
     const { triggers } = useAppSelector(selectTriggers);
     const trigger =
-        triggers?.filter((trigger) => trigger.id === triggerId)[0] ||
-        createTriggerLocationState?.trigger ||
-        null;
+        triggers?.filter((trigger) => trigger.id === triggerId)[0] || null;
 
     const isCreateMode = !idFromUrl;
     const isEditMode = location.pathname.includes('edit') && triggerId !== null;
@@ -152,12 +146,7 @@ const Trigger = () => {
 
     useEffect(() => {
         if (createTriggerResponse && createTriggerResponse.id) {
-            navigate(`/dashboard/triggers/${createTriggerResponse.id}`, {
-                replace: false,
-                state: {
-                    trigger: createTriggerResponse,
-                },
-            });
+            navigate(`/dashboard/triggers/${createTriggerResponse.id}`);
         }
     }, [navigate, createTriggerResponse]);
 
@@ -171,6 +160,7 @@ const Trigger = () => {
                 })
             );
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [updateTriggerResponse]);
 
     return (

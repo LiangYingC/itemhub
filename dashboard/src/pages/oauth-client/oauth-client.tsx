@@ -24,13 +24,8 @@ import {
 } from '@/redux/reducers/toaster.reducer';
 import OauthClientRedirectUri from '@/components/oauth-client-redirect-uri/oauth-client-redirect-uri';
 
-interface OauthClientLocationState {
-    secret: string;
-}
-
 const OauthClient = () => {
     const { id: idFromUrl } = useParams();
-    const { state } = useLocation();
     const id: number | null = idFromUrl ? Number(idFromUrl) : null;
     const isCreateMode = id === null;
 
@@ -106,13 +101,7 @@ const OauthClient = () => {
                 })
             );
             navigate(
-                `/dashboard/oauth-clients/${createOAuthClientResponse?.id}`,
-                {
-                    replace: false,
-                    state: {
-                        secret: createOAuthClientResponse.clientSecrets,
-                    },
-                }
+                `/dashboard/oauth-clients/${createOAuthClientResponse?.id}`
             );
         }
     }, [createOAuthClientResponse]);
@@ -184,10 +173,7 @@ const OauthClient = () => {
                                         ? ''
                                         : '****************************'
                                 }
-                                value={
-                                    revokeSecretResponse?.secret ||
-                                    (state as OauthClientLocationState)?.secret
-                                }
+                                value={revokeSecretResponse?.secret}
                                 disabled
                             />
                         </div>

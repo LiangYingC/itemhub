@@ -1,6 +1,12 @@
 import { useRef } from 'react';
 import closeIcon from '@/assets/images/dark-close.svg';
 
+export interface Tag {
+    id: string;
+    text: string;
+    className?: string;
+}
+
 const TagsInput = ({
     placeholder,
     tags = [],
@@ -8,15 +14,15 @@ const TagsInput = ({
     handleDelete,
 }: {
     placeholder?: string;
-    tags?: Tag[];
+    tags: Tag[];
     handleAddition: (tag: Tag) => void;
     handleDelete: (id: string) => void;
 }) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const handleKeyboardEvent = (event: React.KeyboardEvent) => {
         if (event.key === 'Tab' && event.type === 'keydown') {
-            event.nativeEvent.stopPropagation();
-            event.nativeEvent.preventDefault();
+            event.stopPropagation();
+            event.preventDefault();
         }
 
         const { target } = event.nativeEvent as KeyboardEvent;
@@ -83,9 +89,3 @@ const TagsInput = ({
 };
 
 export default TagsInput;
-
-export interface Tag {
-    id: string;
-    text: string;
-    className?: string;
-}

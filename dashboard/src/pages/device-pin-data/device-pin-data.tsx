@@ -411,6 +411,35 @@ const DevicePinData = () => {
                                                 <div className="text-center rounded-circle bg-black bg-opacity-5 border-black border-opacity-10 pin-text">
                                                     {pin.name}
                                                 </div>
+                                                <div>
+                                                    <input
+                                                        className={`${
+                                                            selectedPins
+                                                                ?.map(
+                                                                    (pins) => {
+                                                                        return pins.pin;
+                                                                    }
+                                                                )
+                                                                .includes(
+                                                                    pin.name
+                                                                )
+                                                                ? 'd-block'
+                                                                : 'd-none'
+                                                        }`}
+                                                        type="text"
+                                                        placeholder="請輸入 pin name"
+                                                        defaultValue={
+                                                            devicePins?.find(
+                                                                (pins) => {
+                                                                    return (
+                                                                        pins.pin ===
+                                                                        pin.name
+                                                                    );
+                                                                }
+                                                            )?.name || ''
+                                                        }
+                                                    />
+                                                </div>
                                                 <div className="rounded-2 shadow-lg overflow-hidden bg-white pin-option">
                                                     <div
                                                         className={`lh-1 p-25`}

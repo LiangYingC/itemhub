@@ -429,14 +429,14 @@ const DevicePinData = () => {
                                                         type="text"
                                                         placeholder="請輸入 pin name"
                                                         defaultValue={
-                                                            devicePins?.filter(
+                                                            devicePins?.find(
                                                                 (pins) => {
                                                                     return (
                                                                         pins.pin ===
                                                                         pin.name
                                                                     );
                                                                 }
-                                                            )[0]?.name || ''
+                                                            )?.name || ''
                                                         }
                                                     />
                                                 </div>

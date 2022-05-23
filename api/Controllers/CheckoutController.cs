@@ -106,6 +106,12 @@ namespace Homo.IotApi
                 result = sr.ReadToEnd();
             }
             DTOs.TapPayResponse response = Newtonsoft.Json.JsonConvert.DeserializeObject<DTOs.TapPayResponse>(result);
+            if (response.status != DTOs.TAP_PAY_TRANSACTION_STATUS.OK)
+            {
+                subscription.DeletedAt = System.DateTime.Now;
+                _dbContext.SaveChanges();
+                throw new CustomException(ERROR_CODE.TAPPAY_TRANSACTION_ERROR, System.Net.HttpStatusCode.InternalServerError, new Dictionary<string, string>() { { "message", response.msg ?? response.bank_result_msg } });
+            }
 
             subscription.CardKey = response.card_secret.card_key;
             subscription.CardToken = response.card_secret.card_token;
@@ -125,15 +131,7 @@ namespace Homo.IotApi
             name.LastName = dto.name.Substring(0, 1);
             UserDataservice.UpdateName(_authDbContext, extraPayload.Id, name, extraPayload.Id);
 
-
-            if (response.status == DTOs.TAP_PAY_TRANSACTION_STATUS.OK)
-            {
-                return new { Status = CUSTOM_RESPONSE.OK, paymentUrl = response.payment_url };
-            }
-            else
-            {
-                throw new CustomException(ERROR_CODE.TAPPAY_TRANSACTION_ERROR, System.Net.HttpStatusCode.InternalServerError, new Dictionary<string, string>() { { "message", response.msg ?? response.bank_result_msg } });
-            }
+            return new { Status = CUSTOM_RESPONSE.OK, paymentUrl = response.payment_url };
         }
     }
 }

@@ -172,8 +172,11 @@ export class SignUpController extends RoutingController {
             this.pageVariable.passwordInvalidMessage = resp.data.message;
             return;
         }
-        CookieUtil.setCookie('token', resp.data.token);
-        CookieUtil.setCookie('dashboardToken', resp.data.dashboardToken);
+        const payload = window.jwt_decode(resp.data.token);
+        CookieUtil.setCookie('token', resp.data.token, null, payload.exp);
+
+        const dashboardPayload = window.jwt_decode(resp.data.dashboardToken);
+        CookieUtil.setCookie('dashboardToken', resp.data.dashboardToken, null, dashboardPayload.exp);
         history.pushState({}, '', '/auth/finish/');
     }
 

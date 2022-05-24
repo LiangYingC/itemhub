@@ -18,12 +18,14 @@ namespace Homo.IotApi
     {
         private readonly IotDbContext _dbContext;
         private readonly Homo.AuthApi.DBContext _authDbContext;
+        private readonly Homo.Api.CommonLocalizer _commonLocalizer;
         private string _tapPayEndpoint;
         private string _tapPayPartnerKey;
         private string _tapPayMerchantId;
         private string _websiteUrl;
         private string _apiUrl;
-        public CheckoutController(IotDbContext dbContext, Homo.AuthApi.DBContext authDbContext, IOptions<AppSettings> appSettings)
+        private string _adminEmail;
+        public CheckoutController(IotDbContext dbContext, Homo.AuthApi.DBContext authDbContext, IOptions<AppSettings> appSettings, Homo.Api.CommonLocalizer commonLocalizer)
         {
             _dbContext = dbContext;
             _authDbContext = authDbContext;
@@ -32,6 +34,8 @@ namespace Homo.IotApi
             _tapPayMerchantId = appSettings.Value.Secrets.TapPayMerchantId;
             _websiteUrl = appSettings.Value.Common.WebsiteUrl;
             _apiUrl = appSettings.Value.Common.ApiUrl;
+            _adminEmail = appSettings.Value.Common.AdminEmail;
+            _commonLocalizer = commonLocalizer;
 
         }
 
@@ -113,26 +117,31 @@ namespace Homo.IotApi
 
             // 把交易結果存回資料庫
             TransactionDataservice.UpdateTransitionRaw(_dbContext, transaction, JsonConvert.SerializeObject(withoutSenstiveInfoResponse), response.rec_trade_id);
-
+            string errorMessage = "";
             if (response.status != DTOs.TAP_PAY_TRANSACTION_STATUS.OK)
             {
-                SubscriptionDataservice.DeleteSubscription(_dbContext, subscription.Id);
-                throw new CustomException(ERROR_CODE.TAPPAY_TRANSACTION_ERROR, System.Net.HttpStatusCode.InternalServerError, new Dictionary<string, string>() { { "message", response.msg ?? response.bank_result_msg } });
+                errorMessage = response.msg ?? response.bank_result_msg;
             }
 
             if (response.card_secret == null)
             {
-                throw new CustomException(ERROR_CODE.TAPPAY_TRANSACTION_ERROR, System.Net.HttpStatusCode.InternalServerError, new Dictionary<string, string>() { { "message", "cart secret is null" } });
+                errorMessage = _commonLocalizer.Get("cartSecretIsNull", null, new Dictionary<string, string>() { { "adminEmail", _adminEmail } });
             }
 
             if (response.card_secret.card_token == null)
             {
-                throw new CustomException(ERROR_CODE.TAPPAY_TRANSACTION_ERROR, System.Net.HttpStatusCode.InternalServerError, new Dictionary<string, string>() { { "message", "cart token is null" } });
+                errorMessage = _commonLocalizer.Get("cartTokenIsNull", null, new Dictionary<string, string>() { { "adminEmail", _adminEmail } });
             }
 
             if (response.card_secret.card_key == null)
             {
-                throw new CustomException(ERROR_CODE.TAPPAY_TRANSACTION_ERROR, System.Net.HttpStatusCode.InternalServerError, new Dictionary<string, string>() { { "message", "cart key is null" } });
+                errorMessage = _commonLocalizer.Get("cartKeyIsNull", null, new Dictionary<string, string>() { { "adminEmail", _adminEmail } });
+            }
+
+            if (!String.IsNullOrEmpty(errorMessage))
+            {
+                SubscriptionDataservice.DeleteSubscription(_dbContext, subscription.Id);
+                throw new CustomException(ERROR_CODE.TAPPAY_TRANSACTION_ERROR, System.Net.HttpStatusCode.InternalServerError, new Dictionary<string, string>() { { "message", errorMessage } });
             }
 
             // save card key and card token to subscription

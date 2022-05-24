@@ -108,8 +108,7 @@ namespace Homo.IotApi
             DTOs.TapPayResponse response = Newtonsoft.Json.JsonConvert.DeserializeObject<DTOs.TapPayResponse>(result);
             if (response.status != DTOs.TAP_PAY_TRANSACTION_STATUS.OK)
             {
-                subscription.DeletedAt = System.DateTime.Now;
-                _dbContext.SaveChanges();
+                SubscriptionDataservice.DeleteSubscription(_dbContext, subscription.Id);
                 throw new CustomException(ERROR_CODE.TAPPAY_TRANSACTION_ERROR, System.Net.HttpStatusCode.InternalServerError, new Dictionary<string, string>() { { "message", response.msg ?? response.bank_result_msg } });
             }
 

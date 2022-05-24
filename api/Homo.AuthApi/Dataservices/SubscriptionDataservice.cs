@@ -67,6 +67,11 @@ namespace Homo.IotApi
             dbContext.Subscription.Where(x => x.DeletedAt == null && x.OwnerId == ownerId).UpdateFromQuery(x => new Subscription() { StopNextSubscribed = true });
         }
 
+        public static void DeleteSubscription(IotDbContext dbContext, long id)
+        {
+            dbContext.Subscription.Where(x => x.DeletedAt == null && x.Id == id).UpdateFromQuery(x => new Subscription() { DeletedAt = System.DateTime.Now });
+        }
+
         public static Subscription GetOneByTransactionId(IotDbContext dbContext, long ownerId, long transactionId)
         {
             return dbContext.Subscription.Where(x => x.DeletedAt == null && x.OwnerId == ownerId && x.TransactionId == transactionId).FirstOrDefault();

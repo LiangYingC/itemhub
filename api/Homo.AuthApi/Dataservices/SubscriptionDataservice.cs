@@ -76,5 +76,12 @@ namespace Homo.IotApi
         {
             return dbContext.Subscription.Where(x => x.DeletedAt == null && x.OwnerId == ownerId && x.TransactionId == transactionId).FirstOrDefault();
         }
+
+        public static void SaveCardInformation(IotDbContext dbContext, Subscription subscription, string cardKey, string cardToken)
+        {
+            subscription.CardKey = cardKey;
+            subscription.CardToken = cardToken;
+            dbContext.SaveChanges();
+        }
     }
 }

@@ -106,23 +106,37 @@ namespace Homo.IotApi
                 result = sr.ReadToEnd();
             }
             DTOs.TapPayResponse response = Newtonsoft.Json.JsonConvert.DeserializeObject<DTOs.TapPayResponse>(result);
-            if (response.status != DTOs.TAP_PAY_TRANSACTION_STATUS.OK)
-            {
-                SubscriptionDataservice.DeleteSubscription(_dbContext, subscription.Id);
-                throw new CustomException(ERROR_CODE.TAPPAY_TRANSACTION_ERROR, System.Net.HttpStatusCode.InternalServerError, new Dictionary<string, string>() { { "message", response.msg ?? response.bank_result_msg } });
-            }
-
-            subscription.CardKey = response.card_secret.card_key;
-            subscription.CardToken = response.card_secret.card_token;
 
             // create transaction log and remove senstive information 
             var withoutSenstiveInfoResponse = JsonConvert.DeserializeObject<IDictionary<string, dynamic>>(JsonConvert.SerializeObject(response));
             withoutSenstiveInfoResponse.Remove("card_secret");
 
             // 把交易結果存回資料庫
-            transaction.Raw = JsonConvert.SerializeObject(withoutSenstiveInfoResponse);
-            transaction.ExternalTransactionId = response.rec_trade_id;
-            _dbContext.SaveChanges();
+            TransactionDataservice.UpdateTransitionRaw(_dbContext, transaction, JsonConvert.SerializeObject(withoutSenstiveInfoResponse), response.rec_trade_id);
+
+            if (response.status != DTOs.TAP_PAY_TRANSACTION_STATUS.OK)
+            {
+                SubscriptionDataservice.DeleteSubscription(_dbContext, subscription.Id);
+                throw new CustomException(ERROR_CODE.TAPPAY_TRANSACTION_ERROR, System.Net.HttpStatusCode.InternalServerError, new Dictionary<string, string>() { { "message", response.msg ?? response.bank_result_msg } });
+            }
+
+            if (response.card_secret == null)
+            {
+                throw new CustomException(ERROR_CODE.TAPPAY_TRANSACTION_ERROR, System.Net.HttpStatusCode.InternalServerError, new Dictionary<string, string>() { { "message", "cart secret is null" } });
+            }
+
+            if (response.card_secret.card_token == null)
+            {
+                throw new CustomException(ERROR_CODE.TAPPAY_TRANSACTION_ERROR, System.Net.HttpStatusCode.InternalServerError, new Dictionary<string, string>() { { "message", "cart token is null" } });
+            }
+
+            if (response.card_secret.card_key == null)
+            {
+                throw new CustomException(ERROR_CODE.TAPPAY_TRANSACTION_ERROR, System.Net.HttpStatusCode.InternalServerError, new Dictionary<string, string>() { { "message", "cart key is null" } });
+            }
+
+            // save card key and card token to subscription
+            SubscriptionDataservice.SaveCardInformation(_dbContext, subscription, response.card_secret.card_key, response.card_secret.card_token);
 
             // 更新姓名
             Homo.AuthApi.DTOs.UpdateName name = new Homo.AuthApi.DTOs.UpdateName();

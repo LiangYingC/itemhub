@@ -44,6 +44,10 @@ const AutocompletedSearch = ({
         }
     }, [currentValue, isTriggerOnEnterKeyUp, onEnterKeyUp]);
 
+    useEffect(() => {
+        setFilteredSuggestions(allSuggestions);
+    }, [allSuggestions]);
+
     const handleChangeValue = ({
         currentValue,
         nativeEvent,

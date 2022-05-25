@@ -123,17 +123,17 @@ namespace Homo.IotApi
                 errorMessage = response.msg ?? response.bank_result_msg;
             }
 
-            if (response.card_secret == null)
+            if (response.status == DTOs.TAP_PAY_TRANSACTION_STATUS.OK && response.card_secret == null)
             {
                 errorMessage = _commonLocalizer.Get("cartSecretIsNull", null, new Dictionary<string, string>() { { "adminEmail", _adminEmail } });
             }
 
-            if (response.card_secret.card_token == null)
+            if (response.status == DTOs.TAP_PAY_TRANSACTION_STATUS.OK && response.card_secret.card_token == null)
             {
                 errorMessage = _commonLocalizer.Get("cartTokenIsNull", null, new Dictionary<string, string>() { { "adminEmail", _adminEmail } });
             }
 
-            if (response.card_secret.card_key == null)
+            if (response.status == DTOs.TAP_PAY_TRANSACTION_STATUS.OK && response.card_secret.card_key == null)
             {
                 errorMessage = _commonLocalizer.Get("cartKeyIsNull", null, new Dictionary<string, string>() { { "adminEmail", _adminEmail } });
             }

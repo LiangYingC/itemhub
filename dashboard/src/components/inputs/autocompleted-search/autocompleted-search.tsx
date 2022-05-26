@@ -134,9 +134,7 @@ const AutocompletedSearch = ({
                 })}
             </datalist>
             {isError && (
-                <div className="text-error text-danger mt-1 font-size-5">
-                    {errorWords}
-                </div>
+                <div className="text-error text-danger mt-1">{errorWords}</div>
             )}
         </div>
     );

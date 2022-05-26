@@ -274,7 +274,7 @@ const Trigger = () => {
                         }}
                     />
                     {!isValidEditedTrigger.name && (
-                        <div className="text-error text-danger mt-1 font-size-5">
+                        <div className="text-error text-danger mt-1">
                             請輸入觸發名稱
                         </div>
                     )}
@@ -378,7 +378,7 @@ const Trigger = () => {
                             }}
                         />
                         {!isValidEditedTrigger.sourceThreshold && (
-                            <div className="text-error text-danger mt-1 font-size-5">
+                            <div className="text-error text-danger mt-1">
                                 請輸入設定條件
                             </div>
                         )}

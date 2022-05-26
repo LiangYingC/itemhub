@@ -98,7 +98,7 @@ const DeviceAndPinInputs = ({
                     )}
                 </select>
                 {isPinError && (
-                    <div className="text-error text-danger mt-1 font-size-5">
+                    <div className="text-error text-danger mt-1">
                         請輸入裝置 Pin
                     </div>
                 )}

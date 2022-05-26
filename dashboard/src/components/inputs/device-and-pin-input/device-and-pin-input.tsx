@@ -53,7 +53,7 @@ const DeviceAndPinInputs = ({
                     currentValue={deviceName}
                     isDisabled={isDisabled}
                     isError={isDeviceNameError}
-                    errorWords="請輸入裝置名稱"
+                    errorMessage="請輸入裝置名稱"
                     updateCurrentValue={(newValue) => setDeviceName(newValue)}
                     allSuggestions={allDevices.map(({ name }) => name)}
                 />

@@ -4,7 +4,7 @@ import debounce from 'lodash.debounce';
 const AutocompletedSearch = ({
     isDisabled = false,
     isError = false,
-    errorWords = '請輸入正確的內容',
+    errorMessage = '請輸入正確的內容',
     datalistId,
     placeholder,
     allSuggestions,
@@ -15,7 +15,7 @@ const AutocompletedSearch = ({
 }: {
     isDisabled?: boolean;
     isError?: boolean;
-    errorWords?: string;
+    errorMessage?: string;
     datalistId: string;
     placeholder: string;
     allSuggestions: string[];
@@ -134,7 +134,9 @@ const AutocompletedSearch = ({
                 })}
             </datalist>
             {isError && (
-                <div className="text-error text-danger mt-1">{errorWords}</div>
+                <div className="text-error text-danger mt-1">
+                    {errorMessage}
+                </div>
             )}
         </div>
     );

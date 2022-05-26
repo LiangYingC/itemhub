@@ -275,7 +275,7 @@ const Trigger = () => {
                     />
                     {!isValidEditedTrigger.name && (
                         <div className="text-error text-danger mt-1 font-size-5">
-                            請輸入名稱
+                            請輸入觸發名稱
                         </div>
                     )}
                 </div>

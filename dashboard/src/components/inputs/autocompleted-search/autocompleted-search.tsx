@@ -2,6 +2,9 @@ import { useState, useEffect, useRef } from 'react';
 import debounce from 'lodash.debounce';
 
 const AutocompletedSearch = ({
+    isDisabled = false,
+    isError = false,
+    errorWords = '請輸入正確的內容',
     datalistId,
     placeholder,
     allSuggestions,
@@ -9,8 +12,10 @@ const AutocompletedSearch = ({
     updateCurrentValue,
     onEnterKeyUp,
     onClickOption,
-    isDisabled,
 }: {
+    isDisabled?: boolean;
+    isError?: boolean;
+    errorWords?: string;
     datalistId: string;
     placeholder: string;
     allSuggestions: string[];
@@ -18,7 +23,6 @@ const AutocompletedSearch = ({
     updateCurrentValue: (newValue: string) => void;
     onEnterKeyUp?: () => void;
     onClickOption?: () => void;
-    isDisabled: boolean;
 }) => {
     const [filteredSuggestions, setFilteredSuggestions] =
         useState<string[]>(allSuggestions);
@@ -98,7 +102,7 @@ const AutocompletedSearch = ({
     return (
         <div ref={wrapperRef}>
             <input
-                className="form-control"
+                className={`form-control ${isError && 'border-danger'}`}
                 list={datalistId}
                 placeholder={placeholder}
                 ref={inputRef}
@@ -129,6 +133,11 @@ const AutocompletedSearch = ({
                     );
                 })}
             </datalist>
+            {isError && (
+                <div className="text-error text-danger mt-1 font-size-5">
+                    {errorWords}
+                </div>
+            )}
         </div>
     );
 };

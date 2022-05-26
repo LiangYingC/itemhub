@@ -4,8 +4,10 @@ import AutocompletedSearch from '@/components/inputs/autocompleted-search/autoco
 
 const DeviceAndPinInputs = ({
     allDevices,
+    isDeviceNameError,
     initialDeviceName = '',
     deviceNameLabel,
+    isPinError,
     pinLabel,
     pinValue,
     pinOptions,
@@ -14,8 +16,10 @@ const DeviceAndPinInputs = ({
     isDisabled,
 }: {
     allDevices: DeviceItem[];
+    isDeviceNameError: boolean;
     initialDeviceName?: string;
     deviceNameLabel: string;
+    isPinError: boolean;
     pinLabel: string;
     pinValue: string;
     pinOptions: PinItem[] | null;
@@ -48,6 +52,8 @@ const DeviceAndPinInputs = ({
                     placeholder="請輸入裝置名稱搜尋"
                     currentValue={deviceName}
                     isDisabled={isDisabled}
+                    isError={isDeviceNameError}
+                    errorWords="請輸入裝置名稱"
                     updateCurrentValue={(newValue) => setDeviceName(newValue)}
                     allSuggestions={allDevices.map(({ name }) => name)}
                 />
@@ -56,9 +62,8 @@ const DeviceAndPinInputs = ({
                 <label className="mb-1">
                     {pinLabel} {pinValue}
                 </label>
-
                 <select
-                    className="form-select"
+                    className={`form-select ${isPinError && 'border-danger'}`}
                     value={pinValue}
                     disabled={isDisabled}
                     onChange={(e) => {
@@ -92,6 +97,11 @@ const DeviceAndPinInputs = ({
                         </>
                     )}
                 </select>
+                {isPinError && (
+                    <div className="text-error text-danger mt-1 font-size-5">
+                        請輸入裝置 Pin
+                    </div>
+                )}
             </div>
         </div>
     );

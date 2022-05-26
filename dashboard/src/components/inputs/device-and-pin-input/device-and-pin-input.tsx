@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { DeviceItem, PinItem } from '@/types/devices.type';
 import AutocompletedSearch from '@/components/inputs/autocompleted-search/autocompleted-search';
 
@@ -27,13 +27,14 @@ const DeviceAndPinInputs = ({
     updateDeviceId: (id: number) => void;
     isDisabled: boolean;
 }) => {
+    const hasManualUpdate = useRef(false);
     const [deviceName, setDeviceName] = useState(initialDeviceName);
 
     const currentDeviceId =
         allDevices.filter(({ name }) => deviceName === name)[0]?.id || 0;
 
     useEffect(() => {
-        if (currentDeviceId) {
+        if (hasManualUpdate.current) {
             updateDeviceId(currentDeviceId);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -54,7 +55,12 @@ const DeviceAndPinInputs = ({
                     isDisabled={isDisabled}
                     isError={isDeviceNameError}
                     errorMessage="請輸入裝置名稱"
-                    updateCurrentValue={(newValue) => setDeviceName(newValue)}
+                    updateCurrentValue={(newValue) => {
+                        setDeviceName(newValue);
+                        if (!hasManualUpdate.current) {
+                            hasManualUpdate.current = true;
+                        }
+                    }}
                     allSuggestions={allDevices.map(({ name }) => name)}
                 />
             </div>

@@ -299,7 +299,6 @@ const Trigger = () => {
                                 sourcePin: newPin,
                             };
                         });
-                        console.log({ newPin });
                         setIsValidEditedTrigger((prev) => {
                             return {
                                 ...prev,
@@ -393,7 +392,7 @@ const Trigger = () => {
                     isDeviceNameError={
                         !isValidEditedTrigger.destinationDeviceId
                     }
-                    initialDeviceName={trigger?.destinationDevice?.name || ''}
+                    initialDeviceName={trigger?.destinationDevice?.name}
                     deviceNameLabel="目標裝置"
                     isPinError={!isValidEditedTrigger.destinationPin}
                     pinLabel="目標裝置 Pin"

@@ -117,29 +117,35 @@ const DevicePinData = () => {
         navigate(`/dashboard/devices/${id}`);
     };
 
+    const [isValidData, setIsValidData] = useState({
+        name: true,
+        selectedPins: true,
+    });
+
     const validate = () => {
-        const validationMessage = [];
-        if (name.length === 0) {
-            validationMessage.push('請輸入裝置名稱');
+        let isValidAll = true;
+        if (!name) {
+            setIsValidData((prev) => {
+                return {
+                    ...prev,
+                    name: false,
+                };
+            });
+            isValidAll = false;
         }
-        if (selectedPins?.length === 0) {
-            validationMessage.push('請至少選擇一個 PIN');
-        }
-        if (validationMessage.length > 0) {
-            dispatch(
-                toasterActions.pushOne({
-                    message: validationMessage.join(', '),
-                    duration: 5,
-                    type: ToasterTypeEnum.WARN,
-                })
-            );
-            return;
+        if (!selectedPins || selectedPins.length === 0) {
+            setIsValidData((prev) => {
+                return {
+                    ...prev,
+                    selectedPins: false,
+                };
+            });
+            isValidAll = false;
         }
 
-        if (isCreateMode) {
-            createDeviceApi();
-        } else {
-            updateDevice();
+        if (isValidAll) {
+            isCreateMode ? createDeviceApi() : updateDevice();
+            return;
         }
     };
 
@@ -214,6 +220,12 @@ const DevicePinData = () => {
 
             newSelected.push({ ...pushData });
             return newSelected;
+        });
+        setIsValidData((prev) => {
+            return {
+                ...prev,
+                selectedPins: true,
+            };
         });
     };
 
@@ -347,11 +359,27 @@ const DevicePinData = () => {
                             <label>裝置名稱</label>
                             <input
                                 type="text"
-                                className="form-control mt-2"
+                                className={`form-control mt-2 ${
+                                    !isValidData.name && 'border-danger'
+                                }`}
                                 placeholder="請輸入裝置名稱"
                                 defaultValue={device ? device.name : ''}
-                                onChange={(e) => setName(e.target.value)}
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    setName(e.target.value);
+                                    setIsValidData((prev) => {
+                                        return {
+                                            ...prev,
+                                            name: value ? true : false,
+                                        };
+                                    });
+                                }}
                             />
+                            {!isValidData.name && (
+                                <div className="text-error text-danger mt-1 font-size-5">
+                                    請輸入裝置名稱
+                                </div>
+                            )}
                         </div>
                         <div className="mb-4">
                             <label>裝置類型</label>
@@ -377,7 +405,12 @@ const DevicePinData = () => {
                         </div>
                         <div className="mb-4">
                             <label>選擇 Pin</label>
-                            <div className="d-flex flex-wrap mt-5">
+                            {!isValidData.selectedPins && (
+                                <div className="text-error text-danger font-size-5">
+                                    請點選並設定至少一個 Pin
+                                </div>
+                            )}
+                            <div className="d-flex flex-wrap mt-2">
                                 {microcontrollerItem[0]?.pins.map(
                                     (pin, index) => {
                                         return (
@@ -511,7 +544,6 @@ const DevicePinData = () => {
                             >
                                 返回
                             </button>
-
                             <button
                                 disabled={isCreating || isUpdating}
                                 className="btn btn-primary"

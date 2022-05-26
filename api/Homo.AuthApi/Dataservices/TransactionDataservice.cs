@@ -36,5 +36,11 @@ namespace Homo.IotApi
             transaction.ExternalTransactionId = externalTransactionId;
             dbContext.SaveChanges();
         }
+
+        public static void UpdateStatus(IotDbContext dbContext, Transaction transaction, TRANSACTION_STATUS status)
+        {
+            transaction.Status = status;
+            dbContext.SaveChanges();
+        }
     }
 }

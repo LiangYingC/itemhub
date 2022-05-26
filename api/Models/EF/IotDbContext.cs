@@ -2,10 +2,10 @@ using System;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+using Homo.AuthApi;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Homo.AuthApi;
 
 namespace Homo.IotApi
 {
@@ -170,7 +170,6 @@ namespace Homo.IotApi
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
-
 
     }
 }

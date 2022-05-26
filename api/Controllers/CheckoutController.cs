@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
-using Homo.AuthApi;
-using Homo.Api;
-using Homo.Core.Constants;
-using Microsoft.Extensions.Options;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Homo.Api;
+using Homo.AuthApi;
+using Homo.Core.Constants;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
 namespace Homo.IotApi
@@ -44,15 +44,15 @@ namespace Homo.IotApi
         public async Task<dynamic> checkout([FromBody] DTOs.Checkout dto, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
             // avoid duplciate subscribe
-            var subscriptionsInDb = SubscriptionDataservice.GetAll(_dbContext, extraPayload.Id, dto.pricingPlan, DateTime.Now); ;
+            var subscriptionsInDb = SubscriptionDataservice.GetAll(_dbContext, extraPayload.Id, dto.pricingPlan, DateTime.Now);
             List<ConvertHelper.EnumList> plans = ConvertHelper.EnumToList(typeof(PRICING_PLAN));
             if (subscriptionsInDb.Count > 0)
             {
                 Subscription firstSubscription = subscriptionsInDb[0];
                 ConvertHelper.EnumList existstPlan = plans.Find(x => (int)x.Value == firstSubscription.PricingPlan);
                 throw new CustomException(ERROR_CODE.DUPLICATE_SUBSCRIBE,
-                System.Net.HttpStatusCode.BadRequest,
-                new Dictionary<string, string> { { "planName", existstPlan.Label }, { "startAt", firstSubscription.StartAt.ToString("yyyy-MM-dd HH:mm:ss") }, { "endAt", firstSubscription.EndAt.ToString("yyyy-MM-dd HH:mm:ss") } });
+                    System.Net.HttpStatusCode.BadRequest,
+                    new Dictionary<string, string> { { "planName", existstPlan.Label }, { "startAt", firstSubscription.StartAt.ToString("yyyy-MM-dd HH:mm:ss") }, { "endAt", firstSubscription.EndAt.ToString("yyyy-MM-dd HH:mm:ss") } });
             }
 
             // prepare Tappay request data
@@ -63,7 +63,6 @@ namespace Homo.IotApi
             DateTime endOfMonth = startOfMonth.AddDays(daysInMonth - 1).AddHours(23).AddMinutes(59).AddSeconds(59);
             int infactAmount = (int)Math.Round((decimal)amount * (endOfMonth - DateTime.Now).Days / daysInMonth);
             string planName = plans.Find(x => (int)x.Value == (int)dto.pricingPlan).Label;
-
 
             // 在 local 端建立 subscription, transaction
             // subscription 訂閱紀錄
@@ -80,6 +79,7 @@ namespace Homo.IotApi
                 EndAt = endOfMonth,
                 TransactionId = transaction.Id,
                 PricingPlan = dto.pricingPlan,
+                Status = SUBSCRIPTION_STATUS.PENDING,
             });
 
             var postBody = new
@@ -140,7 +140,6 @@ namespace Homo.IotApi
 
             if (!String.IsNullOrEmpty(errorMessage))
             {
-                SubscriptionDataservice.DeleteSubscription(_dbContext, subscription.Id);
                 throw new CustomException(ERROR_CODE.TAPPAY_TRANSACTION_ERROR, System.Net.HttpStatusCode.InternalServerError, new Dictionary<string, string>() { { "message", errorMessage } });
             }
 

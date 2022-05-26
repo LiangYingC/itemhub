@@ -24,28 +24,22 @@ namespace Homo.IotApi
         public static List<Subscription> GetAll(IotDbContext dbContext, long? ownerId, PRICING_PLAN? pricingPlan, DateTime? current)
         {
             return dbContext.Subscription.Where(x =>
-                (ownerId == null || x.OwnerId == ownerId)
-                && (pricingPlan == null || x.PricingPlan == (int)pricingPlan)
-                && x.DeletedAt == null
-                && (current == null || (x.StartAt <= current && x.EndAt >= current))
+                (ownerId == null || x.OwnerId == ownerId) &&
+                (pricingPlan == null || x.PricingPlan == (int)pricingPlan) &&
+                x.DeletedAt == null &&
+                (current == null || (x.StartAt <= current && x.EndAt >= current)) &&
+                x.Status == SUBSCRIPTION_STATUS.PAID
             ).ToList<Subscription>();
-        }
-
-        public static Subscription GetOne(IotDbContext dbContext, long? ownerId)
-        {
-            return dbContext.Subscription.Where(x =>
-                (ownerId == null || x.OwnerId == ownerId)
-                && x.DeletedAt == null
-            ).OrderByDescending(x => x.Id).FirstOrDefault();
         }
 
         public static Subscription GetCurrnetOne(IotDbContext dbContext, long? ownerId)
         {
             return dbContext.Subscription.Where(x =>
-                (ownerId == null || x.OwnerId == ownerId)
-                && x.DeletedAt == null
-                && x.StartAt <= DateTime.Now
-                && x.EndAt >= DateTime.Now
+                (ownerId == null || x.OwnerId == ownerId) &&
+                x.DeletedAt == null &&
+                x.StartAt <= DateTime.Now &&
+                x.EndAt >= DateTime.Now &&
+                x.Status == SUBSCRIPTION_STATUS.PAID
             ).OrderByDescending(x => x.Id).FirstOrDefault();
         }
 
@@ -54,22 +48,19 @@ namespace Homo.IotApi
             DateTime filterStartAt = nextStartAt.AddMonths(-1);
             return dbContext.Subscription
                 .Where(x =>
-                    x.DeletedAt == null
-                    && !x.StopNextSubscribed
-                    && x.EndAt > filterStartAt // 當前時間減一個月確定前一期是否有資料
-                    && !dbContext.Subscription.Any(y => nextStartAt >= y.StartAt && nextStartAt <= y.EndAt) // 同時沒有當期的資料
+                    x.DeletedAt == null &&
+                    x.Status == SUBSCRIPTION_STATUS.PAID &&
+                    !x.StopNextSubscribed &&
+                    x.EndAt > filterStartAt // 當前時間減一個月確定前一期是否有資料
+                    &&
+                    !dbContext.Subscription.Any(y => nextStartAt >= y.StartAt && nextStartAt <= y.EndAt) // 同時沒有當期的資料
                 )
                 .ToList();
         }
 
-        public static void CancelSubscription(IotDbContext dbContext, long ownerId)
+        public static void CancelCurrentSubscription(IotDbContext dbContext, long ownerId, long subscriptionId)
         {
-            dbContext.Subscription.Where(x => x.DeletedAt == null && x.OwnerId == ownerId).UpdateFromQuery(x => new Subscription() { StopNextSubscribed = true });
-        }
-
-        public static void DeleteSubscription(IotDbContext dbContext, long id)
-        {
-            dbContext.Subscription.Where(x => x.DeletedAt == null && x.Id == id).UpdateFromQuery(x => new Subscription() { DeletedAt = System.DateTime.Now });
+            dbContext.Subscription.Where(x => x.DeletedAt == null && x.OwnerId == ownerId && x.Id == subscriptionId).UpdateFromQuery(x => new Subscription() { StopNextSubscribed = true });
         }
 
         public static Subscription GetOneByTransactionId(IotDbContext dbContext, long ownerId, long transactionId)
@@ -81,6 +72,12 @@ namespace Homo.IotApi
         {
             subscription.CardKey = cardKey;
             subscription.CardToken = cardToken;
+            dbContext.SaveChanges();
+        }
+
+        public static void UpdateStatus(IotDbContext dbContext, Subscription subscription, SUBSCRIPTION_STATUS status)
+        {
+            subscription.Status = status;
             dbContext.SaveChanges();
         }
     }

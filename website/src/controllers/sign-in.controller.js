@@ -79,7 +79,8 @@ export class SignInController extends RoutingController {
             Toaster.popup(Toaster.TYPE.ERROR, resp.data.message);
             return;
         }
-        CookieUtil.setCookie('token', resp.data.token);
+        const payload = window.jwt_decode(resp.data.token);
+        CookieUtil.setCookie('token', resp.data.token, null, payload.exp);
         if (this.args.redirectUrl && this.args.redirectUrl.indexOf('http') === 0) {
             location.href = this.args.redirectUrl;
         } else {

@@ -104,7 +104,8 @@ export class TwoFactorAuthController extends RoutingController {
         if (APP_CONFIG.ENV === 'dev') {
             location.href = `${APP_CONFIG.DASHBOARD_URL}?dashboardToken=${resp.data.token}`;
         } else {
-            CookieUtil.setCookie('dashboardToken', resp.data.token);
+            const dashboardPayload = window.jwt_decode(resp.data.dashboardToken);
+            CookieUtil.setCookie('dashboardToken', resp.data.token, null, dashboardPayload.exp);
             location.href = APP_CONFIG.DASHBOARD_URL;
         }
     }

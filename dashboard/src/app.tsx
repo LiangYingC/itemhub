@@ -14,6 +14,7 @@ import Header from './components/header/header';
 import Footer from './components/footer/footer';
 import Dialog from './components/dialog/dialog';
 import Toaster from './components/toaster/toaster';
+import jwt_decode from 'jwt-decode';
 
 const isDev = import.meta.env.VITE_ENV === 'dev';
 
@@ -23,9 +24,13 @@ const App = () => {
         query.get(COOKIE_KEY.DASHBOARD_TOKEN) || '';
 
     if (isDev && dashboardTokenFromQueryString) {
+        const payload = jwt_decode<{ exp: number }>(
+            dashboardTokenFromQueryString
+        );
         CookieHelpers.SetCookie({
             name: COOKIE_KEY.DASHBOARD_TOKEN,
             value: dashboardTokenFromQueryString,
+            unixTimestamp: payload?.exp,
         });
     }
 

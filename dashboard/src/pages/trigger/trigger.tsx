@@ -61,7 +61,7 @@ const Trigger = () => {
         operator: trigger?.operator || 0,
     });
 
-    const [validatedEditedTrigger, setValidatedEditedTrigger] = useState({
+    const [isValidEditedTrigger, setIsValidEditedTrigger] = useState({
         name: true,
         sourceDeviceId: true,
         sourcePin: true,
@@ -73,7 +73,7 @@ const Trigger = () => {
     const validateEditedTrigger = (fetchApi: () => Promise<void>) => {
         let isValidateSuccess = true;
         if (!editedTriggerData.name) {
-            setValidatedEditedTrigger((prev) => {
+            setIsValidEditedTrigger((prev) => {
                 return {
                     ...prev,
                     name: false,
@@ -82,7 +82,7 @@ const Trigger = () => {
             isValidateSuccess = false;
         }
         if (!editedTriggerData.sourceDeviceId) {
-            setValidatedEditedTrigger((prev) => {
+            setIsValidEditedTrigger((prev) => {
                 return {
                     ...prev,
                     sourceDeviceId: false,
@@ -91,7 +91,7 @@ const Trigger = () => {
             isValidateSuccess = false;
         }
         if (!editedTriggerData.sourcePin) {
-            setValidatedEditedTrigger((prev) => {
+            setIsValidEditedTrigger((prev) => {
                 return {
                     ...prev,
                     sourcePin: false,
@@ -100,7 +100,7 @@ const Trigger = () => {
             isValidateSuccess = false;
         }
         if (isNaN(editedTriggerData.sourceThreshold)) {
-            setValidatedEditedTrigger((prev) => {
+            setIsValidEditedTrigger((prev) => {
                 return {
                     ...prev,
                     sourceThreshold: false,
@@ -109,7 +109,7 @@ const Trigger = () => {
             isValidateSuccess = false;
         }
         if (!editedTriggerData.destinationDeviceId) {
-            setValidatedEditedTrigger((prev) => {
+            setIsValidEditedTrigger((prev) => {
                 return {
                     ...prev,
                     destinationDeviceId: false,
@@ -118,7 +118,7 @@ const Trigger = () => {
             isValidateSuccess = false;
         }
         if (!editedTriggerData.destinationPin) {
-            setValidatedEditedTrigger((prev) => {
+            setIsValidEditedTrigger((prev) => {
                 return {
                     ...prev,
                     destinationPin: false,
@@ -250,7 +250,7 @@ const Trigger = () => {
                     </label>
                     <input
                         className={`form-control ${
-                            !validatedEditedTrigger.name && 'border-danger'
+                            !isValidEditedTrigger.name && 'border-danger'
                         }`}
                         disabled={isReadMode}
                         type="text"
@@ -265,7 +265,7 @@ const Trigger = () => {
                                     name: value,
                                 };
                             });
-                            setValidatedEditedTrigger((prev) => {
+                            setIsValidEditedTrigger((prev) => {
                                 return {
                                     ...prev,
                                     name: value ? true : false,
@@ -273,7 +273,7 @@ const Trigger = () => {
                             });
                         }}
                     />
-                    {!validatedEditedTrigger.name && (
+                    {!isValidEditedTrigger.name && (
                         <div className="text-error text-danger mt-1 font-size-5">
                             請輸入名稱
                         </div>
@@ -284,10 +284,10 @@ const Trigger = () => {
                 </div>
                 <DeviceAndPinInputs
                     allDevices={allDevices}
-                    isDeviceNameError={!validatedEditedTrigger.sourceDeviceId}
+                    isDeviceNameError={!isValidEditedTrigger.sourceDeviceId}
                     initialDeviceName={trigger?.sourceDevice?.name}
                     deviceNameLabel="來源裝置"
-                    isPinError={!validatedEditedTrigger.sourcePin}
+                    isPinError={!isValidEditedTrigger.sourcePin}
                     pinLabel="來源裝置 Pin"
                     pinValue={editedTriggerData.sourcePin}
                     pinOptions={sourceDeviecePinsOptions}
@@ -300,7 +300,7 @@ const Trigger = () => {
                             };
                         });
                         console.log({ newPin });
-                        setValidatedEditedTrigger((prev) => {
+                        setIsValidEditedTrigger((prev) => {
                             return {
                                 ...prev,
                                 sourcePin: newPin ? true : false,
@@ -314,7 +314,7 @@ const Trigger = () => {
                                 sourceDeviceId: newDeviceId,
                             };
                         });
-                        setValidatedEditedTrigger((prev) => {
+                        setIsValidEditedTrigger((prev) => {
                             return {
                                 ...prev,
                                 sourceDeviceId: newDeviceId ? true : false,
@@ -353,7 +353,7 @@ const Trigger = () => {
                         <label className="mb-1">來源裝置門檻</label>
                         <input
                             className={`form-control ${
-                                !validatedEditedTrigger.sourceThreshold &&
+                                !isValidEditedTrigger.sourceThreshold &&
                                 'border-danger'
                             }`}
                             type="number"
@@ -368,7 +368,7 @@ const Trigger = () => {
                                         sourceThreshold,
                                     };
                                 });
-                                setValidatedEditedTrigger((prev) => {
+                                setIsValidEditedTrigger((prev) => {
                                     return {
                                         ...prev,
                                         sourceThreshold: !isNaN(sourceThreshold)
@@ -378,7 +378,7 @@ const Trigger = () => {
                                 });
                             }}
                         />
-                        {!validatedEditedTrigger.sourceThreshold && (
+                        {!isValidEditedTrigger.sourceThreshold && (
                             <div className="text-error text-danger mt-1 font-size-5">
                                 請輸入設定條件
                             </div>
@@ -391,11 +391,11 @@ const Trigger = () => {
                 <DeviceAndPinInputs
                     allDevices={allDevices}
                     isDeviceNameError={
-                        !validatedEditedTrigger.destinationDeviceId
+                        !isValidEditedTrigger.destinationDeviceId
                     }
                     initialDeviceName={trigger?.destinationDevice?.name || ''}
                     deviceNameLabel="目標裝置"
-                    isPinError={!validatedEditedTrigger.destinationPin}
+                    isPinError={!isValidEditedTrigger.destinationPin}
                     pinLabel="目標裝置 Pin"
                     pinValue={editedTriggerData.destinationPin}
                     pinOptions={destinationDeviecePinsOptions}
@@ -407,7 +407,7 @@ const Trigger = () => {
                                 destinationPin: newPin,
                             };
                         });
-                        setValidatedEditedTrigger((prev) => {
+                        setIsValidEditedTrigger((prev) => {
                             return {
                                 ...prev,
                                 destinationPin: newPin ? true : false,
@@ -421,7 +421,7 @@ const Trigger = () => {
                                 destinationDeviceId: newDeviceId,
                             };
                         });
-                        setValidatedEditedTrigger((prev) => {
+                        setIsValidEditedTrigger((prev) => {
                             return {
                                 ...prev,
                                 destinationDeviceId: newDeviceId ? true : false,

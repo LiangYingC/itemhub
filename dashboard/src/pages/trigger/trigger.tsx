@@ -53,7 +53,7 @@ const Trigger = () => {
         name: trigger?.name || '',
         sourceDeviceId: trigger?.sourceDeviceId || 0,
         sourcePin: trigger?.sourcePin || '',
-        sourceThreshold: trigger?.sourceThreshold || '',
+        sourceThreshold: trigger?.sourceThreshold || 0,
         destinationDeviceId: trigger?.destinationDeviceId || 0,
         destinationPin: trigger?.destinationPin || '',
         destinationDeviceTargetState:
@@ -78,7 +78,7 @@ const Trigger = () => {
     const { isCreatingTrigger, createTriggerResponse, createTriggerApi } =
         useCreateTriggerApi({
             ...editedTriggerData,
-            sourceThreshold: Number(editedTriggerData.sourceThreshold),
+            sourceThreshold: editedTriggerData.sourceThreshold,
         });
 
     const sourceDeviecePinsOptions =
@@ -123,7 +123,7 @@ const Trigger = () => {
             name: trigger?.name || '',
             sourceDeviceId: trigger?.sourceDeviceId || 0,
             sourcePin: trigger?.sourcePin || '',
-            sourceThreshold: trigger?.sourceThreshold || '',
+            sourceThreshold: trigger?.sourceThreshold || 0,
             destinationDeviceId: trigger?.destinationDeviceId || 0,
             destinationPin: trigger?.destinationPin || '',
             destinationDeviceTargetState:
@@ -261,9 +261,11 @@ const Trigger = () => {
                             value={editedTriggerData.sourceThreshold}
                             onChange={(e) => {
                                 setEditedTriggerData((prev) => {
+                                    const sourceThreshold =
+                                        e.target.valueAsNumber;
                                     return {
                                         ...prev,
-                                        sourceThreshold: e.target.value,
+                                        sourceThreshold,
                                     };
                                 });
                             }}

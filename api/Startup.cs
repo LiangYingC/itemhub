@@ -10,6 +10,7 @@ using System.Globalization;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using System.Linq;
 using Homo.Api;
 
 namespace Homo.IotApi
@@ -123,6 +124,7 @@ namespace Homo.IotApi
             {
                 c.EnableAnnotations();
                 c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo() { Title = "ItemHub API 文件", Version = "v1" });
+                c.OperationFilter<OpenApiParameterIgnoreFilter>();
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     In = ParameterLocation.Header,

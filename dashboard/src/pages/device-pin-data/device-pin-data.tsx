@@ -133,23 +133,15 @@ const DevicePinData = () => {
     };
 
     const updatePinName = () => {
-        console.log(originalPin);
-        console.log(newPinName);
-        console.log(selectedPins);
-
         const pinData = selectedPins?.find((item) => {
             return item.pin === originalPin;
         });
-        console.log(pinData);
 
         if (pinData) {
-            console.log('AA');
             selectPins(pinData.pin, pinData.mode, newPinName, pinData.value);
         }
 
         setNewPinName('');
-        console.log(originalPin);
-        console.log(newPinName);
         setIsEditPinNameOpen(false);
     };
 
@@ -248,7 +240,6 @@ const DevicePinData = () => {
             };
 
             newSelected.push({ ...pushData });
-            console.log(newSelected);
             return newSelected;
         });
     };

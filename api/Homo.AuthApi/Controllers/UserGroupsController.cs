@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Homo.Core.Constants;
 using Homo.Api;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Homo.AuthApi
 {
@@ -18,12 +19,22 @@ namespace Homo.AuthApi
             _dbContext = dbContext;
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "管理系統" },
+            Summary = "使用者群組 - 取得使用者相關的",
+            Description = ""
+        )]
         [HttpGet]
         public ActionResult<dynamic> getAll([FromRoute] long id)
         {
             return RelationOfGroupAndUserDataservice.GetRelationByUserId(_dbContext, id);
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "管理系統" },
+            Summary = "使用者群組 - 更新群組",
+            Description = ""
+        )]
         [HttpPatch]
         public ActionResult<dynamic> updateGroups([FromRoute] long id, [FromBody] List<long> groupIds, DTOs.JwtExtraPayload extraPayload)
         {

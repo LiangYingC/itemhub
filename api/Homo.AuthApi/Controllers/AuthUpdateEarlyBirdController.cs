@@ -1,10 +1,8 @@
-using System;
-using System.Net;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.Annotations;
 
 using Homo.Core.Constants;
 using Homo.Core.Helpers;
@@ -13,6 +11,7 @@ using Homo.Api;
 namespace Homo.AuthApi
 {
     [Route("v1/auth")]
+    [SwaggerUiInvisibility]
     [Homo.Api.Validate]
     public class AuthRegisterForEarlyBirdController : ControllerBase
     {
@@ -36,8 +35,12 @@ namespace Homo.AuthApi
             _phoneHashSalt = secrets.PhoneHashSalt;
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "註冊相關" },
+            Summary = "早鳥註冊",
+            Description = ""
+        )]
         [Route("register-for-early-bird")]
-        [SwaggerUiInvisibility]
         [AuthorizeFactory(AUTH_TYPE.SIGN_UP)]
         [HttpPost]
         public ActionResult<dynamic> registerForEarlyBird([FromBody] DTOs.SignUp dto, DTOs.JwtExtraPayload extraPayload)

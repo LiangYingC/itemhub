@@ -6,6 +6,7 @@ using Homo.Core.Helpers;
 using Homo.Api;
 using api.Constants;
 using api.Helpers;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Homo.AuthApi
 {
@@ -42,6 +43,11 @@ namespace Homo.AuthApi
             _staticPath = appSettings.Value.Common.StaticPath;
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "身份驗證" },
+            Summary = "寄送兩階段驗證信件",
+            Description = ""
+        )]
         [Route("send-two-factor-auth-mail")]
         [HttpPost]
         public async Task<dynamic> sendTwoFactorAuthMail(Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
@@ -82,6 +88,11 @@ namespace Homo.AuthApi
             return new { status = CUSTOM_RESPONSE.OK };
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "身份驗證" },
+            Summary = "透過驗證碼交換 token",
+            Description = ""
+        )]
         [Route("exchange-dashboard-token")]
         [HttpPost]
         public ActionResult<dynamic> exhangeDashboardToken([FromBody] DTOs.VerifyCode dto, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)

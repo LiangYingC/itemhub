@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using System;
 using Homo.Api;
 using Homo.Core.Constants;
 using Homo.AuthApi;
-
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Homo.IotApi
 {
@@ -27,6 +26,11 @@ namespace Homo.IotApi
 
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "裝置相關" },
+            Summary = "裝置 - 取得分頁列表",
+            Description = ""
+        )]
         [HttpGet]
         public ActionResult<dynamic> getList([FromQuery] int limit, [FromQuery] int page, [FromQuery] string name, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
@@ -39,6 +43,11 @@ namespace Homo.IotApi
             };
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "裝置相關" },
+            Summary = "裝置 - 取得列表",
+            Description = ""
+        )]
         [HttpGet]
         [Route("all")]
         public ActionResult<dynamic> getAll(Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
@@ -47,6 +56,11 @@ namespace Homo.IotApi
             return DeviceDataservice.GetAll(_dbContext, ownerId);
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "裝置相關" },
+            Summary = "裝置 - 建立新裝置",
+            Description = ""
+        )]
         [HttpPost]
         public ActionResult<dynamic> create([FromBody] DTOs.DevicePayload dto, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
@@ -80,6 +94,12 @@ namespace Homo.IotApi
             return rewRecord;
         }
 
+
+        [SwaggerOperation(
+            Tags = new[] { "裝置相關" },
+            Summary = "裝置 - 批次刪除裝置",
+            Description = ""
+        )]
         [HttpDelete]
         public ActionResult<dynamic> batchDelete([FromBody] List<long> ids, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
@@ -88,6 +108,11 @@ namespace Homo.IotApi
             return new { status = CUSTOM_RESPONSE.OK };
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "裝置相關" },
+            Summary = "裝置 - 取得單一裝置",
+            Description = ""
+        )]
         [HttpGet]
         [Route("{id}")]
         public ActionResult<dynamic> getOne([FromRoute] int id, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
@@ -101,6 +126,11 @@ namespace Homo.IotApi
             return record;
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "裝置相關" },
+            Summary = "裝置 - 經由裝置號碼取得單一裝置",
+            Description = ""
+        )]
         [HttpGet]
         [Route("by-device-id/{deviceId}")]
         public ActionResult<dynamic> getOneByDeviceId([FromRoute] string deviceId, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
@@ -114,6 +144,11 @@ namespace Homo.IotApi
             return record;
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "裝置相關" },
+            Summary = "裝置 - 更新單一裝置基本資料",
+            Description = ""
+        )]
         [HttpPatch]
         [Route("{id}")]
         public ActionResult<dynamic> update([FromRoute] int id, [FromBody] DTOs.DevicePayload dto, dynamic extraPayload)
@@ -123,6 +158,11 @@ namespace Homo.IotApi
             return new { status = CUSTOM_RESPONSE.OK };
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "裝置相關" },
+            Summary = "裝置 - 刪除單一裝置",
+            Description = ""
+        )]
         [HttpDelete]
         [Route("{id}")]
         public ActionResult<dynamic> delete([FromRoute] long id, dynamic extraPayload)
@@ -132,6 +172,11 @@ namespace Homo.IotApi
             return new { status = CUSTOM_RESPONSE.OK };
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "裝置相關" },
+            Summary = "裝置 - 切換裝置狀態",
+            Description = ""
+        )]
         [HttpPost]
         [Route("{id}/online")]
         public ActionResult<dynamic> online([FromRoute] long id, dynamic extraPayload)

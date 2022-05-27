@@ -10,7 +10,6 @@ using System.Globalization;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using Homo.AuthApi;
 using Homo.Api;
 
 namespace Homo.IotApi
@@ -122,7 +121,8 @@ namespace Homo.IotApi
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo() { Title = "Api Doc", Version = "v1" });
+                c.EnableAnnotations();
+                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo() { Title = "ItemHub API 文件", Version = "v1" });
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     In = ParameterLocation.Header,
@@ -151,7 +151,11 @@ namespace Homo.IotApi
         {
             app.UseDeveloperExceptionPage();
             app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "itemhub api v1"));
+            app.UseSwaggerUI(c =>
+            {
+                c.DocumentTitle = "Itemhub API";
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "itemhub api v1");
+            });
 
             var supportedCultures = new[] {
                 new CultureInfo("zh-TW"),

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Homo.Api;
 using Homo.Core.Constants;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Homo.IotApi
 {
@@ -16,6 +17,11 @@ namespace Homo.IotApi
             _dbContext = dbContext;
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "觸發" },
+            Summary = "觸發 - 建立新的觸發",
+            Description = ""
+        )]
         [HttpPost]
         public ActionResult<dynamic> create([FromBody] DTOs.Trigger dto, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
@@ -23,6 +29,11 @@ namespace Homo.IotApi
             return rewRecord;
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "觸發" },
+            Summary = "觸發 - 取得觸發分頁列表",
+            Description = ""
+        )]
         [HttpGet]
         public ActionResult<dynamic> getList([FromQuery] int page, [FromQuery] int limit,
             [FromQuery] long? sourceDeviceId,
@@ -41,6 +52,11 @@ namespace Homo.IotApi
             };
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "觸發" },
+            Summary = "觸發 - 更新單一觸發資料",
+            Description = ""
+        )]
         [HttpPatch]
         [Route("{id}")]
         public ActionResult<dynamic> update([FromRoute] long id,
@@ -51,6 +67,11 @@ namespace Homo.IotApi
             return new { status = CUSTOM_RESPONSE.OK };
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "觸發" },
+            Summary = "觸發 - 取得單一觸發資料",
+            Description = ""
+        )]
         [HttpGet]
         [Route("{id}")]
         public ActionResult<dynamic> get([FromRoute] long id, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
@@ -58,6 +79,11 @@ namespace Homo.IotApi
             return TriggerDataservice.GetOne(_dbContext, extraPayload.Id, id, null, null, null, null);
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "觸發" },
+            Summary = "觸發 - 刪除多筆觸發資料",
+            Description = ""
+        )]
         [HttpDelete]
         public ActionResult<dynamic> batchDelete([FromBody] List<long> ids, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {

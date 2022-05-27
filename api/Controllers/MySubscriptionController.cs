@@ -1,9 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Homo.Api;
-using Homo.AuthApi;
 using Homo.Core.Constants;
-using System.Threading.Tasks;
+using Swashbuckle.AspNetCore.Annotations;
 
 
 namespace Homo.IotApi
@@ -24,6 +23,11 @@ namespace Homo.IotApi
             _sendGridApiKey = appSettings.Value.Secrets.SendGridApiKey;
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "使用者相關" },
+            Summary = "訂閱 - 取得現在的訂閱資訊",
+            Description = ""
+        )]
         [HttpGet]
         public ActionResult<dynamic> getMyCurrentSubscription(Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
@@ -51,6 +55,11 @@ namespace Homo.IotApi
             };
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "使用者相關" },
+            Summary = "訂閱 - 取消訂閱",
+            Description = ""
+        )]
         [HttpDelete]
         public ActionResult<dynamic> cancelSubscription(Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
@@ -60,6 +69,11 @@ namespace Homo.IotApi
             return new { status = CUSTOM_RESPONSE.OK };
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "使用者相關" },
+            Summary = "訂閱 - 取得單一訂閱資訊",
+            Description = ""
+        )]
         [HttpGet]
         [Route("by-transaction-id/{transactionId}")]
         public ActionResult<dynamic> getOneByTransactionId([FromRoute] long transactionId, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)

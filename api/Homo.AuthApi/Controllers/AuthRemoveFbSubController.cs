@@ -6,11 +6,10 @@ using System.Text;
 using Homo.Core.Constants;
 using Homo.Core.Helpers;
 using Homo.Api;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Homo.AuthApi
 {
-
-
     [Route("v1/auth/fb-sub")]
     [SwaggerUiInvisibility]
     public class AuthRemoveFbSubController : ControllerBase
@@ -27,6 +26,12 @@ namespace Homo.AuthApi
             _websiteUrl = common.WebsiteUrl;
             _dbContext = dbContext;
         }
+
+        [SwaggerOperation(
+            Tags = new[] { "身份驗證" },
+            Summary = "移除 fb 帳號狀態",
+            Description = ""
+        )]
         [HttpGet]
         public ActionResult<dynamic> tracking([FromQuery] string confirmCode)
         {
@@ -44,6 +49,11 @@ namespace Homo.AuthApi
             };
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "身份驗證" },
+            Summary = "移除 fb 帳號",
+            Description = ""
+        )]
         [HttpPost]
         [Consumes("application/x-www-form-urlencoded")]
         public ActionResult<dynamic> removeFbSub([FromForm] DTOs.RemoveFbSub dto)

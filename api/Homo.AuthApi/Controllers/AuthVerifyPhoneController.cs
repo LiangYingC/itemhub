@@ -6,6 +6,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using Swashbuckle.AspNetCore.Annotations;
 
 using Homo.Core.Constants;
 using Homo.Core.Helpers;
@@ -45,8 +46,13 @@ namespace Homo.AuthApi
             _phoneHashSalt = secrets.PhoneHashSalt;
         }
 
-        [HttpPost]
+        [SwaggerOperation(
+            Tags = new[] { "註冊相關" },
+            Summary = "寄送驗證簡訊",
+            Description = ""
+        )]
         [Route("send-sms")]
+        [HttpPost]
         public async Task<dynamic> sendSms([FromBody] DTOs.SendSms dto, DTOs.JwtExtraPayload extraPayload)
         {
             string ip = NetworkHelper.GetIpFromRequest(Request);
@@ -83,6 +89,11 @@ namespace Homo.AuthApi
             return new { status = CUSTOM_RESPONSE.OK };
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "註冊相關" },
+            Summary = "驗證手機",
+            Description = ""
+        )]
         [HttpPost]
         [Route("verify-phone")]
         public ActionResult<dynamic> verifyPhone([FromBody] DTOs.VerifyPhone dto)

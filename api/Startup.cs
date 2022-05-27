@@ -157,6 +157,7 @@ namespace Homo.IotApi
             {
                 c.DocumentTitle = "Itemhub API";
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "itemhub api v1");
+                c.DefaultModelsExpandDepth(-1);
             });
 
             var supportedCultures = new[] {

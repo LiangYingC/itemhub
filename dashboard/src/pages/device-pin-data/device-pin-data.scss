@@ -1,6 +1,7 @@
 $pin-wh: 48px;
-$pin-option-w: 88px;
-$pin-option-h: 120px;
+$pin-option-w: 104px;
+$pin-option-h: 160px;
+$dialog-w: 300px;
 
 .device-pin-data {
     .microcontroller-img {
@@ -45,11 +46,31 @@ $pin-option-h: 120px;
         left: -15%;
         z-index: 1;
         transition: 0.3s ease-in-out;
-        > div {
+        > div,
+        button {
             width: $pin-option-w;
             &:hover {
                 background: rgba($primary, 0.09);
             }
+        }
+    }
+    .dialog {
+        z-index: 2;
+        .card {
+            width: $dialog-w;
+        }
+
+        &::after {
+            display: block;
+            position: absolute;
+            content: '';
+            background: rgba(black, 0.5);
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .close-button {
+            right: 0;
         }
     }
 }

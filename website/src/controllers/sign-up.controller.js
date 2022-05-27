@@ -10,7 +10,7 @@ export class SignUpController extends RoutingController {
     constructor (elHTML, parentController, args, context) {
         super(elHTML, parentController, args, context);
         this.resendTimer = null;
-        this.resendTime = 0;
+        this.resendTime = null;
         this.signUpToken = '';
         this.validPhone = false;
     }
@@ -61,7 +61,6 @@ export class SignUpController extends RoutingController {
             elPhone.removeAttribute('disabled');
         } else {
             const elCode = this.elHTML.querySelector('[data-field="code"]');
-            elCode.removeAttribute('disabled');
             elCode.focus();
             this._countdownResendTimerStart();
         }
@@ -172,8 +171,11 @@ export class SignUpController extends RoutingController {
             this.pageVariable.passwordInvalidMessage = resp.data.message;
             return;
         }
-        CookieUtil.setCookie('token', resp.data.token);
-        CookieUtil.setCookie('dashboardToken', resp.data.dashboardToken);
+        const payload = window.jwt_decode(resp.data.token);
+        CookieUtil.setCookie('token', resp.data.token, null, payload.exp);
+
+        const dashboardPayload = window.jwt_decode(resp.data.dashboardToken);
+        CookieUtil.setCookie('dashboardToken', resp.data.dashboardToken, null, dashboardPayload.exp);
         history.pushState({}, '', '/auth/finish/');
     }
 
@@ -212,7 +214,7 @@ export class SignUpController extends RoutingController {
 
     _countdownResendTimerStart () {
         clearTimeout(this.resendTimer);
-        this.resendTime = 60;
+        this.resendTime = new Date();
         this._countdownMain();
     }
 
@@ -221,10 +223,11 @@ export class SignUpController extends RoutingController {
         if (this.validPhone) {
             return;
         }
-        if (this.resendTime <= 0) {
+
+        const diff = 60 - Math.round((new Date() - this.resendTime) / 1000);
+        if (diff <= 0) {
             elSendVerifyMailButton.innerHTML = '發送驗證碼至手機';
             elSendVerifyMailButton.removeAttribute('disabled');
-            this.elHTML.querySelector('[data-field="code"]').setAttribute('disabled', 'disabled');
             this.elHTML.querySelector('[data-field="password"]').setAttribute('disabled', 'disabled');
             this.elHTML.querySelector('.btn-sign-up').setAttribute('disabled', 'disabled');
             this.elHTML.querySelector('[data-field="phone"]').removeAttribute('disabled', 'disabled');
@@ -232,8 +235,7 @@ export class SignUpController extends RoutingController {
             this.resendTime = 0;
             return;
         }
-        this.resendTime -= 1;
-        elSendVerifyMailButton.innerHTML = `可於 ${this.resendTime} 秒後重送`;
+        elSendVerifyMailButton.innerHTML = `可於 ${diff} 秒後重送`;
         this.resendTimer = setTimeout(() => {
             this._countdownMain();
         }, 1000);

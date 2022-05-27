@@ -146,7 +146,7 @@ const Trigger = () => {
 
     useEffect(() => {
         if (createTriggerResponse && createTriggerResponse.id) {
-            navigate(`/dashboard/triggers/${createTriggerResponse.id}`);
+            navigate(`/dashboard/triggers`);
         }
     }, [navigate, createTriggerResponse]);
 

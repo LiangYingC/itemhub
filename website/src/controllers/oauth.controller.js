@@ -37,7 +37,8 @@ export class OauthController extends RoutingController {
             return;
         }
 
-        CookieUtil.setCookie('token', resp.data.token);
+        const payload = window.jwt_decode(resp.data.token);
+        CookieUtil.setCookie('token', resp.data.token, null, payload.exp);
         opener.history.pushState({}, '', '/?tf=' + new Date().getUTCMilliseconds());
         opener.window.gtag('event', EVENTS.SIGN_IN);
         window.close();

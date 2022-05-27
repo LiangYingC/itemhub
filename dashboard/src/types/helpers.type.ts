@@ -41,4 +41,5 @@ export interface SetCookieParams {
     name: string;
     value: string;
     days?: number;
+    unixTimestamp?: number;
 }

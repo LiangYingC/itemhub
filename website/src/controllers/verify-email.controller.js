@@ -143,24 +143,23 @@ export class VerifyEmailController extends RoutingController {
 
     _countdownResendTimerStart () {
         clearTimeout(this.resendTimer);
-        this.resendTime = 60;
+        this.resendTime = new Date();
         this._countdownMain();
     }
 
     _countdownMain () {
         const elSendVerifyMailButton = this.elHTML.querySelector('.btn-send-verify-email');
-        if (this.resendTime <= 0) {
+        const diff = 60 - Math.round((new Date() - this.resendTime) / 1000);
+        if (diff <= 0) {
             elSendVerifyMailButton.innerHTML = '傳送驗證碼至信箱';
             elSendVerifyMailButton.removeAttribute('disabled');
-            this.elHTML.querySelector('[data-field="code"]').setAttribute('disabled', 'disabled');
-            this.elHTML.querySelector('.btn-next').setAttribute('disabled', 'disabled');
             this.elHTML.querySelector('[data-field="email"]').removeAttribute('disabled', 'disabled');
             this.resendTimer = null;
             this.resendTime = 0;
             return;
         }
-        this.resendTime -= 1;
-        elSendVerifyMailButton.innerHTML = `可於 ${this.resendTime} 秒後重送`;
+
+        elSendVerifyMailButton.innerHTML = `可於 ${diff} 秒後重送`;
         this.resendTimer = setTimeout(() => {
             this._countdownMain();
         }, 1000);

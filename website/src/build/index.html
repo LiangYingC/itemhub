@@ -33,7 +33,9 @@
         }
 
         function initiateCall() {
-            initialize(document, "Freshdesk Messaging-js-sdk")
+            setTimeout(() => {
+                initialize(document, "Freshdesk Messaging-js-sdk")
+            }, 1000);
         }
 
         window.addEventListener ? window.addEventListener("load", initiateCall, !1) : window.attachEvent("load",

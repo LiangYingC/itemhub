@@ -1,10 +1,13 @@
 export const CookieUtil = {
-    setCookie: (name, value, days) => {
+    setCookie: (name, value, days, unixTimestamp) => {
         let expires = '';
         if (days) {
             const date = new Date();
             date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
             expires = '; expires=' + date.toGMTString();
+        }
+        if (unixTimestamp) {
+            expires = `; expires=${(new Date(unixTimestamp * 1000)).toUTCString()}`;
         }
         document.cookie = name + '=' + value + expires + '; path=/';
     },

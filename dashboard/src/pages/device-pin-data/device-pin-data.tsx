@@ -137,17 +137,17 @@ const DevicePinData = () => {
         console.log(newPinName);
         console.log(selectedPins);
 
-        selectedPins?.find((item) => {
-            if (item.pin === originalPin) {
-                item.name = newPinName;
-            }
+        const pinData = selectedPins?.find((item) => {
+            return item.pin === originalPin;
         });
+        console.log(pinData);
 
-        setSelectedPins(selectedPins);
-        // setSelectedPins(...pinData);
-        setOriginalPin('');
+        if (pinData) {
+            console.log('AA');
+            selectPins(pinData.pin, pinData.mode, newPinName, pinData.value);
+        }
+
         setNewPinName('');
-        console.log('--');
         console.log(originalPin);
         console.log(newPinName);
         setIsEditPinNameOpen(false);
@@ -248,6 +248,7 @@ const DevicePinData = () => {
             };
 
             newSelected.push({ ...pushData });
+            console.log(newSelected);
             return newSelected;
         });
     };
@@ -444,7 +445,7 @@ const DevicePinData = () => {
                                                     )}
                                                 </div>
                                                 <div className="text-center rounded-circle bg-black bg-opacity-5 border-black border-opacity-10 pin-text">
-                                                    {devicePins?.find(
+                                                    {selectedPins?.find(
                                                         (pins) => {
                                                             return (
                                                                 pins.pin ===

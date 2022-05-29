@@ -1,6 +1,7 @@
 $pin-wh: 48px;
 $pin-option-w: 104px;
-$pin-option-h: 160px;
+$pin-option2-h: 80px;
+$pin-option4-h: 160px;
 $dialog-w: 300px;
 
 .device-pin-data {
@@ -9,8 +10,11 @@ $dialog-w: 300px;
     }
     .pin {
         &:hover {
-            .pin-option {
-                height: $pin-option-h;
+            .pin-option-2 {
+                height: $pin-option2-h;
+            }
+            .pin-option-4 {
+                height: $pin-option4-h;
             }
         }
         &.selected {

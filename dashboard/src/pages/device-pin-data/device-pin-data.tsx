@@ -376,7 +376,7 @@ const DevicePinData = () => {
                                 }}
                             />
                             {!isValidData.name && (
-                                <div className="text-error text-danger mt-1">
+                                <div className="text-danger mt-1 fs-5">
                                     請輸入裝置名稱
                                 </div>
                             )}
@@ -406,7 +406,7 @@ const DevicePinData = () => {
                         <div className="mb-4">
                             <label>選擇 Pin</label>
                             {!isValidData.selectedPins && (
-                                <div className="text-error text-danger">
+                                <div className="text-danger fs-5">
                                     請點選並設定至少一個 Pin
                                 </div>
                             )}

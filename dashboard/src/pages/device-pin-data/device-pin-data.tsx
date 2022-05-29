@@ -168,6 +168,10 @@ const DevicePinData = () => {
             return;
         }
 
+        if (inputPinNameRef.current) {
+            inputPinNameRef.current.value = '';
+        }
+
         selectPins(pinData.pin, pinData.mode, newPinName, pinData.value);
         setIsEditPinNameOpen(false);
         ReactTooltip.rebuild();
@@ -527,7 +531,7 @@ const DevicePinData = () => {
                                                                     );
                                                                 }
                                                             )
-                                                                ? 'd-block'
+                                                                ? ''
                                                                 : 'd-none'
                                                         }`}
                                                         onClick={() => {
@@ -548,7 +552,7 @@ const DevicePinData = () => {
                                                                     );
                                                                 }
                                                             )
-                                                                ? 'd-block'
+                                                                ? ''
                                                                 : 'd-none'
                                                         }`}
                                                         onClick={() => {
@@ -625,7 +629,6 @@ const DevicePinData = () => {
                                     placeholder="請輸入 PIN 的名稱"
                                     className="form-control"
                                     type="text"
-                                    defaultValue={''}
                                     ref={inputPinNameRef}
                                     onKeyUp={(
                                         event: React.KeyboardEvent<HTMLInputElement>

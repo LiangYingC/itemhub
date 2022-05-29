@@ -51,7 +51,7 @@ const DevicePinData = () => {
     const { deviceModes } = useAppSelector(selectUniversal);
     const [microcontrollerImg, setMicrocontrollerIdImg] = useState(String);
     const [isEditPinNameOpen, setIsEditPinNameOpen] = useState(Boolean);
-    const inputPinNameRef = useRef<HTMLInputElement>(null);
+    const pinNameInputRef = useRef<HTMLInputElement>(null);
     const [newPinName, setNewPinName] = useState(String);
     const [originalPin, setOriginalPin] = useState(String);
 
@@ -126,7 +126,6 @@ const DevicePinData = () => {
     const editPinName = (name: string) => {
         setOriginalPin(name);
         setIsEditPinNameOpen(true);
-        inputPinNameRef.current?.focus();
     };
 
     const shortPinName = (name: string) => {
@@ -168,8 +167,8 @@ const DevicePinData = () => {
             return;
         }
 
-        if (inputPinNameRef.current) {
-            inputPinNameRef.current.value = '';
+        if (pinNameInputRef.current) {
+            pinNameInputRef.current.value = '';
         }
 
         selectPins(pinData.pin, pinData.mode, newPinName, pinData.value);
@@ -377,6 +376,10 @@ const DevicePinData = () => {
             getDevicePinsApi();
         }
     }, [createDevicePinResponse]);
+
+    useEffect(() => {
+        pinNameInputRef.current?.focus();
+    }, [isEditPinNameOpen]);
 
     const breadcrumbs = [
         {
@@ -629,7 +632,7 @@ const DevicePinData = () => {
                                     placeholder="請輸入 PIN 的名稱"
                                     className="form-control"
                                     type="text"
-                                    ref={inputPinNameRef}
+                                    ref={pinNameInputRef}
                                     onKeyUp={(
                                         event: React.KeyboardEvent<HTMLInputElement>
                                     ) => {

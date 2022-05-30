@@ -1,16 +1,12 @@
 #include <ArduinoHttpClient.h>
 #include <WiFiNINA.h>
-#include <DHT.h>
 #include <vector>
 #include <string>
 #include <ArduinoUniqueID.h>
 #include "tiny-json.h"
 #include "ItemhubUtilities.h"
 
-#define DHTPIN 2
-#define D0 0
 #define REBOOT_PIN 4
-#define DHTTYPE DHT11
 #define _DEBUG_ true
 #define SWITCH "SWITCH"
 #define SENSOR "SENSOR"
@@ -59,12 +55,9 @@ std::string projectName;
 std::string tokenHeader;
 std::vector<ItemhubPin> pins;
 
-DHT dht(DHTPIN, DHTTYPE);
-
 void setup()
 {
     {PINS};
-    dht.begin();
 
     connect();
     String fv = WiFi.firmwareVersion();
@@ -73,11 +66,6 @@ void setup()
     // itemhub authorized
     auth();
     Serial.println("authorized");
-
-    // itemhub setup remote device id
-    setupRemoteDeviceId();
-    Serial.print("remote device id: ");
-    Serial.println(remoteDeviceId.c_str());
 
     tokenHeader = "Authorization: Bearer ";
     tokenHeader.append(token);
@@ -146,8 +134,9 @@ void auth()
     std::string postData = "{\"clientId\":\"{CLIENT_ID}\",\"clientSecret\":\"{CLIENT_SECRET}\"}";
     client.post("/api/v1/oauth/exchange-token-for-device", "application/json", postData.c_str());
     std::string body = std::string(client.responseBody().c_str());
+    std::string deviceBody = body;
     token = ItemhubUtilities::Extract(body, "token");
-    remoteDeviceId = ItemhubUtilities::Extract(body, "deviceId");
+    remoteDeviceId = ItemhubUtilities::Extract(deviceBody, "deviceId");
     if (token.size() == 0)
     {
         delay(1000);
@@ -245,14 +234,7 @@ void sendSensor()
             endpoint.append("/sensors/");
             endpoint.append(pins[i].pinString);
             std::string postBody = "{\"value\":";
-            float h = dht.readHumidity();
-            float t = dht.readTemperature();
-            Serial.print("temperature: ");
-            Serial.println(t);
-            Serial.print("humidity: ");
-            Serial.println(h);
-            std::string humidity = std::to_string(h);
-            postBody.append(humidity);
+            postBody.append(0);
             postBody.append("}");
 
             client.beginRequest();

@@ -11,7 +11,7 @@ const Breadcrumbs = ({ breadcrumbs }: { breadcrumbs: Breadcrumb[] }) => {
 
     return (
         <nav className="breadcrumb-wrapper" aria-label="breadcrumb">
-            <ol className="breadcrumb mb-1">
+            <ol className="breadcrumb fs-5 mb-1">
                 {breadcrumbs.map(({ pathName, label }) => {
                     const isActive = currentPathName === pathName;
                     return isActive ? (

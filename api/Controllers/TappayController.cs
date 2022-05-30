@@ -1,14 +1,11 @@
-
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.Annotations;
+using api.Constants;
+using api.Helpers;
 using Homo.Api;
 using Homo.AuthApi;
 using Homo.Core.Constants;
-using api.Constants;
-using api.Helpers;
-
-using Swashbuckle.AspNetCore.Annotations;
-
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace Homo.IotApi
 {
@@ -49,6 +46,8 @@ namespace Homo.IotApi
                 Raw = Newtonsoft.Json.JsonConvert.SerializeObject(dto)
             });
             var transaction = TransactionDataservice.GetOneByExternalId(_dbContext, dto.rec_trade_id);
+            var subscription = SubscriptionDataservice.GetOneByTransactionId(_dbContext, transaction.OwnerId, transaction.Id);
+            var newTransactionStatus = TRANSACTION_STATUS.PENDING;
             if (dto.status == 0)
             {
                 // 發信給管理員
@@ -69,12 +68,15 @@ namespace Homo.IotApi
                     Content = template.Content
                 }, _systemEmail, _adminEmail, _sendGridApiKey);
 
-                transaction.Status = TRANSACTION_STATUS.PAID;
+                newTransactionStatus = TRANSACTION_STATUS.PAID;
             }
             else
             {
-                transaction.Status = TRANSACTION_STATUS.ERROR;
+                newTransactionStatus = TRANSACTION_STATUS.ERROR;
             }
+
+            TransactionDataservice.UpdateStatus(_dbContext, transaction, newTransactionStatus);
+            SubscriptionDataservice.UpdateStatus(_dbContext, subscription, newTransactionStatus == TRANSACTION_STATUS.PAID ? SUBSCRIPTION_STATUS.PAID : SUBSCRIPTION_STATUS.PENDING);
             return new { status = CUSTOM_RESPONSE.OK };
         }
 

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
-using Homo.AuthApi;
-using Homo.Api;
-using Homo.Core.Constants;
-using Microsoft.Extensions.Options;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Homo.Api;
+using Homo.AuthApi;
+using Homo.Core.Constants;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -19,12 +19,14 @@ namespace Homo.IotApi
     {
         private readonly IotDbContext _dbContext;
         private readonly Homo.AuthApi.DBContext _authDbContext;
+        private readonly Homo.Api.CommonLocalizer _commonLocalizer;
         private string _tapPayEndpoint;
         private string _tapPayPartnerKey;
         private string _tapPayMerchantId;
         private string _websiteUrl;
         private string _apiUrl;
-        public CheckoutController(IotDbContext dbContext, Homo.AuthApi.DBContext authDbContext, IOptions<AppSettings> appSettings)
+        private string _adminEmail;
+        public CheckoutController(IotDbContext dbContext, Homo.AuthApi.DBContext authDbContext, IOptions<AppSettings> appSettings, Homo.Api.CommonLocalizer commonLocalizer)
         {
             _dbContext = dbContext;
             _authDbContext = authDbContext;
@@ -33,6 +35,8 @@ namespace Homo.IotApi
             _tapPayMerchantId = appSettings.Value.Secrets.TapPayMerchantId;
             _websiteUrl = appSettings.Value.Common.WebsiteUrl;
             _apiUrl = appSettings.Value.Common.ApiUrl;
+            _adminEmail = appSettings.Value.Common.AdminEmail;
+            _commonLocalizer = commonLocalizer;
 
         }
 
@@ -46,15 +50,15 @@ namespace Homo.IotApi
         public async Task<dynamic> checkout([FromBody] DTOs.Checkout dto, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
             // avoid duplciate subscribe
-            var subscriptionsInDb = SubscriptionDataservice.GetAll(_dbContext, extraPayload.Id, dto.pricingPlan, DateTime.Now); ;
+            var subscriptionsInDb = SubscriptionDataservice.GetAll(_dbContext, extraPayload.Id, dto.pricingPlan, DateTime.Now);
             List<ConvertHelper.EnumList> plans = ConvertHelper.EnumToList(typeof(PRICING_PLAN));
             if (subscriptionsInDb.Count > 0)
             {
                 Subscription firstSubscription = subscriptionsInDb[0];
                 ConvertHelper.EnumList existstPlan = plans.Find(x => (int)x.Value == firstSubscription.PricingPlan);
                 throw new CustomException(ERROR_CODE.DUPLICATE_SUBSCRIBE,
-                System.Net.HttpStatusCode.BadRequest,
-                new Dictionary<string, string> { { "planName", existstPlan.Label }, { "startAt", firstSubscription.StartAt.ToString("yyyy-MM-dd HH:mm:ss") }, { "endAt", firstSubscription.EndAt.ToString("yyyy-MM-dd HH:mm:ss") } });
+                    System.Net.HttpStatusCode.BadRequest,
+                    new Dictionary<string, string> { { "planName", existstPlan.Label }, { "startAt", firstSubscription.StartAt.ToString("yyyy-MM-dd HH:mm:ss") }, { "endAt", firstSubscription.EndAt.ToString("yyyy-MM-dd HH:mm:ss") } });
             }
 
             // prepare Tappay request data
@@ -65,7 +69,6 @@ namespace Homo.IotApi
             DateTime endOfMonth = startOfMonth.AddDays(daysInMonth - 1).AddHours(23).AddMinutes(59).AddSeconds(59);
             int infactAmount = (int)Math.Round((decimal)amount * (endOfMonth - DateTime.Now).Days / daysInMonth);
             string planName = plans.Find(x => (int)x.Value == (int)dto.pricingPlan).Label;
-
 
             // 在 local 端建立 subscription, transaction
             // subscription 訂閱紀錄
@@ -82,6 +85,7 @@ namespace Homo.IotApi
                 EndAt = endOfMonth,
                 TransactionId = transaction.Id,
                 PricingPlan = dto.pricingPlan,
+                Status = SUBSCRIPTION_STATUS.PENDING,
             });
 
             var postBody = new
@@ -103,6 +107,7 @@ namespace Homo.IotApi
             };
 
             StringContent stringContent = new StringContent(JsonConvert.SerializeObject(postBody), System.Text.Encoding.UTF8, "application/json");
+            System.Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(postBody,Newtonsoft.Json.Formatting.Indented));
             HttpClient http = new HttpClient();
             http.DefaultRequestHeaders.Add("x-api-key", _tapPayPartnerKey);
             HttpResponseMessage responseStream = await http.PostAsync(_tapPayEndpoint, stringContent);
@@ -112,23 +117,41 @@ namespace Homo.IotApi
                 result = sr.ReadToEnd();
             }
             DTOs.TapPayResponse response = Newtonsoft.Json.JsonConvert.DeserializeObject<DTOs.TapPayResponse>(result);
-            if (response.status != DTOs.TAP_PAY_TRANSACTION_STATUS.OK)
-            {
-                SubscriptionDataservice.DeleteSubscription(_dbContext, subscription.Id);
-                throw new CustomException(ERROR_CODE.TAPPAY_TRANSACTION_ERROR, System.Net.HttpStatusCode.InternalServerError, new Dictionary<string, string>() { { "message", response.msg ?? response.bank_result_msg } });
-            }
-
-            subscription.CardKey = response.card_secret.card_key;
-            subscription.CardToken = response.card_secret.card_token;
 
             // create transaction log and remove senstive information 
             var withoutSenstiveInfoResponse = JsonConvert.DeserializeObject<IDictionary<string, dynamic>>(JsonConvert.SerializeObject(response));
             withoutSenstiveInfoResponse.Remove("card_secret");
 
             // 把交易結果存回資料庫
-            transaction.Raw = JsonConvert.SerializeObject(withoutSenstiveInfoResponse);
-            transaction.ExternalTransactionId = response.rec_trade_id;
-            _dbContext.SaveChanges();
+            TransactionDataservice.UpdateTransitionRaw(_dbContext, transaction, JsonConvert.SerializeObject(withoutSenstiveInfoResponse), response.rec_trade_id);
+            string errorMessage = "";
+            if (response.status != DTOs.TAP_PAY_TRANSACTION_STATUS.OK)
+            {
+                errorMessage = response.msg ?? response.bank_result_msg;
+            }
+
+            if (response.status == DTOs.TAP_PAY_TRANSACTION_STATUS.OK && response.card_secret == null)
+            {
+                errorMessage = _commonLocalizer.Get("cartSecretIsNull", null, new Dictionary<string, string>() { { "adminEmail", _adminEmail } });
+            }
+
+            if (response.status == DTOs.TAP_PAY_TRANSACTION_STATUS.OK && response.card_secret.card_token == null)
+            {
+                errorMessage = _commonLocalizer.Get("cartTokenIsNull", null, new Dictionary<string, string>() { { "adminEmail", _adminEmail } });
+            }
+
+            if (response.status == DTOs.TAP_PAY_TRANSACTION_STATUS.OK && response.card_secret.card_key == null)
+            {
+                errorMessage = _commonLocalizer.Get("cartKeyIsNull", null, new Dictionary<string, string>() { { "adminEmail", _adminEmail } });
+            }
+
+            if (!String.IsNullOrEmpty(errorMessage))
+            {
+                throw new CustomException(ERROR_CODE.TAPPAY_TRANSACTION_ERROR, System.Net.HttpStatusCode.InternalServerError, new Dictionary<string, string>() { { "message", errorMessage } });
+            }
+
+            // save card key and card token to subscription
+            SubscriptionDataservice.SaveCardInformation(_dbContext, subscription, response.card_secret.card_key, response.card_secret.card_token);
 
             // 更新姓名
             Homo.AuthApi.DTOs.UpdateName name = new Homo.AuthApi.DTOs.UpdateName();

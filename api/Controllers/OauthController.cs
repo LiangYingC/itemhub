@@ -1,13 +1,14 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
-using Homo.Core.Helpers;
-using Homo.Core.Constants;
-using Homo.AuthApi;
-using Microsoft.Extensions.Options;
+using System.Linq;
 using System.Security.Claims;
+using Homo.AuthApi;
+using Homo.Core.Constants;
+using Homo.Core.Helpers;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Annotations;
+
 
 namespace Homo.IotApi
 {
@@ -172,7 +173,7 @@ namespace Homo.IotApi
                 throw new CustomException(ERROR_CODE.OAUTH_CLIENT_SECRET_ERROR, System.Net.HttpStatusCode.Unauthorized);
             }
 
-            Subscription subscrioption = SubscriptionDataservice.GetOne(_iotDbContext, client.OwnerId);
+            Subscription subscrioption = SubscriptionDataservice.GetCurrnetOne(_iotDbContext, client.OwnerId);
 
             string token = JWTHelper.GenerateToken(_jwtKey, 24 * 30 * 24 * 60, new
             {

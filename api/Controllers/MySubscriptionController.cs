@@ -1,9 +1,8 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using Homo.Api;
 using Homo.Core.Constants;
 using Swashbuckle.AspNetCore.Annotations;
-
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace Homo.IotApi
 {
@@ -32,7 +31,7 @@ namespace Homo.IotApi
         public ActionResult<dynamic> getMyCurrentSubscription(Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
             long ownerId = extraPayload.Id;
-            var subscription = SubscriptionDataservice.GetOne(_dbContext, ownerId);
+            var subscription = SubscriptionDataservice.GetCurrnetOne(_dbContext, ownerId);
             if (subscription == null)
             {
                 throw new CustomException(ERROR_CODE.NO_SUBSCRIPTION, System.Net.HttpStatusCode.NotFound);
@@ -64,8 +63,8 @@ namespace Homo.IotApi
         public ActionResult<dynamic> cancelSubscription(Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
             long ownerId = extraPayload.Id;
-            var subscription = SubscriptionDataservice.GetOne(_dbContext, ownerId);
-            SubscriptionDataservice.CancelSubscription(_dbContext, ownerId);
+            var subscription = SubscriptionDataservice.GetCurrnetOne(_dbContext, ownerId);
+            SubscriptionDataservice.CancelCurrentSubscription(_dbContext, ownerId, subscription.Id);
             return new { status = CUSTOM_RESPONSE.OK };
         }
 

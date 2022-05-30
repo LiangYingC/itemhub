@@ -1,13 +1,13 @@
 using System;
-using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Options;
-using Homo.AuthApi;
-using System.Collections.Generic;
 using api.Constants;
 using api.Helpers;
 using Homo.Api;
+using Homo.AuthApi;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace Homo.IotApi
 {
@@ -23,8 +23,7 @@ namespace Homo.IotApi
 
         private readonly string _staticPath;
 
-        public SendOverPlanNotificationCronJobService(IScheduleConfig<SendOverPlanNotificationCronJobService> config, IServiceProvider serviceProvider, Microsoft.AspNetCore.Hosting.IWebHostEnvironment env, IOptions<AppSettings> appSettings, Homo.Api.CommonLocalizer commonLocalizer)
-            : base(config.CronExpression, config.TimeZoneInfo, serviceProvider)
+        public SendOverPlanNotificationCronJobService(IScheduleConfig<SendOverPlanNotificationCronJobService> config, IServiceProvider serviceProvider, Microsoft.AspNetCore.Hosting.IWebHostEnvironment env, IOptions<AppSettings> appSettings, Homo.Api.CommonLocalizer commonLocalizer) : base(config.CronExpression, config.TimeZoneInfo, serviceProvider)
         {
             _commonLocalizer = commonLocalizer;
             _envName = env.EnvironmentName;
@@ -63,7 +62,6 @@ namespace Homo.IotApi
                     continue;
                 }
 
-
                 DateTime? whenToSendNextTime = null;
                 if (user.SendOverPlanNotificationAt != null)
                 {
@@ -78,7 +76,7 @@ namespace Homo.IotApi
 
                 if (shouldBeSent)
                 {
-                    Subscription subscription = SubscriptionDataservice.GetOne(_iotDbContext, user.Id);
+                    Subscription subscription = SubscriptionDataservice.GetCurrnetOne(_iotDbContext, user.Id);
                     int nextSubscription = 0;
                     if (subscription != null)
                     {

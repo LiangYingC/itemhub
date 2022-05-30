@@ -1,11 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { DeviceItem, PinItem } from '@/types/devices.type';
 import AutocompletedSearch from '@/components/inputs/autocompleted-search/autocompleted-search';
 
 const DeviceAndPinInputs = ({
     allDevices,
+    isDeviceNameError,
     initialDeviceName = '',
     deviceNameLabel,
+    isPinError,
     pinLabel,
     pinValue,
     pinOptions,
@@ -14,8 +16,10 @@ const DeviceAndPinInputs = ({
     isDisabled,
 }: {
     allDevices: DeviceItem[];
+    isDeviceNameError: boolean;
     initialDeviceName?: string;
     deviceNameLabel: string;
+    isPinError: boolean;
     pinLabel: string;
     pinValue: string;
     pinOptions: PinItem[] | null;
@@ -23,13 +27,14 @@ const DeviceAndPinInputs = ({
     updateDeviceId: (id: number) => void;
     isDisabled: boolean;
 }) => {
+    const hasManualUpdate = useRef(false);
     const [deviceName, setDeviceName] = useState(initialDeviceName);
 
     const currentDeviceId =
         allDevices.filter(({ name }) => deviceName === name)[0]?.id || 0;
 
     useEffect(() => {
-        if (currentDeviceId) {
+        if (hasManualUpdate.current) {
             updateDeviceId(currentDeviceId);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -48,7 +53,14 @@ const DeviceAndPinInputs = ({
                     placeholder="請輸入裝置名稱搜尋"
                     currentValue={deviceName}
                     isDisabled={isDisabled}
-                    updateCurrentValue={(newValue) => setDeviceName(newValue)}
+                    isError={isDeviceNameError}
+                    errorMessage="請輸入裝置名稱"
+                    updateCurrentValue={(newValue) => {
+                        setDeviceName(newValue);
+                        if (!hasManualUpdate.current) {
+                            hasManualUpdate.current = true;
+                        }
+                    }}
                     allSuggestions={allDevices.map(({ name }) => name)}
                 />
             </div>
@@ -56,9 +68,8 @@ const DeviceAndPinInputs = ({
                 <label className="mb-1">
                     {pinLabel} {pinValue}
                 </label>
-
                 <select
-                    className="form-select"
+                    className={`form-select ${isPinError && 'border-danger'}`}
                     value={pinValue}
                     disabled={isDisabled}
                     onChange={(e) => {
@@ -92,6 +103,9 @@ const DeviceAndPinInputs = ({
                         </>
                     )}
                 </select>
+                {isPinError && (
+                    <div className="text-danger mt-15 fs-5">請輸入裝置 Pin</div>
+                )}
             </div>
         </div>
     );

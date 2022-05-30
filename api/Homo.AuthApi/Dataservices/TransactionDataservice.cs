@@ -29,5 +29,18 @@ namespace Homo.IotApi
         {
             return dbContext.Transaction.Where(x => x.DeletedAt == null && x.ExternalTransactionId == externalTransactionId).FirstOrDefault();
         }
+
+        public static void UpdateTransitionRaw(IotDbContext dbContext, Transaction transaction, string raw, string externalTransactionId)
+        {
+            transaction.Raw = raw;
+            transaction.ExternalTransactionId = externalTransactionId;
+            dbContext.SaveChanges();
+        }
+
+        public static void UpdateStatus(IotDbContext dbContext, Transaction transaction, TRANSACTION_STATUS status)
+        {
+            transaction.Status = status;
+            dbContext.SaveChanges();
+        }
     }
 }

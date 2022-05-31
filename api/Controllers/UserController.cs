@@ -18,7 +18,7 @@ namespace Homo.IotApi
         }
 
         [SwaggerOperation(
-            Tags = new[] { "Marketing" },
+            Tags = new[] { "使用者相關" },
             Summary = "使用者數量",
             Description = ""
         )]

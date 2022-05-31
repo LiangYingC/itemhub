@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using Homo.Core.Constants;
 using Homo.Core.Helpers;
 using Homo.Api;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Homo.AuthApi
 {
@@ -21,6 +22,11 @@ namespace Homo.AuthApi
             _dbContext = dbContext;
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "使用者相關" },
+            Summary = "忘記密碼",
+            Description = ""
+        )]
         [HttpPatch]
         public dynamic resetPassword([FromBody] DTOs.ResetMyPassword dto, DTOs.JwtExtraPayload extraPayload)
         {

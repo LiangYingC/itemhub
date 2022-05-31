@@ -2,9 +2,9 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.Annotations;
 
 using Homo.Core.Constants;
 using Homo.Core.Helpers;
@@ -55,7 +55,11 @@ namespace Homo.AuthApi
             _staticPath = common.StaticPath;
         }
 
-
+        [SwaggerOperation(
+            Tags = new[] { "註冊相關" },
+            Summary = "寄送註冊驗證信",
+            Description = ""
+        )]
         [Route("send-verify-email")]
         [HttpPost]
         public async Task<dynamic> sendVerifyEmail([FromBody] DTOs.SendValidatedEmail dto)
@@ -111,6 +115,11 @@ namespace Homo.AuthApi
             return new { status = CUSTOM_RESPONSE.OK };
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "註冊相關" },
+            Summary = "寄送早鳥註冊信件",
+            Description = ""
+        )]
         [Route("send-register-email-to-early-bird")]
         [HttpPost]
         public async Task<dynamic> sendRegisterEmailToEarlyBird([FromBody] DTOs.SendRegisterEmailToEarlyBird dto)
@@ -146,6 +155,11 @@ namespace Homo.AuthApi
             return new { status = CUSTOM_RESPONSE.OK };
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "註冊相關" },
+            Summary = "驗證 Email",
+            Description = ""
+        )]
         [Route("verify-email")]
         [HttpPost]
         public dynamic verifyEmail([FromBody] DTOs.VerifyEmail dto)
@@ -170,6 +184,11 @@ namespace Homo.AuthApi
             return new { token = JWTHelper.GenerateToken(_verifyPhoneJwtKey, 5, new { Id = record.Id, Email = record.Email, IsEarlyBird = isEarlyBird }, null) };
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "註冊相關" },
+            Summary = "透過社群驗證 Email",
+            Description = ""
+        )]
         [Route("verify-email-with-social-media")]
         [HttpPost]
         public async Task<dynamic> verifyEmailWithSocialMedia([FromBody] DTOs.AuthWithSocialMedia dto)

@@ -1,12 +1,9 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Swashbuckle.AspNetCore.Annotations;
 using api.Constants;
 using api.Helpers;
 using Homo.Api;
 using Homo.AuthApi;
 using Homo.Core.Constants;
-using Homo.Core.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
@@ -35,6 +32,11 @@ namespace Homo.IotApi
             _staticPath = appSettings.Value.Common.StaticPath;
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "金流" },
+            Summary = "Tappay 更新金流狀態",
+            Description = ""
+        )]
         [HttpPost]
         public ActionResult<dynamic> updateTransactionByTappay(DTOs.TapPayNotify dto)
         {

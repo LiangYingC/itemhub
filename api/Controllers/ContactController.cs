@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Homo.Api;
 using Homo.AuthApi;
@@ -7,6 +6,7 @@ using Microsoft.Extensions.Options;
 using System.Threading.Tasks;
 using api.Constants;
 using api.Helpers;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Homo.IotApi
 {
@@ -35,6 +35,11 @@ namespace Homo.IotApi
             _staticPath = optionAppSettings.Value.Common.StaticPath;
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "聯絡我們" },
+            Summary = "聯絡我們",
+            Description = ""
+        )]
         [HttpPost]
         public async Task<dynamic> sendEmailToUs([FromBody] DTOs.ContactUs dto)
         {

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Homo.Core.Constants;
 using Homo.Api;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Homo.AuthApi
 {
@@ -16,6 +17,11 @@ namespace Homo.AuthApi
             _dbContext = dbContext;
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "管理系統" },
+            Summary = "群組 - 取得分頁列表",
+            Description = ""
+        )]
         [HttpGet]
         public ActionResult<dynamic> getList([FromQuery] string name, [FromQuery] int page = 1, [FromQuery] int limit = 20)
         {
@@ -27,6 +33,11 @@ namespace Homo.AuthApi
             };
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "管理系統" },
+            Summary = "群組 - 取得列表",
+            Description = ""
+        )]
         [HttpGet]
         [Route("all")]
         public ActionResult<dynamic> getAll([FromQuery] string name)
@@ -34,6 +45,11 @@ namespace Homo.AuthApi
             return GroupDataservice.GetAll(_dbContext, name);
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "管理系統" },
+            Summary = "群組 - 新增群組",
+            Description = ""
+        )]
         [HttpPost]
         public ActionResult<dynamic> create([FromBody] DTOs.Group dto, DTOs.JwtExtraPayload extraPayload)
         {
@@ -42,6 +58,11 @@ namespace Homo.AuthApi
             return rewRecord;
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "管理系統" },
+            Summary = "群組 - 批次刪除",
+            Description = ""
+        )]
         [HttpDelete]
         public ActionResult<dynamic> batchDelete([FromBody] List<long?> ids, DTOs.JwtExtraPayload extraPayload)
         {
@@ -50,6 +71,11 @@ namespace Homo.AuthApi
             return new { status = CUSTOM_RESPONSE.OK };
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "管理系統" },
+            Summary = "群組 - 取得單一資料",
+            Description = ""
+        )]
         [HttpGet]
         [Route("{id}")]
         public ActionResult<dynamic> get([FromRoute] int id)
@@ -62,6 +88,11 @@ namespace Homo.AuthApi
             return record;
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "管理系統" },
+            Summary = "群組 - 更新單筆資料",
+            Description = ""
+        )]
         [HttpPatch]
         [Route("{id}")]
         public ActionResult<dynamic> update([FromRoute] int id, [FromBody] DTOs.Group dto, DTOs.JwtExtraPayload extraPayload)
@@ -71,6 +102,11 @@ namespace Homo.AuthApi
             return new { status = CUSTOM_RESPONSE.OK };
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "管理系統" },
+            Summary = "群組 - 刪除單筆資料",
+            Description = ""
+        )]
         [HttpDelete]
         [Route("{id}")]
         public ActionResult<dynamic> delete([FromRoute] long id, DTOs.JwtExtraPayload extraPayload)

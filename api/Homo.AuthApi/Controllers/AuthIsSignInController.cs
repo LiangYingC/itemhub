@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Homo.Api;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Homo.AuthApi
 {
@@ -17,6 +18,11 @@ namespace Homo.AuthApi
             _authByCookie = common.AuthByCookie;
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "身份驗證" },
+            Summary = "檢查是否登入",
+            Description = ""
+        )]
         [Route("is-sign-in")]
         [SwaggerUiInvisibility]
         [HttpPost]

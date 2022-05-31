@@ -7,6 +7,8 @@ using Homo.Core.Constants;
 using Homo.Core.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.Annotations;
+
 
 namespace Homo.IotApi
 {
@@ -26,6 +28,11 @@ namespace Homo.IotApi
             _refreshJwtKey = settings.Secrets.RefreshJwtKey;
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "oAuth" },
+            Summary = "oAuth 授權 - 取得驗證碼",
+            Description = ""
+        )]
         [HttpGet]
         public ActionResult<dynamic> getCode([FromQuery(Name = "redirect_uri")] string redirectUri, [FromQuery] string state, [FromQuery(Name = "response_type")] string responseType, [FromQuery(Name = "client_id")] string clientId)
         {
@@ -51,6 +58,11 @@ namespace Homo.IotApi
             return new { code = randomCode };
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "oAuth" },
+            Summary = "oAuth 授權 - 透過驗證碼交換 Token",
+            Description = ""
+        )]
         [Route("token")]
         [HttpPost]
         [Consumes("application/x-www-form-urlencoded")]
@@ -140,6 +152,11 @@ namespace Homo.IotApi
             return new { };
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "oAuth" },
+            Summary = "oAuth 授權 - 透過 Secret 交換驗證碼 (請確保網路通訊的安全性)",
+            Description = ""
+        )]
         [Route("exchange-token-for-device")]
         [HttpPost]
         public ActionResult<dynamic> exchangeTokenForDevice([FromBody] DTOs.ExchangeTokenByDevice dto)

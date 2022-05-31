@@ -1,10 +1,9 @@
-using System;
 using System.Net;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.Annotations;
 
 using Homo.Core.Constants;
 using Homo.Core.Helpers;
@@ -61,6 +60,11 @@ namespace Homo.AuthApi
             _phoneHashSalt = secrets.PhoneHashSalt;
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "註冊相關" },
+            Summary = "註冊",
+            Description = ""
+        )]
         [Route("sign-up")]
         [AuthorizeFactory(AUTH_TYPE.SIGN_UP)]
         [HttpPost]

@@ -61,7 +61,11 @@ namespace Homo.IotApi
             DateTime startOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
             int daysInMonth = System.DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
             DateTime endOfMonth = startOfMonth.AddDays(daysInMonth - 1).AddHours(23).AddMinutes(59).AddSeconds(59);
-            int infactAmount = (int)Math.Round((decimal)amount * (endOfMonth - DateTime.Now).Days / daysInMonth);
+            int infactAmount = (int)Math.Round((decimal)amount * ((endOfMonth - DateTime.Now).Days + 1) / daysInMonth);
+            if (infactAmount <= 0)
+            {
+                infactAmount = 1;
+            }
             string planName = plans.Find(x => (int)x.Value == (int)dto.pricingPlan).Label;
 
             // 在 local 端建立 subscription, transaction
@@ -101,7 +105,6 @@ namespace Homo.IotApi
             };
 
             StringContent stringContent = new StringContent(JsonConvert.SerializeObject(postBody), System.Text.Encoding.UTF8, "application/json");
-            System.Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(postBody,Newtonsoft.Json.Formatting.Indented));
             HttpClient http = new HttpClient();
             http.DefaultRequestHeaders.Add("x-api-key", _tapPayPartnerKey);
             HttpResponseMessage responseStream = await http.PostAsync(_tapPayEndpoint, stringContent);

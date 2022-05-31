@@ -11,6 +11,7 @@ import { ResetPasswordFinishController } from '../controllers/reset-password-fin
 
 export const AuthRoutingRule = {
     path: '/auth/',
+    skipSitemap: true,
     controller: AuthController,
     html: '/template/auth.html',
     children: [{

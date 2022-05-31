@@ -43,17 +43,16 @@ const DevicePinData = () => {
         (devices || []).filter((device) => device.id === Number(id))[0] || null;
     const devicePins = useAppSelector(selectDevicePins);
 
-    const [name, setName] = useState(String);
-    const [microcontrollerId, setMicrocontrollerId] = useState(Number);
+    const [name, setName] = useState('');
+    const [microcontrollerId, setMicrocontrollerId] = useState(0);
 
     const [selectedPins, setSelectedPins] = useState(devicePins);
     const { microcontrollers } = useAppSelector(selectUniversal);
     const { deviceModes } = useAppSelector(selectUniversal);
-    const [microcontrollerImg, setMicrocontrollerIdImg] = useState(String);
-    const [isEditPinNameOpen, setIsEditPinNameOpen] = useState(Boolean);
+    const [microcontrollerImg, setMicrocontrollerIdImg] = useState('');
+    const [isEditPinNameOpen, setIsEditPinNameOpen] = useState(false);
     const pinNameInputRef = useRef<HTMLInputElement>(null);
-    const [newPinName, setNewPinName] = useState(String);
-    const [originalPin, setOriginalPin] = useState(String);
+    const [originalPin, setOriginalPin] = useState('');
 
     const microcontrollerItem = (microcontrollers || []).filter((item) => {
         return item.id === microcontrollerId;
@@ -75,9 +74,11 @@ const DevicePinData = () => {
         Number(id)
     );
 
-    const { getDevicePinsApi } = useGetDevicePinsApi({
-        id: Number(id),
-    });
+    const { getDevicePinsApi, devicePins: devicePinData } = useGetDevicePinsApi(
+        {
+            id: Number(id),
+        }
+    );
 
     const {
         isLoading: isUpdating,
@@ -128,7 +129,7 @@ const DevicePinData = () => {
         setIsEditPinNameOpen(true);
     };
 
-    const shortPinName = (name: string) => {
+    const getShortPinName = (name: string) => {
         const pinName = selectedPins?.find((pins) => {
             return pins.pin === name;
         })?.name;
@@ -142,7 +143,7 @@ const DevicePinData = () => {
         return `${pinName.substring(0, 2)}...`;
     };
 
-    const fullPinName = (name: string) => {
+    const getFullPinName = (name: string) => {
         const newPinName = selectedPins?.find((pins) => {
             return pins.pin === name;
         })?.name;
@@ -168,10 +169,15 @@ const DevicePinData = () => {
         }
 
         if (pinNameInputRef.current) {
+            selectPins(
+                pinData.pin,
+                pinData.mode,
+                pinNameInputRef.current.value,
+                pinData.value
+            );
             pinNameInputRef.current.value = '';
         }
 
-        selectPins(pinData.pin, pinData.mode, newPinName, pinData.value);
         setIsEditPinNameOpen(false);
         ReactTooltip.rebuild();
     };
@@ -293,6 +299,10 @@ const DevicePinData = () => {
     useEffect(() => {
         setSelectedPins(devicePins);
     }, [devicePins]);
+
+    useEffect(() => {
+        ReactTooltip.rebuild();
+    }, [selectedPins]);
 
     useEffect(() => {
         // 切換裝置類型的時候 把選取的 PIN 都清空
@@ -472,11 +482,11 @@ const DevicePinData = () => {
                                                 </div>
                                                 <div
                                                     className="text-center rounded-circle bg-black bg-opacity-5 border-black border-opacity-10 pin-text"
-                                                    data-tip={fullPinName(
+                                                    data-tip={getFullPinName(
                                                         pin.name
                                                     )}
                                                 >
-                                                    {shortPinName(pin.name)}
+                                                    {getShortPinName(pin.name)}
                                                 </div>
                                                 <ReactTooltip
                                                     effect="solid"
@@ -639,9 +649,6 @@ const DevicePinData = () => {
                                         if (event.key === 'Escape') {
                                             closeEditPinName();
                                         }
-                                        setNewPinName(
-                                            event.currentTarget.value
-                                        );
 
                                         if (event.key === 'Enter') {
                                             updatePinName();

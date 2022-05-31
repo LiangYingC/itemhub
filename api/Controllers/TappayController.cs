@@ -38,9 +38,10 @@ namespace Homo.IotApi
             Description = ""
         )]
         [HttpPost]
-        public ActionResult<dynamic> updateTransactionByTappay(DTOs.TapPayNotify dto)
+        public ActionResult<dynamic> updateTransactionByTappay(dynamic originalDto)
         {
-            System.Console.WriteLine($"testing:{Newtonsoft.Json.JsonConvert.SerializeObject(dto, Newtonsoft.Json.Formatting.Indented)}");
+            System.Console.WriteLine($"testing:{Newtonsoft.Json.JsonConvert.SerializeObject(originalDto, Newtonsoft.Json.Formatting.Indented)}");
+            DTOs.TapPayNotify dto = Newtonsoft.Json.JsonConvert.DeserializeObject<DTOs.TapPayNotify>(Newtonsoft.Json.JsonConvert.SerializeObject(originalDto));
             ThirdPartyPaymentFlowDataservice.Create(_dbContext, new DTOs.ThirdPartyPaymentFlow()
             {
                 ExternalTransactionId = dto.rec_trade_id,

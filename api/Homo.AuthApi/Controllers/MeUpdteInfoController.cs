@@ -4,6 +4,7 @@ using Homo.Core.Constants;
 using Homo.Api;
 using Homo.Core.Helpers;
 using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Homo.AuthApi
 {
@@ -22,6 +23,11 @@ namespace Homo.AuthApi
             _PKCS1PublicKeyPath = common.Pkcs1PublicKeyPath;
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "使用者相關" },
+            Summary = "更新個人資料",
+            Description = ""
+        )]
         [HttpPatch]
         [Validate]
         public dynamic updateInfo([FromBody] DTOs.UpdateMe dto, DTOs.JwtExtraPayload extraPayload)

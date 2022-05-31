@@ -188,6 +188,7 @@ export const RoutingRule = [{
                 }]
             }, {
                 path: 'transaction/{id}/?rec_trade_id&status',
+                skipSitemap: true,
                 controller: TransactionController,
                 html: '/template/transaction.html',
                 dependency: [{

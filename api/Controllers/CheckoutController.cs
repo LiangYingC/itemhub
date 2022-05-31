@@ -8,6 +8,7 @@ using Homo.Core.Constants;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Homo.IotApi
 {
@@ -39,6 +40,11 @@ namespace Homo.IotApi
 
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "金流" },
+            Summary = "結帳",
+            Description = ""
+        )]
         [HttpPost]
         [Validate]
         public async Task<dynamic> checkout([FromBody] DTOs.Checkout dto, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)

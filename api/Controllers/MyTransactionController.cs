@@ -1,9 +1,7 @@
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Homo.Api;
-using Homo.Core.Constants;
-using System.Linq;
+using Swashbuckle.AspNetCore.Annotations;
 
 
 namespace Homo.IotApi
@@ -20,6 +18,11 @@ namespace Homo.IotApi
             _dbContext = dbContext;
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "使用者相關" },
+            Summary = "交易狀態",
+            Description = ""
+        )]
         [HttpGet]
         public ActionResult<dynamic> get([FromRoute] long id, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {

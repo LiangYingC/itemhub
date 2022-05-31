@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Homo.Api;
 using Homo.Core.Constants;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Homo.IotApi
 {
@@ -16,6 +17,11 @@ namespace Homo.IotApi
             _dbContext = dbContext;
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "裝置相關" },
+            Summary = "裝置 PIN 感測 - 新增特定裝置感測資料",
+            Description = ""
+        )]
         [HttpPost]
         [FilterRequestFactory]
         [Route("{pin}")]
@@ -58,6 +64,11 @@ namespace Homo.IotApi
         }
 
 
+        [SwaggerOperation(
+            Tags = new[] { "裝置相關" },
+            Summary = "裝置 PIN 感測 - 取得感測資料分頁列表",
+            Description = ""
+        )]
         [HttpGet]
         [Route("{pin}")]
         public ActionResult<dynamic> getList([FromRoute] long id, [FromRoute] string pin, [FromQuery] int page, [FromQuery] int limit, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)

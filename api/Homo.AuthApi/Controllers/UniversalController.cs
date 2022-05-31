@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Homo.Api;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Homo.AuthApi
 {
@@ -12,6 +13,11 @@ namespace Homo.AuthApi
         {
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "常數" },
+            Summary = "社群媒體",
+            Description = ""
+        )]
         [HttpGet]
         [Route("social-media-types")]
         public ActionResult<dynamic> getSocialMediaTypes()

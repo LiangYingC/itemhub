@@ -78,7 +78,7 @@ namespace Homo.Api
                 }
                 payload = customEx.payload;
             }
-            var result = new { message = internalErrorMessage, errorKey = errorKey, payload = payload };
+            var result = new { message = internalErrorMessage, errorKey = errorKey, stackTrace = ex.StackTrace, payload = payload };
             try
             {
                 context.Response.ContentType = "application/json";

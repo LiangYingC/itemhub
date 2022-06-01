@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Homo.Api;
 using Homo.Core.Constants;
 using Homo.Core.Helpers;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Homo.IotApi
 {
@@ -17,6 +18,11 @@ namespace Homo.IotApi
             _dbContext = dbContext;
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "oAuth" },
+            Summary = "oAuthClient - 取得 oAuthClient 分頁列表",
+            Description = ""
+        )]
         [HttpGet]
         public ActionResult<dynamic> getList([FromQuery] int limit, [FromQuery] int page, [FromQuery] bool isDeviceClient, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
@@ -29,6 +35,11 @@ namespace Homo.IotApi
             };
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "oAuth" },
+            Summary = "oAuthClient - 建立 oAuthClient",
+            Description = ""
+        )]
         [HttpPost]
         public ActionResult<dynamic> create([FromBody] DTOs.OauthClient dto, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
@@ -67,6 +78,11 @@ namespace Homo.IotApi
             };
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "oAuth" },
+            Summary = "oAuthClient - 批次刪除 oAuthClient",
+            Description = ""
+        )]
         [HttpDelete]
         public ActionResult<dynamic> batchDelete([FromBody] List<long> ids, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
@@ -75,6 +91,11 @@ namespace Homo.IotApi
             return new { status = CUSTOM_RESPONSE.OK };
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "oAuth" },
+            Summary = "oAuthClient - 取得單一 oAuthClient 資料",
+            Description = ""
+        )]
         [HttpGet]
         [Route("{id}")]
         public ActionResult<dynamic> get([FromRoute] long id, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
@@ -94,6 +115,11 @@ namespace Homo.IotApi
             }; ;
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "oAuth" },
+            Summary = "oAuthClient - 更新單一 oAuthClient 資料",
+            Description = ""
+        )]
         [HttpPatch]
         [Route("{id}")]
         public ActionResult<dynamic> update([FromRoute] int id, [FromBody] DTOs.OauthClient dto, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
@@ -103,6 +129,11 @@ namespace Homo.IotApi
             return new { status = CUSTOM_RESPONSE.OK };
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "oAuth" },
+            Summary = "oAuthClient - 取得新的 oAuthClient Secret",
+            Description = ""
+        )]
         [HttpPost]
         [Route("{id}/revoke-secret")]
         public ActionResult<dynamic> revokeSecret([FromRoute] int id, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
@@ -115,6 +146,11 @@ namespace Homo.IotApi
             return new { secret = clientSecret };
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "oAuth" },
+            Summary = "oAuthClient - 刪除單一 oAuthClient",
+            Description = ""
+        )]
         [HttpDelete]
         [Route("{id}")]
         public ActionResult<dynamic> delete([FromRoute] long id, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
@@ -124,7 +160,11 @@ namespace Homo.IotApi
             return new { status = CUSTOM_RESPONSE.OK };
         }
 
-
+        [SwaggerOperation(
+            Tags = new[] { "oAuth" },
+            Summary = "oAuthClient - 透過裝置 ID 取得單一 oAuthClient 資料",
+            Description = ""
+        )]
         [HttpGet]
         [Route("by-device-id/{deviceId}")]
         public ActionResult<dynamic> getOneByDeviceId([FromRoute] long deviceId, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)

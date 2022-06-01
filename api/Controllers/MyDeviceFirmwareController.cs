@@ -5,7 +5,7 @@ using System.IO;
 using Homo.Api;
 using Homo.Core.Constants;
 using Homo.Core.Helpers;
-
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Homo.IotApi
 {
@@ -27,8 +27,13 @@ namespace Homo.IotApi
             _dbc = appSettings.Value.Secrets.DBConnectionString;
         }
 
-        [HttpPost]
+        [SwaggerOperation(
+            Tags = new[] { "裝置相關" },
+            Summary = "裝置 - 打包裝置韌體",
+            Description = ""
+        )]
         [Route("{id}/bundle-firmware")]
+        [HttpPost]
         public ActionResult<dynamic> generate([FromRoute] long id, DTOs.Firmware dto, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
             // validation 

@@ -1,14 +1,15 @@
 using System.Threading.Tasks;
 using System.Net;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System.Security.Claims;
+using Swashbuckle.AspNetCore.Annotations;
+
+using api.Constants;
+using api.Helpers;
 using Homo.Core.Constants;
 using Homo.Core.Helpers;
 using Homo.Api;
-using System.Security.Claims;
-using api.Constants;
-using api.Helpers;
 
 namespace Homo.AuthApi
 {
@@ -39,6 +40,11 @@ namespace Homo.AuthApi
             _staticPath = common.StaticPath;
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "匿名忘記密碼" },
+            Summary = "匿名寄送重設密碼信件",
+            Description = ""
+        )]
         [Route("send-reset-password-mail")]
         [HttpPost]
         public async Task<dynamic> sendResetPasswordMail([FromBody] DTOs.SendResetPasswordMail dto)
@@ -80,6 +86,11 @@ namespace Homo.AuthApi
             return new { status = CUSTOM_RESPONSE.OK };
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "匿名忘記密碼" },
+            Summary = "重設密碼",
+            Description = ""
+        )]
         [Route("reset-password")]
         [HttpPost]
         public dynamic resetPassword([FromBody] DTOs.ResetPassword dto)

@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using Homo.Api;
 using Homo.Core.Constants;
 using System.Linq;
+using Swashbuckle.AspNetCore.Annotations;
 
 
 namespace Homo.IotApi
@@ -19,6 +20,11 @@ namespace Homo.IotApi
             _dbContext = dbContext;
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "裝置相關" },
+            Summary = "裝置 PIN - 取得裝置所有腳位",
+            Description = ""
+        )]
         [HttpGet]
         public ActionResult<dynamic> getAll([FromRoute] long id, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
@@ -26,6 +32,11 @@ namespace Homo.IotApi
             return DevicePinDataservice.GetAll(_dbContext, ownerId, new List<long>() { id }, null, null);
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "裝置相關" },
+            Summary = "裝置 PIN - 批次新增腳位",
+            Description = ""
+        )]
         [HttpPost]
         public ActionResult<dynamic> batchedCreate([FromRoute] long id, [FromBody] List<DTOs.DevicePinsData> dto, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
@@ -34,6 +45,11 @@ namespace Homo.IotApi
             return new { status = CUSTOM_RESPONSE.OK };
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "裝置相關" },
+            Summary = "裝置 PIN - 更新多筆腳位資料",
+            Description = ""
+        )]
         [HttpPatch]
         public ActionResult<dynamic> updatePins([FromRoute] long id, [FromBody] List<DTOs.DevicePinsData> dto, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
@@ -42,6 +58,11 @@ namespace Homo.IotApi
             return new { status = CUSTOM_RESPONSE.OK };
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "裝置相關" },
+            Summary = "裝置 PIN - 刪除多筆腳位資料",
+            Description = ""
+        )]
         [HttpDelete]
         public ActionResult<dynamic> removeUnusedPins([FromRoute] long id, [FromQuery] string pins, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)
         {
@@ -51,6 +72,11 @@ namespace Homo.IotApi
             return new { status = CUSTOM_RESPONSE.OK };
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "裝置相關" },
+            Summary = "裝置 PIN - 更新腳位名稱",
+            Description = ""
+        )]
         [HttpPatch]
         [Route("{pin}")]
         public ActionResult<dynamic> updatePinName([FromRoute] long id, [FromRoute] string pin, [FromBody] DTOs.UpdateDevicePinName dto, Homo.AuthApi.DTOs.JwtExtraPayload extraPayload)

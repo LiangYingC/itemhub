@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Homo.Core.Constants;
 using Homo.Api;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Homo.AuthApi
 {
@@ -45,6 +46,11 @@ namespace Homo.AuthApi
             _authByCookie = common.AuthByCookie;
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "身份驗證" },
+            Summary = "登出",
+            Description = ""
+        )]
         [Route("sign-out")]
         [HttpPost]
         public ActionResult<dynamic> signOut()
@@ -53,6 +59,11 @@ namespace Homo.AuthApi
             return new { status = CUSTOM_RESPONSE.OK };
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "身份驗證" },
+            Summary = "使用 Email 登入",
+            Description = ""
+        )]
         [Route("sign-in-with-email")]
         [HttpPost]
         [Validate]
@@ -122,6 +133,11 @@ namespace Homo.AuthApi
 
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "身份驗證" },
+            Summary = "使用社群媒體登入",
+            Description = ""
+        )]
         [Route("sign-in-with-social-media")]
         [HttpPost]
         public async Task<dynamic> signInWithSocialMedia([FromBody] DTOs.AuthWithSocialMedia dto)

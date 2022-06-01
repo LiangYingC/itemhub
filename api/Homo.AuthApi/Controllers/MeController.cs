@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Homo.Api;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Homo.AuthApi
 {
@@ -15,6 +16,11 @@ namespace Homo.AuthApi
             _dbContext = dbContext;
         }
 
+        [SwaggerOperation(
+            Tags = new[] { "使用者相關" },
+            Summary = "取得個人資訊",
+            Description = ""
+        )]
         [HttpGet]
         public dynamic getMe(DTOs.JwtExtraPayload extraPayload)
         {

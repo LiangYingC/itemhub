@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { RESPONSE_STATUS } from '@/constants/api';
 import { useQuery } from '@/hooks/query.hook';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hook';

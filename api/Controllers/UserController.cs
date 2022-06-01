@@ -3,6 +3,7 @@ using Homo.AuthApi;
 using Homo.Core.Constants;
 using Homo.Core.Helpers;
 using Homo.Api;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Homo.IotApi
 {
@@ -16,15 +17,25 @@ namespace Homo.IotApi
             _dbContext = dbContext;
         }
 
-        [HttpGet]
+        [SwaggerOperation(
+            Tags = new[] { "使用者相關" },
+            Summary = "使用者數量",
+            Description = ""
+        )]
         [Route("number-of-registered-users")]
+        [HttpGet]
         public ActionResult<dynamic> getNumberOfRegisteredUsers()
         {
             return new { nums = UserDataservice.GetRowNum(_dbContext, null, null) };
         }
 
-        [HttpPost]
+        [SwaggerOperation(
+            Tags = new[] { "Deprecated" },
+            Summary = "早期使用者登記",
+            Description = ""
+        )]
         [Route("check-in")]
+        [HttpPost]
         public ActionResult<dynamic> record([FromBody] DTOs.CheckIn dto)
         {
             User user = UserDataservice.GetOneByEmail(_dbContext, dto.Email);

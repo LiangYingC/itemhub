@@ -121,7 +121,7 @@ namespace Homo.IotApi
                 result = sr.ReadToEnd();
             }
             DTOs.TapPayResponse response = Newtonsoft.Json.JsonConvert.DeserializeObject<DTOs.TapPayResponse>(result);
-
+            System.Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(response,Newtonsoft.Json.Formatting.Indented));
             // create transaction log and remove senstive information 
             var withoutSenstiveInfoResponse = JsonConvert.DeserializeObject<IDictionary<string, dynamic>>(JsonConvert.SerializeObject(response));
             withoutSenstiveInfoResponse.Remove("card_secret");

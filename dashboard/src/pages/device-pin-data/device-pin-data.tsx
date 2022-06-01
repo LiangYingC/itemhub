@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import {
     useCreateDeviceApi,
@@ -27,6 +27,8 @@ import { selectUniversal } from '@/redux/reducers/universal.reducer';
 import { PinItem } from '@/types/devices.type';
 import { selectDevicePins } from '@/redux/reducers/pins.reducer';
 import { DEVICE_MODE } from '@/constants/device-mode';
+import closeIcon from '@/assets/images/dark-close.svg';
+import ReactTooltip from 'react-tooltip';
 
 const DevicePinData = () => {
     const navigate = useNavigate();
@@ -41,13 +43,16 @@ const DevicePinData = () => {
         (devices || []).filter((device) => device.id === Number(id))[0] || null;
     const devicePins = useAppSelector(selectDevicePins);
 
-    const [name, setName] = useState(String);
-    const [microcontrollerId, setMicrocontrollerId] = useState(Number);
+    const [name, setName] = useState('');
+    const [microcontrollerId, setMicrocontrollerId] = useState(0);
 
     const [selectedPins, setSelectedPins] = useState(devicePins);
     const { microcontrollers } = useAppSelector(selectUniversal);
     const { deviceModes } = useAppSelector(selectUniversal);
-    const [microcontrollerImg, setMicrocontrollerIdImg] = useState(String);
+    const [microcontrollerImg, setMicrocontrollerIdImg] = useState('');
+    const [isEditPinNameOpen, setIsEditPinNameOpen] = useState(false);
+    const pinNameInputRef = useRef<HTMLInputElement>(null);
+    const [originalPin, setOriginalPin] = useState('');
 
     const microcontrollerItem = (microcontrollers || []).filter((item) => {
         return item.id === microcontrollerId;
@@ -69,9 +74,11 @@ const DevicePinData = () => {
         Number(id)
     );
 
-    const { getDevicePinsApi } = useGetDevicePinsApi({
-        id: Number(id),
-    });
+    const { getDevicePinsApi, devicePins: devicePinData } = useGetDevicePinsApi(
+        {
+            id: Number(id),
+        }
+    );
 
     const {
         isLoading: isUpdating,
@@ -117,6 +124,63 @@ const DevicePinData = () => {
         navigate(`/dashboard/devices/${id}`);
     };
 
+    const editPinName = (name: string) => {
+        setOriginalPin(name);
+        setIsEditPinNameOpen(true);
+    };
+
+    const getShortPinName = (name: string) => {
+        const pinName = selectedPins?.find((pins) => {
+            return pins.pin === name;
+        })?.name;
+
+        if (!pinName) {
+            return name;
+        }
+        if (pinName?.length <= 2) {
+            return pinName;
+        }
+        return `${pinName.substring(0, 2)}...`;
+    };
+
+    const getFullPinName = (name: string) => {
+        const newPinName = selectedPins?.find((pins) => {
+            return pins.pin === name;
+        })?.name;
+
+        if (!newPinName) {
+            return;
+        }
+
+        return newPinName;
+    };
+
+    const closeEditPinName = () => {
+        setIsEditPinNameOpen(false);
+    };
+
+    const updatePinName = () => {
+        const pinData = selectedPins?.find((item) => {
+            return item.pin === originalPin;
+        });
+
+        if (!pinData) {
+            return;
+        }
+
+        if (pinNameInputRef.current) {
+            selectPins(
+                pinData.pin,
+                pinData.mode,
+                pinNameInputRef.current.value,
+                pinData.value
+            );
+            pinNameInputRef.current.value = '';
+        }
+
+        setIsEditPinNameOpen(false);
+        ReactTooltip.rebuild();
+    };
     const [isValidData, setIsValidData] = useState({
         name: true,
         selectedPins: true,
@@ -195,7 +259,6 @@ const DevicePinData = () => {
         pin: string,
         mode: number,
         name: string,
-        action: string,
         value: number | null
     ) => {
         setSelectedPins(() => {
@@ -247,6 +310,10 @@ const DevicePinData = () => {
     useEffect(() => {
         setSelectedPins(devicePins);
     }, [devicePins]);
+
+    useEffect(() => {
+        ReactTooltip.rebuild();
+    }, [selectedPins]);
 
     useEffect(() => {
         // 切換裝置類型的時候 把選取的 PIN 都清空
@@ -330,6 +397,10 @@ const DevicePinData = () => {
             getDevicePinsApi();
         }
     }, [createDevicePinResponse]);
+
+    useEffect(() => {
+        pinNameInputRef.current?.focus();
+    }, [isEditPinNameOpen]);
 
     const breadcrumbs = [
         {
@@ -441,39 +512,32 @@ const DevicePinData = () => {
                                                         <div>感應器</div>
                                                     )}
                                                 </div>
-                                                <div className="text-center rounded-circle bg-black bg-opacity-5 border-black border-opacity-10 pin-text">
-                                                    {pin.name}
+                                                <div
+                                                    className="text-center rounded-circle bg-black bg-opacity-5 border-black border-opacity-10 pin-text"
+                                                    data-tip={getFullPinName(
+                                                        pin.name
+                                                    )}
+                                                >
+                                                    {getShortPinName(pin.name)}
                                                 </div>
-                                                <div>
-                                                    <input
-                                                        className={`${
-                                                            selectedPins
-                                                                ?.map(
-                                                                    (pins) => {
-                                                                        return pins.pin;
-                                                                    }
-                                                                )
-                                                                .includes(
+                                                <ReactTooltip
+                                                    effect="solid"
+                                                    place="bottom"
+                                                />
+                                                <div
+                                                    className={`rounded-2 shadow-lg overflow-hidden bg-white pin-option ${
+                                                        selectedPins?.find(
+                                                            (pins) => {
+                                                                return (
+                                                                    pins.pin ===
                                                                     pin.name
-                                                                )
-                                                                ? 'd-block'
-                                                                : 'd-none'
-                                                        }`}
-                                                        type="text"
-                                                        placeholder="請輸入 pin name"
-                                                        defaultValue={
-                                                            devicePins?.find(
-                                                                (pins) => {
-                                                                    return (
-                                                                        pins.pin ===
-                                                                        pin.name
-                                                                    );
-                                                                }
-                                                            )?.name || ''
-                                                        }
-                                                    />
-                                                </div>
-                                                <div className="rounded-2 shadow-lg overflow-hidden bg-white pin-option">
+                                                                );
+                                                            }
+                                                        )
+                                                            ? 'pin-option-4'
+                                                            : 'pin-option-2'
+                                                    }`}
+                                                >
                                                     <div
                                                         className={`lh-1 p-25`}
                                                         role="button"
@@ -482,12 +546,11 @@ const DevicePinData = () => {
                                                                 pin.name,
                                                                 isSwitch,
                                                                 pin.name,
-                                                                'ADD',
                                                                 0
                                                             );
                                                         }}
                                                     >
-                                                        開關
+                                                        設為開關
                                                     </div>
                                                     <div
                                                         className="lh-1 p-25"
@@ -497,16 +560,46 @@ const DevicePinData = () => {
                                                                 pin.name,
                                                                 isSensor,
                                                                 pin.name,
-                                                                'ADD',
                                                                 null
                                                             );
                                                         }}
                                                     >
-                                                        感應器
+                                                        設為感應器
                                                     </div>
                                                     <div
-                                                        className="lh-1 p-25"
-                                                        role="button"
+                                                        className={`lh-1 p-25 ${
+                                                            selectedPins?.find(
+                                                                (pins) => {
+                                                                    return (
+                                                                        pins.pin ===
+                                                                        pin.name
+                                                                    );
+                                                                }
+                                                            )
+                                                                ? ''
+                                                                : 'd-none'
+                                                        }`}
+                                                        onClick={() => {
+                                                            editPinName(
+                                                                pin.name
+                                                            );
+                                                        }}
+                                                    >
+                                                        重新命名
+                                                    </div>
+                                                    <div
+                                                        className={`lh-1 p-25 ${
+                                                            selectedPins?.find(
+                                                                (pins) => {
+                                                                    return (
+                                                                        pins.pin ===
+                                                                        pin.name
+                                                                    );
+                                                                }
+                                                            )
+                                                                ? ''
+                                                                : 'd-none'
+                                                        }`}
                                                         onClick={() => {
                                                             setSelectedPins(
                                                                 selectedPins
@@ -521,7 +614,7 @@ const DevicePinData = () => {
                                                             );
                                                         }}
                                                     >
-                                                        取消
+                                                        取消設定
                                                     </div>
                                                 </div>
                                             </div>
@@ -555,6 +648,67 @@ const DevicePinData = () => {
                                     <div>儲存編輯</div>
                                 )}
                             </button>
+                        </div>
+                    </div>
+                    {/* 編輯 pin name */}
+                    <div
+                        className={`dialog position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center ${
+                            isEditPinNameOpen ? '' : 'd-none'
+                        }`}
+                    >
+                        <div
+                            className="card py-3 px-0"
+                            onKeyUp={(
+                                event: React.KeyboardEvent<HTMLDivElement>
+                            ) => {
+                                if (event.key === 'Escape') {
+                                    closeEditPinName();
+                                }
+                            }}
+                        >
+                            <h4 className="text-center px-3 mb-0">重新命名</h4>
+                            <hr />
+                            <div className="px-3">
+                                <input
+                                    placeholder="請輸入 PIN 的名稱"
+                                    className="form-control"
+                                    type="text"
+                                    ref={pinNameInputRef}
+                                    onKeyUp={(
+                                        event: React.KeyboardEvent<HTMLInputElement>
+                                    ) => {
+                                        if (event.key === 'Escape') {
+                                            closeEditPinName();
+                                        }
+
+                                        if (event.key === 'Enter') {
+                                            updatePinName();
+                                        }
+                                    }}
+                                />
+                            </div>
+                            <hr />
+                            <div className="d-flex align-items-center justify-content-end px-3">
+                                <button
+                                    className="btn btn-secondary me-3 btn-secondary"
+                                    onClick={closeEditPinName}
+                                >
+                                    取消
+                                </button>
+                                <button
+                                    className={`btn btn-primary`}
+                                    onClick={updatePinName}
+                                >
+                                    確認
+                                </button>
+                            </div>
+                            <div
+                                role="button"
+                                className="close-button position-absolute top-0 px-3 py-25"
+                                onClick={closeEditPinName}
+                            >
+                                <img src={closeIcon} />
+                            </div>
                         </div>
                     </div>
                 </div>

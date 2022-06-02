@@ -3,12 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
-using System.Collections.Generic;
-using Homo.AuthApi;
-using System.Linq;
-using System.Net.Http;
-using Newtonsoft.Json;
-using Homo.Core.Constants;
+using Homo.Core.Helpers;
 
 namespace Homo.IotApi
 {
@@ -49,6 +44,17 @@ namespace Homo.IotApi
             var serverVersion = new MySqlServerVersion(new Version(8, 0, 25));
             iotBuilder.UseMySql(_dbc, serverVersion);
             IotDbContext _iotDbContext = new IotDbContext(iotBuilder.Options);
+            string lockerKey = CryptographicHelper.GetSpecificLengthRandomString(12, true);
+            SystemConfigDataservice.OccupeLocker(_iotDbContext, SYSTEM_CONFIG.CLEAR_DEVICE_ACTIVITY_LOG_LOCKER, lockerKey);
+
+            await Task.Delay(5000);
+            SystemConfig locker = SystemConfigDataservice.GetOne(_iotDbContext, SYSTEM_CONFIG.CLEAR_DEVICE_ACTIVITY_LOG_LOCKER);
+            if (locker.Value != lockerKey)
+            {
+                return Task.CompletedTask;
+            }
+
+
             long? currentLatestId = DeviceActivityLogDataservice.Delete(_iotDbContext, DateTime.Now.AddDays(-1), 1, 500, latestId);
             if (currentLatestId == null)
             {

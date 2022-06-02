@@ -6,6 +6,7 @@ using api.Constants;
 using api.Helpers;
 using Homo.Api;
 using Homo.AuthApi;
+using Homo.Core.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -41,7 +42,7 @@ namespace Homo.IotApi
             return base.StartAsync(cancellationToken);
         }
 
-        public override Task DoWork(CancellationToken cancellationToken)
+        public override async Task<dynamic> DoWork(CancellationToken cancellationToken)
         {
             Console.WriteLine($"{DateTime.Now:hh:mm:ss} SendOverPlanNotificationCronJobService is working.");
             DbContextOptionsBuilder<DBContext> builder = new DbContextOptionsBuilder<DBContext>();
@@ -51,6 +52,17 @@ namespace Homo.IotApi
             iotBuilder.UseMySql(_dbc, serverVersion);
             DBContext _dbContext = new DBContext(builder.Options);
             IotDbContext _iotDbContext = new IotDbContext(iotBuilder.Options);
+
+            string lockerKey = CryptographicHelper.GetSpecificLengthRandomString(12, true);
+            SystemConfigDataservice.OccupeLocker(_iotDbContext, SYSTEM_CONFIG.SEND_OVER_PLAN_NOTIFICATION_LOCKER, lockerKey);
+
+            await Task.Delay(5000);
+            SystemConfig locker = SystemConfigDataservice.GetOne(_iotDbContext, SYSTEM_CONFIG.SEND_OVER_PLAN_NOTIFICATION_LOCKER);
+            if (locker.Value != lockerKey)
+            {
+                return Task.CompletedTask;
+            }
+
             List<User> overPlanUsers = UserDataservice.GetOverPlanAll(_dbContext);
             for (int i = 0; i < overPlanUsers.Count; i++)
             {

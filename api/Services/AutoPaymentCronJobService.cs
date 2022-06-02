@@ -55,7 +55,7 @@ namespace Homo.IotApi
             DBContext _dbContext = new DBContext(builder.Options);
 
             string lockerKey = CryptographicHelper.GetSpecificLengthRandomString(12, true);
-            SystemConfigDataservice.OccupeAutoPaymentLocker(_iotDbContext, lockerKey);
+            SystemConfigDataservice.OccupeLocker(_iotDbContext, SYSTEM_CONFIG.AUTO_PAYMENT_LOCKER, lockerKey);
 
             await Task.Delay(5000);
             SystemConfig locker = SystemConfigDataservice.GetOne(_iotDbContext, SYSTEM_CONFIG.AUTO_PAYMENT_LOCKER);

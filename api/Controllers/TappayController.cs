@@ -38,7 +38,7 @@ namespace Homo.IotApi
             Description = ""
         )]
         [HttpPost]
-        public ActionResult<dynamic> updateTransactionByTappay([FromBody]DTOs.TapPayNotify originalDto)
+        public ActionResult<dynamic> updateTransactionByTappay([FromBody] DTOs.TapPayNotify originalDto)
         {
             System.Console.WriteLine($"testing:{Newtonsoft.Json.JsonConvert.SerializeObject(originalDto, Newtonsoft.Json.Formatting.Indented)}");
             DTOs.TapPayNotify dto = Newtonsoft.Json.JsonConvert.DeserializeObject<DTOs.TapPayNotify>(Newtonsoft.Json.JsonConvert.SerializeObject(originalDto));

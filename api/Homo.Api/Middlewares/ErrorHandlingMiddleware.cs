@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using Sentry;
 using Homo.Core.Constants;
 using Homo.AuthApi;
 
@@ -55,6 +56,28 @@ namespace Homo.Api
                 internalErrorMessage = System.Web.HttpUtility.JavaScriptStringEncode(ex.ToString());
             }
 
+            long? userId = null;
+            string token = "";
+            string authorization = context.Request.Headers["Authorization"];
+            token = authorization == null ? "" : authorization.Substring("Bearer ".Length).Trim();
+            var appSetting = (dynamic)config.Value;
+
+            if (token != null && token.Length > 0 && appSetting.Secrets != null && appSetting.Secrets.JwtKey != null)
+            {
+                try
+                {
+                    dynamic extraPayload = JWTHelper.GetExtraPayload(appSetting.Secrets.JwtKey, token);
+                    userId = extraPayload.Id;
+
+                }
+                catch (System.Exception parseTokenEx)
+                {
+                    SendErrorToSentry(parseTokenEx, context.Request.Body, context.Request.QueryString, null);
+                }
+            }
+
+            SendErrorToSentry(ex, context.Request.Body, context.Request.QueryString, userId);
+
             Dictionary<string, dynamic> payload = null;
             if (ex.GetType() == typeof(Homo.Core.Constants.CustomException))
             {
@@ -78,7 +101,7 @@ namespace Homo.Api
                 }
                 payload = customEx.payload;
             }
-            var result = new { message = internalErrorMessage, errorKey = errorKey, stackTrace = ex.StackTrace, payload = payload };
+            var result = new { message = internalErrorMessage, errorKey = errorKey, payload = payload };
             try
             {
                 context.Response.ContentType = "application/json";
@@ -89,6 +112,34 @@ namespace Homo.Api
                 throw new Exception(ex.ToString() + exInner.ToString());
             }
             return context.Response.WriteAsync(JsonConvert.SerializeObject(result));
+        }
+
+        private async Task SendErrorToSentry(Exception ex, System.IO.Stream reqBody = null, QueryString queryString = default(QueryString), long? userId = null)
+        {
+
+            await SentrySdk.ConfigureScopeAsync(async scope =>
+            {
+                string body = "";
+                using (var reader = new System.IO.StreamReader(reqBody, System.Text.Encoding.UTF8))
+                {
+                    body = await reader.ReadToEndAsync();
+                    scope.SetExtra("request-body", body);
+                }
+                scope.SetExtra("userId", userId);
+                scope.SetExtra("query-string", queryString.ToString());
+            });
+
+            if (ex.GetType() == typeof(CustomException))
+            {
+                var customEx = (CustomException)ex;
+                string internalErrorMessage = customEx.errorCode;
+                Exception newEx = new Exception(internalErrorMessage, customEx);
+                SentrySdk.CaptureException(newEx);
+            }
+            else
+            {
+                SentrySdk.CaptureException(ex);
+            }
         }
     }
 }

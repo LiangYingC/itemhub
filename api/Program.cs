@@ -15,6 +15,7 @@ namespace Homo.IotApi
             .ConfigureWebHostDefaults(webBuilder =>
             {
                 webBuilder.UseStartup<Startup>();
+                webBuilder.UseSentry();
             });
     }
 }

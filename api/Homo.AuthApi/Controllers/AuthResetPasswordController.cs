@@ -58,7 +58,7 @@ namespace Homo.AuthApi
             {
                 throw new CustomException(ERROR_CODE.USER_BE_BLOCKED, HttpStatusCode.Forbidden);
             }
-            if (user.IsEarlyBird)
+            if (user.IsEarlyBird && user.PseudonymousPhone == null)
             {
                 throw new CustomException(ERROR_CODE.LACK_PHONE, HttpStatusCode.Forbidden);
             }

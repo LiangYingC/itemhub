@@ -3,12 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
-using System.Collections.Generic;
-using Homo.AuthApi;
-using System.Linq;
-using System.Net.Http;
-using Newtonsoft.Json;
-using Homo.Core.Constants;
+using Homo.Core.Helpers;
 
 namespace Homo.IotApi
 {
@@ -37,20 +32,24 @@ namespace Homo.IotApi
             return base.StartAsync(cancellationToken);
         }
 
-        public override Task DoWork(CancellationToken cancellationToken)
+        public override async Task<dynamic> DoWork(CancellationToken cancellationToken)
         {
-            if (DateTime.Now.Day == 1)
+            Console.WriteLine($"{DateTime.Now:hh:mm:ss} TriggerLogCronJob is working.");
+            DbContextOptionsBuilder<IotDbContext> iotBuilder = new DbContextOptionsBuilder<IotDbContext>();
+            var serverVersion = new MySqlServerVersion(new Version(8, 0, 25));
+            iotBuilder.UseMySql(_dbc, serverVersion);
+            IotDbContext _iotDbContext = new IotDbContext(iotBuilder.Options);
+
+            string lockerKey = CryptographicHelper.GetSpecificLengthRandomString(12, true);
+            SystemConfigDataservice.OccupeLocker(_iotDbContext, SYSTEM_CONFIG.CLEAR_TRIGGER_LOG_LOCKER, lockerKey);
+
+            await Task.Delay(5000);
+            SystemConfig locker = SystemConfigDataservice.GetOne(_iotDbContext, SYSTEM_CONFIG.CLEAR_TRIGGER_LOG_LOCKER);
+            if (locker.Value != lockerKey)
             {
                 return Task.CompletedTask;
             }
 
-            Console.WriteLine($"{DateTime.Now:hh:mm:ss} TriggerLogCronJob is working.");
-            DbContextOptionsBuilder<IotDbContext> iotBuilder = new DbContextOptionsBuilder<IotDbContext>();
-            DbContextOptionsBuilder<DBContext> builder = new DbContextOptionsBuilder<DBContext>();
-            var serverVersion = new MySqlServerVersion(new Version(8, 0, 25));
-            iotBuilder.UseMySql(_dbc, serverVersion);
-            builder.UseMySql(_dbc, serverVersion);
-            IotDbContext _iotDbContext = new IotDbContext(iotBuilder.Options);
             TriggerLogDataservice.Delete(_iotDbContext, DateTime.Now.AddDays(-30));
             return Task.CompletedTask;
         }

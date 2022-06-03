@@ -7,11 +7,11 @@ namespace Homo.IotApi
 {
     public class SystemConfigDataservice
     {
-        public static void OccupeAutoPaymentLocker(IotDbContext dbContext, string lockerKey)
+        public static void OccupeLocker(IotDbContext dbContext, string SystemConfigKey, string lockerKey)
         {
-            dbContext.SystemConfig.Where(x => x.Key == SYSTEM_CONFIG.AUTO_PAYMENT_LOCKER).UpdateFromQuery(x => new SystemConfig
+            dbContext.SystemConfig.Where(x => x.Key == SystemConfigKey).UpdateFromQuery(x => new SystemConfig
             {
-                Key = SYSTEM_CONFIG.AUTO_PAYMENT_LOCKER,
+                Key = SystemConfigKey,
                 Value = lockerKey
             });
         }

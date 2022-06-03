@@ -1,11 +1,7 @@
 #include <string>
 #include <vector>
-#include "DHT/DHT.h"
 #include "ItemhubUtilities/ItemhubUtilities.h"
 #include "ca-pem.h"
-
-#define DHTPIN D1
-#define DHTTYPE DHT11
 
 #define SWITCH "SWITCH"
 #define SENSOR "SENSOR"
@@ -21,7 +17,6 @@
         return;                                         \
     }
 
-DHT dht(DHTPIN, DHTTYPE);
 TlsTcpClient client;
 std::string caPem = CA_PEM;
 unsigned long lastSync = millis();
@@ -56,10 +51,7 @@ void setup()
 {
     delay(5000);
     Serial.begin(9600);
-    // pins.push_back(ItemhubPin(D0, "D0", SWITCH));
-    // pins.push_back(ItemhubPin(D1, "D1", SENSOR));
     {PINS};
-    dht.begin();
 
     // setup Root CA pem.
     client.init(caPem.c_str(), caPem.length() + 1);
@@ -187,14 +179,7 @@ void sendSensor()
             endpoint.append("/sensors/");
             endpoint.append(pins[i].pinString);
             std::string postBody = "{\"value\":";
-            float h = dht.readHumidity();
-            float t = dht.readTemperature();
-            Serial.print("temperature: ");
-            Serial.println(t);
-            Serial.print("humidity: ");
-            Serial.println(h);
-            std::string humidity = std::to_string(h);
-            postBody.append(humidity);
+            postBody.append(std::to_string(0));
             postBody.append("}");
 
             std::string respOfRegisterPin = ItemhubUtilities::Send(client, apiEndpoint, caPem, POST, endpoint, postBody, token);

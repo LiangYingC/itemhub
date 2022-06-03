@@ -34,7 +34,6 @@ namespace Homo.IotApi
         public static void Delete(IotDbContext dbContext, DateTime endAt)
         {
             dbContext.TriggerLog.Where(x => x.CreatedAt <= endAt).DeleteFromQuery();
-            dbContext.SaveChanges();
         }
 
     }

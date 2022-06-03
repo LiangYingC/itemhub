@@ -4,7 +4,7 @@
 
 enum
 {
-    MAX_FIELDS = 64
+    MAX_FIELDS = 128
 };
 json_t pool[MAX_FIELDS];
 

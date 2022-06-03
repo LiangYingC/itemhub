@@ -2,7 +2,6 @@
 #include <ArduinoUniqueID.h>
 #include <ESP8266WiFi.h>
 #include <WiFiClientSecure.h>
-#include <DHT.h>
 
 #include "ItemhubUtilities/ItemhubUtilities.h"
 #include "ItemhubUtilities/Certs.h"
@@ -14,8 +13,6 @@
 
 #define SWITCH "SWITCH"
 #define SENSOR "SENSOR"
-#define DHTTYPE DHT11
-#define DHTPIN 1
 
 const char *ssid = STASSID;
 const char *password = STAPSK;
@@ -26,7 +23,6 @@ std::string empty = "";
 std::string postBody = "{\"clientId\":\"{CLIENT_ID}\",\"clientSecret\":\"{CLIENT_SECRET}\"}";
 WiFiClientSecure client;
 X509List ca(CA_PEM);
-DHT dht(DHTPIN, DHTTYPE);
 std::vector<ItemhubPin> pins;
 const int intervalSensor = 30 * 1000;
 const int intervalSwitch = 2000;
@@ -44,7 +40,6 @@ void setup()
   delay(5000);
   Serial.begin(115200);
   {PINS};
-  dht.begin();
 
   Serial.println();
   Serial.print("Connecting to ");
@@ -114,10 +109,7 @@ void loop()
       std::string mode = pins[i].mode;
       if (mode == SENSOR)
       {
-        float h = dht.readHumidity();
-        Serial.print("humidity: ");
-        Serial.println(h);
-        pins[i].value = std::to_string(h);
+        pins[i].value = std::to_string(0);
       }
     }
     ItemhubUtilities::SendSensor(client, ca, host, token, remoteDeviceId, pins);

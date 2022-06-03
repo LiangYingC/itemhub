@@ -70,7 +70,6 @@ namespace Homo.IotApi
             decimal deviceCountInPricingPlan = subscriptionLevel == -1 ? 2 : SubscriptionHelper.GetDeviceCount((PRICING_PLAN)subscription.PricingPlan);
             decimal currentDeviceCount = DeviceDataservice.GetRowNum(_dbContext, ownerId, null);
 
-
             if (currentDeviceCount + 1 > deviceCountInPricingPlan)
             {
                 var pricingPlans = ConvertHelper.EnumToList(typeof(PRICING_PLAN));
@@ -81,7 +80,7 @@ namespace Homo.IotApi
                 }
                 else
                 {
-                    decimal deviceCountInNextLevelPricingPlan = SubscriptionHelper.GetDeviceCount((PRICING_PLAN)subscription.PricingPlan + 1);
+                    decimal deviceCountInNextLevelPricingPlan = SubscriptionHelper.GetDeviceCount((PRICING_PLAN)(subscriptionLevel + 1));
                     reason = _commonLocalizer.Get("moreThanMaxNumberOfDevice", null, new Dictionary<string, string>() { { "deviceCountInNextLevelPricingPlan", deviceCountInNextLevelPricingPlan.ToString() } });
                 }
 

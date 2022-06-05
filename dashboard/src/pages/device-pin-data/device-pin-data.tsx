@@ -425,7 +425,7 @@ const DevicePinData = () => {
                 <div>Loading</div>
             ) : (
                 <div className="card">
-                    <div className="p-4">
+                    <div className="">
                         <div className="mb-4">
                             <label>裝置名稱</label>
                             <input

@@ -17,6 +17,24 @@ export class HowController extends RoutingController {
             keywords: 'ItemHub,item-hub,物聯網,iot,串聯裝置,連結裝置,low-code,no-code,iot platform,iot,internet of thing,iot data center'
         };
         await super.render({
+            expandedHowToBindGoogleSmartHomeVisible: 'd-none',
+            expandedHowToStartVisible: 'd-none'
         });
+    }
+
+    toggleHowToBindSmartHome () {
+        if (this.pageVariable.expandedHowToBindGoogleSmartHomeVisible === '') {
+            this.pageVariable.expandedHowToBindGoogleSmartHomeVisible = 'd-none';
+        } else {
+            this.pageVariable.expandedHowToBindGoogleSmartHomeVisible = '';
+        }
+    }
+
+    toggleHowToStart () {
+        if (this.pageVariable.expandedHowToStartVisible === '') {
+            this.pageVariable.expandedHowToStartVisible = 'd-none';
+        } else {
+            this.pageVariable.expandedHowToStartVisible = '';
+        }
     }
 }

@@ -61,6 +61,7 @@ export class SignUpController extends RoutingController {
             elPhone.removeAttribute('disabled');
         } else {
             const elCode = this.elHTML.querySelector('[data-field="code"]');
+            elCode.removeAttribute('disabled');
             elCode.focus();
             this._countdownResendTimerStart();
         }

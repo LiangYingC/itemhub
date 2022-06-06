@@ -337,6 +337,7 @@ const DevicePinData = () => {
         if (targetKey === 'PARTICLE_IO_PHOTON') {
             setMicrocontrollerIdImg(particleIoPhoton);
         } else if (targetKey === 'ARDUINO_NANO_IOT_33') {
+            console.log(arduinoNano33Iot);
             setMicrocontrollerIdImg(arduinoNano33Iot);
         } else if (targetKey === 'ESP_01S') {
             setMicrocontrollerIdImg(esp01s);

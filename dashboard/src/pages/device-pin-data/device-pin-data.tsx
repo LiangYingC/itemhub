@@ -337,6 +337,7 @@ const DevicePinData = () => {
         if (targetKey === 'PARTICLE_IO_PHOTON') {
             setMicrocontrollerIdImg(particleIoPhoton);
         } else if (targetKey === 'ARDUINO_NANO_IOT_33') {
+            console.log(arduinoNano33Iot);
             setMicrocontrollerIdImg(arduinoNano33Iot);
         } else if (targetKey === 'ESP_01S') {
             setMicrocontrollerIdImg(esp01s);
@@ -425,7 +426,7 @@ const DevicePinData = () => {
                 <div>Loading</div>
             ) : (
                 <div className="card">
-                    <div className="p-4">
+                    <div>
                         <div className="mb-4">
                             <label>裝置名稱</label>
                             <input

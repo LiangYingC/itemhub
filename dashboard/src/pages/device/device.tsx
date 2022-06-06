@@ -1,10 +1,9 @@
 import moment from 'moment';
-import { useRef, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import {
     useDeleteDevicesApi,
     useGetDeviceApi,
-    useUpdateDeviceApi,
     useBundleFirmwareApi,
 } from '@/hooks/apis/devices.hook';
 import { useAppSelector } from '@/hooks/redux.hook';
@@ -46,14 +45,6 @@ const Device = () => {
     const [isFirmwarePrepare, setIsFirmwarePrepare] = useState(false);
     const [shouldBeBundledId, setShouldBeBundledId] = useState(0);
     const { microcontrollers } = useAppSelector(selectUniversal);
-
-    const { updateDeviceApi, isLoading: isUpdating } = useUpdateDeviceApi({
-        id: Number(id),
-        editedData: {
-            name: deviceName,
-            deviceId: device?.deviceId,
-        },
-    });
 
     const { fetchApi: deleteApi, data: deleteDeviceResponse } =
         useDeleteDevicesApi([Number(id)]);
@@ -165,7 +156,7 @@ const Device = () => {
     return (
         <div className="device" data-testid="device">
             <PageTitle
-                title={`${deviceName}詳細內容`}
+                title="裝置詳細內容"
                 breadcrumbs={breadcrumbs}
                 titleClickCallback={backToList}
                 titleBackIconVisible
@@ -186,6 +177,22 @@ const Device = () => {
             ) : (
                 <div className="card">
                     <div className="row m-0">
+                        <div className="col-12 col-lg-6 d-flex p-0 item">
+                            <div className="d-flex fs-5 text-black text-opacity-45 bg-black bg-opacity-5 item-title py-2 px-25">
+                                裝置名稱
+                            </div>
+                            <div className="text-break text-black text-opacity-65 py-2 px-25">
+                                {device.name}
+                            </div>
+                        </div>
+                        <div className="col-12 col-lg-6 d-flex p-0 item">
+                            <div className="d-flex fs-5 bg-black bg-opacity-5 text-black text-opacity-45 item-title py-2 px-25">
+                                裝置類型
+                            </div>
+                            <div className="text-break text-black text-opacity-65 py-2 px-25">
+                                {microcontrollerName}
+                            </div>
+                        </div>
                         <div className="col-12 col-lg-6 d-flex p-0 item">
                             <div className="d-flex fs-5 text-black text-opacity-45 bg-black bg-opacity-5 item-title py-2 px-25">
                                 Device Id
@@ -210,14 +217,6 @@ const Device = () => {
                                 {` ${moment(device.createdAt).format(
                                     'YYYY-MM-DD HH:mm'
                                 )}`}
-                            </div>
-                        </div>
-                        <div className="col-12 col-lg-6 d-flex p-0 item">
-                            <div className="d-flex fs-5 bg-black bg-opacity-5 text-black text-opacity-45 item-title py-2 px-25">
-                                裝置類型
-                            </div>
-                            <div className="text-break text-black text-opacity-65 py-2 px-25">
-                                {microcontrollerName}
                             </div>
                         </div>
                         <div className="col-12 col-lg-6 d-flex p-0 item">

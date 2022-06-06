@@ -179,7 +179,7 @@ void sendSensor()
             endpoint.append("/sensors/");
             endpoint.append(pins[i].pinString);
             std::string postBody = "{\"value\":";
-            postBody.append(std::to_string(0));
+            postBody.append(digitalRead(pins[i].pin));
             postBody.append("}");
 
             std::string respOfRegisterPin = ItemhubUtilities::Send(client, apiEndpoint, caPem, POST, endpoint, postBody, token);

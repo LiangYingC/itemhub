@@ -109,7 +109,7 @@ void loop()
       std::string mode = pins[i].mode;
       if (mode == SENSOR)
       {
-        pins[i].value = std::to_string(0);
+        pins[i].value = digitalRead(pins[i].pin);
       }
     }
     ItemhubUtilities::SendSensor(client, ca, host, token, remoteDeviceId, pins);
